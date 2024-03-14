@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import {
   Box,
   Button,
@@ -8,12 +9,13 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import Lottie from "react-lottie";
 import { FaTwitter, FaDiscord, FaArrowRight } from "react-icons/fa";
 import successAnimation from "@/../public/static/successAnimation.json";
 import Navbar from "@/app/common/components/navbar";
 import { getContentByType } from "@/pages/api/get-content";
 import { flatMapDeep } from "lodash";
+
+const Lottie = dynamic(() => import("react-lottie"), { ssr: false });
 
 interface SuccessPageProps {
   course: string;
@@ -97,7 +99,9 @@ const SuccessPage: React.FC<SuccessPageProps> = (props: SuccessPageProps) => {
             {Number(lesson) < totalLessonsInCourse ? (
               <Button
                 as={Link}
-                href={`/courses/${course}/lesson/${Number(lesson) + 1}/chapter/1`}
+                href={`/courses/${course}/lesson/${
+                  Number(lesson) + 1
+                }/chapter/1`}
                 rightIcon={<FaArrowRight />}
                 bg="white"
                 color="gray.800"
