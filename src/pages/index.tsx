@@ -1,5 +1,12 @@
 import Navbar from "@/app/common/components/navbar";
-import { Box, Heading, Text, Link } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Text,
+  Link,
+  Button,
+  ButtonGroup,
+} from "@chakra-ui/react";
 import PrimaryButton from "@/app/common/components/primary-button";
 import Footer from "@/app/common/components/footer";
 
@@ -16,16 +23,26 @@ export default function Index() {
           to build meaningful web3 applications using the Polkadot SDK. Learn
           how to build your own custom blockchain from zero to one hundred.
         </Text>
-        <PrimaryButton
-          as={Link}
-          href="/courses/rust-state-machine"
-          mt={12}
-          py={8}
-          px={16}
-          _hover={{ textDecor: "none" }}
-        >
-          Get Started
-        </PrimaryButton>
+        <ButtonGroup mt={12} spacing={4}>
+          <PrimaryButton
+            as={Link}
+            href="/courses/rust-state-machine"
+            size="lg"
+            _hover={{ textDecor: "none" }}
+          >
+            View Course
+          </PrimaryButton>
+          <Button
+            as={Link}
+            href="https://forms.gle/2o4hBauCJ6Fkf9Zz7"
+            size="lg"
+            variant="outline"
+            _hover={{ textDecor: "none" }}
+            isExternal
+          >
+            Become a Teacher
+          </Button>
+        </ButtonGroup>
       </Box>
       <Footer />
     </Box>
