@@ -47,6 +47,18 @@ Before starting, you'll need to setup the following content models on Contentful
 }
 ```
 
+Once you've set up the content models, start by cloning this repo:
+
+```bash
+git clone https://github.com/dotcodeschool/frontend.git
+```
+
+Make sure you're in the right working directory:
+
+```bash
+cd frontend
+```
+
 Next, you will need to set up your local environment with the following variables:
 
 ```env
@@ -70,6 +82,12 @@ To start the development server, simply run:
 
 ```bash
 yarn dev
+```
+
+Or, build a docker image and run the project inside a container:
+
+```bash
+docker build . -t dotcodeschool-frontend:latest && docker run -p 3000:3000 dotcodeschool-frontend:latest
 ```
 
 Open [http://localhost:3000](http://localhost:3000) on your browser to interact with the UI locally.
