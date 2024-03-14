@@ -1,6 +1,7 @@
 import Navbar from "@/app/common/components/navbar";
 import { Box, Heading, Text, Link } from "@chakra-ui/react";
 import PrimaryButton from "@/app/common/components/primary-button";
+import Footer from "@/app/common/components/footer";
 
 export default function Index() {
   return (
@@ -26,6 +27,7 @@ export default function Index() {
           Get Started
         </PrimaryButton>
       </Box>
+      <Footer />
     </Box>
   );
 }
