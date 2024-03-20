@@ -26,11 +26,11 @@ export default function Index() {
         <ButtonGroup mt={12} spacing={4}>
           <PrimaryButton
             as={Link}
-            href="/courses/rust-state-machine"
+            href="/courses"
             size="lg"
             _hover={{ textDecor: "none" }}
           >
-            View Course
+            Browse Courses
           </PrimaryButton>
           <Button
             as={Link}

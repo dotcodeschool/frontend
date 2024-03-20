@@ -22,7 +22,13 @@ import {
 } from "@chakra-ui/react";
 import { forEach, get, isEmpty, isString, map, size } from "lodash";
 import { getContentByType } from "@/pages/api/get-content";
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useSession } from "next-auth/react";
 
 type Module = {
@@ -43,32 +49,31 @@ const Module = ({ module, slug }: ModuleProps) => {
   const [progress, setProgress] = useState(0);
   const progressData = useContext(ProgressProvider);
 
-  const countCompletedChapters = useCallback((
-    courseId: string,
-    lessonId?: string,
-    progressData?: any
-  ) => {
-    // Count the completed chapters
-    let count = 0;
-    const progressDataParsed = isString(progressData)
-      ? JSON.parse(progressData)
-      : progressData;
-    if (lessonId) {
-      // Count the completed chapters for a specific lesson
-      forEach(progressDataParsed[courseId]?.[lessonId], (chapter) => {
-        if (chapter) {
-          count++;
+  const countCompletedChapters = useCallback(
+    (courseId: string, lessonId?: string, progressData?: any) => {
+      // Count the completed chapters
+      let count = 0;
+      const progressDataParsed = isString(progressData)
+        ? JSON.parse(progressData)
+        : progressData;
+      if (lessonId) {
+        // Count the completed chapters for a specific lesson
+        forEach(progressDataParsed[courseId]?.[lessonId], (chapter) => {
+          if (chapter) {
+            count++;
+          }
+        });
+      } else {
+        // Count the completed chapters for the entire course
+        for (const lessonId in progressDataParsed[courseId] || {}) {
+          count += countCompletedChapters(courseId, lessonId);
         }
-      });
-    } else {
-      // Count the completed chapters for the entire course
-      for (const lessonId in progressDataParsed[courseId] || {}) {
-        count += countCompletedChapters(courseId, lessonId);
       }
-    }
 
-    return count;
-  }, []);
+      return count;
+    },
+    []
+  );
 
   useEffect(() => {
     if (!isEmpty(progressData)) {
@@ -216,7 +221,7 @@ const CoursePage = ({
     <ProgressProvider.Provider value={progressData}>
       <Box maxW="6xl" mx="auto" px={[4, 12]}>
         <Navbar cta={false} />
-        <Link href="/" color="green.500" fontSize="5xl">
+        <Link href="/courses" color="green.500" fontSize="5xl">
           <ArrowBackIcon />
         </Link>
         <Heading as="h1" size="xl" fontWeight="800" my={4}>
@@ -261,7 +266,13 @@ export async function getStaticProps({
   };
 }) {
   const res = await getContentByType("courseModule");
-  const entry = res.items[0];
+  const entry = res.items.find(
+    (item: any) => item.fields.slug === params.course
+  );
+
+  if (!entry) {
+    throw new Error("No course found with the provided slug");
+  }
 
   const { moduleName, moduleDescription, author, level, language } =
     entry.fields as any;
