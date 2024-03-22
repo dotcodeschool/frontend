@@ -65,11 +65,11 @@ const StartCourseButton = ({ ...props }: ChakraProps) => {
   return (
     <PrimaryButton
       as={Link}
-      href="/courses/rust-state-machine"
+      href="/courses"
       _hover={{ textDecor: "none" }}
       {...props}
     >
-      Start Course
+      Courses
     </PrimaryButton>
   );
 };
