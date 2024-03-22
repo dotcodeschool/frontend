@@ -47,12 +47,29 @@ function Header() {
 
 function LandingCTA() {
   return (
-    <ButtonGroup spacing={4}>
+    <ButtonGroup
+      spacing={{
+        base: 0,
+        md: 4,
+      }}
+      flexWrap={{
+        base: "wrap",
+        md: "nowrap",
+      }}
+    >
       <PrimaryButton
         as={Link}
         href="/courses"
-        p={8}
         fontSize={"xl"}
+        p={8}
+        mb={{
+          base: 4,
+          md: 0,
+        }}
+        w={{
+          base: "full",
+          md: "auto",
+        }}
         _hover={{ textDecor: "none" }}
       >
         Browse Courses
@@ -64,6 +81,10 @@ function LandingCTA() {
         colorScheme="gray"
         fontSize={"xl"}
         p={8}
+        w={{
+          base: "full",
+          md: "auto",
+        }}
         _hover={{ textDecor: "none" }}
         isExternal
       >
@@ -125,8 +146,8 @@ function FeaturesList() {
         }
         description={
           <>
-            The most respected engineers don&apos;t just read about technology — they
-            build it.
+            The most respected engineers don&apos;t just read about technology —
+            they build it.
             <br />
             <br />
             Improve the depth of your understanding by building real projects
