@@ -125,7 +125,7 @@ function FeaturesList() {
         }
         description={
           <>
-            The most respected engineers don't just read about technology — they
+            The most respected engineers don&apos;t just read about technology — they
             build it.
             <br />
             <br />
