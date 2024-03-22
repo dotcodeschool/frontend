@@ -55,6 +55,7 @@ interface Props {
   prev: string;
   next: string;
   chapters: any[];
+  githubUrl: string;
 }
 
 const MODES = {
@@ -73,6 +74,7 @@ export default function CourseModule({
   prev,
   next,
   chapters,
+  githubUrl,
 }: Props) {
   const { source, template, solution } = files;
 
@@ -141,7 +143,17 @@ export default function CourseModule({
   return (
     <Box h="100vh" position="relative">
       <Box h="95vh" px={[6, 12]} mx="auto">
-        <Navbar cta={false} />
+        <Navbar
+          cta={false}
+          isLessonInterface
+          lessonDetails={{
+            courseId,
+            lessonId,
+            chapterId,
+            chapters,
+            githubUrl,
+          }}
+        />
         <Grid templateColumns="repeat(12, 1fr)" gap={1} pb={24}>
           <GridItem
             colSpan={[12, 5]}
@@ -358,6 +370,8 @@ export async function getStaticProps({
   });
   const modules: any = _course?.fields.sections;
 
+  const githubUrl = _course?.fields.githubUrl;
+
   const lessonModule: any = nth(modules, parsedLesson - 1);
 
   const chapters = lessonModule?.fields.lessons;
@@ -413,6 +427,7 @@ export async function getStaticProps({
       prev,
       next,
       chapters: _chapters,
+      githubUrl,
     },
   };
 }

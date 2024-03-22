@@ -30,6 +30,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { Fragment, useEffect } from "react";
 import axios from "axios";
 import Image from "next/image";
+import { FaPen } from "react-icons/fa";
 
 interface NavLink {
   name: string;
@@ -147,6 +148,7 @@ const Auth = () => {
   ) : (
     <PrimaryButton
       onClick={() => signIn()}
+      px={8}
       w={{ base: "full", md: "fit-content" }}
     >
       Login
@@ -186,15 +188,40 @@ const DrawerMenu = ({
   );
 };
 
+interface NavbarProps {
+  navLinks?: NavLink[];
+  cta?: boolean;
+  isLessonInterface?: boolean;
+  lessonDetails?: {
+    courseId: string;
+    lessonId: string;
+    chapterId: string;
+    chapters: any[];
+    githubUrl: string;
+  };
+}
+
 const Navbar = ({
   navLinks = [],
   cta = true,
-}: {
-  navLinks?: NavLink[];
-  cta?: boolean;
-}) => {
+  isLessonInterface,
+  lessonDetails,
+}: NavbarProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data: session, status } = useSession();
+
+  if (!lessonDetails) {
+    lessonDetails = {
+      courseId: "",
+      lessonId: "",
+      chapterId: "",
+      chapters: [],
+      githubUrl: "",
+    };
+  }
+
+  const { courseId, lessonId, chapterId, chapters, githubUrl } = lessonDetails;
+  const currentChapter = chapters[Number(chapterId) - 1]?.title;
 
   // TODO: Move this to a custom hook
   useEffect(() => {
@@ -246,8 +273,23 @@ const Navbar = ({
     >
       <Logo />
       <Spacer />
-      <HStack display={{ base: "none", md: "block" }} spacing={4}>
-        {navLinks && <NavLinks navLinks={navLinks} />}
+      <HStack display={{ base: "none", md: "flex" }} spacing={4}>
+        {navLinks && !isLessonInterface && <NavLinks navLinks={navLinks} />}
+        {isLessonInterface && (
+          <Button
+            as={Link}
+            leftIcon={<FaPen />}
+            variant="outline"
+            href={`${githubUrl}/issues/new?assignees=&labels=feedback&template=feedback.md&title=Dot+Code+School+Suggestion:+Feedback+for+Section+${lessonId}+-+Chapter+${chapterId}:+${currentChapter}`}
+            w="full"
+            _hover={{
+              textDecoration: "none",
+            }}
+            isExternal
+          >
+            Submit Feedback
+          </Button>
+        )}
         {cta ? <StartCourseButton /> : <Auth />}
       </HStack>
       <IconButton
