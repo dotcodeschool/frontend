@@ -18,13 +18,14 @@ import { flatMapDeep, size } from "lodash";
 const Lottie = dynamic(() => import("react-lottie"), { ssr: false });
 
 interface SuccessPageProps {
+  slug: string;
   course: string;
   lesson: string;
   totalLessonsInCourse: number;
 }
 
 const SuccessPage: React.FC<SuccessPageProps> = (props: SuccessPageProps) => {
-  const { course, lesson, totalLessonsInCourse } = props;
+  const { slug, course, lesson, totalLessonsInCourse } = props;
   const tweetText = encodeURIComponent(
     `I just completed the ${course} course on @dotcodeschool.\n\nNow, I am one step closer to building my own blockchain on @Polkadot.`
   );
@@ -98,9 +99,7 @@ const SuccessPage: React.FC<SuccessPageProps> = (props: SuccessPageProps) => {
             {Number(lesson) < totalLessonsInCourse ? (
               <Button
                 as={Link}
-                href={`/courses/${course}/lesson/${
-                  Number(lesson) + 1
-                }/chapter/1`}
+                href={`/courses/${slug}/lesson/${Number(lesson) + 1}/chapter/1`}
                 rightIcon={<FaArrowRight />}
                 bg="white"
                 color="gray.800"
@@ -187,6 +186,7 @@ export async function getStaticProps({ params }: any) {
 
   return {
     props: {
+      slug: course?.fields.slug,
       course: course?.fields.moduleName,
       lesson: params.lesson,
       totalLessonsInCourse,
