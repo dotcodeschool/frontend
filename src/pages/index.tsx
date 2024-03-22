@@ -6,13 +6,14 @@ import {
   Link,
   Button,
   ButtonGroup,
+  Stack,
 } from "@chakra-ui/react";
 import PrimaryButton from "@/app/common/components/primary-button";
 import Footer from "@/app/common/components/footer";
 
 export default function Index() {
   return (
-    <Box maxW="6xl" mx="auto" px={[4, 12]}>
+    <Box maxW="8xl" mx="auto" px={[4, 12]}>
       <Navbar />
       <Header />
       <Footer />
@@ -22,7 +23,7 @@ export default function Index() {
 
 function Header() {
   return (
-    <Box mt={20}>
+    <Stack mt={20} textAlign="center" align="center">
       <Heading as="h1" fontWeight="800" size="4xl" maxW="3xl">
         Learn to Code Web3 Apps by Building Real Projects.
       </Heading>
@@ -54,6 +55,6 @@ function Header() {
           Become a Teacher
         </Button>
       </ButtonGroup>
-    </Box>
+    </Stack>
   );
 }

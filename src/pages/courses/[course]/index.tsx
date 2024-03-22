@@ -219,38 +219,40 @@ const CoursePage = ({
 
   return (
     <ProgressProvider.Provider value={progressData}>
-      <Box maxW="6xl" mx="auto" px={[4, 12]}>
+      <Box maxW="8xl" mx="auto" px={[4, 12]}>
         <Navbar cta={false} />
-        <Link href="/courses" color="green.500" fontSize="5xl">
-          <ArrowBackIcon />
-        </Link>
-        <Heading as="h1" size="xl" fontWeight="800" my={4}>
-          {title}
-        </Heading>
-        <Text>
-          Written by{" "}
-          <Link color="green.300" href={author.url} isExternal>
-            {author.name}
+        <Box maxW="4xl" mx="auto">
+          <Link href="/courses" color="green.500" fontSize="5xl">
+            <ArrowBackIcon />
           </Link>
-        </Text>
-        <Text my={8}>{description}</Text>
-        {map(tags, (tag, key) => (
-          <Tag key={key} mr={2} mb={2}>
-            {tag}
-          </Tag>
-        ))}
-        <ModuleList modules={modules} />
-        <Heading as="h2" size="lg" fontWeight="800" my={8}>
-          Course Content
-        </Heading>
-        <Text mt={4} mb={8} color="gray.400" fontWeight="500">
-          {size(modules)} lessons
-        </Text>
-        <Accordion allowToggle>
-          {modules.map((module, index) => (
-            <Module key={index} module={module} slug={slug} />
+          <Heading as="h1" size="xl" fontWeight="800" my={4}>
+            {title}
+          </Heading>
+          <Text>
+            Written by{" "}
+            <Link color="green.300" href={author.url} isExternal>
+              {author.name}
+            </Link>
+          </Text>
+          <Text my={8}>{description}</Text>
+          {map(tags, (tag, key) => (
+            <Tag key={key} mr={2} mb={2}>
+              {tag}
+            </Tag>
           ))}
-        </Accordion>
+          <ModuleList modules={modules} />
+          <Heading as="h2" size="lg" fontWeight="800" my={8}>
+            Course Content
+          </Heading>
+          <Text mt={4} mb={8} color="gray.400" fontWeight="500">
+            {size(modules)} lessons
+          </Text>
+          <Accordion allowToggle>
+            {modules.map((module, index) => (
+              <Module key={index} module={module} slug={slug} />
+            ))}
+          </Accordion>
+        </Box>
       </Box>
     </ProgressProvider.Provider>
   );
