@@ -4,6 +4,8 @@ import {
   Box,
   Grid,
   GridItem,
+  IconButton,
+  Link,
   Tab,
   TabList,
   TabPanel,
@@ -82,6 +84,7 @@ export default function CourseModule({
   const rawFiles = !isEmpty(source) ? source : template;
   const _files = filter(rawFiles, (file) => !file.fileName.endsWith(".diff"));
 
+  const currentChapter = chapters[Number(chapterId) - 1]?.title;
   const toast = useToast();
 
   const [editorContent, setEditorContent] = useState(_files);
@@ -154,6 +157,20 @@ export default function CourseModule({
             githubUrl,
           }}
         />
+        <IconButton
+          as={Link}
+          aria-label="Submit Feedback"
+          variant="solid"
+          colorScheme="blue"
+          icon={<Text fontSize="xl">✍️</Text>}
+          position="fixed"
+          bottom={20}
+          right={4}
+          zIndex={100}
+          href={`${githubUrl}/issues/new?assignees=&labels=feedback&template=feedback.md&title=Dot+Code+School+Suggestion:+Feedback+for+Section+${lessonId}+-+Chapter+${chapterId}:+${currentChapter}`}
+          isExternal
+        />
+
         <Grid templateColumns="repeat(12, 1fr)" gap={1} pb={24}>
           <GridItem
             colSpan={[12, 5]}
