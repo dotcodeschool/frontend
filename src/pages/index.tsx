@@ -23,7 +23,7 @@ export default function Index() {
 
 function Header() {
   return (
-    <Stack mt={20} textAlign="center" align="center">
+    <Stack mt={20} textAlign="center" align="center" pb={20}>
       <Heading as="h1" fontWeight="800" size="4xl" maxW="3xl">
         Learn to Code Web3 Apps by Building Real Projects.
       </Heading>
