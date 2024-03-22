@@ -13,22 +13,21 @@ import { FaTwitter, FaDiscord, FaArrowRight } from "react-icons/fa";
 import successAnimation from "@/../public/static/successAnimation.json";
 import Navbar from "@/app/common/components/navbar";
 import { getContentByType } from "@/pages/api/get-content";
-import { flatMapDeep } from "lodash";
+import { flatMapDeep, size } from "lodash";
 
 const Lottie = dynamic(() => import("react-lottie"), { ssr: false });
 
 interface SuccessPageProps {
   course: string;
   lesson: string;
+  totalLessonsInCourse: number;
 }
 
 const SuccessPage: React.FC<SuccessPageProps> = (props: SuccessPageProps) => {
-  const totalLessonsInCourse = 7;
+  const { course, lesson, totalLessonsInCourse } = props;
   const tweetText = encodeURIComponent(
-    "I just completed the Rust State Machine course on https://dotcodeschool.com.\n\nNow, I am one step closer to building my own blockchain on @Polkadot."
+    `I just completed the ${course} course on @dotcodeschool.\n\nNow, I am one step closer to building my own blockchain on @Polkadot.`
   );
-
-  const { course, lesson } = props;
 
   const lottieContainerRef = React.useRef<HTMLDivElement | null>(null);
   const [textOpacity, setTextOpacity] = useState(0);
@@ -76,7 +75,7 @@ const SuccessPage: React.FC<SuccessPageProps> = (props: SuccessPageProps) => {
           mt={-8}
           transition="opacity 2s"
         >
-          Level {lesson}: Apprentice of the Rusty State
+          Achievement Unlocked!
         </Text>
         <Text
           fontSize="lg"
@@ -85,9 +84,9 @@ const SuccessPage: React.FC<SuccessPageProps> = (props: SuccessPageProps) => {
           transitionDelay="0.5s"
           maxW="lg"
         >
-          Congratulations! You have successfully completed the Rust State
-          Machine course. You&apos;re officially one step closer to building
-          your own blockchain on Polkadot.
+          Congratulations! You have successfully completed the {course} course.
+          You&apos;re officially one step closer to building your own blockchain
+          on Polkadot.
         </Text>
         <VStack
           opacity={textOpacity}
@@ -137,8 +136,8 @@ const SuccessPage: React.FC<SuccessPageProps> = (props: SuccessPageProps) => {
           <ButtonGroup spacing={4}>
             <IconButton
               as={Link}
-              href="https://twitter.com/Polkadot"
-              aria-label="Tweet your achievement"
+              href="https://twitter.com/intent/user?screen_name=dotcodeschool"
+              aria-label="Follow us on Twitter"
               colorScheme="twitter"
               variant="outline"
               size="lg"
@@ -151,7 +150,7 @@ const SuccessPage: React.FC<SuccessPageProps> = (props: SuccessPageProps) => {
             </IconButton>
             <IconButton
               as={Link}
-              href="https://dot.li/discord"
+              href="https://discord.gg/Z6QBZ886Bq"
               aria-label="Join us on Discord"
               colorScheme="purple"
               variant="outline"
@@ -172,9 +171,26 @@ const SuccessPage: React.FC<SuccessPageProps> = (props: SuccessPageProps) => {
 
 export default SuccessPage;
 
-export function getStaticProps({ params }: any) {
+export async function getStaticProps({ params }: any) {
+  const res = await getContentByType("courseModule");
+  const course = res.items.find(
+    (item: any) => item.fields.slug === params.course
+  );
+  const sections = course?.fields.sections;
+
+  if (!sections || !Array.isArray(sections)) {
+    return {
+      notFound: true,
+    };
+  }
+  const totalLessonsInCourse = size(sections);
+
   return {
-    props: params,
+    props: {
+      course: course?.fields.moduleName,
+      lesson: params.lesson,
+      totalLessonsInCourse,
+    },
   };
 }
 
