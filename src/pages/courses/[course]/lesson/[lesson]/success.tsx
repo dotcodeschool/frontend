@@ -76,7 +76,9 @@ const SuccessPage: React.FC<SuccessPageProps> = (props: SuccessPageProps) => {
           mt={-8}
           transition="opacity 2s"
         >
-          Achievement Unlocked!
+          {Number(lesson) < totalLessonsInCourse
+            ? "Lesson Completed!"
+            : "Achievement Unlocked!"}
         </Text>
         <Text
           fontSize="lg"
@@ -85,9 +87,18 @@ const SuccessPage: React.FC<SuccessPageProps> = (props: SuccessPageProps) => {
           transitionDelay="0.5s"
           maxW="lg"
         >
-          Congratulations! You have successfully completed the {course} course.
-          You&apos;re officially one step closer to building your own blockchain
-          on Polkadot.
+          {Number(lesson) < totalLessonsInCourse ? (
+            <>
+              Lesson {lesson} of the {course} course has been successfully
+              completed. Ready for the next one?
+            </>
+          ) : (
+            <>
+              Congratulations! You have successfully completed the {course}{" "}
+              course. You&apos;re officially one step closer to building your
+              own blockchain on Polkadot.
+            </>
+          )}
         </Text>
         <VStack
           opacity={textOpacity}
