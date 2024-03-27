@@ -159,16 +159,23 @@ export default function CourseModule({
         />
         <IconButton
           as={Link}
+          display={{ base: "block", md: "none" }}
           aria-label="Submit Feedback"
           variant="solid"
           colorScheme="blue"
-          icon={<Text fontSize="xl">✍️</Text>}
+          alignContent="center"
+          icon={
+            <Text fontSize="xl" w="full" textAlign="center">
+              ✍️
+            </Text>
+          }
           position="fixed"
           bottom={20}
           right={4}
           zIndex={100}
           href={`${githubUrl}/issues/new?assignees=&labels=feedback&template=feedback.md&title=Dot+Code+School+Suggestion:+Feedback+for+Section+${lessonId}+-+Chapter+${chapterId}:+${currentChapter}`}
           isExternal
+          _hover={{ textDecor: "none" }}
         />
 
         <Grid templateColumns="repeat(12, 1fr)" gap={1} pb={24}>
