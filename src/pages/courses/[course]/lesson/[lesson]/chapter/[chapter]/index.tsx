@@ -163,9 +163,8 @@ export default function CourseModule({
           aria-label="Submit Feedback"
           variant="solid"
           colorScheme="blue"
-          alignContent="center"
           icon={
-            <Text fontSize="xl" w="full" textAlign="center">
+            <Text fontSize="xl" w="full" textAlign="center" pt="2">
               ✍️
             </Text>
           }
