@@ -88,14 +88,15 @@ export default function CourseModule({
   const toast = useToast();
 
   const [editorContent, setEditorContent] = useState(_files);
-  const [isCorrect, setIsCorrect] = useState(false);
+  const [doesMatch, setDoesMatch] = useState(false);
+  const [isAnswerOpen, setIsAnswerOpen] = useState(false);
   const [incorrectFiles, setIncorrectFiles] = useState<File[]>([]);
   const [checkedAnswer, setCheckedAnswer] = useState(false);
   const [showHints, setShowHints] = useState(false);
 
-  const checkAnswer = () => {
+  const toggleAnswer = () => {
     const incorrect: File[] = [];
-    const _isCorrectArr = map(_files, (file, index) => {
+    const _doesMatchArr = map(_files, (file, index) => {
       if (file.fileName.endsWith(".diff")) return true;
       const solutionFile = solution[index];
       // Remove comments and whitespace
@@ -113,36 +114,39 @@ export default function CourseModule({
       }
       return isFileCorrect;
     });
-    const _isCorrect = _isCorrectArr.every((isCorrect) => isCorrect);
-    if (!_isCorrect) {
+    const _doesMatch = _doesMatchArr.every((doesMatch) => doesMatch);
+    if (!_doesMatch && !isAnswerOpen) {
       setShowHints(true);
       toast.closeAll();
       toast({
-        title: "Incorrect!",
-        description: "Please try again",
-        status: "error",
-        duration: 5000,
+        title: "Your solution doesn't match ours",
+        description:
+          "This doesn't mean you're wrong! We just might have different ways of solving the problem.",
+        status: "warning",
+        duration: 9000,
         isClosable: true,
       });
     }
     setIncorrectFiles(incorrect);
-    setIsCorrect(_isCorrect);
+    setDoesMatch(_doesMatch);
     setCheckedAnswer(true);
+    setIsAnswerOpen(!isAnswerOpen);
   };
+
   useEffect(() => {
     if (checkedAnswer) {
-      if (isCorrect) {
+      if (doesMatch) {
         toast.closeAll();
         toast({
           title: "Correct!",
           description: "You have passed the lesson",
           status: "success",
-          duration: 5000,
+          duration: 9000,
           isClosable: true,
         });
       }
     }
-  }, [checkedAnswer, isCorrect, toast]);
+  }, [checkedAnswer, doesMatch, toast]);
   return (
     <Box h="100vh" position="relative">
       <Box h="95vh" px={[6, 12]} mx="auto">
@@ -204,6 +208,7 @@ export default function CourseModule({
                 solution={solution}
                 incorrectFiles={incorrectFiles}
                 showHints={showHints}
+                isAnswerOpen={isAnswerOpen}
                 editorContent={editorContent}
                 setEditorContent={setEditorContent}
                 readOnly={readOnly}
@@ -222,8 +227,9 @@ export default function CourseModule({
         chapterId={chapterId}
         current={current}
         chapters={chapters}
-        isCorrect={isCorrect}
-        {...(!isEmpty(solution) && { checkAnswer })}
+        doesMatch={doesMatch}
+        isOpen={isAnswerOpen}
+        {...(!isEmpty(solution) && { toggleAnswer })}
       />
     </Box>
   );
@@ -231,6 +237,7 @@ export default function CourseModule({
 
 interface EditorTabsProps {
   showHints: boolean;
+  isAnswerOpen: boolean;
   readOnly?: boolean;
   incorrectFiles: File[];
   solution: File[];
@@ -240,6 +247,7 @@ interface EditorTabsProps {
 
 function EditorTabs({
   showHints,
+  isAnswerOpen,
   readOnly,
   incorrectFiles,
   solution,
@@ -303,7 +311,7 @@ function EditorTabs({
         {map(editorContent, (file, i) => (
           <TabPanel key={i} h="100%" p={0} pb={showHints ? 16 : 10}>
             <Editor
-              height={showHints ? "70%" : "100%"}
+              height={isAnswerOpen ? "0%" : "100%"}
               theme="vs-dark"
               defaultLanguage={file.language || "rust"}
               defaultValue={file.code || "// placeholder"}
@@ -314,9 +322,9 @@ function EditorTabs({
                 setEditorContent(newEditorContent);
               }}
             />
-            {showHints && (
+            {isAnswerOpen && (
               <>
-                <Box borderBottom="1px solid" borderColor="whiteAlpha.200">
+                {/* <Box borderBottom="1px solid" borderColor="whiteAlpha.200">
                   <Text
                     display="inline"
                     fontSize="sm"
@@ -329,9 +337,9 @@ function EditorTabs({
                   >
                     Hints
                   </Text>
-                </Box>
+                </Box> */}
                 <DiffEditor
-                  height="30%"
+                  height="100%"
                   theme="vs-dark"
                   original={
                     showHints ? stripComments(editorContent[i]?.code) : ""

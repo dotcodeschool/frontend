@@ -24,7 +24,8 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 
 interface BottomNavbarProps {
-  isCorrect?: boolean;
+  doesMatch?: boolean;
+  isOpen?: boolean;
   courseId: string;
   lessonId: string;
   chapterId: string;
@@ -32,11 +33,12 @@ interface BottomNavbarProps {
   prev?: string;
   next?: string;
   chapters: any[];
-  checkAnswer?: () => void;
+  toggleAnswer?: () => void;
 }
 
 const BottomNavbar = ({
-  isCorrect,
+  doesMatch,
+  isOpen,
   courseId,
   lessonId,
   chapterId,
@@ -44,7 +46,7 @@ const BottomNavbar = ({
   prev,
   next,
   chapters,
-  checkAnswer,
+  toggleAnswer,
 }: BottomNavbarProps) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { data: session } = useSession();
@@ -58,70 +60,69 @@ const BottomNavbar = ({
   };
 
   // TODO: Refactor this to a custom hook
-  const saveProgress = useCallback(async (
-    courseId: string,
-    lessonId: string,
-    chapterId: string
-  ) => {
-    // Load the progress from local storage
-    const localProgress: any = localStorage.getItem("progress");
+  const saveProgress = useCallback(
+    async (courseId: string, lessonId: string, chapterId: string) => {
+      // Load the progress from local storage
+      const localProgress: any = localStorage.getItem("progress");
 
-    // Load the progress from the database
-    const savedProgress = session
-      ? await axios
-          .get("/api/get-progress", {
-            params: { user: session?.user },
-          })
-          .then((res) => {
-            return res.data.progress;
+      // Load the progress from the database
+      const savedProgress = session
+        ? await axios
+            .get("/api/get-progress", {
+              params: { user: session?.user },
+            })
+            .then((res) => {
+              return res.data.progress;
+            })
+            .catch((err) => {
+              console.error(err);
+            })
+        : null;
+
+      // Merge the progress from local storage and the database
+      const progress = JSON.parse(
+        savedProgress ? savedProgress : localProgress || "{}"
+      );
+
+      // Update the progress
+      if (!progress[courseId]) {
+        progress[courseId] = {};
+      }
+      if (!progress[courseId][lessonId]) {
+        progress[courseId][lessonId] = {};
+      }
+      progress[courseId][lessonId][chapterId] = true;
+
+      // Save the progress back to local storage
+      localStorage.setItem("progress", JSON.stringify(progress));
+
+      // Save the progress to the database
+      if (session) {
+        axios
+          .post("/api/update-progress", {
+            updates: [{ user: session?.user, progress }],
           })
           .catch((err) => {
             console.error(err);
-          })
-      : null;
-
-    // Merge the progress from local storage and the database
-    const progress = JSON.parse(
-      savedProgress ? savedProgress : localProgress || "{}"
-    );
-
-    // Update the progress
-    if (!progress[courseId]) {
-      progress[courseId] = {};
-    }
-    if (!progress[courseId][lessonId]) {
-      progress[courseId][lessonId] = {};
-    }
-    progress[courseId][lessonId][chapterId] = true;
-
-    // Save the progress back to local storage
-    localStorage.setItem("progress", JSON.stringify(progress));
-
-    // Save the progress to the database
-    if (session) {
-      axios
-        .post("/api/update-progress", {
-          updates: [{ user: session?.user, progress }],
-        })
-        .catch((err) => {
-          console.error(err);
-          const pendingUpdates = JSON.parse(
-            localStorage.getItem("pendingUpdates") || "[]"
-          );
-          pendingUpdates.push({ courseId, lessonId, chapterId });
-          localStorage.setItem(
-            "pendingUpdates",
-            JSON.stringify(pendingUpdates)
-          );
-        });
-    } else {
-      const pendingUpdates = JSON.parse(
-        localStorage.getItem("pendingUpdates") || "[]"
-      );
-      pendingUpdates.push({ courseId, lessonId, chapterId });
-      localStorage.setItem("pendingUpdates", JSON.stringify(pendingUpdates));
-    }
-  }, [session]);
+            const pendingUpdates = JSON.parse(
+              localStorage.getItem("pendingUpdates") || "[]"
+            );
+            pendingUpdates.push({ courseId, lessonId, chapterId });
+            localStorage.setItem(
+              "pendingUpdates",
+              JSON.stringify(pendingUpdates)
+            );
+          });
+      } else {
+        const pendingUpdates = JSON.parse(
+          localStorage.getItem("pendingUpdates") || "[]"
+        );
+        pendingUpdates.push({ courseId, lessonId, chapterId });
+        localStorage.setItem("pendingUpdates", JSON.stringify(pendingUpdates));
+      }
+    },
+    [session]
+  );
 
   useEffect(() => {
     const syncProgress = () => {
@@ -156,8 +157,8 @@ const BottomNavbar = ({
         />
 
         <Flex gap={2}>
-          {checkAnswer &&
-            (isCorrect ? (
+          {toggleAnswer &&
+            (doesMatch ? (
               <Button
                 variant="ghost"
                 colorScheme="green"
@@ -168,8 +169,9 @@ const BottomNavbar = ({
                 Correct
               </Button>
             ) : (
-              <Button variant="outline" onClick={checkAnswer}>
-                Check Answers
+              <Button variant="outline" onClick={toggleAnswer}>
+                {isOpen ? "Hide" : "Show"}{" "}
+                Answer
               </Button>
             ))}
           {prev ? (
