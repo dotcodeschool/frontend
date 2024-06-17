@@ -323,31 +323,15 @@ function EditorTabs({
               }}
             />
             {isAnswerOpen && (
-              <>
-                {/* <Box borderBottom="1px solid" borderColor="whiteAlpha.200">
-                  <Text
-                    display="inline"
-                    fontSize="sm"
-                    color="gray.400"
-                    border="1px solid"
-                    borderColor="whiteAlpha.200"
-                    borderTopRadius={6}
-                    px={4}
-                    py={1}
-                  >
-                    Hints
-                  </Text>
-                </Box> */}
-                <DiffEditor
-                  height="100%"
-                  theme="vs-dark"
-                  original={
-                    showHints ? stripComments(editorContent[i]?.code) : ""
-                  }
-                  modified={showHints ? stripComments(solution[i]?.code) : ""}
-                  options={{ readOnly: true, comments: false }}
-                />
-              </>
+              <DiffEditor
+                height="100%"
+                theme="vs-dark"
+                original={
+                  showHints ? stripComments(editorContent[i]?.code) : ""
+                }
+                modified={showHints ? stripComments(solution[i]?.code) : ""}
+                options={{ readOnly: true, comments: false }}
+              />
             )}
           </TabPanel>
         ))}
