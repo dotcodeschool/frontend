@@ -81,7 +81,7 @@ const BottomNavbar = ({
 
       // Merge the progress from local storage and the database
       const progress = JSON.parse(
-        savedProgress ? savedProgress : localProgress || "{}"
+        savedProgress ? savedProgress : localProgress || "{}",
       );
 
       // Update the progress
@@ -105,30 +105,30 @@ const BottomNavbar = ({
           .catch((err) => {
             console.error(err);
             const pendingUpdates = JSON.parse(
-              localStorage.getItem("pendingUpdates") || "[]"
+              localStorage.getItem("pendingUpdates") || "[]",
             );
             pendingUpdates.push({ courseId, lessonId, chapterId });
             localStorage.setItem(
               "pendingUpdates",
-              JSON.stringify(pendingUpdates)
+              JSON.stringify(pendingUpdates),
             );
           });
       } else {
         const pendingUpdates = JSON.parse(
-          localStorage.getItem("pendingUpdates") || "[]"
+          localStorage.getItem("pendingUpdates") || "[]",
         );
         pendingUpdates.push({ courseId, lessonId, chapterId });
         localStorage.setItem("pendingUpdates", JSON.stringify(pendingUpdates));
       }
     },
-    [session]
+    [session],
   );
 
   useEffect(() => {
     const syncProgress = () => {
       if (session) {
         const pendingUpdates = JSON.parse(
-          localStorage.getItem("pendingUpdates") || "[]"
+          localStorage.getItem("pendingUpdates") || "[]",
         );
         pendingUpdates.forEach((update: any) => {
           saveProgress(update.courseId, update.lessonId, update.chapterId);
@@ -170,8 +170,7 @@ const BottomNavbar = ({
               </Button>
             ) : (
               <Button variant="outline" onClick={toggleAnswer}>
-                {isOpen ? "Hide" : "Show"}{" "}
-                Answer
+                {isOpen ? "Hide" : "Show"} Answer
               </Button>
             ))}
           {prev ? (

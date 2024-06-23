@@ -1,5 +1,5 @@
-import Navbar from "@/app/common/components/navbar";
-import PrimaryButton from "@/app/common/components/primary-button";
+import Navbar from "@/components/navbar";
+import PrimaryButton from "@/components/primary-button";
 import { getContentByType } from "@/pages/api/get-content";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { Box, Card, Heading, Link, Stack, Text } from "@chakra-ui/react";

@@ -227,7 +227,7 @@ const Navbar = ({
   useEffect(() => {
     if (status === "authenticated") {
       const pendingUpdates = JSON.parse(
-        localStorage.getItem("pendingUpdates") || "[]"
+        localStorage.getItem("pendingUpdates") || "[]",
       );
 
       const updates = pendingUpdates.map(
@@ -245,7 +245,7 @@ const Navbar = ({
             user: session?.user,
             progress,
           };
-        }
+        },
       );
 
       if (pendingUpdates.length > 0) {

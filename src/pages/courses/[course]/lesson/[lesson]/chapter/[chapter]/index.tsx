@@ -6,35 +6,22 @@ import {
   GridItem,
   IconButton,
   Link,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
   Text,
   useToast,
 } from "@chakra-ui/react";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
-import _, {
-  filter,
-  find,
-  flatMapDeep,
-  isEmpty,
-  map,
-  matches,
-  nth,
-} from "lodash";
+import _, { endsWith, find, flatMapDeep, isEmpty, map, nth } from "lodash";
 import { serialize } from "next-mdx-remote/serialize";
-import Editor, { DiffEditor } from "@monaco-editor/react";
 import stripComments from "strip-comments";
 
 import { getContentById, getContentByType } from "@/pages/api/get-content";
-import MDXComponents from "@/app/common/components/lessons-interface/mdx-components";
-import Navbar from "@/app/common/components/navbar";
-import TerminalEmulator from "@/app/common/components/lessons-interface/terminal-emulator";
-import BottomNavbar from "@/app/common/components/lessons-interface/bottom-navbar";
+import MDXComponents from "@/components/lessons-interface/mdx-components";
+import Navbar from "@/components/navbar";
+import BottomNavbar from "@/components/lessons-interface/bottom-navbar";
 import { useEffect, useState } from "react";
+import EditorTabs from "@/components/lessons-interface/editor-tabs";
 
+// TODO: Move to type.ts file
 type File = {
   fileName: string;
   code: string;
@@ -60,12 +47,6 @@ interface Props {
   githubUrl: string;
 }
 
-const MODES = {
-  TERMINAL: "terminal",
-  EDITOR: "editor",
-};
-const MODE = MODES.EDITOR;
-
 export default function CourseModule({
   courseId,
   lessonId,
@@ -81,13 +62,16 @@ export default function CourseModule({
   const { source, template, solution } = files;
 
   const readOnly = isEmpty(solution);
-  const rawFiles = !isEmpty(source) ? source : template;
-  const _files = filter(rawFiles, (file) => !file.fileName.endsWith(".diff"));
+  const startingFiles = !isEmpty(source) ? source : template;
+  const rawFiles = startingFiles.map((file) => ({
+    ...file,
+    language: endsWith(file.fileName, ".diff") ? "diff" : "rust",
+  }));
 
   const currentChapter = chapters[Number(chapterId) - 1]?.title;
   const toast = useToast();
 
-  const [editorContent, setEditorContent] = useState(_files);
+  const [editorContent, setEditorContent] = useState(rawFiles);
   const [doesMatch, setDoesMatch] = useState(false);
   const [isAnswerOpen, setIsAnswerOpen] = useState(false);
   const [incorrectFiles, setIncorrectFiles] = useState<File[]>([]);
@@ -96,7 +80,7 @@ export default function CourseModule({
 
   const toggleAnswer = () => {
     const incorrect: File[] = [];
-    const _doesMatchArr = map(_files, (file, index) => {
+    const _doesMatchArr = map(rawFiles, (file, index) => {
       if (file.fileName.endsWith(".diff")) return true;
       const solutionFile = solution[index];
       // Remove comments and whitespace
@@ -147,6 +131,7 @@ export default function CourseModule({
       }
     }
   }, [checkedAnswer, doesMatch, toast]);
+
   return (
     <Box h="100vh" position="relative">
       <Box h="95vh" px={[6, 12]} mx="auto">
@@ -203,19 +188,15 @@ export default function CourseModule({
             <MDXRemote {...mdxSource} components={MDXComponents} />
           </GridItem>
           <GridItem colSpan={[12, 7]} overflow="clip">
-            {MODE === MODES.EDITOR ? (
-              <EditorTabs
-                solution={solution}
-                incorrectFiles={incorrectFiles}
-                showHints={showHints}
-                isAnswerOpen={isAnswerOpen}
-                editorContent={editorContent}
-                setEditorContent={setEditorContent}
-                readOnly={readOnly}
-              />
-            ) : (
-              <TerminalEmulator h="100%" />
-            )}
+            <EditorTabs
+              showHints={showHints}
+              isAnswerOpen={isAnswerOpen}
+              readOnly={readOnly}
+              incorrectFiles={incorrectFiles}
+              solution={solution}
+              editorContent={editorContent}
+              setEditorContent={setEditorContent}
+            />
           </GridItem>
         </Grid>
       </Box>
@@ -232,111 +213,6 @@ export default function CourseModule({
         {...(!isEmpty(solution) && { toggleAnswer })}
       />
     </Box>
-  );
-}
-
-interface EditorTabsProps {
-  showHints: boolean;
-  isAnswerOpen: boolean;
-  readOnly?: boolean;
-  incorrectFiles: File[];
-  solution: File[];
-  editorContent: File[];
-  setEditorContent: (editorContent: File[]) => void;
-}
-
-function EditorTabs({
-  showHints,
-  isAnswerOpen,
-  readOnly,
-  incorrectFiles,
-  solution,
-  editorContent,
-  setEditorContent,
-}: EditorTabsProps) {
-  return (
-    <Tabs
-      variant="enclosed"
-      p={1}
-      h={"80vh"}
-      border="1px solid"
-      borderColor="whiteAlpha.200"
-      bg="#1e1e1e"
-      rounded={8}
-    >
-      <TabList
-        overflowX="auto"
-        overflowY="hidden"
-        gap={1}
-        sx={{
-          "::-webkit-scrollbar": {
-            height: "1px",
-            borderRadius: "8px",
-          },
-          "::-webkit-scrollbar-thumb": {
-            height: "1px",
-            borderRadius: "8px",
-          },
-          ":hover::-webkit-scrollbar-thumb": { background: "gray.700" },
-        }}
-      >
-        {map(editorContent, (file, i) => {
-          const incorrectColor = find(
-            incorrectFiles,
-            matches({ fileName: file.fileName })
-          )
-            ? "red.300"
-            : null;
-          return (
-            <Tab
-              key={i}
-              border="none"
-              color={incorrectColor ? incorrectColor : "whiteAlpha.600"}
-              _hover={{
-                bg: "whiteAlpha.200",
-              }}
-              _selected={{
-                bg: "whiteAlpha.200",
-                color: incorrectColor ? incorrectColor : "orange.200",
-                borderBottom: "2px solid",
-                borderColor: incorrectColor ? incorrectColor : "orange.200",
-              }}
-            >
-              {file.fileName}
-            </Tab>
-          );
-        })}
-      </TabList>
-      <TabPanels h="full" pt={2}>
-        {map(editorContent, (file, i) => (
-          <TabPanel key={i} h="100%" p={0} pb={showHints ? 16 : 10}>
-            <Editor
-              height={isAnswerOpen ? "0%" : "100%"}
-              theme="vs-dark"
-              defaultLanguage={file.language || "rust"}
-              defaultValue={file.code || "// placeholder"}
-              options={{ readOnly: readOnly }}
-              onChange={(value) => {
-                const newEditorContent = [...editorContent];
-                newEditorContent[i].code = value?.toString() || "";
-                setEditorContent(newEditorContent);
-              }}
-            />
-            {isAnswerOpen && (
-              <DiffEditor
-                height="100%"
-                theme="vs-dark"
-                original={
-                  showHints ? stripComments(editorContent[i]?.code) : ""
-                }
-                modified={showHints ? stripComments(solution[i]?.code) : ""}
-                options={{ readOnly: true, comments: false }}
-              />
-            )}
-          </TabPanel>
-        ))}
-      </TabPanels>
-    </Tabs>
   );
 }
 
@@ -392,7 +268,7 @@ export async function getStaticProps({
   const chapters = lessonModule?.fields.lessons;
 
   const entries: any = await Promise.all(
-    map(chapters, (chapter) => fetchEntry(chapter.sys.id))
+    map(chapters, (chapter) => fetchEntry(chapter.sys.id)),
   ).catch(console.error);
 
   const entry = entries[parsedChapter - 1];
@@ -400,13 +276,13 @@ export async function getStaticProps({
   const files = entry.fields.files;
 
   const source = await Promise.all(map(files.fields.source, fetchFile)).catch(
-    console.error
+    console.error,
   );
   const template = await Promise.all(
-    map(files.fields.template, fetchFile)
+    map(files.fields.template, fetchFile),
   ).catch(console.error);
   const solution = await Promise.all(
-    map(files.fields.solution, fetchFile)
+    map(files.fields.solution, fetchFile),
   ).catch(console.error);
 
   const lessonContent: any = entry.fields.lessonContent;
@@ -452,7 +328,7 @@ function getSections(entry: any) {
   const sections = entry.fields.sections;
   if (!sections || !Array.isArray(sections) || sections.length === 0) {
     throw new Error(
-      "Failed to fetch the entry from Contentful or sections array is null or empty"
+      "Failed to fetch the entry from Contentful or sections array is null or empty",
     );
   }
   return sections;
@@ -494,9 +370,9 @@ export async function getStaticPaths() {
               },
             };
           });
-        })
+        }),
       );
-    })
+    }),
   );
 
   const flattenedPaths = flatMapDeep(paths);
