@@ -1,7 +1,18 @@
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+import {
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  IconButton,
+  Flex,
+  Tooltip,
+} from "@chakra-ui/react";
 import { DiffEditor, Editor } from "@monaco-editor/react";
-import { map, find, matches, endsWith } from "lodash";
+import { map, find, matches, endsWith, repeat } from "lodash";
 import stripComments from "strip-comments";
+import { FiMaximize2 } from "react-icons/fi";
+import { IoGitCompareOutline } from "react-icons/io5";
 import { parseDiff } from "@/utils";
 
 // TODO: Move to a types.ts file
@@ -32,59 +43,82 @@ const EditorTabs = ({
 }: EditorTabsProps) => {
   return (
     <Tabs
-      variant="enclosed"
-      p={1}
+      variant="unstyled"
       h="80vh"
       border="1px solid"
       borderColor="whiteAlpha.200"
-      bg="#1e1e1e"
-      rounded={8}
+      bg="#2e2e2e"
       w="auto"
     >
-      <TabList
-        overflowX="auto"
-        overflowY="hidden"
-        gap={1}
-        sx={{
-          "::-webkit-scrollbar": {
-            height: "1px",
-            borderRadius: "8px",
-          },
-          "::-webkit-scrollbar-thumb": {
-            height: "1px",
-            borderRadius: "8px",
-          },
-          ":hover::-webkit-scrollbar-thumb": { background: "gray.700" },
-        }}
-      >
-        {map(editorContent, (file, i) => {
-          const incorrectColor = find(
-            incorrectFiles,
-            matches({ fileName: file.fileName }),
-          )
-            ? "red.300"
-            : null;
-          return (
-            !endsWith(file.fileName, ".diff") && (
-              <Tab
-                key={i}
-                border="none"
-                color={incorrectColor ? incorrectColor : "whiteAlpha.600"}
-                _hover={{ bg: "whiteAlpha.200" }}
-                _selected={{
-                  bg: "whiteAlpha.200",
-                  color: incorrectColor ? incorrectColor : "orange.200",
-                  borderBottom: "2px solid",
-                  borderColor: incorrectColor ? incorrectColor : "orange.200",
-                }}
-              >
-                {file.fileName}
-              </Tab>
+      <TabList>
+        <Flex
+          position="relative"
+          w="full"
+          sx={{
+            overflowX: "auto",
+            height: "100%",
+            "::-webkit-scrollbar": {
+              height: "2px",
+            },
+            ":hover::-webkit-scrollbar-thumb": { background: "whiteAlpha.300" },
+          }}
+        >
+          {map(editorContent, (file, i) => {
+            const incorrectColor = find(
+              incorrectFiles,
+              matches({ fileName: file.fileName }),
             )
-          );
-        })}
+              ? "red.300"
+              : null;
+            return (
+              !endsWith(file.fileName, ".diff") && (
+                <Tab
+                  key={i}
+                  borderRight="1px solid"
+                  borderRightColor="#111111"
+                  color={incorrectColor ? incorrectColor : "whiteAlpha.600"}
+                  _hover={{ bg: "whiteAlpha.300" }}
+                  _selected={{
+                    bg: "whiteAlpha.100",
+                    color: incorrectColor ? incorrectColor : "orange.200",
+                    borderBottom: "1px solid",
+                    borderColor: incorrectColor ? incorrectColor : "orange.200",
+                    borderRightColor: "#111111",
+                  }}
+                >
+                  {file.fileName}
+                </Tab>
+              )
+            );
+          })}
+        </Flex>
+        <Flex alignItems="center" px={2}>
+          <Tooltip
+            hasArrow
+            maxW={32}
+            label="Enter Fullscreen Code Editor"
+            textAlign="center"
+          >
+            <IconButton
+              size="sm"
+              bg="none"
+              p={0}
+              aria-label="Enter Fullscreen Code Editor"
+              icon={<FiMaximize2 size={18} />}
+            />
+          </Tooltip>
+          <Tooltip hasArrow maxW={32} label="Open Changes" textAlign="center">
+            <IconButton
+              size="sm"
+              bg="none"
+              p={0}
+              aria-label="Open Changes"
+              icon={<IoGitCompareOutline size={18} />}
+            />
+          </Tooltip>
+        </Flex>
       </TabList>
-      <TabPanels h="87%" pt={2}>
+      <TabPanels h="90%">
         {map(editorContent, (file, i) => (
           <TabPanel key={i} h="100%" p={0} pb={0}>
             {file.language === "diff" ? (
