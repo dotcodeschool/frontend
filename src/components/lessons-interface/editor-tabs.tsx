@@ -9,9 +9,9 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { DiffEditor, Editor } from "@monaco-editor/react";
-import { map, find, matches, endsWith, repeat } from "lodash";
+import { map, find, matches, endsWith } from "lodash";
 import stripComments from "strip-comments";
-import { FiMaximize2 } from "react-icons/fi";
+import { FiMaximize2, FiMinimize2 } from "react-icons/fi";
 import { IoGitCompareOutline } from "react-icons/io5";
 import { parseDiff } from "@/utils";
 
@@ -22,13 +22,16 @@ type File = {
   language: string;
 };
 
-interface EditorTabsProps {
+export interface EditorTabsProps {
   showHints: boolean;
   isAnswerOpen: boolean;
   readOnly?: boolean;
   incorrectFiles: File[];
   solution: File[];
   editorContent: File[];
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
   setEditorContent: (editorContent: File[]) => void;
 }
 
@@ -39,12 +42,15 @@ const EditorTabs = ({
   incorrectFiles,
   solution,
   editorContent,
+  isOpen,
+  onOpen,
+  onClose,
   setEditorContent,
 }: EditorTabsProps) => {
   return (
     <Tabs
       variant="unstyled"
-      h="80vh"
+      h={isOpen ? "100vh" : "80vh"}
       border="1px solid"
       borderColor="whiteAlpha.200"
       bg="#2e2e2e"
@@ -93,20 +99,6 @@ const EditorTabs = ({
           })}
         </Flex>
         <Flex alignItems="center" px={2}>
-          <Tooltip
-            hasArrow
-            maxW={32}
-            label="Enter Fullscreen Code Editor"
-            textAlign="center"
-          >
-            <IconButton
-              size="sm"
-              bg="none"
-              p={0}
-              aria-label="Enter Fullscreen Code Editor"
-              icon={<FiMaximize2 size={18} />}
-            />
-          </Tooltip>
           <Tooltip hasArrow maxW={32} label="Open Changes" textAlign="center">
             <IconButton
               size="sm"
@@ -114,6 +106,31 @@ const EditorTabs = ({
               p={0}
               aria-label="Open Changes"
               icon={<IoGitCompareOutline size={18} />}
+            />
+          </Tooltip>
+          <Tooltip
+            hasArrow
+            maxW={32}
+            label={
+              isOpen
+                ? "Exit Fullscreen Code Editor"
+                : "Enter Fullscreen Code Editor"
+            }
+            textAlign="center"
+          >
+            <IconButton
+              size="sm"
+              bg="none"
+              p={0}
+              aria-label={
+                isOpen
+                  ? "Exit Fullscreen Code Editor"
+                  : "Enter Fullscreen Code Editor"
+              }
+              icon={
+                isOpen ? <FiMinimize2 size={18} /> : <FiMaximize2 size={18} />
+              }
+              onClick={isOpen ? onClose : onOpen}
             />
           </Tooltip>
         </Flex>

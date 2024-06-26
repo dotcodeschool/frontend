@@ -7,6 +7,7 @@ import {
   IconButton,
   Link,
   Text,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
@@ -20,6 +21,7 @@ import Navbar from "@/components/navbar";
 import BottomNavbar from "@/components/lessons-interface/bottom-navbar";
 import { useEffect, useState } from "react";
 import EditorTabs from "@/components/lessons-interface/editor-tabs";
+import FullscreenEditorModal from "@/components/lessons-interface/fullscreen-editor-modal";
 
 // TODO: Move to type.ts file
 type File = {
@@ -72,6 +74,7 @@ export default function CourseModule({
   const toast = useToast();
 
   const [editorContent, setEditorContent] = useState(rawFiles);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [doesMatch, setDoesMatch] = useState(false);
   const [isAnswerOpen, setIsAnswerOpen] = useState(false);
   const [incorrectFiles, setIncorrectFiles] = useState<File[]>([]);
@@ -195,7 +198,25 @@ export default function CourseModule({
               incorrectFiles={incorrectFiles}
               solution={solution}
               editorContent={editorContent}
+              isOpen={isOpen}
+              onOpen={onOpen}
+              onClose={onClose}
               setEditorContent={setEditorContent}
+            />
+            <FullscreenEditorModal
+              isOpen={isOpen}
+              editorProps={{
+                showHints,
+                isAnswerOpen,
+                readOnly,
+                incorrectFiles,
+                solution,
+                editorContent,
+                isOpen,
+                setEditorContent,
+                onOpen,
+                onClose,
+              }}
             />
           </GridItem>
         </Grid>
