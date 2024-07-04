@@ -44,7 +44,7 @@ interface ModuleProps {
   slug: string;
 }
 
-const Module = ({ module, slug }: ModuleProps) => {
+const ModuleItem = ({ module, slug }: ModuleProps) => {
   const { index, title, description } = module;
   const [progress, setProgress] = useState(0);
   const progressData = useContext(ProgressProvider);
@@ -249,7 +249,7 @@ const CoursePage = ({
           </Text>
           <Accordion allowToggle>
             {modules.map((module, index) => (
-              <Module key={index} module={module} slug={slug} />
+              <ModuleItem key={index} module={module} slug={slug} />
             ))}
           </Accordion>
         </Box>
