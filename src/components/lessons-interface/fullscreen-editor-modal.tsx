@@ -2,8 +2,6 @@ import {
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
-  ModalCloseButton,
   ModalBody,
 } from "@chakra-ui/react";
 import EditorTabs, { EditorTabsProps } from "./editor-tabs";
@@ -11,7 +9,6 @@ import EditorTabs, { EditorTabsProps } from "./editor-tabs";
 interface FullscreenEditorModalProps {
   isOpen: boolean;
   editorProps: EditorTabsProps;
-  handleClose
 }
 
 const FullscreenEditorModal = ({ editorProps }: FullscreenEditorModalProps) => {

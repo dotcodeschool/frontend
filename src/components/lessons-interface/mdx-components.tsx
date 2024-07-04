@@ -36,7 +36,6 @@ const PreComponent = (props: any) => {
         }
       >
         {({
-          className,
           style,
           tokens,
           getLineProps,

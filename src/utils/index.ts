@@ -1,7 +1,4 @@
-import stripComments from "strip-comments";
-import { getContentById, getContentByType } from "@/pages/api/get-content";
-import { find, map, nth } from "lodash";
-import { serialize } from "next-mdx-remote/serialize";
+import { getContentById } from "@/pages/api/get-content";
 
 export async function fetchEntry(id: string) {
   const entry = await getContentById(id);

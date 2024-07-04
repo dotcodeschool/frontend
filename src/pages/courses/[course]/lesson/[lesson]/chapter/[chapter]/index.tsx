@@ -11,7 +11,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
-import _, { endsWith, find, flatMapDeep, isEmpty, map, nth } from "lodash";
+import { endsWith, find, flatMapDeep, isEmpty, map, nth } from "lodash";
 import { serialize } from "next-mdx-remote/serialize";
 import stripComments from "strip-comments";
 

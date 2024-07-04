@@ -48,11 +48,6 @@ export default function CoursesPage({ courses }: { courses: any[] }) {
   );
 }
 
-type Author = {
-  name: string;
-  url: string;
-};
-
 export async function getStaticProps() {
   const res = await getContentByType("courseModule");
   const entry = res.items.map((item) => item.fields);

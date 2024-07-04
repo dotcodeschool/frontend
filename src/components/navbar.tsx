@@ -220,7 +220,7 @@ const Navbar = ({
     };
   }
 
-  const { courseId, lessonId, chapterId, chapters, githubUrl } = lessonDetails;
+  const { lessonId, chapterId, chapters, githubUrl } = lessonDetails;
   const currentChapter = chapters[Number(chapterId) - 1]?.title;
 
   // TODO: Move this to a custom hook
