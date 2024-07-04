@@ -24,6 +24,10 @@ type File = {
   language: string;
 };
 
+interface setEditorContent {
+  (newEditorContent: File[]): void;
+}
+
 export interface EditorTabsProps {
   showHints: boolean;
   isAnswerOpen: boolean;
@@ -34,7 +38,7 @@ export interface EditorTabsProps {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
-  setEditorContent: (editorContent: File[]) => void;
+  setEditorContent: setEditorContent;
 }
 
 const EditorTabs = ({
@@ -62,7 +66,7 @@ const EditorTabs = ({
     } else {
       setTabIndex(0);
     }
-  }, [showDiff]);
+  }, [showDiff, editorContent.length]);
   return (
     <Tabs
       index={tabIndex}
