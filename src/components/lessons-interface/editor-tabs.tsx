@@ -7,6 +7,7 @@ import {
   IconButton,
   Flex,
   Tooltip,
+  CloseButton,
 } from "@chakra-ui/react";
 import { DiffEditor, Editor } from "@monaco-editor/react";
 import { map, find, matches, endsWith } from "lodash";
@@ -14,6 +15,7 @@ import stripComments from "strip-comments";
 import { FiMaximize2, FiMinimize2 } from "react-icons/fi";
 import { IoGitCompareOutline } from "react-icons/io5";
 import { parseDiff } from "@/utils";
+import { useEffect, useState } from "react";
 
 // TODO: Move to a types.ts file
 type File = {
@@ -47,8 +49,24 @@ const EditorTabs = ({
   onClose,
   setEditorContent,
 }: EditorTabsProps) => {
+  const [tabIndex, setTabIndex] = useState(0);
+  const [showDiff, setShowDiff] = useState(false);
+
+  const handleTabsChange = (index: number) => {
+    setTabIndex(index);
+  };
+
+  useEffect(() => {
+    if (showDiff) {
+      setTabIndex(editorContent.length - 1);
+    } else {
+      setTabIndex(0);
+    }
+  }, [showDiff]);
   return (
     <Tabs
+      index={tabIndex}
+      onChange={handleTabsChange}
       variant="unstyled"
       h={isOpen ? "100vh" : "80vh"}
       border="1px solid"
@@ -77,35 +95,65 @@ const EditorTabs = ({
               ? "red.300"
               : null;
             return (
-              !endsWith(file.fileName, ".diff") && (
-                <Tab
-                  key={i}
-                  borderRight="1px solid"
-                  borderRightColor="#111111"
-                  color={incorrectColor ? incorrectColor : "whiteAlpha.600"}
-                  _hover={{ bg: "whiteAlpha.300" }}
-                  _selected={{
-                    bg: "whiteAlpha.100",
-                    color: incorrectColor ? incorrectColor : "orange.200",
-                    borderBottom: "1px solid",
-                    borderColor: incorrectColor ? incorrectColor : "orange.200",
-                    borderRightColor: "#111111",
-                  }}
-                >
-                  {file.fileName}
-                </Tab>
-              )
+              <Tab
+                key={i}
+                as={
+                  showDiff && endsWith(file.fileName, ".diff") ? "i" : undefined
+                }
+                display={
+                  !showDiff && endsWith(file.fileName, ".diff")
+                    ? "none"
+                    : "block"
+                }
+                borderRight="1px solid"
+                borderRightColor="#111111"
+                color={incorrectColor ? incorrectColor : "whiteAlpha.600"}
+                _hover={{ bg: "whiteAlpha.300" }}
+                _selected={{
+                  bg: "whiteAlpha.100",
+                  color: incorrectColor ? incorrectColor : "orange.200",
+                  borderBottom: "1px solid",
+                  borderColor: incorrectColor ? incorrectColor : "orange.200",
+                  borderRightColor: "#111111",
+                }}
+              >
+                {file.fileName}
+                {showDiff && endsWith(file.fileName, ".diff") && (
+                  <>
+                    &nbsp;(Prev. Changes)
+                    <CloseButton
+                      display={"inline"}
+                      size="sm"
+                      p={0}
+                      verticalAlign="middle"
+                      h="fit-content"
+                      bg="transparent"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowDiff(false);
+                        setTabIndex(0);
+                      }}
+                    />
+                  </>
+                )}
+              </Tab>
             );
           })}
         </Flex>
         <Flex alignItems="center" px={2}>
-          <Tooltip hasArrow maxW={32} label="Open Changes" textAlign="center">
+          <Tooltip
+            hasArrow
+            maxW={32}
+            label={showDiff ? "Hide Changes" : "Open Changes"}
+            textAlign="center"
+          >
             <IconButton
               size="sm"
               bg="none"
               p={0}
-              aria-label="Open Changes"
+              aria-label={showDiff ? "Hide Changes" : "Open Changes"}
               icon={<IoGitCompareOutline size={18} />}
+              onClick={() => setShowDiff(!showDiff)}
             />
           </Tooltip>
           <Tooltip
