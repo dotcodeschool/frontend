@@ -80,6 +80,16 @@ export default function CourseModule({
   const [incorrectFiles, setIncorrectFiles] = useState<File[]>([]);
   const [checkedAnswer, setCheckedAnswer] = useState(false);
   const [showHints, setShowHints] = useState(false);
+  const [tabIndex, setTabIndex] = useState(0);
+  const [showDiff, setShowDiff] = useState(false);
+
+  useEffect(() => {
+    if (showDiff) {
+      setTabIndex(editorContent.length - 1);
+    } else {
+      setTabIndex(0);
+    }
+  }, [showDiff, editorContent.length]);
 
   const toggleAnswer = () => {
     const incorrect: File[] = [];
@@ -199,6 +209,10 @@ export default function CourseModule({
               solution={solution}
               editorContent={editorContent}
               isOpen={isOpen}
+              tabIndex={tabIndex}
+              showDiff={showDiff}
+              setShowDiff={setShowDiff}
+              setTabIndex={setTabIndex}
               onOpen={onOpen}
               onClose={onClose}
               setEditorContent={setEditorContent}
@@ -213,6 +227,10 @@ export default function CourseModule({
                 solution,
                 editorContent,
                 isOpen,
+                tabIndex,
+                showDiff,
+                setShowDiff,
+                setTabIndex,
                 setEditorContent,
                 onOpen,
                 onClose,
