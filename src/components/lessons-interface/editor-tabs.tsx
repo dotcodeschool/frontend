@@ -205,11 +205,13 @@ const EditorTabs = ({
               />
             ) : (
               <Editor
+                key={i + file.fileName}
                 height={isAnswerOpen ? "0%" : "100%"}
                 theme="vs-dark"
                 defaultLanguage={file.language || "rust"}
                 defaultValue={file.code || "// placeholder"}
                 options={{ readOnly: readOnly || file.language === "diff" }}
+                value={file.code}
                 onChange={(value) => {
                   const newEditorContent = [...editorContent];
                   newEditorContent[i].code = value?.toString() || "";
