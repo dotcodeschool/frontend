@@ -220,14 +220,14 @@ const Navbar = ({
     };
   }
 
-  const { courseId, lessonId, chapterId, chapters, githubUrl } = lessonDetails;
+  const { lessonId, chapterId, chapters, githubUrl } = lessonDetails;
   const currentChapter = chapters[Number(chapterId) - 1]?.title;
 
   // TODO: Move this to a custom hook
   useEffect(() => {
     if (status === "authenticated") {
       const pendingUpdates = JSON.parse(
-        localStorage.getItem("pendingUpdates") || "[]"
+        localStorage.getItem("pendingUpdates") || "[]",
       );
 
       const updates = pendingUpdates.map(
@@ -245,7 +245,7 @@ const Navbar = ({
             user: session?.user,
             progress,
           };
-        }
+        },
       );
 
       if (pendingUpdates.length > 0) {

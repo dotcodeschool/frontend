@@ -92,7 +92,6 @@ docker build . -t dotcodeschool-frontend:latest && docker run -p 3000:3000 dotco
 
 Open [http://localhost:3000](http://localhost:3000) on your browser to interact with the UI locally.
 
-
 ## Deploy on Vercel
 
 The easiest way to deploy your the app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.

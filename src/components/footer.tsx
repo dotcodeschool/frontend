@@ -1,4 +1,4 @@
-import { Box, HStack, Link, Text } from "@chakra-ui/react";
+import { Box, HStack, Link } from "@chakra-ui/react";
 import { FaDiscord, FaEnvelope, FaGithub, FaTwitter } from "react-icons/fa";
 
 const socialLinks = [

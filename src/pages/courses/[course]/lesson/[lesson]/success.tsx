@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { FaTwitter, FaDiscord, FaArrowRight } from "react-icons/fa";
 import successAnimation from "@/../public/static/successAnimation.json";
-import Navbar from "@/app/common/components/navbar";
+import Navbar from "@/components/navbar";
 import { getContentByType } from "@/pages/api/get-content";
 import { flatMapDeep, size } from "lodash";
 
@@ -27,7 +27,7 @@ interface SuccessPageProps {
 const SuccessPage: React.FC<SuccessPageProps> = (props: SuccessPageProps) => {
   const { slug, course, lesson, totalLessonsInCourse } = props;
   const tweetText = encodeURIComponent(
-    `I just completed the ${course} course on @dotcodeschool.\n\nNow, I am one step closer to building my own blockchain on @Polkadot.`
+    `I just completed the ${course} course on @dotcodeschool.\n\nNow, I am one step closer to building my own blockchain on @Polkadot.`,
   );
 
   const lottieContainerRef = React.useRef<HTMLDivElement | null>(null);
@@ -184,7 +184,7 @@ export default SuccessPage;
 export async function getStaticProps({ params }: any) {
   const res = await getContentByType("courseModule");
   const course = res.items.find(
-    (item: any) => item.fields.slug === params.course
+    (item: any) => item.fields.slug === params.course,
   );
   const sections = course?.fields.sections;
 

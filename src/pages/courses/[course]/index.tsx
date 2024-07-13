@@ -1,7 +1,7 @@
 // TODO: Refactoring
 
-import Navbar from "@/app/common/components/navbar";
-import PrimaryButton from "@/app/common/components/primary-button";
+import Navbar from "@/components/navbar";
+import PrimaryButton from "@/components/primary-button";
 import { ArrowBackIcon, CheckCircleIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -44,7 +44,7 @@ interface ModuleProps {
   slug: string;
 }
 
-const Module = ({ module, slug }: ModuleProps) => {
+const ModuleItem = ({ module, slug }: ModuleProps) => {
   const { index, title, description } = module;
   const [progress, setProgress] = useState(0);
   const progressData = useContext(ProgressProvider);
@@ -72,7 +72,7 @@ const Module = ({ module, slug }: ModuleProps) => {
 
       return count;
     },
-    []
+    [],
   );
 
   useEffect(() => {
@@ -80,11 +80,11 @@ const Module = ({ module, slug }: ModuleProps) => {
       const completedChaptersCount = countCompletedChapters(
         slug,
         `${index + 1}`,
-        progressData
+        progressData,
       );
 
       const _progress = Number(
-        ((completedChaptersCount / module.numOfLessons) * 100).toFixed(0)
+        ((completedChaptersCount / module.numOfLessons) * 100).toFixed(0),
       );
       setProgress(_progress);
     }
@@ -200,7 +200,7 @@ const CoursePage = ({
     const progress = JSON.parse(
       savedProgress
         ? JSON.stringify(savedProgress)
-        : JSON.stringify(localProgress) || "{}"
+        : JSON.stringify(localProgress) || "{}",
     );
 
     if (savedProgress) {
@@ -249,7 +249,7 @@ const CoursePage = ({
           </Text>
           <Accordion allowToggle>
             {modules.map((module, index) => (
-              <Module key={index} module={module} slug={slug} />
+              <ModuleItem key={index} module={module} slug={slug} />
             ))}
           </Accordion>
         </Box>
@@ -269,7 +269,7 @@ export async function getStaticProps({
 }) {
   const res = await getContentByType("courseModule");
   const entry = res.items.find(
-    (item: any) => item.fields.slug === params.course
+    (item: any) => item.fields.slug === params.course,
   );
 
   if (!entry) {
@@ -291,7 +291,7 @@ export async function getStaticProps({
 
   if (!sections || !Array.isArray(sections) || sections.length === 0) {
     throw new Error(
-      "Failed to fetch the entry from Contentful or sections array is null or empty"
+      "Failed to fetch the entry from Contentful or sections array is null or empty",
     );
   }
 

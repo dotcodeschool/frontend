@@ -1,4 +1,4 @@
-import Navbar from "@/app/common/components/navbar";
+import Navbar from "@/components/navbar";
 import {
   Box,
   Heading,
@@ -9,8 +9,8 @@ import {
   Stack,
   Image,
 } from "@chakra-ui/react";
-import PrimaryButton from "@/app/common/components/primary-button";
-import Footer from "@/app/common/components/footer";
+import PrimaryButton from "@/components/primary-button";
+import Footer from "@/components/footer";
 
 export default function Index() {
   return (
