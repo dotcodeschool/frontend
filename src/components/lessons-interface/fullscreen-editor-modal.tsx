@@ -1,9 +1,4 @@
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalBody,
-} from "@chakra-ui/react";
+import { Modal, ModalOverlay, ModalContent, ModalBody } from "@chakra-ui/react";
 import EditorTabs, { EditorTabsProps } from "./editor-tabs";
 
 interface FullscreenEditorModalProps {
@@ -20,6 +15,10 @@ const FullscreenEditorModal = ({ editorProps }: FullscreenEditorModalProps) => {
     solution,
     editorContent,
     isOpen,
+    tabIndex,
+    showDiff,
+    setShowDiff,
+    setTabIndex,
     onOpen,
     onClose,
     setEditorContent,
@@ -36,6 +35,10 @@ const FullscreenEditorModal = ({ editorProps }: FullscreenEditorModalProps) => {
             incorrectFiles={incorrectFiles}
             solution={solution}
             isOpen={isOpen}
+            tabIndex={tabIndex}
+            showDiff={showDiff}
+            setShowDiff={setShowDiff}
+            setTabIndex={setTabIndex}
             onOpen={onOpen}
             onClose={onClose}
             editorContent={editorContent}

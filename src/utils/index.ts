@@ -27,21 +27,29 @@ export function parseDiff(diff: string) {
   const lines = diff.split("\n");
   let originalContent = "";
   let modifiedContent = "";
+  let currentFile = "";
   let inHunk = false;
+
   for (const line of lines) {
-    if (
-      line.startsWith("diff --git") ||
+    if (line.startsWith("diff --git")) {
+      // Start of a new file diff
+      currentFile = line.split(" ")[2];
+      originalContent += line + "\n";
+      modifiedContent += line + "\n";
+    } else if (
       line.startsWith("index") ||
       line.startsWith("--- ") ||
       line.startsWith("+++ ")
     ) {
       // Ignore these lines
+      continue;
     } else if (line.startsWith("@@ ")) {
-      // Hunk header: add to both original and modified to maintain context
+      // Hunk header
       inHunk = true;
       originalContent += line + "\n";
       modifiedContent += line + "\n";
     } else if (inHunk) {
+      // Content lines
       if (line.startsWith("-")) {
         originalContent += line + "\n";
       } else if (line.startsWith("+")) {
@@ -52,5 +60,6 @@ export function parseDiff(diff: string) {
       }
     }
   }
+
   return { originalContent, modifiedContent };
 }

@@ -15,7 +15,6 @@ import stripComments from "strip-comments";
 import { FiMaximize2, FiMinimize2 } from "react-icons/fi";
 import { IoGitCompareOutline } from "react-icons/io5";
 import { parseDiff } from "@/utils";
-import { useEffect, useState } from "react";
 
 // TODO: Move to a types.ts file
 type File = {
@@ -36,6 +35,10 @@ export interface EditorTabsProps {
   solution: File[];
   editorContent: File[];
   isOpen: boolean;
+  tabIndex: number;
+  showDiff: boolean;
+  setShowDiff: (showDiff: boolean) => void;
+  setTabIndex: (index: number) => void;
   onOpen: () => void;
   onClose: () => void;
   setEditorContent: setEditorContent;
@@ -49,24 +52,18 @@ const EditorTabs = ({
   solution,
   editorContent,
   isOpen,
+  tabIndex,
+  showDiff,
+  setShowDiff,
+  setTabIndex,
   onOpen,
   onClose,
   setEditorContent,
 }: EditorTabsProps) => {
-  const [tabIndex, setTabIndex] = useState(0);
-  const [showDiff, setShowDiff] = useState(false);
-
   const handleTabsChange = (index: number) => {
     setTabIndex(index);
   };
 
-  useEffect(() => {
-    if (showDiff) {
-      setTabIndex(editorContent.length - 1);
-    } else {
-      setTabIndex(0);
-    }
-  }, [showDiff, editorContent.length]);
   return (
     <Tabs
       index={tabIndex}
@@ -205,11 +202,13 @@ const EditorTabs = ({
               />
             ) : (
               <Editor
+                key={i + file.fileName}
                 height={isAnswerOpen ? "0%" : "100%"}
                 theme="vs-dark"
                 defaultLanguage={file.language || "rust"}
                 defaultValue={file.code || "// placeholder"}
                 options={{ readOnly: readOnly || file.language === "diff" }}
+                value={file.code}
                 onChange={(value) => {
                   const newEditorContent = [...editorContent];
                   newEditorContent[i].code = value?.toString() || "";
