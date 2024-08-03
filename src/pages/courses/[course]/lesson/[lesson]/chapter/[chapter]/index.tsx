@@ -2,6 +2,7 @@
 
 import {
   Box,
+  Flex,
   Grid,
   GridItem,
   IconButton,
@@ -10,6 +11,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
+import SplitPane from "react-split-pane";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { endsWith, find, flatMapDeep, isEmpty, map, nth } from "lodash";
 import { serialize } from "next-mdx-remote/serialize";
@@ -22,6 +24,8 @@ import BottomNavbar from "@/components/lessons-interface/bottom-navbar";
 import { useEffect, useState } from "react";
 import EditorTabs from "@/components/lessons-interface/editor-tabs";
 import FullscreenEditorModal from "@/components/lessons-interface/fullscreen-editor-modal";
+
+import "@/app/lib/resizer.css";
 
 // TODO: Move to type.ts file
 type File = {
@@ -146,19 +150,19 @@ export default function CourseModule({
   }, [checkedAnswer, doesMatch, toast]);
 
   return (
-    <Box h="100vh" position="relative">
-    <Navbar
-      cta={false}
-      isLessonInterface
-      lessonDetails={{
-        courseId,
-        lessonId,
-        chapterId,
-        chapters,
-        githubUrl,
-      }}
-    />
-      <Box h="95vh" px={[6, 12]} mx="auto">
+    <Box h="100vh" position="relative" overflow="hidden">
+      <Navbar
+        cta={false}
+        isLessonInterface
+        lessonDetails={{
+          courseId,
+          lessonId,
+          chapterId,
+          chapters,
+          githubUrl,
+        }}
+      />
+      <Box>
         <IconButton
           as={Link}
           display={{ base: "block", md: "none" }}
@@ -178,11 +182,86 @@ export default function CourseModule({
           isExternal
           _hover={{ textDecor: "none" }}
         />
+        <SplitPane
+          split="vertical"
+          defaultSize="50%"
+          minSize={200}
+          maxSize={-200}
+          px={[6, 12]}
+          style={{ position: "relative", height: "100%" }}
+          resizerStyle={{
+            background: "white",
+            opacity: 0.2,
+            zIndex: 1,
+            boxSizing: "border-box",
+            backgroundClip: "padding-box",
+            cursor: "col-resize",
+            width: "10px",
+          }}
+        >
+          <Box
+            h={["fit-content", "calc(100vh - 144px)"]}
+            overflowY="auto"
+            sx={{
+              "::-webkit-scrollbar": {
+                width: "6px",
+                borderRadius: "8px",
+              },
+              "::-webkit-scrollbar-thumb": {
+                width: "6px",
+                borderRadius: "8px",
+              },
+              ":hover::-webkit-scrollbar-thumb": { background: "gray.700" },
+            }}
+            py={6}
+            px={[6, 12]}
+            m={1}
+          >
+            <MDXRemote {...mdxSource} components={MDXComponents} />
+          </Box>
+          <Flex h="full" w="full">
+            <EditorTabs
+              showHints={showHints}
+              isAnswerOpen={isAnswerOpen}
+              readOnly={readOnly}
+              incorrectFiles={incorrectFiles}
+              solution={solution}
+              editorContent={editorContent}
+              isOpen={isOpen}
+              tabIndex={tabIndex}
+              showDiff={showDiff}
+              setShowDiff={setShowDiff}
+              setTabIndex={setTabIndex}
+              onOpen={onOpen}
+              onClose={onClose}
+              setEditorContent={setEditorContent}
+            />
+            <FullscreenEditorModal
+              isOpen={isOpen}
+              editorProps={{
+                showHints,
+                isAnswerOpen,
+                readOnly,
+                incorrectFiles,
+                solution,
+                editorContent,
+                isOpen,
+                tabIndex,
+                showDiff,
+                setShowDiff,
+                setTabIndex,
+                setEditorContent,
+                onOpen,
+                onClose,
+              }}
+            />
+          </Flex>
+        </SplitPane>
 
-        <Grid templateColumns="repeat(12, 1fr)" gap={1} pb={24}>
+        <Grid templateColumns="repeat(12, 1fr)" gap={1} pb={24} display="none">
           <GridItem
             colSpan={[12, 5]}
-            h={["fit-content", "80vh"]}
+            h={["fit-content", "full"]}
             overflowY="auto"
             pr={6}
             pt={4}

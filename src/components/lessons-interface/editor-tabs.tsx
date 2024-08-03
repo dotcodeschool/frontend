@@ -69,11 +69,11 @@ const EditorTabs = ({
       index={tabIndex}
       onChange={handleTabsChange}
       variant="unstyled"
-      h={isOpen ? "100vh" : "80vh"}
+      h={isOpen ? "100vh" : "full"}
       border="1px solid"
       borderColor="whiteAlpha.200"
       bg="#2e2e2e"
-      w="auto"
+      w="full"
     >
       <TabList>
         <Flex

@@ -265,6 +265,9 @@ const Navbar = ({
 
   return (
     <Flex
+      position={isLessonInterface ? "sticky" : "static"}
+      top={0}
+      zIndex={10}
       align="center"
       justify="space-between"
       py={2}
