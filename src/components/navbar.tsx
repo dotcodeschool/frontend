@@ -267,8 +267,11 @@ const Navbar = ({
     <Flex
       align="center"
       justify="space-between"
-      py={4}
-      bg="gray.800"
+      py={2}
+      px={[6, 12]}
+      bg={isLessonInterface ? "gray.900" : "gray.800"}
+      borderBottom={isLessonInterface ? "1px solid" : "none"}
+      borderBottomColor="gray.700"
       color="white"
     >
       <Logo />

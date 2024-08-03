@@ -147,18 +147,18 @@ export default function CourseModule({
 
   return (
     <Box h="100vh" position="relative">
+    <Navbar
+      cta={false}
+      isLessonInterface
+      lessonDetails={{
+        courseId,
+        lessonId,
+        chapterId,
+        chapters,
+        githubUrl,
+      }}
+    />
       <Box h="95vh" px={[6, 12]} mx="auto">
-        <Navbar
-          cta={false}
-          isLessonInterface
-          lessonDetails={{
-            courseId,
-            lessonId,
-            chapterId,
-            chapters,
-            githubUrl,
-          }}
-        />
         <IconButton
           as={Link}
           display={{ base: "block", md: "none" }}
