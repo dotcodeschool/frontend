@@ -223,7 +223,19 @@ const EditorTabs = ({
                 original={
                   showHints ? stripComments(editorContent[i]?.code) : ""
                 }
-                modified={showHints ? stripComments(solution[i]?.code) : ""}
+                modified={
+                  showHints
+                    ? stripComments(
+                        find(
+                          solution,
+                          ({ fileName }) =>
+                            fileName === editorContent[i].fileName,
+                        )?.code ??
+                          editorContent[i]?.code ??
+                          "",
+                      )
+                    : ""
+                }
                 options={{ readOnly: true, comments: false }}
               />
             )}

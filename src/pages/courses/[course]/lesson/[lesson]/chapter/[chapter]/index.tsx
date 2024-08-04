@@ -11,7 +11,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import SplitPane from "react-split-pane";
+import SplitPane, { SplitPaneProps } from "react-split-pane";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import { endsWith, find, flatMapDeep, isEmpty, map, nth } from "lodash";
 import { serialize } from "next-mdx-remote/serialize";
@@ -99,18 +99,25 @@ export default function CourseModule({
     const incorrect: File[] = [];
     const _doesMatchArr = map(rawFiles, (file, index) => {
       if (file.fileName.endsWith(".diff")) return true;
-      const solutionFile = solution[index];
+      const solutionFile = find(
+        solution,
+        ({ fileName }) => fileName === file.fileName,
+      );
       // Remove comments and whitespace
       const fileCodeWithoutComments = stripComments(file.code);
       const fileContent = fileCodeWithoutComments.replace(/\s+/g, " ").trim();
 
-      const solutionCodeWithoutComments = stripComments(solutionFile.code);
+      const solutionCodeWithoutComments = stripComments(
+        solutionFile
+          ? solutionFile.code
+          : "// This file doesn't have a solution.",
+      );
       const solutionContent = solutionCodeWithoutComments
         .replace(/\s+/g, " ")
         .trim();
 
-      const isFileCorrect = fileContent === solutionContent;
-      if (!isFileCorrect) {
+      const isFileCorrect = fileContent === solutionContent || !solutionFile;
+      if (!isFileCorrect && !isAnswerOpen) {
         incorrect.push(file);
       }
       return isFileCorrect;
@@ -187,7 +194,6 @@ export default function CourseModule({
           defaultSize="50%"
           minSize={200}
           maxSize={-200}
-          px={[6, 12]}
           style={{ position: "relative", height: "100%" }}
           resizerStyle={{
             background: "white",
@@ -198,65 +204,69 @@ export default function CourseModule({
             cursor: "col-resize",
             width: "10px",
           }}
-        >
-          <Box
-            h={["fit-content", "calc(100vh - 144px)"]}
-            overflowY="auto"
-            sx={{
-              "::-webkit-scrollbar": {
-                width: "6px",
-                borderRadius: "8px",
-              },
-              "::-webkit-scrollbar-thumb": {
-                width: "6px",
-                borderRadius: "8px",
-              },
-              ":hover::-webkit-scrollbar-thumb": { background: "gray.700" },
-            }}
-            py={6}
-            px={[6, 12]}
-            m={1}
-          >
-            <MDXRemote {...mdxSource} components={MDXComponents} />
-          </Box>
-          <Flex h="full" w="full">
-            <EditorTabs
-              showHints={showHints}
-              isAnswerOpen={isAnswerOpen}
-              readOnly={readOnly}
-              incorrectFiles={incorrectFiles}
-              solution={solution}
-              editorContent={editorContent}
-              isOpen={isOpen}
-              tabIndex={tabIndex}
-              showDiff={showDiff}
-              setShowDiff={setShowDiff}
-              setTabIndex={setTabIndex}
-              onOpen={onOpen}
-              onClose={onClose}
-              setEditorContent={setEditorContent}
-            />
-            <FullscreenEditorModal
-              isOpen={isOpen}
-              editorProps={{
-                showHints,
-                isAnswerOpen,
-                readOnly,
-                incorrectFiles,
-                solution,
-                editorContent,
-                isOpen,
-                tabIndex,
-                showDiff,
-                setShowDiff,
-                setTabIndex,
-                setEditorContent,
-                onOpen,
-                onClose,
-              }}
-            />
-          </Flex>
-        </SplitPane>
+          {...({
+            children: [
+              <Box
+                key={1}
+                h={["fit-content", "calc(100vh - 144px)"]}
+                overflowY="auto"
+                sx={{
+                  "::-webkit-scrollbar": {
+                    width: "6px",
+                    borderRadius: "8px",
+                  },
+                  "::-webkit-scrollbar-thumb": {
+                    width: "6px",
+                    borderRadius: "8px",
+                  },
+                  ":hover::-webkit-scrollbar-thumb": { background: "gray.700" },
+                }}
+                py={6}
+                px={[6, 12]}
+                m={1}
+              >
+                <MDXRemote {...mdxSource} components={MDXComponents} />
+              </Box>,
+              <Flex h="full" w="full" key={2}>
+                <EditorTabs
+                  showHints={showHints}
+                  isAnswerOpen={isAnswerOpen}
+                  readOnly={readOnly}
+                  incorrectFiles={incorrectFiles}
+                  solution={solution}
+                  editorContent={editorContent}
+                  isOpen={isOpen}
+                  tabIndex={tabIndex}
+                  showDiff={showDiff}
+                  setShowDiff={setShowDiff}
+                  setTabIndex={setTabIndex}
+                  onOpen={onOpen}
+                  onClose={onClose}
+                  setEditorContent={setEditorContent}
+                />
+                <FullscreenEditorModal
+                  isOpen={isOpen}
+                  editorProps={{
+                    showHints,
+                    isAnswerOpen,
+                    readOnly,
+                    incorrectFiles,
+                    solution,
+                    editorContent,
+                    isOpen,
+                    tabIndex,
+                    showDiff,
+                    setShowDiff,
+                    setTabIndex,
+                    setEditorContent,
+                    onOpen,
+                    onClose,
+                  }}
+                />
+              </Flex>,
+            ],
+          } as SplitPaneProps)}
+        />
 
         <Grid templateColumns="repeat(12, 1fr)" gap={1} pb={24} display="none">
           <GridItem
