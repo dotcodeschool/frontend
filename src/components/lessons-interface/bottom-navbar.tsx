@@ -11,6 +11,13 @@ import {
   DrawerBody,
   Text,
   Link,
+  Icon,
+  Accordion,
+  AccordionItem,
+  AccordionIcon,
+  AccordionButton,
+  AccordionPanel,
+  Tooltip,
 } from "@chakra-ui/react";
 import {
   HamburgerIcon,
@@ -18,10 +25,82 @@ import {
   ChevronRightIcon,
   CheckIcon,
 } from "@chakra-ui/icons";
+import { MdCode, MdNumbers } from "react-icons/md";
+import { FaCode } from "react-icons/fa";
 import { useCallback, useEffect, useState } from "react";
 import { map } from "lodash";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+
+interface SectionProps {
+  courseId: string;
+  section: {
+    sectionIndex: number;
+    title: string;
+    lessons: any[];
+  };
+  current: string;
+  isActive: boolean;
+}
+
+const Section = ({
+  courseId,
+  section: { sectionIndex, title, lessons },
+  current,
+  isActive,
+}: SectionProps) => {
+  return (
+    <AccordionItem border="none">
+      <AccordionButton
+        py={4}
+        fontWeight={isActive ? "bold" : "500"}
+        _hover={{
+          bg: !isActive && "whiteAlpha.100",
+          color: !isActive && "white",
+        }}
+      >
+        <Icon
+          as={isActive ? MdCode : MdNumbers}
+          color={isActive ? "green.300" : "gray.300"}
+          fontSize="xl"
+        />
+        <Tooltip label={title} aria-label={title} openDelay={750} hasArrow>
+          <Text textAlign="left" flex={1} pl={2} isTruncated>
+            {title}
+          </Text>
+        </Tooltip>
+        <AccordionIcon />
+      </AccordionButton>
+      <AccordionPanel px={0}>
+        {map(lessons, (chapter, index) => {
+          const slug = `${courseId}/lesson/${Number(sectionIndex + 1)}/chapter/${Number(index + 1)}`;
+          return (
+            <Link
+              key={chapter.id}
+              href={`/courses/${slug}`}
+              _hover={{ textDecor: "none" }}
+            >
+              <Text
+                bg={slug === current ? "whiteAlpha.200" : ""}
+                color={slug === current ? "white" : "gray.300"}
+                fontWeight={slug === current ? "semibold" : ""}
+                px={8}
+                py={2}
+                _hover={{
+                  bg: slug !== current && "whiteAlpha.100",
+                  color: slug !== current && "white",
+                }}
+                isTruncated
+              >
+                {chapter.title}
+              </Text>
+            </Link>
+          );
+        })}
+      </AccordionPanel>
+    </AccordionItem>
+  );
+};
 
 interface BottomNavbarProps {
   doesMatch?: boolean;
@@ -32,7 +111,7 @@ interface BottomNavbarProps {
   current: string;
   prev?: string;
   next?: string;
-  chapters: any[];
+  sections: any[];
   toggleAnswer?: () => void;
 }
 
@@ -45,7 +124,7 @@ const BottomNavbar = ({
   current,
   prev,
   next,
-  chapters,
+  sections,
   toggleAnswer,
 }: BottomNavbarProps) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -231,29 +310,31 @@ const BottomNavbar = ({
           <DrawerContent>
             <DrawerCloseButton />
             <DrawerHeader>Lessons</DrawerHeader>
-            <DrawerBody px={0}>
-              {map(chapters, (chapter) => {
-                const isCurrent = current === chapter.lesson;
-                return (
-                  <Link
-                    key={chapter.id}
-                    display="block"
-                    href={`/courses/${chapter.lesson}`}
-                    w="full"
-                    py={2}
-                    px={4}
-                    color={isCurrent ? "gray.700" : ""}
-                    bg={isCurrent ? "green.300" : ""}
-                    fontWeight={isCurrent ? "semibold" : "normal"}
-                    _hover={{
-                      textDecor: "none",
-                      bg: isCurrent ? "green.300" : "gray.600",
-                    }}
-                  >
-                    {chapter.index + 1}. {chapter.title}
-                  </Link>
-                );
-              })}
+            <DrawerBody
+              px={0}
+              sx={{
+                "::-webkit-scrollbar": {
+                  width: "1px",
+                  borderRadius: "8px",
+                },
+                "::-webkit-scrollbar-thumb": {
+                  width: "6px",
+                  borderRadius: "8px",
+                },
+                ":hover::-webkit-scrollbar-thumb": { background: "white.700" },
+              }}
+            >
+              <Accordion defaultIndex={[Number(lessonId) - 1]} allowMultiple>
+                {map(sections, (section, sectionIndex) => (
+                  <Section
+                    key={sectionIndex}
+                    courseId={courseId}
+                    section={{ ...section, sectionIndex }}
+                    current={current}
+                    isActive={sectionIndex === Number(lessonId) - 1}
+                  />
+                ))}
+              </Accordion>
             </DrawerBody>
           </DrawerContent>
         </DrawerOverlay>

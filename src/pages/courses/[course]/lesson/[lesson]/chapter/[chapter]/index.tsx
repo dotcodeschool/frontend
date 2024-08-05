@@ -50,6 +50,7 @@ interface Props {
   prev: string;
   next: string;
   chapters: any[];
+  sections: any[];
   githubUrl: string;
 }
 
@@ -63,6 +64,7 @@ export default function CourseModule({
   prev,
   next,
   chapters,
+  sections,
   githubUrl,
 }: Props) {
   const { source, template, solution } = files;
@@ -335,7 +337,7 @@ export default function CourseModule({
         lessonId={lessonId}
         chapterId={chapterId}
         current={current}
-        chapters={chapters}
+        sections={sections}
         doesMatch={doesMatch}
         isOpen={isAnswerOpen}
         {...(!isEmpty(solution) && { toggleAnswer })}
@@ -388,6 +390,29 @@ export async function getStaticProps({
     return slug === course;
   });
   const modules: any = _course?.fields.sections;
+  const rawSections = getSections(_course).map((section) => ({
+    id: section.sys.id,
+    title: section.fields.title,
+    lessons: section.fields.lessons,
+  }));
+
+  // get chapters for each section
+  const sections = await Promise.all(
+    map(rawSections, async (section) => {
+      const rawLessons = await Promise.all(
+        map(section.lessons, async (lesson) => await fetchEntry(lesson.sys.id)),
+      );
+      const lessons = rawLessons.map((lesson) => ({
+        id: lesson.sys.id,
+        title: lesson.fields.lessonName,
+      }));
+      return {
+        id: section.id,
+        title: section.title,
+        lessons: lessons,
+      };
+    }),
+  ).catch(console.error);
 
   const githubUrl = _course?.fields.githubUrl;
 
@@ -446,6 +471,7 @@ export async function getStaticProps({
       prev,
       next,
       chapters: _chapters,
+      sections,
       githubUrl,
     },
   };
