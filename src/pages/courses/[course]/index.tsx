@@ -30,12 +30,15 @@ import {
   useState,
 } from "react";
 import { useSession } from "next-auth/react";
+import { serialize } from "next-mdx-remote/serialize";
+import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
+import MDXComponents from "@/components/lessons-interface/mdx-components";
 
 type Module = {
   id: string;
   index: number;
   title: string;
-  description: string;
+  description: MDXRemoteSerializeResult;
   numOfLessons: number;
 };
 
@@ -115,7 +118,7 @@ const ModuleItem = ({ module, slug }: ModuleProps) => {
         </VStack>
       </AccordionButton>
       <AccordionPanel pb={12} w="90%" pt={0}>
-        <Text>{description}</Text>
+        <MDXRemote {...description} components={MDXComponents} />
         <PrimaryButton
           as="a"
           href={`/courses/${slug}/lesson/${index + 1}/chapter/1`}
@@ -295,19 +298,27 @@ export async function getStaticProps({
     );
   }
 
-  const modules = map(sections, (lesson, index) => {
-    if (!lesson) {
-      throw new Error("Lesson is undefined");
-    }
+  const modules = await Promise.all(
+    map(sections, async (lesson, index) => {
+      if (!lesson) {
+        throw new Error("Lesson is undefined");
+      }
 
-    return {
-      index,
-      id: get(lesson, "sys.id"),
-      title: get(lesson, "fields.title"),
-      description: get(lesson, "fields.description"),
-      numOfLessons: get(lesson, "fields.lessons.length"),
-    };
-  });
+      const lessonDescription = get(lesson, "fields.description") || "";
+      console.log(lessonDescription);
+      const serializedLessonDescription = await serialize(lessonDescription);
+
+      console.log(serializedLessonDescription);
+
+      return {
+        index,
+        id: get(lesson, "sys.id"),
+        title: get(lesson, "fields.title"),
+        description: serializedLessonDescription,
+        numOfLessons: get(lesson, "fields.lessons.length"),
+      };
+    }),
+  );
 
   return {
     props: {
