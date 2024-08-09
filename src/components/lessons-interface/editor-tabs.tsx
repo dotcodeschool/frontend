@@ -197,7 +197,7 @@ const EditorTabs = ({
       </TabList>
       <TabPanels h="90%">
         {map(editorContent, (file, i) => (
-          <TabPanel key={i} h="100%" p={0} pb={0}>
+          <TabPanel key={i} h={{ base: "80vh", md: "100%" }} p={0} pb={0}>
             {file.language === "diff" ? (
               <DiffEditor
                 height="100%"

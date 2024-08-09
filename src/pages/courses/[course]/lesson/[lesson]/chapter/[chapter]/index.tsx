@@ -159,7 +159,11 @@ export default function CourseModule({
   }, [checkedAnswer, doesMatch, toast]);
 
   return (
-    <Box h="100vh" position="relative" overflow="hidden">
+    <Box
+      h="100vh"
+      position="relative"
+      overflow={{ base: "auto", md: "hidden" }}
+    >
       <Navbar
         cta={false}
         isLessonInterface
@@ -191,91 +195,100 @@ export default function CourseModule({
           isExternal
           _hover={{ textDecor: "none" }}
         />
-        <SplitPane
-          split="vertical"
-          defaultSize="50%"
-          minSize={200}
-          maxSize={-200}
-          style={{ position: "relative", height: "100%" }}
-          resizerStyle={{
-            background: "white",
-            opacity: 0.2,
-            zIndex: 1,
-            boxSizing: "border-box",
-            backgroundClip: "padding-box",
-            cursor: "col-resize",
-            width: "10px",
-          }}
-          {...({
-            children: [
-              <Box
-                key={1}
-                h={["fit-content", "calc(100vh - 144px)"]}
-                overflowY="auto"
-                sx={{
-                  "::-webkit-scrollbar": {
-                    width: "6px",
-                    borderRadius: "8px",
-                  },
-                  "::-webkit-scrollbar-thumb": {
-                    width: "6px",
-                    borderRadius: "8px",
-                  },
-                  ":hover::-webkit-scrollbar-thumb": { background: "gray.700" },
-                }}
-                py={6}
-                px={[6, 12]}
-                m={1}
-              >
-                <MDXRemote {...mdxSource} components={MDXComponents} />
-              </Box>,
-              <Flex h="full" w="full" key={2}>
-                <EditorTabs
-                  showHints={showHints}
-                  isAnswerOpen={isAnswerOpen}
-                  readOnly={readOnly}
-                  incorrectFiles={incorrectFiles}
-                  solution={solution}
-                  editorContent={editorContent}
-                  isOpen={isOpen}
-                  tabIndex={tabIndex}
-                  showDiff={showDiff}
-                  setShowDiff={setShowDiff}
-                  setTabIndex={setTabIndex}
-                  onOpen={onOpen}
-                  onClose={onClose}
-                  setEditorContent={setEditorContent}
-                />
-                <FullscreenEditorModal
-                  isOpen={isOpen}
-                  editorProps={{
-                    showHints,
-                    isAnswerOpen,
-                    readOnly,
-                    incorrectFiles,
-                    solution,
-                    editorContent,
-                    isOpen,
-                    tabIndex,
-                    showDiff,
-                    setShowDiff,
-                    setTabIndex,
-                    setEditorContent,
-                    onOpen,
-                    onClose,
+        <Box display={{ base: "none", md: "block" }}>
+          <Box
+            as={SplitPane}
+            split="vertical"
+            defaultSize="50%"
+            minSize={200}
+            maxSize={-200}
+            style={{ position: "relative", height: "100%" }}
+            resizerStyle={{
+              background: "white",
+              opacity: 0.2,
+              zIndex: 1,
+              boxSizing: "border-box",
+              backgroundClip: "padding-box",
+              cursor: "col-resize",
+              width: "10px",
+            }}
+            {...({
+              children: [
+                <Box
+                  key={1}
+                  h={["fit-content", "calc(100vh - 144px)"]}
+                  overflowY="auto"
+                  sx={{
+                    "::-webkit-scrollbar": {
+                      width: "6px",
+                      borderRadius: "8px",
+                    },
+                    "::-webkit-scrollbar-thumb": {
+                      width: "6px",
+                      borderRadius: "8px",
+                    },
+                    ":hover::-webkit-scrollbar-thumb": {
+                      background: "gray.700",
+                    },
                   }}
-                />
-              </Flex>,
-            ],
-          } as SplitPaneProps)}
-        />
-
-        <Grid templateColumns="repeat(12, 1fr)" gap={1} pb={24} display="none">
+                  py={6}
+                  px={[6, 12]}
+                  m={1}
+                >
+                  <MDXRemote {...mdxSource} components={MDXComponents} />
+                </Box>,
+                <Flex h="full" w="full" key={2}>
+                  <EditorTabs
+                    showHints={showHints}
+                    isAnswerOpen={isAnswerOpen}
+                    readOnly={readOnly}
+                    incorrectFiles={incorrectFiles}
+                    solution={solution}
+                    editorContent={editorContent}
+                    isOpen={isOpen}
+                    tabIndex={tabIndex}
+                    showDiff={showDiff}
+                    setShowDiff={setShowDiff}
+                    setTabIndex={setTabIndex}
+                    onOpen={onOpen}
+                    onClose={onClose}
+                    setEditorContent={setEditorContent}
+                  />
+                  <FullscreenEditorModal
+                    isOpen={isOpen}
+                    editorProps={{
+                      showHints,
+                      isAnswerOpen,
+                      readOnly,
+                      incorrectFiles,
+                      solution,
+                      editorContent,
+                      isOpen,
+                      tabIndex,
+                      showDiff,
+                      setShowDiff,
+                      setTabIndex,
+                      setEditorContent,
+                      onOpen,
+                      onClose,
+                    }}
+                  />
+                </Flex>,
+              ],
+            } as SplitPaneProps)}
+          />
+        </Box>
+        <Grid
+          templateColumns="repeat(12, 1fr)"
+          gap={1}
+          pb={24}
+          display={{ base: "block", md: "none" }}
+        >
           <GridItem
             colSpan={[12, 5]}
             h={["fit-content", "full"]}
             overflowY="auto"
-            pr={6}
+            px={6}
             pt={4}
             sx={{
               "::-webkit-scrollbar": {
