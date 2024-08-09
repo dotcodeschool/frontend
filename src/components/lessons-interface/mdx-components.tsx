@@ -99,9 +99,9 @@ const PreComponent = (props: any) => {
 };
 
 const MDXComponents = {
-  h1: (props: any) => <Heading as="h1" size="xl" {...props} />,
-  h2: (props: any) => <Heading as="h2" size="lg" {...props} />,
-  h3: (props: any) => <Heading as="h3" size="md" {...props} />,
+  h1: (props: any) => <Heading as="h1" size="xl" mt={4} {...props} />,
+  h2: (props: any) => <Heading as="h2" size="lg" mt={4} {...props} />,
+  h3: (props: any) => <Heading as="h3" size="md" mt={4} {...props} />,
   p: (props: any) => <Text my={4} {...props} />,
   a: (props: any) => <Link color="green.300" isExternal {...props} />,
   ul: (props: any) => <Box as="ul" pt={2} pl={4} ml={2} {...props} />,
