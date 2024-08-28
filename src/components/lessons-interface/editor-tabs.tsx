@@ -247,7 +247,7 @@ const EditorTabs = ({
                       )
                     : ""
                 }
-                options={{ readOnly: true, comments: false }}
+                options={{ readOnly: true }}
               />
             )}
           </TabPanel>

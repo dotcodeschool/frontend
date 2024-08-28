@@ -272,7 +272,7 @@ export async function getStaticProps({
 }) {
   const res = await getContentByType("courseModule");
   const entry = res.items.find(
-    (item: any) => item.fields.slug === params.course,
+    (item) => item.fields.slug === params.course,
   );
 
   if (!entry) {
@@ -306,7 +306,8 @@ export async function getStaticProps({
 
       const lessonDescription = get(lesson, "fields.description") || "";
       console.log(lessonDescription);
-      const serializedLessonDescription = await serialize(lessonDescription);
+      const serializedLessonDescription = typeof lessonDescription === "string" ?
+        await serialize(lessonDescription) : console.error("Lesson description is not a string");
 
       console.log(serializedLessonDescription);
 
