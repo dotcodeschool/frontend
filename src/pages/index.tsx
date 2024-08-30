@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import PrimaryButton from "@/components/primary-button";
 import Footer from "@/components/footer";
+import { FeatureComponentProps } from "@/types/types";
 
 export default function Index() {
   return (
@@ -92,15 +93,6 @@ function LandingCTA() {
       </Button>
     </ButtonGroup>
   );
-}
-
-interface FeatureComponentProps {
-  title: string | JSX.Element;
-  description: string | JSX.Element;
-  image: string;
-  alt?: string;
-  isImageFirst?: boolean;
-  cta?: JSX.Element;
 }
 
 function FeatureComponent({
