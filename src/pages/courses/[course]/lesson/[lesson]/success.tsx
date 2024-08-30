@@ -15,14 +15,10 @@ import Navbar from "@/components/navbar";
 import { getContentByType } from "@/pages/api/get-content";
 import { flatMapDeep, size } from "lodash";
 
-const Lottie = dynamic(() => import("react-lottie"), { ssr: false });
+// Types
+import { SuccessPageProps } from "@/types/types";
 
-interface SuccessPageProps {
-  slug: string;
-  course: string;
-  lesson: string;
-  totalLessonsInCourse: number;
-}
+const Lottie = dynamic(() => import("react-lottie"), { ssr: false });
 
 const SuccessPage: React.FC<SuccessPageProps> = (props: SuccessPageProps) => {
   const { slug, course, lesson, totalLessonsInCourse } = props;
