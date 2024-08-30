@@ -31,17 +31,7 @@ import { useCallback, useEffect, useState } from "react";
 import { map } from "lodash";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-
-interface SectionProps {
-  courseId: string;
-  section: {
-    sectionIndex: number;
-    title: string;
-    lessons: any[];
-  };
-  current: string;
-  isActive: boolean;
-}
+import { BottomNavbarProps, SectionProps } from "@/types/types";
 
 const Section = ({
   courseId,
@@ -101,19 +91,6 @@ const Section = ({
     </AccordionItem>
   );
 };
-
-interface BottomNavbarProps {
-  doesMatch?: boolean;
-  isOpen?: boolean;
-  courseId: string;
-  lessonId: string;
-  chapterId: string;
-  current: string;
-  prev?: string;
-  next?: string;
-  sections: any[];
-  toggleAnswer?: () => void;
-}
 
 const BottomNavbar = ({
   doesMatch,
