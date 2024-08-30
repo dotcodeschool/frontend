@@ -27,32 +27,8 @@ import FullscreenEditorModal from "@/components/lessons-interface/fullscreen-edi
 
 import "@/app/lib/resizer.css";
 
-// TODO: Move to type.ts file
-type File = {
-  fileName: string;
-  code: string;
-  language: string;
-};
-
-interface Files {
-  source: File[];
-  template: File[];
-  solution: File[];
-}
-
-interface Props {
-  courseId: string;
-  lessonId: string;
-  chapterId: string;
-  mdxSource: MDXRemoteSerializeResult;
-  files: Files;
-  current: string;
-  prev: string;
-  next: string;
-  chapters: any[];
-  sections: any[];
-  githubUrl: string;
-}
+// Types
+import { CourseModuleProps, File } from "@/types/types";
 
 export default function CourseModule({
   courseId,
@@ -66,7 +42,7 @@ export default function CourseModule({
   chapters,
   sections,
   githubUrl,
-}: Props) {
+}: CourseModuleProps) {
   const { source, template, solution } = files;
 
   const readOnly = isEmpty(solution);
@@ -549,3 +525,5 @@ export async function getStaticPaths() {
     fallback: false,
   };
 }
+
+// Meow
