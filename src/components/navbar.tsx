@@ -32,10 +32,8 @@ import axios from "axios";
 import Image from "next/image";
 import { FaPen } from "react-icons/fa";
 
-interface NavLink {
-  name: string;
-  href: string;
-}
+// Types
+import { NavbarProps, NavLink } from "@/types/types";
 
 const NavLinks = ({ navLinks }: { navLinks: NavLink[] }) => {
   return map(navLinks, (link) => (
@@ -187,19 +185,6 @@ const DrawerMenu = ({
     </Drawer>
   );
 };
-
-interface NavbarProps {
-  navLinks?: NavLink[];
-  cta?: boolean;
-  isLessonInterface?: boolean;
-  lessonDetails?: {
-    courseId: string;
-    lessonId: string;
-    chapterId: string;
-    chapters: any[];
-    githubUrl: string;
-  };
-}
 
 const Navbar = ({
   navLinks = [],
