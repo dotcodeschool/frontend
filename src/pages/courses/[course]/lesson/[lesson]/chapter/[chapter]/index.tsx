@@ -26,8 +26,6 @@ import EditorTabs from "@/components/lessons-interface/editor-tabs";
 import FullscreenEditorModal from "@/components/lessons-interface/fullscreen-editor-modal";
 
 import "@/app/lib/resizer.css";
-
-// Types
 import { CourseModuleProps, File } from "@/types/types";
 
 export default function CourseModule({
@@ -525,5 +523,3 @@ export async function getStaticPaths() {
     fallback: false,
   };
 }
-
-// Meow
