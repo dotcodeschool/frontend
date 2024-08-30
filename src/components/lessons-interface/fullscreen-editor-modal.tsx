@@ -1,10 +1,6 @@
 import { Modal, ModalOverlay, ModalContent, ModalBody } from "@chakra-ui/react";
-import EditorTabs, { EditorTabsProps } from "./editor-tabs";
-
-interface FullscreenEditorModalProps {
-  isOpen: boolean;
-  editorProps: EditorTabsProps;
-}
+import EditorTabs from "./editor-tabs";
+import { FullscreenEditorModalProps } from "@/types/types";
 
 const FullscreenEditorModal = ({ editorProps }: FullscreenEditorModalProps) => {
   const {
