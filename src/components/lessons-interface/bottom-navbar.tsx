@@ -118,7 +118,7 @@ const BottomNavbar = ({
   const saveProgress = useCallback(
     async (courseId: string, lessonId: string, chapterId: string) => {
       // Load the progress from local storage
-      const localProgress: any = localStorage.getItem("progress");
+      const localProgress = localStorage.getItem("progress");
 
       // Load the progress from the database
       const savedProgress = session
@@ -185,9 +185,15 @@ const BottomNavbar = ({
         const pendingUpdates = JSON.parse(
           localStorage.getItem("pendingUpdates") || "[]",
         );
-        pendingUpdates.forEach((update: any) => {
-          saveProgress(update.courseId, update.lessonId, update.chapterId);
-        });
+        pendingUpdates.forEach(
+          (update: {
+            courseId: string;
+            lessonId: string;
+            chapterId: string;
+          }) => {
+            saveProgress(update.courseId, update.lessonId, update.chapterId);
+          },
+        );
         localStorage.setItem("pendingUpdates", "[]");
       }
     };
