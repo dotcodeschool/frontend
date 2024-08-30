@@ -16,34 +16,7 @@ import stripComments from "strip-comments";
 import { FiMaximize2, FiMinimize2 } from "react-icons/fi";
 import { IoGitCompareOutline } from "react-icons/io5";
 import { parseDiff } from "@/utils";
-
-// TODO: Move to a types.ts file
-type File = {
-  fileName: string;
-  code: string;
-  language: string;
-};
-
-interface setEditorContent {
-  (newEditorContent: File[]): void;
-}
-
-export interface EditorTabsProps {
-  showHints: boolean;
-  isAnswerOpen: boolean;
-  readOnly?: boolean;
-  incorrectFiles: File[];
-  solution: File[];
-  editorContent: File[];
-  isOpen: boolean;
-  tabIndex: number;
-  showDiff: boolean;
-  setShowDiff: (showDiff: boolean) => void;
-  setTabIndex: (index: number) => void;
-  onOpen: () => void;
-  onClose: () => void;
-  setEditorContent: setEditorContent;
-}
+import { EditorTabsProps } from "@/types/types";
 
 const EditorTabs = ({
   showHints,
