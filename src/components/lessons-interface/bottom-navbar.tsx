@@ -26,7 +26,6 @@ import {
   CheckIcon,
 } from "@chakra-ui/icons";
 import { MdCode, MdNumbers } from "react-icons/md";
-import { FaCode } from "react-icons/fa";
 import { useCallback, useEffect, useState } from "react";
 import { map } from "lodash";
 import axios from "axios";
