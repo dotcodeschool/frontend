@@ -1,6 +1,6 @@
 import { MongoClient, MongoClientOptions } from "mongodb";
 
-let uri: string | undefined = process.env.MONGODB_URI;
+const uri: string | undefined = process.env.MONGODB_URI;
 
 if (!uri) {
   throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
