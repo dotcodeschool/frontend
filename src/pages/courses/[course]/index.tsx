@@ -34,18 +34,8 @@ import { serialize } from "next-mdx-remote/serialize";
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
 import MDXComponents from "@/components/lessons-interface/mdx-components";
 
-type Module = {
-  id: string;
-  index: number;
-  title: string;
-  description: MDXRemoteSerializeResult;
-  numOfLessons: number;
-};
-
-interface ModuleProps {
-  module: Module;
-  slug: string;
-}
+// Types
+import { CoursePageProps, ModuleListProps, ModuleProps } from "@/types/types";
 
 const ModuleItem = ({ module, slug }: ModuleProps) => {
   const { index, title, description } = module;
@@ -131,10 +121,6 @@ const ModuleItem = ({ module, slug }: ModuleProps) => {
   );
 };
 
-interface ModuleListProps {
-  modules: Module[];
-}
-
 const ModuleList = ({ modules }: ModuleListProps) => {
   return (
     <Box
@@ -169,15 +155,6 @@ type Author = {
   name: string;
   url: string;
 };
-
-interface CoursePageProps {
-  slug: string;
-  title: string;
-  author: Author;
-  description: string;
-  modules: Module[];
-  tags: { language: string; level: string };
-}
 
 const ProgressProvider = createContext({});
 
@@ -271,9 +248,7 @@ export async function getStaticProps({
   };
 }) {
   const res = await getContentByType("courseModule");
-  const entry = res.items.find(
-    (item) => item.fields.slug === params.course,
-  );
+  const entry = res.items.find((item) => item.fields.slug === params.course);
 
   if (!entry) {
     throw new Error("No course found with the provided slug");
@@ -306,8 +281,10 @@ export async function getStaticProps({
 
       const lessonDescription = get(lesson, "fields.description") || "";
       console.log(lessonDescription);
-      const serializedLessonDescription = typeof lessonDescription === "string" ?
-        await serialize(lessonDescription) : console.error("Lesson description is not a string");
+      const serializedLessonDescription =
+        typeof lessonDescription === "string"
+          ? await serialize(lessonDescription)
+          : console.error("Lesson description is not a string");
 
       console.log(serializedLessonDescription);
 
