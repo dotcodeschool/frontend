@@ -8,7 +8,9 @@ export async function fetchEntry(id: string) {
   return entry;
 }
 
-export async function fetchFile(file: any) {
+export async function fetchFile(
+  file: any,
+): Promise<{ fileName: string; code: string }> {
   if (typeof file !== "object" || !file.fields) {
     throw new Error("File is not an object or file.fields is null");
   }
@@ -27,13 +29,13 @@ export function parseDiff(diff: string) {
   const lines = diff.split("\n");
   let originalContent = "";
   let modifiedContent = "";
-  let currentFile = "";
+  // let currentFile = "";
   let inHunk = false;
 
   for (const line of lines) {
     if (line.startsWith("diff --git")) {
       // Start of a new file diff
-      currentFile = line.split(" ")[2];
+      // currentFile = line.split(" ")[2];
       originalContent += line + "\n";
       modifiedContent += line + "\n";
     } else if (
