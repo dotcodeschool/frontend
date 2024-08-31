@@ -12,7 +12,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import SplitPane, { SplitPaneProps } from "react-split-pane";
-import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
+import { MDXRemote } from "next-mdx-remote";
 import { endsWith, find, flatMapDeep, isEmpty, map, nth } from "lodash";
 import { serialize } from "next-mdx-remote/serialize";
 import stripComments from "strip-comments";
@@ -73,7 +73,7 @@ export default function CourseModule({
 
   const toggleAnswer = () => {
     const incorrect: File[] = [];
-    const _doesMatchArr = map(rawFiles, (file, index) => {
+    const _doesMatchArr = map(rawFiles, (file) => {
       if (file.fileName.endsWith(".diff")) return true;
       const solutionFile = find(
         solution,
