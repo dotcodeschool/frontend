@@ -1,36 +1,35 @@
+import logo from "@/../public/logo.svg";
+import { HamburgerIcon } from "@chakra-ui/icons";
 import {
+  Avatar,
   Box,
-  Flex,
-  Spacer,
-  IconButton,
-  useDisclosure,
-  Drawer,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  DrawerHeader,
-  DrawerBody,
-  Link,
-  HStack,
-  VStack,
-  Text,
-  ChakraProps,
   Button,
+  ChakraProps,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
+  Flex,
+  HStack,
+  IconButton,
+  Link,
   Menu,
   MenuButton,
-  MenuList,
   MenuItem,
-  Avatar,
+  MenuList,
+  Spacer,
+  Text,
+  useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
-import { HamburgerIcon } from "@chakra-ui/icons";
 import { map } from "lodash";
-import logo from "@/../public/logo.svg";
-import PrimaryButton from "./primary-button";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { Fragment, useEffect } from "react";
-import axios from "axios";
 import Image from "next/image";
+import { Fragment } from "react";
 import { FaPen } from "react-icons/fa";
+import PrimaryButton from "./primary-button";
 
 // Types
 import { NavbarProps, NavLink } from "@/types/types";
@@ -196,7 +195,7 @@ const Navbar = ({
   lessonDetails,
 }: NavbarProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { data: session, status } = useSession();
+  // const { data: session, status } = useSession();
 
   if (!lessonDetails) {
     lessonDetails = {

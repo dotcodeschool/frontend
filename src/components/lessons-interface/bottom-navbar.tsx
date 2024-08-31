@@ -26,9 +26,8 @@ import {
   CheckIcon,
 } from "@chakra-ui/icons";
 import { MdCode, MdNumbers } from "react-icons/md";
-import { useCallback, useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { map } from "lodash";
-import axios from "axios";
 import { useSession } from "next-auth/react";
 
 // Types

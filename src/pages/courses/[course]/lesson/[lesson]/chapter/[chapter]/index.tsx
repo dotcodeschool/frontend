@@ -26,6 +26,8 @@ import EditorTabs from "@/components/lessons-interface/editor-tabs";
 import FullscreenEditorModal from "@/components/lessons-interface/fullscreen-editor-modal";
 
 import "@/app/lib/resizer.css";
+
+// Types
 import { CourseModuleProps, File } from "@/types/types";
 
 export default function CourseModule({
@@ -481,7 +483,6 @@ function mapSectionsToLessons(sections: any[]) {
     if (!section) {
       throw new Error("Lesson is undefined");
     }
-
     return {
       section: `${index + 1}`,
       id: section.sys.id,
