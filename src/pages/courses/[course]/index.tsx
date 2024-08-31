@@ -31,7 +31,7 @@ import {
 } from "react";
 import { useSession } from "next-auth/react";
 import { serialize } from "next-mdx-remote/serialize";
-import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
+import { MDXRemote } from "next-mdx-remote";
 import MDXComponents from "@/components/lessons-interface/mdx-components";
 
 // Types
