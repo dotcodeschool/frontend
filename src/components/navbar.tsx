@@ -35,6 +35,9 @@ import { FaPen } from "react-icons/fa";
 // Types
 import { NavbarProps, NavLink } from "@/types/types";
 
+// Hooks
+import usePendingUpdates from "@/hooks/usePendingUpdates";
+
 const NavLinks = ({ navLinks }: { navLinks: NavLink[] }) => {
   return map(navLinks, (link) => (
     <Link
@@ -208,45 +211,7 @@ const Navbar = ({
   const { lessonId, chapterId, chapters, githubUrl } = lessonDetails;
   const currentChapter = chapters[Number(chapterId) - 1]?.title;
 
-  // TODO: Move this to a custom hook
-  useEffect(() => {
-    if (status === "authenticated") {
-      const pendingUpdates = JSON.parse(
-        localStorage.getItem("pendingUpdates") || "[]",
-      );
-
-      const updates = pendingUpdates.map(
-        ({ courseId, lessonId, chapterId }: any) => {
-          const progress = JSON.parse(localStorage.getItem("progress") || "{}");
-          // Update the progress
-          if (!progress[courseId]) {
-            progress[courseId] = {};
-          }
-          if (!progress[courseId][lessonId]) {
-            progress[courseId][lessonId] = {};
-          }
-          progress[courseId][lessonId][chapterId] = true;
-          return {
-            user: session?.user,
-            progress,
-          };
-        },
-      );
-
-      if (pendingUpdates.length > 0) {
-        axios
-          .post("/api/update-progress", {
-            updates,
-          })
-          .then(() => {
-            localStorage.removeItem("pendingUpdates");
-          })
-          .catch((err) => {
-            console.error(err);
-          });
-      }
-    }
-  }, [status, session?.user]);
+  usePendingUpdates();
 
   return (
     <Flex
