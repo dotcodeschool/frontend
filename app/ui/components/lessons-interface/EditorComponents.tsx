@@ -6,6 +6,8 @@ import { createContext, useContext, useState } from "react";
 import EditorTabs from "./editor-tabs";
 import FullscreenEditorModal from "./fullscreen-editor-modal";
 import { TypeFile } from "@/app/lib/types/TypeFile";
+import { find, reduce } from "lodash";
+import stripComments from "strip-comments";
 
 const SplitPane = dynamic(() => import("react-split-pane"), { ssr: false });
 
@@ -16,15 +18,24 @@ interface EditorProviderProps {
   initialContent: TypeFile[];
   initialTabIndex?: number;
   initialShowDiff?: boolean;
+  initialDoesAnswerMatch?: boolean;
+  initialIsAnswerOpen?: boolean;
+  solution: TypeFile[];
 }
 
 interface EditorContextType {
+  compareAnswerAndUpdateState: () => void;
+  doesAnswerMatch: boolean;
+  incorrectFiles: TypeFile[];
+  isAnswerOpen: boolean;
   tabIndex: number;
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
+  solution: TypeFile[];
   showDiff: boolean;
   setShowDiff: React.Dispatch<React.SetStateAction<boolean>>;
   editorContent: TypeFile[];
   setEditorContent: React.Dispatch<React.SetStateAction<TypeFile[]>>;
+  toggleAnswer: () => void;
   toggleDiff: () => void;
 }
 
@@ -33,11 +44,23 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   initialContent,
   initialTabIndex = 0,
   initialShowDiff = false,
+  initialDoesAnswerMatch = false,
+  initialIsAnswerOpen = false,
+  solution,
 }) => {
   const [tabIndex, setTabIndex] = useState(initialTabIndex);
   const [showDiff, setShowDiff] = useState(initialShowDiff);
+  const [doesAnswerMatch, setDoesAnswerMatch] = useState(
+    initialDoesAnswerMatch,
+  );
+  const [isAnswerOpen, setIsAnswerOpen] = useState(initialIsAnswerOpen);
+  const [incorrectFiles, setIncorrectFiles] = useState<TypeFile[]>([]);
   const [editorContent, setEditorContent] =
     useState<TypeFile[]>(initialContent);
+
+  const toggleAnswer = () => {
+    setIsAnswerOpen((prevIsAnswerOpen) => !prevIsAnswerOpen);
+  };
 
   const toggleDiff = () => {
     setShowDiff((prevShowDiff) => {
@@ -59,13 +82,59 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
     });
   };
 
+  const compareAnswerAndUpdateState = () => {
+    const doesAnswerMatch = reduce(
+      editorContent,
+      (acc, file) => {
+        const solutionFile = find(
+          solution,
+          (solutionFile: TypeFile) => solutionFile.fileName === file.fileName,
+        );
+
+        if (!solutionFile) {
+          return true && acc;
+        }
+        const solutionCodeWithoutComments = stripComments(solutionFile.code);
+        const solutionCodeWithoutCommentsAndWhitespace =
+          solutionCodeWithoutComments.replace(/\s/g, "");
+        const fileCodeWithoutComments = stripComments(file.code);
+        const fileCodeWithoutCommentsAndWhitespace =
+          fileCodeWithoutComments.replace(/\s/g, "");
+        const doFilesMatch =
+          solutionCodeWithoutCommentsAndWhitespace ===
+          fileCodeWithoutCommentsAndWhitespace;
+        if (!doFilesMatch) {
+          setIncorrectFiles((prevIncorrectFiles) => [
+            ...prevIncorrectFiles,
+            file,
+          ]);
+        } else {
+          setIncorrectFiles((prevIncorrectFiles) =>
+            prevIncorrectFiles.filter(
+              (incorrectFile) => incorrectFile.fileName !== file.fileName,
+            ),
+          );
+        }
+        return doFilesMatch && acc;
+      },
+      true,
+    );
+    setDoesAnswerMatch(doesAnswerMatch);
+  };
+
   const value: EditorContextType = {
+    compareAnswerAndUpdateState,
+    doesAnswerMatch,
+    incorrectFiles,
+    isAnswerOpen,
     tabIndex,
     setTabIndex,
+    solution,
     showDiff,
     setShowDiff,
     editorContent,
     setEditorContent,
+    toggleAnswer,
     toggleDiff,
   };
 
@@ -84,17 +153,13 @@ export const useEditor = (): EditorContextType => {
 
 export function EditorComponents({
   showHints,
-  isAnswerOpen,
   readOnly,
-  incorrectFiles,
   solution,
   editorContent,
   mdxContent,
 }: {
   showHints: boolean;
-  isAnswerOpen: boolean;
   readOnly?: boolean;
-  incorrectFiles: TypeFile[];
   solution: TypeFile[];
   editorContent: TypeFile[];
   mdxContent?: React.ReactNode;
@@ -115,22 +180,12 @@ export function EditorComponents({
     }
   };
 
-  const setEditorContent = (newContent: TypeFile[]) => {
-    // WIP: Implement this for comparing answers
-    // eslint-disable-next-line no-console
-    console.log("setting editor content", newContent);
-  };
-
   const editorProps = {
     showHints,
-    isAnswerOpen,
     readOnly,
-    incorrectFiles,
-    solution,
     editorContent,
     isOpen,
     handleFullscreenToggle,
-    setEditorContent,
   };
 
   return (
@@ -167,7 +222,7 @@ export function EditorComponents({
         key={2}
         px={{ base: 4, md: 0 }}
       >
-        <EditorProvider initialContent={editorContent}>
+        <EditorProvider initialContent={editorContent} solution={solution}>
           <EditorTabs {...editorProps} />
           <FullscreenEditorModal
             isOpen={isOpen}

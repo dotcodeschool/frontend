@@ -9,41 +9,57 @@ import {
   Tooltip,
   CloseButton,
   Text,
+  Button,
+  Icon,
+  useToast,
+  HStack,
 } from "@chakra-ui/react";
 import { DiffEditor, Editor } from "@monaco-editor/react";
-import { map, find, matches, endsWith, isEmpty } from "lodash";
+import { map, find, matches, endsWith, isEmpty, forEach } from "lodash";
 import stripComments from "strip-comments";
 import { FiMaximize2, FiMinimize2 } from "react-icons/fi";
-import { IoGitCompareOutline } from "react-icons/io5";
 import { TypeFile } from "@/app/lib/types/TypeFile";
-import React, { useCallback, useRef } from "react";
+import {
+  IoCheckmarkDone,
+  IoEyeOffOutline,
+  IoGitCompareOutline,
+} from "react-icons/io5";
+import { MdCompareArrows } from "react-icons/md";
+import React, { useCallback, useEffect, useRef } from "react";
 import { useEditor } from "./EditorComponents";
 
 export interface EditorTabsProps {
   showHints: boolean;
   isAnswerOpen: boolean;
   readOnly?: boolean;
-  incorrectFiles: TypeFile[];
-  solution: TypeFile[];
   isOpen: boolean;
   handleFullscreenToggle: (e: React.MouseEvent) => void;
-  setEditorContent: (newContent: TypeFile[]) => void;
 }
 
 const EditorTabs = React.memo(
   ({
     showHints,
-    isAnswerOpen,
     readOnly,
-    incorrectFiles,
-    solution,
     isOpen,
     handleFullscreenToggle,
-    setEditorContent,
   }: EditorTabsProps) => {
-    const { tabIndex, setTabIndex, editorContent, showDiff, toggleDiff } =
-      useEditor();
+    const {
+      compareAnswerAndUpdateState,
+      doesAnswerMatch,
+      incorrectFiles,
+      isAnswerOpen,
+      tabIndex,
+      setTabIndex,
+      solution,
+      editorContent,
+      setEditorContent,
+      showDiff,
+      toggleAnswer,
+      toggleDiff,
+    } = useEditor();
     const isUserInteraction = useRef(false);
+
+    const toast = useToast();
 
     const handleTabsChange = useCallback(
       (index: number) => {
@@ -59,6 +75,31 @@ const EditorTabs = React.memo(
       isUserInteraction.current = true;
     }, []);
 
+    useEffect(() => {
+      if (isAnswerOpen) {
+        toast.closeAll();
+        if (doesAnswerMatch) {
+          toast({
+            title: "Your solution matches ours",
+            description:
+              "Great job! Your solution matches ours. You can now move on to the next step.",
+            status: "success",
+            duration: 9000,
+            isClosable: true,
+          });
+        } else {
+          toast({
+            title: "Your solution doesn't match ours",
+            description:
+              "This doesn't mean you're wrong! We just might have different ways of solving the problem.",
+            status: "warning",
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      }
+    }, [doesAnswerMatch, isAnswerOpen, toast]);
+
     return (
       <Tabs
         index={tabIndex}
@@ -66,9 +107,13 @@ const EditorTabs = React.memo(
           return handleTabsChange(e);
         }}
         variant="unstyled"
-        h={isOpen ? "100vh" : "full"}
-        border="1px solid"
-        borderColor="whiteAlpha.200"
+        h={
+          readOnly
+            ? "100vh"
+            : isOpen
+              ? "calc(100vh - 96px)"
+              : "calc(100vh - 225px)"
+        }
         bg="#2e2e2e"
         w="full"
       >
@@ -201,48 +246,76 @@ const EditorTabs = React.memo(
             </Tooltip>
           </Flex>
         </TabList>
-        <TabPanels h="90%">
-          {map(editorContent, (file, i) => (
-            <TabPanel key={i} h={{ base: "80vh", md: "100%" }} p={0} pb={0}>
-              <Editor
-                key={i + file.fileName}
-                height={isAnswerOpen ? "0%" : "100%"}
-                theme="vs-dark"
-                defaultLanguage={file.language || "rust"}
-                defaultValue={file.code || "// placeholder"}
-                options={{ readOnly: readOnly || file.language === "diff" }}
-                value={file.code}
-                onChange={(value) => {
-                  const newEditorContent = [...editorContent];
-                  newEditorContent[i].code = value?.toString() || "";
-                  setEditorContent(newEditorContent);
-                }}
-              />
-              {isAnswerOpen && (
-                <DiffEditor
-                  height="100%"
+        <TabPanels h="full">
+          {map(editorContent, (file, i) => {
+            const userCodeWithoutComments = showHints
+              ? stripComments(editorContent[i]?.code)
+              : "";
+            const solutionWithoutComments = showHints
+              ? stripComments(
+                  find(
+                    solution,
+                    ({ fileName }) => fileName === editorContent[i].fileName,
+                  )?.code ??
+                    editorContent[i]?.code ??
+                    "",
+                )
+              : "";
+            return (
+              <TabPanel key={i} h="full" p={0} pb={0}>
+                <Editor
+                  key={i + file.fileName}
+                  height={isAnswerOpen ? "0%" : "100%"}
                   theme="vs-dark"
-                  original={
-                    showHints ? stripComments(editorContent[i]?.code) : ""
-                  }
-                  modified={
-                    showHints
-                      ? stripComments(
-                          find(
-                            solution,
-                            ({ fileName }) =>
-                              fileName === editorContent[i].fileName,
-                          )?.code ??
-                            editorContent[i]?.code ??
-                            "",
-                        )
-                      : ""
-                  }
-                  options={{ readOnly: true }}
+                  defaultLanguage={file.language || "rust"}
+                  defaultValue={file.code || "// placeholder"}
+                  options={{ readOnly: readOnly || file.language === "diff" }}
+                  value={file.code}
+                  onChange={(value) => {
+                    const newEditorContent = [...editorContent];
+                    newEditorContent[i].code = value?.toString() || "";
+                    setEditorContent(newEditorContent);
+                  }}
                 />
-              )}
-            </TabPanel>
-          ))}
+                {isAnswerOpen && (
+                  <DiffEditor
+                    height="100%"
+                    theme="vs-dark"
+                    original={userCodeWithoutComments}
+                    modified={solutionWithoutComments}
+                    options={{ readOnly: true }}
+                  />
+                )}
+                {showHints && (
+                  <HStack p={2} w="full" bg="#2e2e2e" alignItems="center">
+                    <Button
+                      variant="outline"
+                      leftIcon={
+                        <Icon
+                          as={isAnswerOpen ? IoEyeOffOutline : MdCompareArrows}
+                        />
+                      }
+                      onClick={() => {
+                        isUserInteraction.current = true;
+                        compareAnswerAndUpdateState();
+                        toggleAnswer();
+                      }}
+                    >
+                      {isAnswerOpen ? "Hide" : "Compare"} Answer
+                    </Button>
+                    {doesAnswerMatch && isAnswerOpen && (
+                      <HStack>
+                        <Icon as={IoCheckmarkDone} color="green.300" />
+                        <Text color="green.300">
+                          Your solution matches ours
+                        </Text>
+                      </HStack>
+                    )}
+                  </HStack>
+                )}
+              </TabPanel>
+            );
+          })}
         </TabPanels>
       </Tabs>
     );

@@ -95,6 +95,9 @@ export default async function CourseModule({
   const { source, template, solution } = lessonData.files.fields;
 
   const readOnly = isEmpty(solution);
+  const parsedSolution = !isEmpty(solution)
+    ? await Promise.all(solution.map(fetchFile))
+    : solution;
   const startingFiles = !isEmpty(source) ? source : template;
   const startingFilesWithCode = await Promise.all(startingFiles.map(fetchFile));
   const startingFilesWithCodeAndLanguage = startingFilesWithCode.map(
@@ -159,10 +162,9 @@ export default async function CourseModule({
         <Box display={{ base: "none", md: "block" }}>
           <EditorComponents
             showHints={!!solution}
-            isAnswerOpen={false}
             readOnly={readOnly}
             incorrectFiles={[]}
-            solution={solution}
+            solution={parsedSolution}
             editorContent={startingFilesWithCodeAndLanguage}
             mdxContent={
               <MDXRemote
@@ -187,10 +189,9 @@ export default async function CourseModule({
           <GridItem colSpan={[12, 7]} overflow="clip">
             <EditorComponents
               showHints={!!solution}
-              isAnswerOpen={false}
               readOnly={readOnly}
               incorrectFiles={[]}
-              solution={solution}
+              solution={parsedSolution}
               editorContent={startingFilesWithCodeAndLanguage}
             />
           </GridItem>
