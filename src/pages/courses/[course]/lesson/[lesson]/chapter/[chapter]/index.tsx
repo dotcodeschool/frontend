@@ -16,7 +16,6 @@ import { MDXRemote } from "next-mdx-remote";
 import { endsWith, find, flatMapDeep, isEmpty, map, nth } from "lodash";
 import { serialize } from "next-mdx-remote/serialize";
 import stripComments from "strip-comments";
-
 import { getContentById, getContentByType } from "@/pages/api/get-content";
 import MDXComponents from "@/components/lessons-interface/mdx-components";
 import Navbar from "@/components/navbar";
@@ -24,11 +23,14 @@ import BottomNavbar from "@/components/lessons-interface/bottom-navbar";
 import { useEffect, useState } from "react";
 import EditorTabs from "@/components/lessons-interface/editor-tabs";
 import FullscreenEditorModal from "@/components/lessons-interface/fullscreen-editor-modal";
-
 import "@/app/lib/resizer.css";
-
-// Types
 import { CourseModuleProps, File } from "@/types/types";
+import {
+  fetchEntry,
+  fetchFile,
+  getSections,
+  mapSectionsToLessons,
+} from "@/utils";
 
 export default function CourseModule({
   courseId,
@@ -335,33 +337,6 @@ export default function CourseModule({
   );
 }
 
-async function fetchEntry(id: string) {
-  const entry = await getContentById(id);
-  if (!entry) {
-    throw new Error(`Entry with id ${id} not found`);
-  }
-
-  return entry;
-}
-
-async function fetchFile(file: any) {
-  if (typeof file !== "object" || !file.fields) {
-    throw new Error("File is not an object or file.fields is null");
-  }
-
-  const { url, fileName } = file.fields.file;
-  const response = await fetch(`https:${url}`);
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-
-  return {
-    fileName,
-    code: await response.text(),
-  };
-}
-
 export async function getStaticProps({
   params,
 }: {
@@ -432,7 +407,6 @@ export async function getStaticProps({
   const mdxSource = await serialize(lessonContent);
 
   const current = `${course}/lesson/${parsedLesson}/chapter/${parsedChapter}`;
-
   const prev =
     parsedChapter > 1
       ? `${course}/lesson/${parsedLesson}/chapter/${parsedChapter - 1}`
@@ -464,32 +438,6 @@ export async function getStaticProps({
       githubUrl,
     },
   };
-}
-
-// Validates and returns the lessons array
-function getSections(entry: any) {
-  const sections = entry.fields.sections;
-  if (!sections || !Array.isArray(sections) || sections.length === 0) {
-    throw new Error(
-      "Failed to fetch the entry from Contentful or sections array is null or empty",
-    );
-  }
-  return sections;
-}
-
-// Maps lessons to modules
-function mapSectionsToLessons(sections: any[]) {
-  return sections.map((section, index) => {
-    if (!section) {
-      throw new Error("Lesson is undefined");
-    }
-    return {
-      section: `${index + 1}`,
-      id: section.sys.id,
-      title: section.fields.title,
-      description: section.fields.description,
-    };
-  });
 }
 
 export async function getStaticPaths() {

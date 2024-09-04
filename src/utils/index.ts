@@ -65,3 +65,29 @@ export function parseDiff(diff: string) {
 
   return { originalContent, modifiedContent };
 }
+
+// Validates and returns the lessons array
+export function getSections(entry: any) {
+  const sections = entry.fields.sections;
+  if (!sections || !Array.isArray(sections) || sections.length === 0) {
+    throw new Error(
+      "Failed to fetch the entry from Contentful or sections array is null or empty",
+    );
+  }
+  return sections;
+}
+
+// Maps lessons to modules
+export function mapSectionsToLessons(sections: any[]) {
+  return sections.map((section, index) => {
+    if (!section) {
+      throw new Error("Lesson is undefined");
+    }
+    return {
+      section: `${index + 1}`,
+      id: section.sys.id,
+      title: section.fields.title,
+      description: section.fields.description,
+    };
+  });
+}
