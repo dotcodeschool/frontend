@@ -6,9 +6,9 @@ export async function GET(req: NextRequest) {
   const db = client.db("test");
 
   const searchParams = req.nextUrl.searchParams;
-  const user = searchParams.get("user");
+  const email = searchParams.get("user[email]");
 
-  if (!user) {
+  if (!email) {
     return NextResponse.json(
       { error: "User parameter is required" },
       { status: 400 },
@@ -16,8 +16,8 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const result = await db.collection("users").findOne({ user });
-    return NextResponse.json({ result });
+    const result = await db.collection("users").findOne({ email });
+    return NextResponse.json(result);
   } catch (error) {
     console.error("MongoDB error:", error);
     return NextResponse.json(

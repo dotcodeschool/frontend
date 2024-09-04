@@ -19,6 +19,7 @@ export interface ModuleProps {
   index: number;
   module: TypeSectionFields;
   slug: string;
+  numOfCompletedLessons: number;
 }
 
 export interface CourseContentProps {

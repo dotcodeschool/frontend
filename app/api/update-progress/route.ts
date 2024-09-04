@@ -20,7 +20,8 @@ export async function POST(req: NextRequest) {
   const db = client.db("test");
 
   try {
-    const updates: ProgressUpdate[] = await req.json();
+    const data = await req.json();
+    const updates: ProgressUpdate[] = data.updates;
 
     const operations = updates.map((update) => {
       const { user, progress } = update;

@@ -210,12 +210,12 @@ const BottomNavbar = ({
   );
 
   useEffect(() => {
-    const syncProgress = () => {
+    const syncProgress = async () => {
       if (session) {
         const pendingUpdates = JSON.parse(
           localStorage.getItem("pendingUpdates") || "[]",
         );
-        pendingUpdates.forEach((update: any) => {
+        pendingUpdates.forEach((update) => {
           saveProgress(update.courseId, update.lessonId, update.chapterId);
         });
         localStorage.setItem("pendingUpdates", "[]");

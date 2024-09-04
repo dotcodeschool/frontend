@@ -8,11 +8,14 @@ import { Key, useEffect, useState } from "react";
 import { IPreComponentProps } from "@/app/lib/types/IPreComponentProps";
 import { Box, IconButton } from "@chakra-ui/react";
 
-const PreComponent = (props: IPreComponentProps) => {
+const PreComponent: React.FC<IPreComponentProps> = ({ children }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
 
-  const code = props.children.props.children.trim();
+  const code = children.props.children.trim();
+  const language = children.props.className
+    ? children.props.className.replace("language-", "")
+    : "rust";
 
   useEffect(() => {
     if (copySuccess) {
@@ -29,15 +32,7 @@ const PreComponent = (props: IPreComponentProps) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Highlight
-        theme={themes.dracula}
-        code={code}
-        language={
-          props.children.props.className
-            ? props.children.props.className.replace("language-", "")
-            : "rust"
-        }
-      >
+      <Highlight theme={themes.dracula} code={code} language={language}>
         {({
           style,
           tokens,
@@ -79,7 +74,7 @@ const PreComponent = (props: IPreComponentProps) => {
           >
             <Box pr={12}>
               {tokens.map((line, i) => (
-                <div key={i} {...getLineProps({ line, key: i })}>
+                <div key={i} {...getLineProps({ line })}>
                   {line.map((token, key) => (
                     <span key={key} {...getTokenProps({ token })} />
                   ))}

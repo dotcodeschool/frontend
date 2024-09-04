@@ -29,8 +29,15 @@ import {
 import { Entry, EntryFieldTypes } from "contentful";
 import ProgressBar from "./ProgressBar";
 import { MdCheckCircle } from "react-icons/md";
+import { auth } from "@/auth";
+import clientPromise from "@/app/lib/mongodb";
 
-const ModuleItem = async ({ index, module, slug }: ModuleProps) => {
+const ModuleItem = async ({
+  index,
+  module,
+  slug,
+  numOfCompletedLessons,
+}: ModuleProps) => {
   const { title, description, lessons } = module;
   const numOfLessons = size(lessons);
 
@@ -46,9 +53,8 @@ const ModuleItem = async ({ index, module, slug }: ModuleProps) => {
           </HStack>
           <VStack w="90%" align="end">
             <ProgressBar
-              index={index}
+              numOfCompletedLessons={numOfCompletedLessons}
               numOfLessons={numOfLessons}
-              slug={slug}
             />
           </VStack>
         </VStack>
@@ -108,7 +114,7 @@ const ModuleList = ({
   );
 };
 
-const CourseContent = ({
+const CourseContent = async ({
   slug,
   moduleName,
   author,
@@ -117,8 +123,25 @@ const CourseContent = ({
   level,
   language,
 }: TypeCourseModuleFields) => {
+  const session = await auth();
   const authorData = author as unknown as TypeAuthorSkeleton;
   const sectionsData = sections as unknown as Entry<TypeSectionSkeleton>[];
+
+  let progressData = {};
+
+  if (session) {
+    try {
+      const client = await clientPromise;
+      const db = client.db("test");
+      const res = await db
+        .collection("users")
+        .findOne({ email: session.user?.email });
+      const data = res?.progress;
+      progressData = data?.[slug.toString()];
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   return (
     <Box maxW="4xl" mx="auto">
@@ -164,6 +187,9 @@ const CourseContent = ({
             key={index}
             index={index}
             module={module.fields as unknown as TypeSectionFields}
+            numOfCompletedLessons={size(
+              progressData?.[Number(index + 1).toString()],
+            )}
             slug={slug.toString()}
           />
         ))}
