@@ -58,6 +58,9 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+      lottie-react:
+        specifier: ^2.4.0
+        version: 2.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       mongodb:
         specifier: ^6.3.0
         version: 6.8.0
@@ -85,9 +88,6 @@ importers:
       react-icons:
         specifier: ^4.12.0
         version: 4.12.0(react@18.3.1)
-      react-lottie:
-        specifier: ^1.2.3
-        version: 1.2.4(react@18.3.1)
       react-split-pane:
         specifier: ^0.1.92
         version: 0.1.92(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1553,6 +1553,12 @@ packages:
         integrity: sha512-91s/n4qUPV/wg8eE9KHYW1kouTfDk2FPGjXbBMfRWP/2vg1rCXNQL1OCabwGs0XSdukuK+MwCDXE30QpSeMUhQ==,
       }
 
+  "@types/node@20.16.5":
+    resolution:
+      {
+        integrity: sha512-VwYCweNo3ERajwy0IUlqqcyZ8/A7Zwa9ZP3MnENWcB11AejO+tLy3pu850goUW2FC/IJMdZUfKpX/yxL1gymCA==,
+      }
+
   "@types/parse-json@4.0.2":
     resolution:
       {
@@ -2097,12 +2103,6 @@ packages:
       }
     engines: { node: ">=10", npm: ">=6" }
 
-  babel-runtime@6.26.0:
-    resolution:
-      {
-        integrity: sha512-ITKNuq2wKlW1fJg9sSW52eepoYgZBggvOAHC0u/CYu/qxQ9EVzThCgR69BnSXLHjy2f7SY5zaQ4yt7H9ZVxY2g==,
-      }
-
   bail@2.0.2:
     resolution:
       {
@@ -2360,13 +2360,6 @@ packages:
         integrity: sha512-2KV8NhB5JqC3ky0r9PMCAZKbUHSwtEo4CwCs0KXgruG43gX5PMqDEBbVU4OUzw2MuAWUfsuFmWvEKG5QRfSnJA==,
       }
 
-  core-js@2.6.12:
-    resolution:
-      {
-        integrity: sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==,
-      }
-    deprecated: core-js@<3.23.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Some versions have web compatibility issues. Please, upgrade your dependencies to the actual version of core-js.
-
   cosmiconfig@7.1.0:
     resolution:
       {
@@ -2542,10 +2535,10 @@ packages:
         integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==,
       }
 
-  electron-to-chromium@1.5.13:
+  electron-to-chromium@1.5.14:
     resolution:
       {
-        integrity: sha512-lbBcvtIJ4J6sS4tb5TLp1b4LyfCdMkwStzXPyAgVgTRAsep4bvrAGaBOP7ZJtQMNJpSQ9SqG4brWOroNaQtm7Q==,
+        integrity: sha512-bEfPECb3fJ15eaDnu9LEJ2vPGD6W1vt7vZleSVyFhYuMIKm3vz/g9lt7IvEzgdwj58RjbPKUF2rXTCN/UW47tQ==,
       }
 
   emoji-regex@8.0.0:
@@ -3787,6 +3780,15 @@ packages:
       }
     hasBin: true
 
+  lottie-react@2.4.0:
+    resolution:
+      {
+        integrity: sha512-pDJGj+AQlnlyHvOHFK7vLdsDcvbuqvwPZdMlJ360wrzGFurXeKPr8SiRCjLf3LrNYKANQtSsh5dz9UYQHuqx4w==,
+      }
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+
   lottie-web@5.12.2:
     resolution:
       {
@@ -4502,6 +4504,12 @@ packages:
         integrity: sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==,
       }
 
+  picocolors@1.1.0:
+    resolution:
+      {
+        integrity: sha512-TQ92mBOW0l3LeMeyLV6mzy/kWr8lkd/hp3mTg7wYK7zJhuBStmGMBG0BdeDZS/dZx1IukaX6Bk11zcln25o1Aw==,
+      }
+
   picomatch@2.3.1:
     resolution:
       {
@@ -4685,15 +4693,6 @@ packages:
         integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==,
       }
 
-  react-lottie@1.2.4:
-    resolution:
-      {
-        integrity: sha512-kBGxI+MIZGBf4wZhNCWwHkMcVP+kbpmrLWH/SkO0qCKc7D7eSPcxQbfpsmsCo8v2KCBYjuGSou+xTqK44D/jMg==,
-      }
-    engines: { npm: ^3.0.0 }
-    peerDependencies:
-      react: ">=15.0.0"
-
   react-remove-scroll-bar@2.3.6:
     resolution:
       {
@@ -4761,12 +4760,6 @@ packages:
         integrity: sha512-fmfw4XgoDke3kdI6h4xcUz1dG8uaiv5q9gcEwLS4Pnth2kxT+GZ7YehS1JTMGBQmtV7Y4GFGbs2re2NqhdozUg==,
       }
     engines: { node: ">= 0.4" }
-
-  regenerator-runtime@0.11.1:
-    resolution:
-      {
-        integrity: sha512-MguG95oij0fC3QV3URf4V2SDYGJhJnJGqvIIgdECeODCT98wSWDAJ94SSuVpYQUoTcGUIL6L4yNB7j1DFFHSBg==,
-      }
 
   regenerator-runtime@0.14.1:
     resolution:
@@ -6816,6 +6809,10 @@ snapshots:
     dependencies:
       undici-types: 6.19.8
 
+  "@types/node@20.16.5":
+    dependencies:
+      undici-types: 6.19.8
+
   "@types/parse-json@4.0.2": {}
 
   "@types/prismjs@1.26.4": {}
@@ -7208,11 +7205,6 @@ snapshots:
       cosmiconfig: 7.1.0
       resolve: 1.22.8
 
-  babel-runtime@6.26.0:
-    dependencies:
-      core-js: 2.6.12
-      regenerator-runtime: 0.11.1
-
   bail@2.0.2: {}
 
   balanced-match@1.0.2: {}
@@ -7233,7 +7225,7 @@ snapshots:
   browserslist@4.23.3:
     dependencies:
       caniuse-lite: 1.0.30001655
-      electron-to-chromium: 1.5.13
+      electron-to-chromium: 1.5.14
       node-releases: 2.0.18
       update-browserslist-db: 1.1.0(browserslist@4.23.3)
 
@@ -7345,8 +7337,6 @@ snapshots:
   copy-to-clipboard@3.3.3:
     dependencies:
       toggle-selection: 1.0.6
-
-  core-js@2.6.12: {}
 
   cosmiconfig@7.1.0:
     dependencies:
@@ -7467,7 +7457,7 @@ snapshots:
 
   eastasianwidth@0.2.0: {}
 
-  electron-to-chromium@1.5.13: {}
+  electron-to-chromium@1.5.14: {}
 
   emoji-regex@8.0.0: {}
 
@@ -8311,7 +8301,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      "@types/node": 20.16.2
+      "@types/node": 20.16.5
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -8388,6 +8378,12 @@ snapshots:
   loose-envify@1.4.0:
     dependencies:
       js-tokens: 4.0.0
+
+  lottie-react@2.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      lottie-web: 5.12.2
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   lottie-web@5.12.2: {}
 
@@ -9042,6 +9038,8 @@ snapshots:
 
   picocolors@1.0.1: {}
 
+  picocolors@1.1.0: {}
+
   picomatch@2.3.1: {}
 
   possible-typed-array-names@1.0.0: {}
@@ -9140,12 +9138,6 @@ snapshots:
 
   react-lifecycles-compat@3.0.4: {}
 
-  react-lottie@1.2.4(react@18.3.1):
-    dependencies:
-      babel-runtime: 6.26.0
-      lottie-web: 5.12.2
-      react: 18.3.1
-
   react-remove-scroll-bar@2.3.6(@types/react@18.3.5)(react@18.3.1):
     dependencies:
       react: 18.3.1
@@ -9199,8 +9191,6 @@ snapshots:
       get-intrinsic: 1.2.4
       globalthis: 1.0.4
       which-builtin-type: 1.1.4
-
-  regenerator-runtime@0.11.1: {}
 
   regenerator-runtime@0.14.1: {}
 
@@ -9666,7 +9656,7 @@ snapshots:
     dependencies:
       browserslist: 4.23.3
       escalade: 3.2.0
-      picocolors: 1.0.1
+      picocolors: 1.1.0
 
   uri-js@4.4.1:
     dependencies:

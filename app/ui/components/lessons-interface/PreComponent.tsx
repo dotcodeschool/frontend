@@ -8,7 +8,7 @@ import { Key, useEffect, useState } from "react";
 import { IPreComponentProps } from "@/app/lib/types/IPreComponentProps";
 import { Box, IconButton } from "@chakra-ui/react";
 
-const PreComponent: React.FC<IPreComponentProps> = ({ children }) => {
+const PreComponent = ({ children }: { children: IPreComponentProps }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
 
@@ -42,11 +42,13 @@ const PreComponent: React.FC<IPreComponentProps> = ({ children }) => {
           className: string;
           style: React.CSSProperties;
           tokens: Token[][];
+          // eslint-disable-next-line no-unused-vars
           getLineProps: (props: { line: Token[]; key?: Key }) => {
             className: string;
             style?: React.CSSProperties;
             key?: Key;
           };
+          // eslint-disable-next-line no-unused-vars
           getTokenProps: (props: { token: Token; key?: Key }) => {
             className: string;
             style?: React.CSSProperties;

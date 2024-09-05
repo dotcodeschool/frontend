@@ -10,6 +10,7 @@ import "@/app/ui/styles/resizer.css";
 import { getContentById, getContentByType } from "@/app/api/get-content/route";
 import {
   TypeCourseModuleSkeleton,
+  TypeFilesSkeleton,
   TypeLessonFields,
   TypeSectionFields,
   TypeSectionSkeleton,
@@ -17,8 +18,9 @@ import {
 import { EntryCollection } from "contentful";
 import { notFound } from "next/navigation";
 import { TypeFile } from "@/app/lib/types/TypeFile";
+import { MDXComponents as MDXComponentsType } from "mdx/types";
 
-async function fetchFile(file: any) {
+async function fetchFile(file: TypeFilesSkeleton): Promise<TypeFile> {
   if (typeof file !== "object" || !file.fields) {
     throw new Error("File is not an object or file.fields is null");
   }
@@ -163,13 +165,14 @@ export default async function CourseModule({
           <EditorComponents
             showHints={!!solution}
             readOnly={readOnly}
-            incorrectFiles={[]}
             solution={parsedSolution}
             editorContent={startingFilesWithCodeAndLanguage}
             mdxContent={
               <MDXRemote
                 source={lessonData.lessonContent.toString()}
-                components={MDXComponents as any}
+                components={
+                  MDXComponents as unknown as Readonly<MDXComponentsType>
+                }
               />
             }
           />
@@ -183,14 +186,15 @@ export default async function CourseModule({
           <GridItem colSpan={[12, 5]} overflowY="auto" px={6} pt={4}>
             <MDXRemote
               source={lessonData.lessonContent.toString()}
-              components={MDXComponents as any}
+              components={
+                MDXComponents as unknown as Readonly<MDXComponentsType>
+              }
             />
           </GridItem>
           <GridItem colSpan={[12, 7]} overflow="clip">
             <EditorComponents
               showHints={!!solution}
               readOnly={readOnly}
-              incorrectFiles={[]}
               solution={parsedSolution}
               editorContent={startingFilesWithCodeAndLanguage}
             />

@@ -1,19 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import clientPromise from "@/app/lib/mongodb";
-
-interface ProgressUpdate {
-  user: {
-    email: string;
-  };
-  progress: {
-    [courseId: string]: {
-      [lessonId: string]: {
-        [chapterId: string]: boolean;
-      };
-    };
-  };
-}
+import { IProgressUpdate } from "@/app/lib/types/IProgress";
 
 export async function POST(req: NextRequest) {
   const client = await clientPromise;
@@ -21,7 +9,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const data = await req.json();
-    const updates: ProgressUpdate[] = data.updates;
+    const updates: IProgressUpdate[] = data.updates;
 
     const operations = updates.map((update) => {
       const { user, progress } = update;

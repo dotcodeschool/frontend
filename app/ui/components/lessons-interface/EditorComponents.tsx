@@ -39,7 +39,7 @@ interface EditorContextType {
   toggleDiff: () => void;
 }
 
-export const EditorProvider: React.FC<EditorProviderProps> = ({
+export const EditorProvider = ({
   children,
   initialContent,
   initialTabIndex = 0,
@@ -47,7 +47,7 @@ export const EditorProvider: React.FC<EditorProviderProps> = ({
   initialDoesAnswerMatch = false,
   initialIsAnswerOpen = false,
   solution,
-}) => {
+}: EditorProviderProps) => {
   const [tabIndex, setTabIndex] = useState(initialTabIndex);
   const [showDiff, setShowDiff] = useState(initialShowDiff);
   const [doesAnswerMatch, setDoesAnswerMatch] = useState(

@@ -31,6 +31,8 @@ import ProgressBar from "./ProgressBar";
 import { MdCheckCircle } from "react-icons/md";
 import { auth } from "@/auth";
 import clientPromise from "@/app/lib/mongodb";
+import { MDXComponents as MDXComponentsType } from "mdx/types";
+import { IProgressData } from "@/app/lib/types/IProgress";
 
 const ModuleItem = async ({
   index,
@@ -61,7 +63,10 @@ const ModuleItem = async ({
       </AccordionButton>
       <AccordionPanel pb={12} w="90%" pt={0}>
         <Suspense fallback={<div>Loading...</div>}>
-          <MDXRemote source={description} components={MDXComponents as any} />
+          <MDXRemote
+            source={description}
+            components={MDXComponents as unknown as Readonly<MDXComponentsType>}
+          />
         </Suspense>
         <PrimaryButton
           as="a"
@@ -127,7 +132,7 @@ const CourseContent = async ({
   const authorData = author as unknown as TypeAuthorSkeleton;
   const sectionsData = sections as unknown as Entry<TypeSectionSkeleton>[];
 
-  let progressData = {};
+  let progressData: IProgressData = {};
 
   if (session) {
     try {

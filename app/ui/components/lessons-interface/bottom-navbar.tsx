@@ -34,6 +34,7 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import {
   TypeLessonFields,
+  TypeLessonSkeleton,
   TypeSectionFields,
 } from "@/app/lib/types/contentful";
 
@@ -52,9 +53,9 @@ const Section = ({
   current,
   isActive,
 }: SectionProps) => {
-  const lessonsArray: TypeLessonFields[] = lessons.map(
-    ({ fields }: { fields: TypeLessonFields }) => fields,
-  );
+  const lessonsArray: TypeLessonFields[] = (
+    lessons as unknown as TypeLessonSkeleton[]
+  ).map(({ fields }: { fields: TypeLessonFields }) => fields);
 
   return (
     <AccordionItem border="none">
@@ -104,7 +105,7 @@ const Section = ({
                 }}
                 isTruncated
               >
-                {lesson.lessonName}
+                {lesson.lessonName.toString()}
               </Text>
             </Link>
           );
@@ -148,7 +149,7 @@ const BottomNavbar = ({
   const saveProgress = useCallback(
     async (courseId: string, lessonId: string, chapterId: string) => {
       // Load the progress from local storage
-      const localProgress: any = localStorage.getItem("progress");
+      const localProgress = localStorage.getItem("progress");
 
       // Load the progress from the database
       const savedProgress = session
@@ -215,9 +216,15 @@ const BottomNavbar = ({
         const pendingUpdates = JSON.parse(
           localStorage.getItem("pendingUpdates") || "[]",
         );
-        pendingUpdates.forEach((update) => {
-          saveProgress(update.courseId, update.lessonId, update.chapterId);
-        });
+        pendingUpdates.forEach(
+          (update: {
+            courseId: string;
+            lessonId: string;
+            chapterId: string;
+          }) => {
+            saveProgress(update.courseId, update.lessonId, update.chapterId);
+          },
+        );
         localStorage.setItem("pendingUpdates", "[]");
       }
     };
@@ -279,7 +286,7 @@ const BottomNavbar = ({
               px={[4, 8]}
               mr={4}
               gap={2}
-              href={`/courses/${courseId}/lesson/${lessonId}/success`}
+              href={`/courses/${courseId}/success`}
               onClick={() => {
                 saveProgress(courseId, lessonId, chapterId);
               }}

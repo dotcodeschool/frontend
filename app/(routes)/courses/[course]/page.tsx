@@ -32,7 +32,7 @@ const CoursePage = async ({ params }: { params: { course: string } }) => {
   );
 };
 
-async function getCourseData(
+export async function getCourseData(
   courseSlug: string,
 ): Promise<TypeCourseModuleFields> {
   const res = await getContentByType<TypeCourseModuleSkeleton>("courseModule");
