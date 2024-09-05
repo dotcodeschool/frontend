@@ -1,4 +1,14 @@
 import { IParsedDiff } from "@/app/lib/types/IParsedDiff";
+import {
+  TypeCourseModuleFields,
+  TypeCourseModuleSkeleton,
+} from "../types/contentful";
+import { getContentByType } from "@/app/lib/utils";
+import { isNil } from "lodash";
+import { notFound } from "next/navigation";
+import { Entry } from "contentful";
+
+export { getContentById, getContentByType } from "./get-content";
 
 export function parseDiff(diff: string): IParsedDiff {
   let currentFile = "";
@@ -34,4 +44,19 @@ export function parseDiff(diff: string): IParsedDiff {
   }
 
   return files;
+}
+
+export async function getCourseData(
+  courseSlug: string,
+): Promise<TypeCourseModuleFields> {
+  const res = await getContentByType<TypeCourseModuleSkeleton>("courseModule");
+  const entry = res.items.find((item) => item.fields.slug === courseSlug);
+
+  if (isNil(entry)) {
+    notFound();
+  } else {
+    const typedEntry = entry as Entry<TypeCourseModuleSkeleton>;
+
+    return typedEntry.fields as unknown as TypeCourseModuleFields;
+  }
 }

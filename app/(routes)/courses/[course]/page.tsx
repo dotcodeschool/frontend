@@ -1,18 +1,12 @@
 import React from "react";
 import { Suspense } from "react";
-import { notFound } from "next/navigation";
 
 import Navbar from "@/app/ui/components/navbar";
 import { Box, Link } from "@chakra-ui/react";
-import { getContentByType } from "@/app/api/get-content/route";
-import {
-  TypeCourseModuleFields,
-  TypeCourseModuleSkeleton,
-} from "@/app/lib/types/contentful";
-import { isNil } from "lodash";
-import { Entry } from "contentful";
+import { TypeCourseModuleFields } from "@/app/lib/types/contentful";
 import { IoArrowBack } from "react-icons/io5";
 import CourseContent from "./components/CourseContent";
+import { getCourseData } from "@/app/lib/utils";
 
 const CoursePage = async ({ params }: { params: { course: string } }) => {
   const courseData: TypeCourseModuleFields = await getCourseData(params.course);
@@ -31,21 +25,6 @@ const CoursePage = async ({ params }: { params: { course: string } }) => {
     </Box>
   );
 };
-
-export async function getCourseData(
-  courseSlug: string,
-): Promise<TypeCourseModuleFields> {
-  const res = await getContentByType<TypeCourseModuleSkeleton>("courseModule");
-  const entry = res.items.find((item) => item.fields.slug === courseSlug);
-
-  if (isNil(entry)) {
-    notFound();
-  } else {
-    const typedEntry = entry as Entry<TypeCourseModuleSkeleton>;
-
-    return typedEntry.fields as unknown as TypeCourseModuleFields;
-  }
-}
 
 export default CoursePage;
 

@@ -12,11 +12,12 @@ import {
 } from "@chakra-ui/react";
 import PreComponent from "./PreComponent";
 import { IPreComponentProps } from "@/app/lib/types/IPreComponentProps";
+import { ReactElement } from "react";
 
 const MDXComponents = {
-  h1: (props: HeadingProps) => <Heading as="h1" size="xl" mt={4} {...props} />,
-  h2: (props: HeadingProps) => <Heading as="h2" size="lg" mt={4} {...props} />,
-  h3: (props: HeadingProps) => <Heading as="h3" size="md" mt={4} {...props} />,
+  h1: (props: HeadingProps) => <Heading as="h1" size="xl" mt={12} {...props} />,
+  h2: (props: HeadingProps) => <Heading as="h2" size="lg" mt={12} {...props} />,
+  h3: (props: HeadingProps) => <Heading as="h3" size="md" mt={12} {...props} />,
   p: (props: TextProps) => <Text my={4} {...props} />,
   a: (props: LinkProps) => <Link color="green.300" isExternal {...props} />,
   ul: (props: BoxProps) => <Box as="ul" pt={2} pl={4} ml={2} {...props} />,
@@ -27,7 +28,13 @@ const MDXComponents = {
     <Code colorScheme="orange" variant="subtle" {...props} />
   ),
 
-  pre: (props: IPreComponentProps) => <PreComponent {...props} />,
+  pre: ({
+    children,
+    ...props
+  }: {
+    children: ReactElement;
+    props: IPreComponentProps;
+  }) => <PreComponent {...props}>{children}</PreComponent>,
 
   blockquote: (props: BoxProps) => (
     <Box

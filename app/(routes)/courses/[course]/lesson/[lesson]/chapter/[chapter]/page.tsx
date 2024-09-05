@@ -1,40 +1,43 @@
 import { Box, Grid, GridItem, IconButton, Link, Text } from "@chakra-ui/react";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { endsWith, isEmpty } from "lodash";
+import { isEmpty, isNil, size } from "lodash";
 import MDXComponents from "@/app/ui/components/lessons-interface/mdx-components";
 import Navbar from "@/app/ui/components/navbar";
 import BottomNavbar from "@/app/ui/components/lessons-interface/bottom-navbar";
 import { EditorComponents } from "@/app/ui/components/lessons-interface/EditorComponents";
 import "@/app/ui/styles/resizer.css";
 
-import { getContentById, getContentByType } from "@/app/api/get-content/route";
+import { getContentById, getContentByType } from "@/app/lib/utils";
 import {
   TypeCourseModuleSkeleton,
   TypeFilesSkeleton,
+  TypeLesson,
   TypeLessonFields,
+  TypeLessonSkeleton,
   TypeSectionFields,
   TypeSectionSkeleton,
 } from "@/app/lib/types/contentful";
-import { EntryCollection } from "contentful";
+import { Asset, AssetFields, EntryCollection } from "contentful";
 import { notFound } from "next/navigation";
 import { TypeFile } from "@/app/lib/types/TypeFile";
 import { MDXComponents as MDXComponentsType } from "mdx/types";
 
-async function fetchFile(file: TypeFilesSkeleton): Promise<TypeFile> {
-  if (typeof file !== "object" || !file.fields) {
-    throw new Error("File is not an object or file.fields is null");
+async function fetchFile(fileFields: AssetFields): Promise<TypeFile> {
+  if (!fileFields.file) {
+    throw new Error("File field is missing");
   }
 
-  const { url, fileName } = file.fields.file;
+  const { url, fileName } = fileFields.file;
   const response = await fetch(`https:${url}`);
 
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    throw new Error(`Failed to fetch file: ${response.statusText}`);
   }
 
   return {
     fileName,
     code: await response.text(),
+    language: fileName.endsWith(".diff") ? "diff" : "rust",
   };
 }
 
@@ -62,14 +65,17 @@ export default async function CourseModule({
     (courseData.fields.sections as unknown as TypeSectionSkeleton[]).map(
       async (section) => {
         const lessons = await Promise.all(
-          section.fields.lessons.map(async (lesson) => {
+          (
+            section.fields
+              .lessons as unknown as TypeLesson<"WITH_ALL_LOCALES">[]
+          ).map(async (lesson: TypeLesson<"WITH_ALL_LOCALES">) => {
             return await getContentById(lesson.sys.id);
           }),
         );
         return {
           ...section.fields,
           lessons,
-        };
+        } as unknown as TypeSectionFields;
       },
     ),
   );
@@ -79,9 +85,9 @@ export default async function CourseModule({
     notFound();
   }
 
-  const lessons: TypeLessonFields[] = sectionData.lessons.map((lesson) => {
-    return lesson.fields as TypeLessonFields;
-  });
+  const lessons = (sectionData.lessons as unknown as TypeLessonSkeleton[]).map(
+    (lesson) => lesson.fields,
+  );
 
   if (!lessons) {
     notFound();
@@ -94,33 +100,43 @@ export default async function CourseModule({
     notFound();
   }
 
-  const { source, template, solution } = lessonData.files.fields;
+  const { source, template, solution } = (
+    lessonData.files as unknown as TypeFilesSkeleton
+  ).fields || {
+    source: [],
+    template: [],
+    solution: [],
+  };
 
-  const readOnly = isEmpty(solution);
-  const parsedSolution = !isEmpty(solution)
-    ? await Promise.all(solution.map(fetchFile))
+  const readOnly = isEmpty(solution) || isNil(solution);
+  const parsedSolution = !readOnly
+    ? await Promise.all(
+        (solution as unknown as Asset<"WITHOUT_LINK_RESOLUTION">[]).map(
+          (asset) => fetchFile(asset.fields),
+        ),
+      )
     : solution;
   const startingFiles = !isEmpty(source) ? source : template;
-  const startingFilesWithCode = await Promise.all(startingFiles.map(fetchFile));
-  const startingFilesWithCodeAndLanguage = startingFilesWithCode.map(
-    (file: TypeFile) => ({
-      ...file,
-      language: endsWith(file.fileName, ".diff") ? "diff" : "rust",
-    }),
-  );
+  const startingFilesWithCodeAndLanguage = startingFiles
+    ? await Promise.all(
+        (startingFiles as unknown as Asset<"WITHOUT_LINK_RESOLUTION">[]).map(
+          (asset) => fetchFile(asset.fields),
+        ),
+      )
+    : [];
 
   const prev: string | undefined =
     chapter === "1" && lesson === "1"
       ? undefined
       : chapter === "1"
-        ? `${course}/lesson/${Number(lesson) - 1}/chapter/${sections[Number(lesson) - 2].lessons.length}`
+        ? `${course}/lesson/${Number(lesson) - 1}/chapter/${size(sections[Number(lesson) - 2].lessons)}`
         : `${course}/lesson/${lesson}/chapter/${Number(chapter) - 1}`;
 
   const next: string | undefined =
-    chapter === sections[Number(lesson) - 1].lessons.length.toString() &&
+    chapter === size(sections[Number(lesson) - 1].lessons).toString() &&
     lesson === sections.length.toString()
       ? undefined
-      : chapter === sections[Number(lesson) - 1].lessons.length.toString()
+      : chapter === size(sections[Number(lesson) - 1].lessons).toString()
         ? `${course}/lesson/${Number(lesson) + 1}/chapter/1`
         : `${course}/lesson/${lesson}/chapter/${Number(chapter) + 1}`;
 
@@ -165,7 +181,7 @@ export default async function CourseModule({
           <EditorComponents
             showHints={!!solution}
             readOnly={readOnly}
-            solution={parsedSolution}
+            solution={parsedSolution || []}
             editorContent={startingFilesWithCodeAndLanguage}
             mdxContent={
               <MDXRemote
@@ -195,7 +211,7 @@ export default async function CourseModule({
             <EditorComponents
               showHints={!!solution}
               readOnly={readOnly}
-              solution={parsedSolution}
+              solution={parsedSolution || []}
               editorContent={startingFilesWithCodeAndLanguage}
             />
           </GridItem>

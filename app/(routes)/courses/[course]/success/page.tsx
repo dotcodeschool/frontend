@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 import {
   Box,
   Button,
@@ -11,7 +10,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { FaTwitter, FaDiscord, FaArrowRight } from "react-icons/fa";
+import { FaTwitter, FaDiscord } from "react-icons/fa";
 import successAnimation from "@/public/static/successAnimation.json";
 import Navbar from "@/app/ui/components/navbar";
 import Lottie from "lottie-react";
@@ -28,7 +27,7 @@ function slugToTitleCase(slug: string): string {
   return titleCase;
 }
 
-const SuccessPage: React.FC<SuccessPageProps> = ({
+const SuccessPage = ({
   params: { course },
 }: {
   params: { course: string };

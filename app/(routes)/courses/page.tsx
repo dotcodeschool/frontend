@@ -3,7 +3,7 @@ import PrimaryButton from "@/app/ui/components/primary-button";
 import { Box, Card, Heading, Link, Stack, Text } from "@chakra-ui/react";
 import { TypeCourseModuleFields } from "@/app/lib/types/contentful";
 import { IoArrowBack } from "react-icons/io5";
-import { getContentByType } from "@/app/api/get-content/route";
+import { getContentByType } from "@/app/lib/utils";
 
 export default async function CoursesPage() {
   const data = await getContentByType("courseModule");
