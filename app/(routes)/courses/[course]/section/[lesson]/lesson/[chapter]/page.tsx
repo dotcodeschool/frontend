@@ -102,7 +102,7 @@ export default async function CourseModule({
 
   const { source, template, solution } = (
     lessonData.files as unknown as TypeFilesSkeleton
-  ).fields || {
+  )?.fields || {
     source: [],
     template: [],
     solution: [],
