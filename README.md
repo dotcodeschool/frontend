@@ -68,11 +68,10 @@ CONTENTFUL_ENVIRONMENT="<your_contentful_environment>"
 CONTENTFUL_ACCESS_TOKEN="<your_contentful_access_token>"
 
 # User Auth
-NEXTAUTH_URL="<your_websites_url>"
-NEXTAUTH_SECRET="<your_secret>"
+AUTH_SECRET="<your_secret>"
 
-GITHUB_ID="<your_github_client_id>"
-GITHUB_SECRET="<your_github_client_secret>"
+AUTH_GITHUB_ID="<your_github_client_id>"
+AUTH_GITHUB_SECRET="<your_github_client_secret>"
 
 # Database
 MONGODB_URI="<your_mongodb_uri>"
