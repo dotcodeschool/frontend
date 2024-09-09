@@ -231,7 +231,7 @@ const Navbar = ({
   }
 
   const { lessonId, chapterId, chapters, githubUrl } = lessonDetails;
-  const currentChapter = chapters[Number(chapterId) - 1]?.lessonName;
+  const currentChapter = chapters[Number(chapterId) - 1]?.title;
 
   // TODO: Move this to a custom hook
   useEffect(() => {
