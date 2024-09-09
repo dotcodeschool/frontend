@@ -53,10 +53,9 @@ export default async function CoursesPage() {
   );
 }
 
-
 export async function generateMetadata() {
-  const title = `Browse Courses | Dot Code School`
-  const description = `Learn to build your own blockchain, web3 applications, and more using the Polkadot SDK. Browse our free and open source courses to find the one that's right for you!`
+  const title = `Browse Courses | Dot Code School`;
+  const description = `Learn to build your own blockchain, web3 applications, and more using the Polkadot SDK. Browse our free and open source courses to find the one that's right for you!`;
   return {
     title,
     description,
