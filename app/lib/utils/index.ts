@@ -60,3 +60,15 @@ export async function getCourseData(
     return typedEntry.fields as unknown as TypeCourseModuleFields;
   }
 }
+
+export function slugToTitleCase(slug: string): string {
+  // Split the slug into words
+  const words = slug.split("-");
+
+  // Capitalize the first letter of each word and join them
+  const titleCase = words
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+
+  return titleCase;
+}

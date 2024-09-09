@@ -14,18 +14,7 @@ import { FaTwitter, FaDiscord } from "react-icons/fa";
 import successAnimation from "@/public/static/successAnimation.json";
 import Navbar from "@/app/ui/components/navbar";
 import Lottie from "lottie-react";
-
-function slugToTitleCase(slug: string): string {
-  // Split the slug into words
-  const words = slug.split("-");
-
-  // Capitalize the first letter of each word and join them
-  const titleCase = words
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(" ");
-
-  return titleCase;
-}
+import { slugToTitleCase } from "@/app/lib/utils";
 
 const SuccessPage = ({
   params: { course },
