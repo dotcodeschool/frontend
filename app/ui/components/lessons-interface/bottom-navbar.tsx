@@ -105,7 +105,7 @@ const Section = ({
                 }}
                 isTruncated
               >
-                {lesson.lessonName.toString()}
+                {lesson.title.toString()}
               </Text>
             </Link>
           );

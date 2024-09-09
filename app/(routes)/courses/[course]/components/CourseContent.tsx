@@ -121,9 +121,9 @@ const ModuleList = ({
 
 const CourseContent = async ({
   slug,
-  moduleName,
+  title,
   author,
-  moduleDescription,
+  description,
   sections,
   level,
   language,
@@ -151,7 +151,7 @@ const CourseContent = async ({
   return (
     <Box maxW="4xl" mx="auto">
       <Heading as="h1" size="xl" fontWeight="800" my={4}>
-        {moduleName.toString()}
+        {title.toString()}
       </Heading>
       <Text>
         Written by{" "}
@@ -164,7 +164,7 @@ const CourseContent = async ({
           {authorData.fields.name.toString()}
         </a>
       </Text>
-      <Text my={8}>{moduleDescription.toString()}</Text>
+      <Text my={8}>{description.toString()}</Text>
       {map([level, language], (tag, key) => (
         <span
           key={key}

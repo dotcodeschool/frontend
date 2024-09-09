@@ -33,21 +33,21 @@ export async function generateMetadata({
 }: {
   params: { course: string };
 }) {
-  const courseData = await getCourseData(params.course);
+  const course = await getCourseData(params.course);
 
   return {
-    title: `${courseData.moduleName} | Dot Code School`,
-    description: courseData.moduleDescription.toString(),
+    title: `${course.title} | Dot Code School`,
+    description: course.description.toString(),
     openGraph: {
-      title: courseData.moduleName.toString(),
-      description: courseData.moduleDescription.toString(),
+      title: course.title.toString(),
+      description: course.description.toString(),
       type: "website",
       url: `https://dotcodeschool.com/courses/${params.course}`,
     },
     twitter: {
       card: "summary_large_image",
-      title: courseData.moduleName.toString(),
-      description: courseData.moduleDescription.toString(),
+      title: course.title.toString(),
+      description: course.description.toString(),
     },
   };
 }

@@ -173,7 +173,7 @@ export default async function CourseModule({
           bottom={20}
           right={4}
           zIndex={100}
-          href={`${courseData.fields.githubUrl.toString()}/issues/new?assignees=&labels=feedback&template=feedback.md&title=Dot+Code+School+Suggestion:+Feedback+for+Section+${lesson}+-+Chapter+${chapter}:+${lessonData.lessonName}`}
+          href={`${courseData.fields.githubUrl.toString()}/issues/new?assignees=&labels=feedback&template=feedback.md&title=Dot+Code+School+Suggestion:+Feedback+for+Section+${lesson}+-+Chapter+${chapter}:+${lessonData.title}`}
           isExternal
           _hover={{ textDecor: "none" }}
         />
@@ -185,7 +185,7 @@ export default async function CourseModule({
             editorContent={startingFilesWithCodeAndLanguage}
             mdxContent={
               <MDXRemote
-                source={lessonData.lessonContent.toString()}
+                source={lessonData.content.toString()}
                 components={
                   MDXComponents as unknown as Readonly<MDXComponentsType>
                 }
@@ -201,7 +201,7 @@ export default async function CourseModule({
         >
           <GridItem colSpan={[12, 5]} overflowY="auto" px={6} pt={4}>
             <MDXRemote
-              source={lessonData.lessonContent.toString()}
+              source={lessonData.content.toString()}
               components={
                 MDXComponents as unknown as Readonly<MDXComponentsType>
               }

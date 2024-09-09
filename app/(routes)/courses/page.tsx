@@ -30,12 +30,12 @@ export default async function CoursesPage() {
           >
             <Stack>
               <Heading as="h2" size="md">
-                {course.moduleName.toString()}
+                {course.title.toString()}
               </Heading>
               <Text>
                 {course.level.toString()} • {course.language.toString()}
               </Text>
-              <Text py={2}>{course.moduleDescription.toString()}</Text>
+              <Text py={2}>{course.description.toString()}</Text>
               <PrimaryButton
                 mt={4}
                 as={Link}
