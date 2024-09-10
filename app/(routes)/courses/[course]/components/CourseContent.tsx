@@ -10,6 +10,7 @@ import {
   GridItem,
   Heading,
   HStack,
+  Tag,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -39,6 +40,7 @@ const ModuleItem = async ({
   module,
   slug,
   numOfCompletedLessons,
+  hasEnrolled,
 }: ModuleProps) => {
   const { title, description, lessons } = module;
   const numOfLessons = size(lessons);
@@ -70,7 +72,11 @@ const ModuleItem = async ({
         </Suspense>
         <PrimaryButton
           as="a"
-          href={`/courses/${slug}/lesson/${index + 1}/chapter/1`}
+          href={
+            hasEnrolled
+              ? `/courses/${slug}/lesson/${index + 1}/chapter/1`
+              : `/courses/${slug}/setup`
+          }
           mt={12}
         >
           Start Lesson
@@ -147,6 +153,10 @@ const CourseContent = async ({
       console.error(err);
     }
   }
+  const hasEnrolled = false;
+  const startCourseUrl = hasEnrolled
+    ? `/courses/${slug}/lesson/1/chapter/1`
+    : `/courses/${slug}/setup`;
 
   return (
     <Box maxW="4xl" mx="auto">
@@ -164,21 +174,18 @@ const CourseContent = async ({
           {authorData.fields.name.toString()}
         </a>
       </Text>
-      <Text my={8}>{description.toString()}</Text>
-      {map([level, language], (tag, key) => (
-        <span
-          key={key}
-          style={{
-            marginRight: "0.5rem",
-            marginBottom: "0.5rem",
-            padding: "0.25rem 0.5rem",
-            backgroundColor: "#2D3748",
-            borderRadius: "0.25rem",
-          }}
-        >
-          {tag.toString()}
-        </span>
-      ))}
+      <Text mt={6}>{description.toString()}</Text>
+      <HStack mt={4}>
+        {map([level, language], (tag, key) => (
+          <Tag key={key} size="md" variant="subtle" colorScheme="green">
+            {tag.toString()}
+          </Tag>
+        ))}
+      </HStack>
+      <PrimaryButton as="a" size="lg" mt={8} href={startCourseUrl} px={12}>
+        Start
+      </PrimaryButton>
+
       <ModuleList sections={sections} />
       <Heading as="h2" size="lg" fontWeight="800" my={8}>
         Course Content
@@ -195,6 +202,7 @@ const CourseContent = async ({
             numOfCompletedLessons={size(
               progressData?.[Number(index + 1).toString()],
             )}
+            hasEnrolled={hasEnrolled}
             slug={slug.toString()}
           />
         ))}
