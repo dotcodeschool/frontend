@@ -7,6 +7,7 @@ import { TypeCourseModuleFields } from "@/app/lib/types/contentful";
 import { IoArrowBack } from "react-icons/io5";
 import CourseContent from "./components/CourseContent";
 import { getCourseData } from "@/app/lib/utils";
+import CourseContentSkeleton from "./components/CourseContentSkeleton";
 
 const CoursePage = async ({ params }: { params: { course: string } }) => {
   const courseData: TypeCourseModuleFields = await getCourseData(params.course);
@@ -18,7 +19,7 @@ const CoursePage = async ({ params }: { params: { course: string } }) => {
         <Link href="/courses" color="green.500" fontSize="5xl">
           <IoArrowBack />
         </Link>
-        <Suspense fallback={<div>Loading course content...</div>}>
+        <Suspense fallback={<CourseContentSkeleton />}>
           <CourseContent {...courseData} />
         </Suspense>
       </Box>
