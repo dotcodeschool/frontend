@@ -7,6 +7,7 @@ import {
   VStack,
   HStack,
   Spinner,
+  Skeleton,
 } from "@chakra-ui/react";
 import { HiOutlineCheckCircle } from "react-icons/hi";
 import { motion } from "framer-motion";
@@ -17,6 +18,7 @@ interface SetupStepProps {
   step: SetupQuestion | RepositorySetup;
   // eslint-disable-next-line no-unused-vars
   onOptionClick?: (option: AnswerOptions) => void;
+  isLoading?: boolean;
   isRepositorySetup?: boolean;
   gitPushReceived?: boolean;
   startingLessonUrl?: string;
@@ -40,6 +42,7 @@ const RepoSetupStep = ({
 export const SetupStep: React.FC<SetupStepProps> = ({
   step,
   onOptionClick,
+  isLoading,
   isRepositorySetup = false,
   gitPushReceived = false,
   startingLessonUrl,
@@ -58,7 +61,9 @@ export const SetupStep: React.FC<SetupStepProps> = ({
           : (step as SetupQuestion).question}
       </Heading>
       <Text color="gray.400" mb={6}>
-        {step.description}
+        {!isLoading
+          ? step.description
+          : "We're setting up your repository... It shouldn't take too long."}
       </Text>
       {!isRepositorySetup ? (
         <VStack spacing={4}>
@@ -77,6 +82,34 @@ export const SetupStep: React.FC<SetupStepProps> = ({
               {option.display}
             </Button>
           ))}
+        </VStack>
+      ) : isLoading ? (
+        <VStack minH={48} h="full" w="full" justify="center" align="start">
+          <Skeleton
+            height={8}
+            startColor="gray.700"
+            endColor="gray.500"
+            width="75%"
+          />
+          <Skeleton
+            height={16}
+            startColor="gray.700"
+            endColor="gray.500"
+            width="100%"
+          />
+          <Skeleton
+            mt={6}
+            height={8}
+            startColor="gray.700"
+            endColor="gray.500"
+            width="50%"
+          />
+          <Skeleton
+            height={16}
+            startColor="gray.700"
+            endColor="gray.500"
+            width="100%"
+          />
         </VStack>
       ) : (
         <VStack spacing={6} alignItems="start" w="full">

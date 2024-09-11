@@ -20,6 +20,7 @@ export interface ModuleProps {
   module: TypeSectionFields;
   slug: string;
   numOfCompletedLessons: number;
+  isOnMachineCourse: boolean;
   hasEnrolled: boolean;
 }
 

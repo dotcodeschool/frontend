@@ -9,13 +9,29 @@ import {
   Heading,
   Text,
 } from "@chakra-ui/react";
-import { AnswerOptions, SetupQuestion } from "@/app/lib/types";
+import {
+  AnswerOptions,
+  PracticeFrequencyOptions,
+  SetupQuestion,
+} from "@/app/lib/types";
 import { SetupStep } from "./SetupStep";
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import { User } from "@/app/lib/models/users";
+import { ObjectId } from "mongodb";
+
+interface CreateRepoRequest {
+  repo_template: string;
+  user_id: ObjectId;
+  expected_practice_frequency: PracticeFrequencyOptions;
+  is_reminders_enabled: boolean;
+}
 
 export default function StepsComponent({
   questions,
   repositorySetup,
   startingLessonUrl,
+  courseSlug,
 }: {
   questions: SetupQuestion[];
   repositorySetup: {
@@ -25,25 +41,74 @@ export default function StepsComponent({
     steps: { title: string; code: React.ReactElement | string }[];
   };
   startingLessonUrl: string;
+  courseSlug: string;
 }) {
+  const { data } = useSession();
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState({});
   const [showRepositorySetup, setShowRepositorySetup] = useState(false);
+  const [loadingRepo, setLoadingRepo] = useState(false);
   const [gitPushReceived, setGitPushReceived] = useState(false);
 
+  async function createRepository(updatedAnswers: {
+    [key: string]: boolean | PracticeFrequencyOptions;
+  }) {
+    if (!data) {
+      return;
+    }
+    const getUserResponse = await axios.get("/api/get-user", {
+      params: {
+        user: data?.user,
+      },
+    });
+    const user: User = getUserResponse.data;
+    if (!user?._id) {
+      return;
+    }
+    const req: CreateRepoRequest = {
+      repo_template: courseSlug,
+      user_id: user._id,
+      expected_practice_frequency: updatedAnswers[
+        "practice_frequency"
+      ] as PracticeFrequencyOptions,
+      is_reminders_enabled: updatedAnswers["accountability"] as boolean,
+    };
+
+    const response = await axios.post("/api/create-repository", req, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.status === 200) {
+      // Update the user's repositories
+      console.log(response);
+    } else {
+      // TODO: add proper error handling to provide user feedback
+      console.error("Failed to create repository");
+    }
+    setLoadingRepo(false);
+  }
+
   const handleOptionClick = (option: AnswerOptions) => {
-    setAnswers({ ...answers, [questions[currentStep].id]: option.value });
+    const updatedAnswers = {
+      ...answers,
+      [questions[currentStep].id]: option.value,
+    };
+    setAnswers(updatedAnswers);
     if (currentStep < questions.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
+      setLoadingRepo(true);
       setShowRepositorySetup(true);
+      createRepository(updatedAnswers);
     }
   };
 
-  console.log("Answers:", answers);
-
   // Simulate receiving a git push after 10 seconds
   if (showRepositorySetup) {
+    setTimeout(() => {
+      setLoadingRepo(false);
+    }, 2000);
     setTimeout(() => {
       setGitPushReceived(true);
     }, 10000);
@@ -63,6 +128,7 @@ export default function StepsComponent({
           <SetupStep
             step={repositorySetup}
             isRepositorySetup={true}
+            isLoading={loadingRepo}
             gitPushReceived={gitPushReceived}
             startingLessonUrl={startingLessonUrl}
           />

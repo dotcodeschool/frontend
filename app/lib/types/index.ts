@@ -1,5 +1,9 @@
+export type PracticeFrequencyOptions =
+  | "every_day"
+  | "once_a_week"
+  | "once_a_month";
 export interface PracticeFrequency {
-  value: "every_day" | "once_a_week" | "once_a_month";
+  value: PracticeFrequencyOptions;
   display: "Every day" | "Once a week" | "Once a month";
 }
 
@@ -22,4 +26,9 @@ export interface RepositorySetup {
   title: string;
   description: string;
   steps: { title: string; code: React.ReactElement | string }[];
+}
+
+export interface Relationship {
+  id: string;
+  type: string;
 }

@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import clientPromise from "@/app/lib/mongodb";
+import { useDatabase } from "@/app/hooks/useDatabase";
 
 export async function GET(req: NextRequest) {
-  const client = await clientPromise;
-  const db = client.db("test");
+  const { findOne } = useDatabase();
 
   const searchParams = req.nextUrl.searchParams;
   const email = searchParams.get("user[email]");
@@ -16,7 +15,7 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const result = await db.collection("users").findOne({ email });
+    const result = await findOne("users", { email });
     return NextResponse.json(result);
   } catch (error) {
     console.error("MongoDB error:", error);

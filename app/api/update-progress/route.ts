@@ -5,7 +5,7 @@ import { IProgressUpdate } from "@/app/lib/types/IProgress";
 
 export async function POST(req: NextRequest) {
   const client = await clientPromise;
-  const db = client.db("test");
+  const db = client.db("dcs-test");
 
   try {
     const data = await req.json();

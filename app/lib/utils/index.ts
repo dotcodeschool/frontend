@@ -7,6 +7,9 @@ import { getContentByType } from "@/app/lib/utils";
 import { isNil } from "lodash";
 import { notFound } from "next/navigation";
 import { Entry } from "contentful";
+import { useDatabase } from "@/app/hooks/useDatabase";
+import { ObjectId } from "mongodb";
+import { Repository } from "../models";
 
 export { getContentById, getContentByType } from "./get-content";
 
@@ -71,4 +74,34 @@ export function slugToTitleCase(slug: string): string {
     .join(" ");
 
   return titleCase;
+}
+
+export async function findRepo(
+  courseSlug: string,
+  userId: string,
+): Promise<Repository | undefined> {
+  const { findOne } = useDatabase();
+  try {
+    const courseId = await getCourseIdFromSlug(courseSlug);
+    const result = await findOne("repositories", {
+      "relationships.course.id": courseId?.toString(),
+      "relationships.user.id": userId,
+    });
+    console.log(result);
+    return result as Repository;
+  } catch (error) {
+    console.error("MongoDB error:", error);
+  }
+}
+
+export async function getCourseIdFromSlug(
+  courseSlug: string,
+): Promise<ObjectId | undefined> {
+  const { findOne } = useDatabase();
+  try {
+    const result = await findOne("courses", { slug: courseSlug });
+    return result?._id;
+  } catch (error) {
+    console.error("MongoDB error:", error);
+  }
 }

@@ -23,7 +23,7 @@ import {
   TypeSectionSkeleton,
 } from "@/app/lib/types/contentful";
 import { Asset, AssetFields, EntryCollection } from "contentful";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { TypeFile } from "@/app/lib/types/TypeFile";
 import { MDXComponents as MDXComponentsType } from "mdx/types";
 
@@ -64,6 +64,14 @@ export default async function CourseModule({
   );
   if (!courseData) {
     notFound();
+  }
+
+  // const session = await auth();
+
+  // const repo = await findRepo(course, userId)
+  const hasEnrolled = true; // TODO: check
+  if (!hasEnrolled && courseData.fields.format === "onMachineCourse") {
+    redirect(`/courses/${params.course}/setup`);
   }
 
   const sections: TypeSectionFields[] = await Promise.all(

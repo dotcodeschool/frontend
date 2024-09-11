@@ -31,15 +31,16 @@ import { Entry, EntryFieldTypes } from "contentful";
 import ProgressBar from "./ProgressBar";
 import { MdCheckCircle } from "react-icons/md";
 import { auth } from "@/auth";
-import clientPromise from "@/app/lib/mongodb";
 import { MDXComponents as MDXComponentsType } from "mdx/types";
 import { IProgressData } from "@/app/lib/types/IProgress";
+import { useDatabase } from "@/app/hooks/useDatabase";
 
 const ModuleItem = async ({
   index,
   module,
   slug,
   numOfCompletedLessons,
+  isOnMachineCourse,
   hasEnrolled,
 }: ModuleProps) => {
   const { title, description, lessons } = module;
@@ -73,9 +74,11 @@ const ModuleItem = async ({
         <PrimaryButton
           as="a"
           href={
-            hasEnrolled
-              ? `/courses/${slug}/lesson/${index + 1}/chapter/1`
-              : `/courses/${slug}/setup`
+            isOnMachineCourse
+              ? hasEnrolled
+                ? `/courses/${slug}/lesson/${index + 1}/chapter/1`
+                : `/courses/${slug}/setup`
+              : `/courses/${slug}/lesson/${index + 1}/chapter/1`
           }
           mt={12}
         >
@@ -133,7 +136,9 @@ const CourseContent = async ({
   sections,
   level,
   language,
+  format,
 }: TypeCourseModuleFields) => {
+  const { findOne } = useDatabase();
   const session = await auth();
   const authorData = author as unknown as TypeAuthorSkeleton;
   const sectionsData = sections as unknown as Entry<TypeSectionSkeleton>[];
@@ -142,21 +147,20 @@ const CourseContent = async ({
 
   if (session) {
     try {
-      const client = await clientPromise;
-      const db = client.db("test");
-      const res = await db
-        .collection("users")
-        .findOne({ email: session.user?.email });
+      const res = await findOne("users", { email: session.user?.email });
       const data = res?.progress;
       progressData = data?.[slug.toString()];
     } catch (err) {
       console.error(err);
     }
   }
+  const isOnMachineCourse = format?.toString() === "onMachineCourse";
   const hasEnrolled = false;
-  const startCourseUrl = hasEnrolled
-    ? `/courses/${slug}/lesson/1/chapter/1`
-    : `/courses/${slug}/setup`;
+  const startCourseUrl = isOnMachineCourse
+    ? hasEnrolled
+      ? `/courses/${slug}/lesson/1/chapter/1`
+      : `/courses/${slug}/setup`
+    : `/courses/${slug}/lesson/1/chapter/1`;
 
   return (
     <Box maxW="4xl" mx="auto">
@@ -202,6 +206,7 @@ const CourseContent = async ({
             numOfCompletedLessons={size(
               progressData?.[Number(index + 1).toString()],
             )}
+            isOnMachineCourse={isOnMachineCourse}
             hasEnrolled={hasEnrolled}
             slug={slug.toString()}
           />
