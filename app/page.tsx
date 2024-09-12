@@ -4,6 +4,8 @@ import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import PrimaryButton from "@/components/primary-button";
 
+export { generateMetadata } from "./metadata";
+
 export default function Home() {
   return (
     <Box maxW="8xl" mx="auto" px={[4, 12]}>
@@ -157,24 +159,4 @@ function FeaturesList() {
       />
     </Stack>
   );
-}
-
-export async function generateMetadata() {
-  const title = `Dot Code School | Learn Blockchain & Web3 Development Fast`;
-  const description = `Learn to build web3 applications and custom blockchains using the Polkadot SDK. Master blockchain development through hands-on learning with our interactive courses!`;
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      type: "website",
-      url: `https://dotcodeschool.com/courses`,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-    },
-  };
 }

@@ -9,6 +9,8 @@ import { getCourseData } from "@/lib/utils";
 import CourseContent from "./components/CourseContent";
 import CourseContentSkeleton from "./components/CourseContentSkeleton";
 
+export { generateMetadata } from "./metadata";
+
 async function CoursePage({ params }: { params: { course: string } }) {
   const courseData: TypeCourseModuleFields = await getCourseData(params.course);
 
@@ -28,23 +30,3 @@ async function CoursePage({ params }: { params: { course: string } }) {
 }
 
 export default CoursePage;
-
-export async function generateMetadata({ params }: { params: { course: string } }) {
-  const course = await getCourseData(params.course);
-
-  return {
-    title: `${course.title} | Dot Code School`,
-    description: course.description.toString(),
-    openGraph: {
-      title: course.title.toString(),
-      description: course.description.toString(),
-      type: "website",
-      url: `https://dotcodeschool.com/courses/${params.course}`,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: course.title.toString(),
-      description: course.description.toString(),
-    },
-  };
-}
