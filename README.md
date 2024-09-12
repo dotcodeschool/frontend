@@ -6,8 +6,14 @@ The tutorial builds upon the raw content written by [Shawn Tabrizi](https://gith
 
 <img src="https://github.com/iammasterbrucewayne/dotcodeschool/assets/93382017/7ce6282e-ab8c-45ed-bd4f-93699806595f" alt="dotcodeschool interactive coding interface" width="600px" />
 
-## Development
+## Development (WARNING: The guide hasn't been updated with latest changes!)
 
+<details>
+<summary>TBD: Update README with latest breaking changes</summary>
+- Document new project structure, the current thought process, known inconsistencies, issues, bugs
+- Update documentation with latest content models
+- Update contribution guidelines (linting, formatting, committing, issue templates, PR templates, etc.)
+</details>
 This is a [Next.js](https://nextjs.org/) project that uses the Contentful API for hosting the tutorials.
 
 Before starting, you'll need to setup the following content models on Contentful:
