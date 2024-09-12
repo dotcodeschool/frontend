@@ -132,6 +132,7 @@
         "unnamedComponents": "arrow-function"
       }
     ],
+    "react/no-multi-comp": "error",
     "require-atomic-updates": "error"
   },
   "settings": {
