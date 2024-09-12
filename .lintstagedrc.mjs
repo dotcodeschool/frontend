@@ -4,6 +4,6 @@ const buildEslintCommand = (filenames) =>
     .map((f) => path.relative(process.cwd(), f))
     .join(" --file ")}`;
 
-module.exports = {
+export default {
   "*.{js,jsx,ts,tsx}": [buildEslintCommand],
 };
