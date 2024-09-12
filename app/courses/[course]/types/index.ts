@@ -1,6 +1,7 @@
-import { TypeSectionFields } from "@/app/lib/types/contentful";
-import { TypeFile } from "@/app/lib/types/TypeFile";
 import { MDXRemoteSerializeResult } from "next-mdx-remote";
+
+import { TypeSectionFields } from "@/lib/types/contentful";
+import { TypeFile } from "@/lib/types/TypeFile";
 
 export type Author = {
   name: string;

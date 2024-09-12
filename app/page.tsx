@@ -1,16 +1,8 @@
-import Navbar from "@/app/ui/components/navbar";
-import {
-  Box,
-  Heading,
-  Text,
-  Link,
-  Button,
-  ButtonGroup,
-  Stack,
-  Image,
-} from "@chakra-ui/react";
-import PrimaryButton from "@/app/ui/components/primary-button";
-import Footer from "@/app/ui/components/footer";
+import { Box, Heading, Text, Link, Button, ButtonGroup, Stack, Image } from "@chakra-ui/react";
+
+import Footer from "@/components/footer";
+import Navbar from "@/components/navbar";
+import PrimaryButton from "@/components/primary-button";
 
 export default function Home() {
   return (
@@ -36,9 +28,9 @@ function Header() {
         Learn to Code Web3 Apps by Building Real Projects.
       </Heading>
       <Text mt={4} mb={20} fontSize="xl" maxW="3xl">
-        Dot Code School is an interactive online school that teaches you how to
-        build meaningful web3 applications using the Polkadot SDK. Learn how to
-        build your own custom blockchain from zero to one hundred.
+        Dot Code School is an interactive online school that teaches you how to build meaningful
+        web3 applications using the Polkadot SDK. Learn how to build your own custom blockchain from
+        zero to one hundred.
       </Text>
       <LandingCTA />
     </Stack>
@@ -95,12 +87,12 @@ function LandingCTA() {
 }
 
 interface FeatureComponentProps {
-  title: string | JSX.Element;
-  description: string | JSX.Element;
+  title: string | React.JSX.Element;
+  description: string | React.JSX.Element;
   image: string;
   alt?: string;
   isImageFirst?: boolean;
-  cta?: JSX.Element;
+  cta?: React.JSX.Element;
 }
 
 function FeatureComponent({
@@ -146,12 +138,11 @@ function FeaturesList() {
         }
         description={
           <>
-            The most respected engineers don&apos;t just read about technology —
-            they build it.
+            The most respected engineers don&apos;t just read about technology — they build it.
             <br />
             <br />
-            Improve the depth of your understanding by building real projects
-            with in-browser step-by-step interactive lessons.
+            Improve the depth of your understanding by building real projects with in-browser
+            step-by-step interactive lessons.
           </>
         }
         image="/static/images/interface.png"

@@ -1,22 +1,13 @@
-import React from "react";
-import {
-  Box,
-  Button,
-  Heading,
-  Text,
-  VStack,
-  HStack,
-  Spinner,
-  Skeleton,
-} from "@chakra-ui/react";
-import { HiOutlineCheckCircle } from "react-icons/hi";
+import { Box, Button, Heading, Text, VStack, HStack, Spinner, Skeleton } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import PrimaryButton from "@/app/ui/components/primary-button";
-import { AnswerOptions, RepositorySetup, SetupQuestion } from "@/app/lib/types";
+import React from "react";
+import { HiOutlineCheckCircle } from "react-icons/hi";
+
+import PrimaryButton from "@/components/primary-button";
+import { AnswerOptions, RepositorySetup, SetupQuestion } from "@/lib/types";
 
 interface SetupStepProps {
   step: SetupQuestion | RepositorySetup;
-  // eslint-disable-next-line no-unused-vars
   onOptionClick?: (option: AnswerOptions) => void;
   isLoading?: boolean;
   isRepositorySetup?: boolean;
@@ -24,20 +15,16 @@ interface SetupStepProps {
   startingLessonUrl?: string;
 }
 
-const RepoSetupStep = ({
-  title,
-  code,
-}: {
-  title: string;
-  code: React.ReactElement | string;
-}) => (
-  <Box bg="gray.800" p={4} borderRadius="md" w="full">
-    <Heading size="sm" mb={2}>
-      {title}
-    </Heading>
-    {code}
-  </Box>
-);
+function RepoSetupStep({ title, code }: { title: string; code: React.ReactElement | string }) {
+  return (
+    <Box bg="gray.800" p={4} borderRadius="md" w="full">
+      <Heading size="sm" mb={2}>
+        {title}
+      </Heading>
+      {code}
+    </Box>
+  );
+}
 
 export const SetupStep: React.FC<SetupStepProps> = ({
   step,
@@ -56,9 +43,7 @@ export const SetupStep: React.FC<SetupStepProps> = ({
       transition={{ duration: 0.3 }}
     >
       <Heading size="md" mb={2}>
-        {isRepositorySetup
-          ? (step as RepositorySetup).title
-          : (step as SetupQuestion).question}
+        {isRepositorySetup ? (step as RepositorySetup).title : (step as SetupQuestion).question}
       </Heading>
       <Text color="gray.400" mb={6}>
         {!isLoading
@@ -85,31 +70,10 @@ export const SetupStep: React.FC<SetupStepProps> = ({
         </VStack>
       ) : isLoading ? (
         <VStack minH={48} h="full" w="full" justify="center" align="start">
-          <Skeleton
-            height={8}
-            startColor="gray.700"
-            endColor="gray.500"
-            width="75%"
-          />
-          <Skeleton
-            height={16}
-            startColor="gray.700"
-            endColor="gray.500"
-            width="100%"
-          />
-          <Skeleton
-            mt={6}
-            height={8}
-            startColor="gray.700"
-            endColor="gray.500"
-            width="50%"
-          />
-          <Skeleton
-            height={16}
-            startColor="gray.700"
-            endColor="gray.500"
-            width="100%"
-          />
+          <Skeleton height={8} startColor="gray.700" endColor="gray.500" width="75%" />
+          <Skeleton height={16} startColor="gray.700" endColor="gray.500" width="100%" />
+          <Skeleton mt={6} height={8} startColor="gray.700" endColor="gray.500" width="50%" />
+          <Skeleton height={16} startColor="gray.700" endColor="gray.500" width="100%" />
         </VStack>
       ) : (
         <VStack spacing={6} alignItems="start" w="full">
@@ -118,11 +82,7 @@ export const SetupStep: React.FC<SetupStepProps> = ({
               steps: { title: string; code: React.ReactElement | string }[];
             }
           ).steps.map((repoStep, index) => (
-            <RepoSetupStep
-              key={index}
-              title={repoStep.title}
-              code={repoStep.code}
-            />
+            <RepoSetupStep key={index} title={repoStep.title} code={repoStep.code} />
           ))}
           <HStack
             gap={1}
@@ -136,9 +96,7 @@ export const SetupStep: React.FC<SetupStepProps> = ({
             {gitPushReceived ? (
               <>
                 <HiOutlineCheckCircle height="20px" width="20px" />
-                <Text>
-                  Git push received! The first stage is now activated.
-                </Text>
+                <Text>Git push received! The first stage is now activated.</Text>
               </>
             ) : (
               <>

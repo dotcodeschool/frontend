@@ -1,8 +1,8 @@
-import NextAuth from "next-auth";
-import { NextAuthConfig } from "next-auth";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
+import NextAuth, { NextAuthConfig } from "next-auth";
 import GitHub from "next-auth/providers/github";
-import clientPromise from "@/app/lib/mongodb";
+
+import clientPromise from "@/lib/db/mongodb";
 
 const adapter = MongoDBAdapter(clientPromise);
 

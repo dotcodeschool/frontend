@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Box,
   Skeleton,
@@ -11,8 +10,9 @@ import {
   AccordionPanel,
   SkeletonCircle,
 } from "@chakra-ui/react";
+import React from "react";
 
-const CourseContentSkeleton = () => {
+function CourseContentSkeleton() {
   return (
     <Box maxW="4xl" mx="auto">
       <Skeleton height="40px" width="80%" my={4} />
@@ -63,12 +63,7 @@ const CourseContentSkeleton = () => {
               </VStack>
             </AccordionButton>
             <AccordionPanel pb={12} w="90%" pt={0}>
-              <SkeletonText
-                mt={4}
-                noOfLines={3}
-                spacing={4}
-                skeletonHeight="4"
-              />
+              <SkeletonText mt={4} noOfLines={3} spacing={4} skeletonHeight="4" />
               <Skeleton height="40px" width="120px" mt={12} />
             </AccordionPanel>
           </AccordionItem>
@@ -76,6 +71,6 @@ const CourseContentSkeleton = () => {
       </Accordion>
     </Box>
   );
-};
+}
 
 export default CourseContentSkeleton;

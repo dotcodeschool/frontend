@@ -1,24 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Heading,
-  Text,
-} from "@chakra-ui/react";
-import {
-  AnswerOptions,
-  PracticeFrequencyOptions,
-  SetupQuestion,
-} from "@/app/lib/types";
-import { SetupStep } from "./SetupStep";
+import { Card, CardHeader, CardBody, CardFooter, Heading, Text } from "@chakra-ui/react";
 import axios from "axios";
-import { useSession } from "next-auth/react";
-import { User } from "@/app/lib/models/users";
 import { ObjectId } from "mongodb";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
+
+import { User } from "@/lib/db/models/users";
+import { AnswerOptions, PracticeFrequencyOptions, SetupQuestion } from "@/lib/types";
+
+import { SetupStep } from "./SetupStep";
 
 interface CreateRepoRequest {
   repo_template: string;
@@ -68,9 +59,7 @@ export default function StepsComponent({
     const req: CreateRepoRequest = {
       repo_template: courseSlug,
       user_id: user._id,
-      expected_practice_frequency: updatedAnswers[
-        "practice_frequency"
-      ] as PracticeFrequencyOptions,
+      expected_practice_frequency: updatedAnswers["practice_frequency"] as PracticeFrequencyOptions,
       is_reminders_enabled: updatedAnswers["accountability"] as boolean,
     };
 
@@ -136,9 +125,7 @@ export default function StepsComponent({
       </CardBody>
       <CardFooter justifyContent="space-between">
         <Text fontSize="sm" color="gray.500">
-          {!showRepositorySetup
-            ? `Step ${currentStep + 1} of ${questions.length}`
-            : "Final Step"}
+          {!showRepositorySetup ? `Step ${currentStep + 1} of ${questions.length}` : "Final Step"}
         </Text>
       </CardFooter>
     </Card>

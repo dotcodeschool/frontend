@@ -1,0 +1,3 @@
+pnpm sort .eslintrc.json tsconfig.json
+pnpm fmt
+pnpm lint-staged

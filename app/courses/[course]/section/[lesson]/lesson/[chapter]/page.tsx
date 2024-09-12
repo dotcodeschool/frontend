@@ -1,18 +1,13 @@
 import { Box, Grid, GridItem, IconButton, Link, Text } from "@chakra-ui/react";
-import { MDXRemote } from "next-mdx-remote/rsc";
 import { isEmpty, isNil, size } from "lodash";
-import MDXComponents from "@/app/ui/components/lessons-interface/mdx-components";
-import Navbar from "@/app/ui/components/navbar";
-import BottomNavbar from "@/app/ui/components/lessons-interface/bottom-navbar";
-import { EditorComponents } from "@/app/ui/components/lessons-interface/EditorComponents";
-import "@/app/ui/styles/resizer.css";
+import { MDXComponents as MDXComponentsType } from "mdx/types";
+import { notFound, redirect } from "next/navigation";
+import { MDXRemote } from "next-mdx-remote/rsc";
 
-import {
-  getContentById,
-  getContentByType,
-  getCourseData,
-  slugToTitleCase,
-} from "@/app/lib/utils";
+import BottomNavbar from "@/components/lessons-interface/bottom-navbar";
+import { EditorComponents } from "@/components/lessons-interface/EditorComponents";
+import MDXComponents from "@/components/lessons-interface/mdx-components";
+import Navbar from "@/components/navbar";
 import {
   TypeCourseModuleSkeleton,
   TypeFilesSkeleton,
@@ -21,11 +16,12 @@ import {
   TypeLessonSkeleton,
   TypeSectionFields,
   TypeSectionSkeleton,
-} from "@/app/lib/types/contentful";
+} from "@/lib/types/contentful";
+import { TypeFile } from "@/lib/types/TypeFile";
+import { getContentById, getContentByType, getCourseData, slugToTitleCase } from "@/lib/utils";
+import "@/styles/resizer.css";
+
 import { Asset, AssetFields, EntryCollection } from "contentful";
-import { notFound, redirect } from "next/navigation";
-import { TypeFile } from "@/app/lib/types/TypeFile";
-import { MDXComponents as MDXComponentsType } from "mdx/types";
 
 async function fetchFile(fileFields: AssetFields): Promise<TypeFile> {
   if (!fileFields.file) {
@@ -56,12 +52,9 @@ export default async function CourseModule({
   };
 }) {
   const { course, lesson, chapter } = params;
-  const courses: EntryCollection<TypeCourseModuleSkeleton> =
-    await getContentByType("courseModule");
+  const courses: EntryCollection<TypeCourseModuleSkeleton> = await getContentByType("courseModule");
 
-  const courseData = courses.items.find(
-    (course) => course.fields.slug === params.course,
-  );
+  const courseData = courses.items.find((course) => course.fields.slug === params.course);
   if (!courseData) {
     notFound();
   }
@@ -75,22 +68,19 @@ export default async function CourseModule({
   }
 
   const sections: TypeSectionFields[] = await Promise.all(
-    (courseData.fields.sections as unknown as TypeSectionSkeleton[]).map(
-      async (section) => {
-        const lessons = await Promise.all(
-          (
-            section.fields
-              .lessons as unknown as TypeLesson<"WITH_ALL_LOCALES">[]
-          ).map(async (lesson: TypeLesson<"WITH_ALL_LOCALES">) => {
+    (courseData.fields.sections as unknown as TypeSectionSkeleton[]).map(async (section) => {
+      const lessons = await Promise.all(
+        (section.fields.lessons as unknown as TypeLesson<"WITH_ALL_LOCALES">[]).map(
+          async (lesson: TypeLesson<"WITH_ALL_LOCALES">) => {
             return await getContentById(lesson.sys.id);
-          }),
-        );
-        return {
-          ...section.fields,
-          lessons,
-        } as unknown as TypeSectionFields;
-      },
-    ),
+          }
+        )
+      );
+      return {
+        ...section.fields,
+        lessons,
+      } as unknown as TypeSectionFields;
+    })
   );
 
   const sectionData = sections[Number(lesson) - 1];
@@ -99,23 +89,20 @@ export default async function CourseModule({
   }
 
   const lessons = (sectionData.lessons as unknown as TypeLessonSkeleton[]).map(
-    (lesson) => lesson.fields,
+    (lesson) => lesson.fields
   );
 
   if (!lessons) {
     notFound();
   }
 
-  const lessonData: TypeLessonFields = lessons[
-    Number(chapter) - 1
-  ] as TypeLessonFields;
+  const lessonData: TypeLessonFields = lessons[Number(chapter) - 1] as TypeLessonFields;
   if (!lessonData) {
     notFound();
   }
 
-  const { source, template, solution } = (
-    lessonData.files as unknown as TypeFilesSkeleton
-  )?.fields || {
+  const { source, template, solution } = (lessonData.files as unknown as TypeFilesSkeleton)
+    ?.fields || {
     source: [],
     template: [],
     solution: [],
@@ -124,17 +111,17 @@ export default async function CourseModule({
   const readOnly = isEmpty(solution) || isNil(solution);
   const parsedSolution = !readOnly
     ? await Promise.all(
-        (solution as unknown as Asset<"WITHOUT_LINK_RESOLUTION">[]).map(
-          (asset) => fetchFile(asset.fields),
-        ),
+        (solution as unknown as Asset<"WITHOUT_LINK_RESOLUTION">[]).map((asset) =>
+          fetchFile(asset.fields)
+        )
       )
     : solution;
   const startingFiles = !isEmpty(source) ? source : template;
   const startingFilesWithCodeAndLanguage = startingFiles
     ? await Promise.all(
-        (startingFiles as unknown as Asset<"WITHOUT_LINK_RESOLUTION">[]).map(
-          (asset) => fetchFile(asset.fields),
-        ),
+        (startingFiles as unknown as Asset<"WITHOUT_LINK_RESOLUTION">[]).map((asset) =>
+          fetchFile(asset.fields)
+        )
       )
     : [];
 
@@ -154,11 +141,7 @@ export default async function CourseModule({
         : `${course}/lesson/${lesson}/chapter/${Number(chapter) + 1}`;
 
   return (
-    <Box
-      h="100vh"
-      position="relative"
-      overflow={{ base: "auto", md: "hidden" }}
-    >
+    <Box h="100vh" position="relative" overflow={{ base: "auto", md: "hidden" }}>
       <Navbar
         cta={false}
         isLessonInterface
@@ -199,9 +182,7 @@ export default async function CourseModule({
             mdxContent={
               <MDXRemote
                 source={lessonData.content.toString()}
-                components={
-                  MDXComponents as unknown as Readonly<MDXComponentsType>
-                }
+                components={MDXComponents as unknown as Readonly<MDXComponentsType>}
               />
             }
           />
@@ -215,9 +196,7 @@ export default async function CourseModule({
           <GridItem colSpan={[12, 5]} overflowY="auto" px={6} pt={4}>
             <MDXRemote
               source={lessonData.content.toString()}
-              components={
-                MDXComponents as unknown as Readonly<MDXComponentsType>
-              }
+              components={MDXComponents as unknown as Readonly<MDXComponentsType>}
             />
           </GridItem>
           <GridItem colSpan={[12, 7]} overflow="clip">
@@ -251,13 +230,12 @@ export async function generateMetadata({
   const { course: courseSlug, lesson, chapter } = params;
   const courseTitle = slugToTitleCase(courseSlug);
   const course = await getCourseData(courseSlug);
-  const sectionFields = (course.sections as unknown as TypeSectionSkeleton[])[
-    Number(lesson) - 1
-  ].fields;
+  const sectionFields = (course.sections as unknown as TypeSectionSkeleton[])[Number(lesson) - 1]
+    .fields;
   const sectionTitle = sectionFields.title;
-  const lessonId = (
-    sectionFields.lessons as unknown as TypeLesson<"WITH_ALL_LOCALES">[]
-  )[Number(chapter) - 1].sys.id;
+  const lessonId = (sectionFields.lessons as unknown as TypeLesson<"WITH_ALL_LOCALES">[])[
+    Number(chapter) - 1
+  ].sys.id;
   const lessonData = await getContentById(lessonId);
   const lessonTitle = lessonData.fields.title;
   const title = `${lessonTitle} - ${sectionTitle} - ${courseTitle} | Dot Code School`;

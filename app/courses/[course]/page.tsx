@@ -1,15 +1,15 @@
-import React from "react";
-import { Suspense } from "react";
-
-import Navbar from "@/app/ui/components/navbar";
 import { Box, Link } from "@chakra-ui/react";
-import { TypeCourseModuleFields } from "@/app/lib/types/contentful";
+import React, { Suspense } from "react";
 import { IoArrowBack } from "react-icons/io5";
+
+import Navbar from "@/components/navbar";
+import { TypeCourseModuleFields } from "@/lib/types/contentful";
+import { getCourseData } from "@/lib/utils";
+
 import CourseContent from "./components/CourseContent";
-import { getCourseData } from "@/app/lib/utils";
 import CourseContentSkeleton from "./components/CourseContentSkeleton";
 
-const CoursePage = async ({ params }: { params: { course: string } }) => {
+async function CoursePage({ params }: { params: { course: string } }) {
   const courseData: TypeCourseModuleFields = await getCourseData(params.course);
 
   return (
@@ -25,15 +25,11 @@ const CoursePage = async ({ params }: { params: { course: string } }) => {
       </Box>
     </Box>
   );
-};
+}
 
 export default CoursePage;
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { course: string };
-}) {
+export async function generateMetadata({ params }: { params: { course: string } }) {
   const course = await getCourseData(params.course);
 
   return {

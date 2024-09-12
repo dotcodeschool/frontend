@@ -11,13 +11,7 @@ export default function ProgressBar({
 
   return (
     <>
-      <Progress
-        colorScheme="green"
-        w="full"
-        value={progress}
-        size="sm"
-        rounded="full"
-      />
+      <Progress colorScheme="green" w="full" value={progress} size="sm" rounded="full" />
       <Text fontSize="sm" fontWeight="500" color="gray.400">
         {progress}% Complete
       </Text>

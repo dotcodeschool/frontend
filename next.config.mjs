@@ -1,7 +1,7 @@
-import remarkGfm from "remark-gfm";
+import createMDX from "@next/mdx";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize from "rehype-sanitize";
-import createMDX from "@next/mdx";
+import remarkGfm from "remark-gfm";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

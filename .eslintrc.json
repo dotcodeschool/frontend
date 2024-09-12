@@ -1,21 +1,210 @@
 {
-  "parser": "@typescript-eslint/parser",
   "extends": [
+    "plugin:react/recommended",
     "next",
     "next/core-web-vitals",
-    "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:react/recommended"
+    "plugin:import/typescript",
+    "plugin:prettier/recommended"
   ],
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    }
-  },
   "globals": {
     "React": "readonly"
   },
+  "overrides": [
+    {
+      "files": [
+        "**/api/**/*.ts"
+      ],
+      "rules": {
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "filter": {
+              "match": true,
+              "regex": "^(GET|POST|PUT|DELETE|PATCH)$"
+            },
+            "format": [
+              "UPPER_CASE"
+            ],
+            "selector": "variable"
+          }
+        ]
+      }
+    }
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "project": "./tsconfig.json",
+    "sourceType": "module"
+  },
   "rules": {
-    "no-unused-vars": "warn"
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "format": [
+          "camelCase"
+        ],
+        "leadingUnderscore": "allow",
+        "modifiers": [
+          "exported"
+        ],
+        "selector": "variable"
+      },
+      {
+        "format": [
+          "camelCase",
+          "UPPER_CASE"
+        ],
+        "leadingUnderscore": "forbid",
+        "modifiers": [
+          "global"
+        ],
+        "selector": "variable"
+      },
+      {
+        "format": [
+          "camelCase",
+          "PascalCase"
+        ],
+        "leadingUnderscore": "forbid",
+        "selector": "function"
+      },
+      {
+        "custom": {
+          "match": false,
+          "regex": "^I[A-Z]"
+        },
+        "format": [
+          "PascalCase"
+        ],
+        "selector": "interface"
+      },
+      {
+        "format": [
+          "PascalCase"
+        ],
+        "prefix": [
+          "Type"
+        ],
+        "selector": "typeAlias"
+      },
+      {
+        "format": [
+          "PascalCase"
+        ],
+        "selector": "enum"
+      },
+      {
+        "format": [
+          "UPPER_CASE",
+          "PascalCase"
+        ],
+        "selector": "enumMember"
+      },
+      {
+        "format": [
+          "PascalCase"
+        ],
+        "prefix": [
+          "Is",
+          "Has",
+          "Can",
+          "Should",
+          "is",
+          "has",
+          "can",
+          "should"
+        ],
+        "selector": "variable",
+        "types": [
+          "boolean"
+        ]
+      }
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "varsIgnorePattern": "^_"
+      }
+    ],
+    "camelcase": "error",
+    "complexity": [
+      "error",
+      5
+    ],
+    "import/no-duplicates": "error",
+    "import/order": [
+      "error",
+      {
+        "alphabetize": {
+          "caseInsensitive": true,
+          "order": "asc"
+        },
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index"
+        ],
+        "newlines-between": "always"
+      }
+    ],
+    "max-depth": [
+      "error",
+      3
+    ],
+    "max-lines-per-function": [
+      "error",
+      {
+        "max": 50,
+        "skipBlankLines": true,
+        "skipComments": true
+      }
+    ],
+    "max-params": [
+      "error",
+      5
+    ],
+    "no-alert": "error",
+    "no-console": "warn",
+    "no-duplicate-imports": "error",
+    "no-loop-func": "error",
+    "no-nested-ternary": "error",
+    "no-undef": "error",
+    "no-unneeded-ternary": "error",
+    "one-var-declaration-per-line": [
+      "warn",
+      "always"
+    ],
+    "operator-assignment": [
+      "warn",
+      "always"
+    ],
+    "operator-linebreak": [
+      "warn",
+      "none"
+    ],
+    "react/function-component-definition": [
+      2,
+      {
+        "namedComponents": "function-declaration",
+        "unnamedComponents": "arrow-function"
+      }
+    ],
+    "require-atomic-updates": "error"
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    },
+    "react": {
+      "version": "detect"
+    }
   }
 }

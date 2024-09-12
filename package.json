@@ -6,8 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "fmt": "prettier --write ."
+    "check": "next lint",
+    "lint": "next lint --fix -d .",
+    "fmt": "prettier --write .",
+    "sort": "sort-json",
+    "prepare": "husky"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^2.0.9",
@@ -46,6 +49,8 @@
     "styled-components": "^6.1.13"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.5.0",
+    "@commitlint/config-conventional": "^19.5.0",
     "@types/lodash": "^4.17.7",
     "@types/node": "^20",
     "@types/react": "^18",
@@ -53,9 +58,22 @@
     "@types/react-lottie": "^1.2.10",
     "@typescript-eslint/eslint-plugin": "^8.3.0",
     "@typescript-eslint/parser": "^8.3.0",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.7",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.35.2",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
     "prettier": "^3.3.2",
+    "sort-json": "^2.0.1",
     "typescript": "^5"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

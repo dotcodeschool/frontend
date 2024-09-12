@@ -1,13 +1,10 @@
-import { Providers } from "@/app/providers";
 import { ColorModeScript } from "@chakra-ui/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import theme from "@/app/ui/theme";
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+import { Providers } from "@/app/providers";
+import theme from "@/ui/theme";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body>

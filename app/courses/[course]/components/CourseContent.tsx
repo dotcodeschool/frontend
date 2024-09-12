@@ -14,35 +14,59 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { Entry, EntryFieldTypes } from "contentful";
 import { map, size } from "lodash";
-import React, { Suspense } from "react";
-import { ModuleProps } from "../types";
+import { MDXComponents as MDXComponentsType } from "mdx/types";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import MDXComponents from "@/app/ui/components/lessons-interface/mdx-components";
-import PrimaryButton from "@/app/ui/components/primary-button";
+import React, { Suspense } from "react";
+import { MdCheckCircle } from "react-icons/md";
+
+import { auth } from "@/auth";
+import MDXComponents from "@/components/lessons-interface/mdx-components";
+import PrimaryButton from "@/components/primary-button";
+import { useDatabase } from "@/lib/hooks/useDatabase";
 import {
   TypeAuthorSkeleton,
   TypeCourseModuleFields,
   TypeLessonSkeleton,
   TypeSectionFields,
   TypeSectionSkeleton,
-} from "@/app/lib/types/contentful";
-import { Entry, EntryFieldTypes } from "contentful";
-import ProgressBar from "./ProgressBar";
-import { MdCheckCircle } from "react-icons/md";
-import { auth } from "@/auth";
-import { MDXComponents as MDXComponentsType } from "mdx/types";
-import { IProgressData } from "@/app/lib/types/IProgress";
-import { useDatabase } from "@/app/hooks/useDatabase";
+} from "@/lib/types/contentful";
+import { IProgressData } from "@/lib/types/IProgress";
 
-const ModuleItem = async ({
+import { ModuleProps } from "../types";
+
+import ProgressBar from "./ProgressBar";
+
+function StartLessonButton({
+  isOnMachineCourse,
+  hasEnrolled,
+  slug,
+  index,
+}: {
+  isOnMachineCourse: boolean;
+  hasEnrolled: boolean;
+  slug: string;
+  index: number;
+}) {
+  const lessonUrl = `/courses/${slug}/lesson/${index + 1}/chapter/1`;
+  const setupUrl = `/courses/${slug}/setup`;
+  const url = isOnMachineCourse && !hasEnrolled ? setupUrl : lessonUrl;
+  return (
+    <PrimaryButton as="a" href={url} mt={12}>
+      Start Lesson
+    </PrimaryButton>
+  );
+}
+
+function ModuleItem({
   index,
   module,
   slug,
   numOfCompletedLessons,
   isOnMachineCourse,
   hasEnrolled,
-}: ModuleProps) => {
+}: ModuleProps) {
   const { title, description, lessons } = module;
   const numOfLessons = size(lessons);
 
@@ -71,31 +95,24 @@ const ModuleItem = async ({
             components={MDXComponents as unknown as Readonly<MDXComponentsType>}
           />
         </Suspense>
-        <PrimaryButton
-          as="a"
-          href={
-            isOnMachineCourse
-              ? hasEnrolled
-                ? `/courses/${slug}/lesson/${index + 1}/chapter/1`
-                : `/courses/${slug}/setup`
-              : `/courses/${slug}/lesson/${index + 1}/chapter/1`
-          }
-          mt={12}
-        >
-          Start Lesson
-        </PrimaryButton>
+        <StartLessonButton
+          isOnMachineCourse={isOnMachineCourse}
+          hasEnrolled={hasEnrolled}
+          slug={slug}
+          index={index}
+        />
       </AccordionPanel>
     </AccordionItem>
   );
-};
+}
 
-const ModuleList = ({
+function ModuleList({
   sections,
 }: {
   sections: EntryFieldTypes.Array<
     EntryFieldTypes.EntryLink<TypeLessonSkeleton | TypeSectionSkeleton>
   >;
-}) => {
+}) {
   const sectionsData = sections as unknown as Entry<TypeSectionSkeleton>[];
   return (
     <Box
@@ -110,11 +127,7 @@ const ModuleList = ({
       <Heading as="h2" size="lg" mb={6}>
         What you&apos;ll learn:
       </Heading>
-      <Grid
-        templateColumns={["repeat(1, 1fr)", "repeat(2, 1fr)"]}
-        gap={4}
-        mb={4}
-      >
+      <Grid templateColumns={["repeat(1, 1fr)", "repeat(2, 1fr)"]} gap={4} mb={4}>
         {sectionsData.map((section, index) => (
           <GridItem key={index} colSpan={1}>
             <Flex align="center">
@@ -126,9 +139,9 @@ const ModuleList = ({
       </Grid>
     </Box>
   );
-};
+}
 
-const CourseContent = async ({
+async function CourseContent({
   slug,
   title,
   author,
@@ -137,7 +150,7 @@ const CourseContent = async ({
   level,
   language,
   format,
-}: TypeCourseModuleFields) => {
+}: TypeCourseModuleFields) {
   const { findOne } = useDatabase();
   const session = await auth();
   const authorData = author as unknown as TypeAuthorSkeleton;
@@ -203,9 +216,7 @@ const CourseContent = async ({
             key={index}
             index={index}
             module={module.fields as unknown as TypeSectionFields}
-            numOfCompletedLessons={size(
-              progressData?.[Number(index + 1).toString()],
-            )}
+            numOfCompletedLessons={size(progressData?.[Number(index + 1).toString()])}
             isOnMachineCourse={isOnMachineCourse}
             hasEnrolled={hasEnrolled}
             slug={slug.toString()}
@@ -214,6 +225,6 @@ const CourseContent = async ({
       </Accordion>
     </Box>
   );
-};
+}
 
 export default CourseContent;

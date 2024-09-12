@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import clientPromise from "@/app/lib/mongodb";
-import { IProgressUpdate } from "@/app/lib/types/IProgress";
+import clientPromise from "@/lib/db/mongodb";
+import { IProgressUpdate } from "@/lib/types/IProgress";
 
 export async function POST(req: NextRequest) {
   const client = await clientPromise;
@@ -35,9 +35,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ result });
   } catch (error) {
     console.error("Error updating progress:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

@@ -1,29 +1,18 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  IconButton,
-  Link,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
-import { FaTwitter, FaDiscord } from "react-icons/fa";
-import successAnimation from "@/public/static/successAnimation.json";
-import Navbar from "@/app/ui/components/navbar";
+import { Box, Button, ButtonGroup, IconButton, Link, Text, VStack } from "@chakra-ui/react";
 import Lottie from "lottie-react";
-import { slugToTitleCase } from "@/app/lib/utils";
+import React, { useEffect, useState } from "react";
+import { FaTwitter, FaDiscord } from "react-icons/fa";
 
-const SuccessPage = ({
-  params: { course },
-}: {
-  params: { course: string };
-}) => {
+import Navbar from "@/components/navbar";
+import { slugToTitleCase } from "@/lib/utils";
+import successAnimation from "@/public/static/successAnimation.json";
+
+function SuccessPage({ params: { course } }: { params: { course: string } }) {
   const courseTitle = slugToTitleCase(course);
   const tweetText = encodeURIComponent(
-    `I just completed the ${courseTitle} course on @dotcodeschool.\n\nNow, I am one step closer to building my own blockchain on @Polkadot.`,
+    `I just completed the ${courseTitle} course on @dotcodeschool.\n\nNow, I am one step closer to building my own blockchain on @Polkadot.`
   );
 
   const lottieContainerRef = React.useRef<HTMLDivElement | null>(null);
@@ -55,10 +44,7 @@ const SuccessPage = ({
       <Navbar cta={false} />
       <VStack maxW="4xl" mx="auto" mt={[-10, 12]}>
         <Box opacity={0} ref={lottieContainerRef} transition="opacity 6s">
-          <Lottie
-            animationData={successAnimation}
-            style={{ cursor: "default", height: 400 }}
-          />
+          <Lottie animationData={successAnimation} style={{ cursor: "default", height: 400 }} />
         </Box>
         <Text
           opacity={textOpacity}
@@ -77,16 +63,10 @@ const SuccessPage = ({
           transitionDelay="0.5s"
           maxW="lg"
         >
-          Congratulations! You have successfully completed the {courseTitle}{" "}
-          course. You&apos;re officially one step closer to building your own
-          blockchain on Polkadot.
+          Congratulations! You have successfully completed the {courseTitle} course. You&apos;re
+          officially one step closer to building your own blockchain on Polkadot.
         </Text>
-        <VStack
-          opacity={textOpacity}
-          transition="opacity 0.5s"
-          transitionDelay="4s"
-          mt={8}
-        >
+        <VStack opacity={textOpacity} transition="opacity 0.5s" transitionDelay="4s" mt={8}>
           <VStack spacing={4} mb={8}>
             <Button
               as={Link}
@@ -140,6 +120,6 @@ const SuccessPage = ({
       </VStack>
     </Box>
   );
-};
+}
 
 export default SuccessPage;
