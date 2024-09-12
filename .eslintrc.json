@@ -12,9 +12,7 @@
   },
   "overrides": [
     {
-      "files": [
-        "**/api/**/*.ts"
-      ],
+      "files": ["**/api/**/*.ts"],
       "rules": {
         "@typescript-eslint/naming-convention": [
           "error",
@@ -23,9 +21,7 @@
               "match": true,
               "regex": "^(GET|POST|PUT|DELETE|PATCH)$"
             },
-            "format": [
-              "UPPER_CASE"
-            ],
+            "format": ["UPPER_CASE"],
             "selector": "variable"
           }
         ]
@@ -45,31 +41,19 @@
     "@typescript-eslint/naming-convention": [
       "error",
       {
-        "format": [
-          "camelCase"
-        ],
+        "format": ["camelCase"],
         "leadingUnderscore": "allow",
-        "modifiers": [
-          "exported"
-        ],
+        "modifiers": ["exported"],
         "selector": "variable"
       },
       {
-        "format": [
-          "camelCase",
-          "UPPER_CASE"
-        ],
+        "format": ["camelCase", "UPPER_CASE"],
         "leadingUnderscore": "forbid",
-        "modifiers": [
-          "global"
-        ],
+        "modifiers": ["global"],
         "selector": "variable"
       },
       {
-        "format": [
-          "camelCase",
-          "PascalCase"
-        ],
+        "format": ["camelCase", "PascalCase"],
         "leadingUnderscore": "forbid",
         "selector": "function"
       },
@@ -78,51 +62,27 @@
           "match": false,
           "regex": "^I[A-Z]"
         },
-        "format": [
-          "PascalCase"
-        ],
+        "format": ["PascalCase"],
         "selector": "interface"
       },
       {
-        "format": [
-          "PascalCase"
-        ],
-        "prefix": [
-          "Type"
-        ],
+        "format": ["PascalCase"],
+        "prefix": ["Type"],
         "selector": "typeAlias"
       },
       {
-        "format": [
-          "PascalCase"
-        ],
+        "format": ["PascalCase"],
         "selector": "enum"
       },
       {
-        "format": [
-          "UPPER_CASE",
-          "PascalCase"
-        ],
+        "format": ["UPPER_CASE", "PascalCase"],
         "selector": "enumMember"
       },
       {
-        "format": [
-          "PascalCase"
-        ],
-        "prefix": [
-          "Is",
-          "Has",
-          "Can",
-          "Should",
-          "is",
-          "has",
-          "can",
-          "should"
-        ],
+        "format": ["PascalCase"],
+        "prefix": ["Is", "Has", "Can", "Should", "is", "has", "can", "should"],
         "selector": "variable",
-        "types": [
-          "boolean"
-        ]
+        "types": ["boolean"]
       }
     ],
     "@typescript-eslint/no-unused-vars": [
@@ -132,10 +92,7 @@
       }
     ],
     "camelcase": "error",
-    "complexity": [
-      "error",
-      5
-    ],
+    "complexity": ["error", 5],
     "import/no-duplicates": "error",
     "import/order": [
       "error",
@@ -144,21 +101,11 @@
           "caseInsensitive": true,
           "order": "asc"
         },
-        "groups": [
-          "builtin",
-          "external",
-          "internal",
-          "parent",
-          "sibling",
-          "index"
-        ],
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
         "newlines-between": "always"
       }
     ],
-    "max-depth": [
-      "error",
-      3
-    ],
+    "max-depth": ["error", 3],
     "max-lines-per-function": [
       "error",
       {
@@ -167,10 +114,7 @@
         "skipComments": true
       }
     ],
-    "max-params": [
-      "error",
-      5
-    ],
+    "max-params": ["error", 5],
     "no-alert": "error",
     "no-console": "warn",
     "no-duplicate-imports": "error",
@@ -178,18 +122,9 @@
     "no-nested-ternary": "error",
     "no-undef": "error",
     "no-unneeded-ternary": "error",
-    "one-var-declaration-per-line": [
-      "warn",
-      "always"
-    ],
-    "operator-assignment": [
-      "warn",
-      "always"
-    ],
-    "operator-linebreak": [
-      "warn",
-      "none"
-    ],
+    "one-var-declaration-per-line": ["warn", "always"],
+    "operator-assignment": ["warn", "always"],
+    "operator-linebreak": ["warn", "none"],
     "react/function-component-definition": [
       2,
       {
