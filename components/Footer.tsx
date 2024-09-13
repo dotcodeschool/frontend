@@ -24,6 +24,18 @@ const socialLinks = [
   },
 ];
 
+/**
+ * Footer component that displays social media links.
+ *
+ * This component renders a footer with centered social media icons.
+ * Each icon is a clickable link to the corresponding social media platform.
+ *
+ * @returns A footer element with social media links
+ * @example
+ * ```tsx
+ * <Footer />
+ * ```
+ */
 export const Footer = () => (
   <Box as="footer" mt={20} py={12} textAlign="center">
     <HStack justify="center" spacing={8}>
