@@ -29,7 +29,13 @@
       }
     },
     {
-      "files": ["**/page.tsx", "**/layout.tsx", "**/*.page.tsx", "**/*.layout.tsx", "**/index.ts"],
+      "files": [
+        "**/page.tsx",
+        "**/layout.tsx",
+        "**/*.page.tsx",
+        "**/*.layout.tsx",
+        "**/index.ts"
+      ],
       "rules": {
         "filename-rules/match": "off",
         "import/no-default-export": "off"
@@ -67,7 +73,10 @@
     "no-plusplus": ["warn", { "allowForLoopAfterthoughts": true }],
     "curly": "warn",
     "object-shorthand": "warn",
-    "@typescript-eslint/consistent-type-assertions": ["error", { "assertionStyle": "never" }],
+    "@typescript-eslint/consistent-type-assertions": [
+      "error",
+      { "assertionStyle": "never" }
+    ],
     "@typescript-eslint/no-unused-vars": [
       "warn",
       {
@@ -131,7 +140,11 @@
 
     "react/no-unstable-nested-components": ["error", { "allowAsProps": true }],
     "react/jsx-fragments": "error",
-    "react/destructuring-assignment": ["error", "always", { "destructureInSignature": "always" }],
+    "react/destructuring-assignment": [
+      "error",
+      "always",
+      { "destructureInSignature": "always" }
+    ],
     "react/jsx-no-leaked-render": ["error", { "validStrategies": ["ternary"] }],
     "react/jsx-max-depth": ["error", { "max": 5 }],
     "react/jsx-key": [
@@ -216,7 +229,7 @@
           "TSInterfaceDeclaration",
           "TSPropertySignature"
         ],
-        "enableFixer": true
+        "enableFixer": false
       }
     ],
     "prefer-arrow-callback": [
@@ -225,7 +238,10 @@
         "allowNamedFunctions": true
       }
     ],
-    "no-secrets/no-secrets": ["error", { "ignoreContent": "https", "tolerance": 4.2 }],
+    "no-secrets/no-secrets": [
+      "error",
+      { "ignoreContent": "https", "tolerance": 4.2 }
+    ],
     "filename-rules/match": [
       2,
       {
@@ -235,7 +251,10 @@
         ".tsx": { "pattern": "pascalcase", "exceptions": ["page", "layout"] }
       }
     ],
-    "jsdoc/check-tag-names": ["warn", { "definedTags": ["remarks", "privateRemarks"] }],
+    "jsdoc/check-tag-names": [
+      "warn",
+      { "definedTags": ["remarks", "privateRemarks"] }
+    ],
     "jsdoc/require-hyphen-before-param-description": "off",
     "jsdoc/require-returns": "off",
     "jsdoc/require-returns-check": "off",
@@ -248,7 +267,14 @@
           "caseInsensitive": true,
           "order": "asc"
         },
-        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          "parent",
+          "sibling",
+          "index"
+        ],
         "newlines-between": "always"
       }
     ],
@@ -314,7 +340,15 @@
       {
         "blankLine": "always",
         "prev": "*",
-        "next": ["function", "interface", "type", "try", "throw", "case", "default"]
+        "next": [
+          "function",
+          "interface",
+          "type",
+          "try",
+          "throw",
+          "case",
+          "default"
+        ]
       }
     ],
     "padding-line-between-statements": "off",
@@ -331,7 +365,10 @@
 
       { "devDependencies": ["**/*.{test,spec,story,stories}.{ts,tsx}"] }
     ],
-    "react/function-component-definition": ["warn", { "namedComponents": "arrow-function" }],
+    "react/function-component-definition": [
+      "warn",
+      { "namedComponents": "arrow-function" }
+    ],
     "react/no-multi-comp": "error",
     "require-atomic-updates": "error",
     "tsdoc/syntax": "warn"
