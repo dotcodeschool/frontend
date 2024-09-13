@@ -35,6 +35,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ result });
   } catch (error) {
     console.error("Error updating progress:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }

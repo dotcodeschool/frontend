@@ -40,7 +40,8 @@ export const questions = [
 export const repositorySetup = {
   id: "repository-setup",
   title: "Repository Setup",
-  description: "We've prepared a starter repository with some Rust code for you.",
+  description:
+    "We've prepared a starter repository with some Rust code for you.",
   steps: [
     {
       title: "1. Clone the repository",

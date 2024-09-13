@@ -18,7 +18,11 @@ import { DiffEditor, Editor } from "@monaco-editor/react";
 import { map, find, matches, endsWith, isEmpty } from "lodash";
 import React, { useCallback, useEffect, useRef } from "react";
 import { FiMaximize2, FiMinimize2 } from "react-icons/fi";
-import { IoCheckmarkDone, IoEyeOffOutline, IoGitCompareOutline } from "react-icons/io5";
+import {
+  IoCheckmarkDone,
+  IoEyeOffOutline,
+  IoGitCompareOutline,
+} from "react-icons/io5";
 import { MdCompareArrows } from "react-icons/md";
 import stripComments from "strip-comments";
 
@@ -31,7 +35,12 @@ export interface EditorTabsProps {
   handleFullscreenToggle: (e: React.MouseEvent) => void;
 }
 
-function EditorTabs({ showHints, readOnly, isOpen, handleFullscreenToggle }: EditorTabsProps) {
+function EditorTabs({
+  showHints,
+  readOnly,
+  isOpen,
+  handleFullscreenToggle,
+}: EditorTabsProps) {
   const {
     compareAnswerAndUpdateState,
     doesAnswerMatch,
@@ -57,7 +66,7 @@ function EditorTabs({ showHints, readOnly, isOpen, handleFullscreenToggle }: Edi
       }
       isUserInteraction.current = false;
     },
-    [setTabIndex]
+    [setTabIndex],
   );
 
   const handleTabClick = useCallback(() => {
@@ -96,7 +105,13 @@ function EditorTabs({ showHints, readOnly, isOpen, handleFullscreenToggle }: Edi
         return handleTabsChange(e);
       }}
       variant="unstyled"
-      h={readOnly ? "100vh" : isOpen ? "calc(100vh - 96px)" : "calc(100vh - 225px)"}
+      h={
+        readOnly
+          ? "100vh"
+          : isOpen
+            ? "calc(100vh - 96px)"
+            : "calc(100vh - 225px)"
+      }
       bg="#2e2e2e"
       w="full"
     >
@@ -119,14 +134,25 @@ function EditorTabs({ showHints, readOnly, isOpen, handleFullscreenToggle }: Edi
             <Text m={4}>No files edited in this step.</Text>
           ) : (
             map(editorContent, (file, i) => {
-              const incorrectColor = find(incorrectFiles, matches({ fileName: file.fileName }))
+              const incorrectColor = find(
+                incorrectFiles,
+                matches({ fileName: file.fileName }),
+              )
                 ? "red.300"
                 : null;
               return (
                 <Tab
                   key={i}
-                  as={showDiff && endsWith(file.fileName, ".diff") ? "i" : undefined}
-                  display={!showDiff && endsWith(file.fileName, ".diff") ? "none" : "block"}
+                  as={
+                    showDiff && endsWith(file.fileName, ".diff")
+                      ? "i"
+                      : undefined
+                  }
+                  display={
+                    !showDiff && endsWith(file.fileName, ".diff")
+                      ? "none"
+                      : "block"
+                  }
                   borderRight="1px solid"
                   borderRightColor="#111111"
                   color={incorrectColor ? incorrectColor : "whiteAlpha.600"}
@@ -166,7 +192,11 @@ function EditorTabs({ showHints, readOnly, isOpen, handleFullscreenToggle }: Edi
             })
           )}
         </Flex>
-        <Flex alignItems="center" px={2} display={isEmpty(editorContent) ? "none" : "flex"}>
+        <Flex
+          alignItems="center"
+          px={2}
+          display={isEmpty(editorContent) ? "none" : "flex"}
+        >
           <Tooltip
             hasArrow
             maxW={32}
@@ -188,15 +218,25 @@ function EditorTabs({ showHints, readOnly, isOpen, handleFullscreenToggle }: Edi
           <Tooltip
             hasArrow
             maxW={32}
-            label={isOpen ? "Exit Fullscreen Code Editor" : "Enter Fullscreen Code Editor"}
+            label={
+              isOpen
+                ? "Exit Fullscreen Code Editor"
+                : "Enter Fullscreen Code Editor"
+            }
             textAlign="center"
           >
             <IconButton
               size="sm"
               bg="none"
               p={0}
-              aria-label={isOpen ? "Exit Fullscreen Code Editor" : "Enter Fullscreen Code Editor"}
-              icon={isOpen ? <FiMinimize2 size={18} /> : <FiMaximize2 size={18} />}
+              aria-label={
+                isOpen
+                  ? "Exit Fullscreen Code Editor"
+                  : "Enter Fullscreen Code Editor"
+              }
+              icon={
+                isOpen ? <FiMinimize2 size={18} /> : <FiMaximize2 size={18} />
+              }
               onClick={handleFullscreenToggle}
             />
           </Tooltip>
@@ -204,12 +244,17 @@ function EditorTabs({ showHints, readOnly, isOpen, handleFullscreenToggle }: Edi
       </TabList>
       <TabPanels h="full">
         {map(editorContent, (file, i) => {
-          const userCodeWithoutComments = showHints ? stripComments(editorContent[i]?.code) : "";
+          const userCodeWithoutComments = showHints
+            ? stripComments(editorContent[i]?.code)
+            : "";
           const solutionWithoutComments = showHints
             ? stripComments(
-                find(solution, ({ fileName }) => fileName === editorContent[i].fileName)?.code ??
+                find(
+                  solution,
+                  ({ fileName }) => fileName === editorContent[i].fileName,
+                )?.code ??
                   editorContent[i]?.code ??
-                  ""
+                  "",
               )
             : "";
           return (
@@ -241,7 +286,11 @@ function EditorTabs({ showHints, readOnly, isOpen, handleFullscreenToggle }: Edi
                 <HStack p={2} w="full" bg="#2e2e2e" alignItems="center">
                   <Button
                     variant="outline"
-                    leftIcon={<Icon as={isAnswerOpen ? IoEyeOffOutline : MdCompareArrows} />}
+                    leftIcon={
+                      <Icon
+                        as={isAnswerOpen ? IoEyeOffOutline : MdCompareArrows}
+                      />
+                    }
                     onClick={() => {
                       isUserInteraction.current = true;
                       compareAnswerAndUpdateState();

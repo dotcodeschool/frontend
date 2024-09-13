@@ -1,9 +1,17 @@
 import { EntryCollection, EntrySkeletonType, createClient } from "contentful";
 
 function initContentfulClient() {
-  const { CONTENTFUL_SPACE_ID, CONTENTFUL_ENVIRONMENT, CONTENTFUL_ACCESS_TOKEN } = process.env;
+  const {
+    CONTENTFUL_SPACE_ID,
+    CONTENTFUL_ENVIRONMENT,
+    CONTENTFUL_ACCESS_TOKEN,
+  } = process.env;
 
-  if (!CONTENTFUL_SPACE_ID || !CONTENTFUL_ENVIRONMENT || !CONTENTFUL_ACCESS_TOKEN) {
+  if (
+    !CONTENTFUL_SPACE_ID ||
+    !CONTENTFUL_ENVIRONMENT ||
+    !CONTENTFUL_ACCESS_TOKEN
+  ) {
     throw new Error("Contentful environment variables are not set");
   }
 
@@ -23,7 +31,7 @@ export async function getContentById(entryId: string) {
 }
 
 export async function getContentByType<T extends EntrySkeletonType>(
-  contentType: string
+  contentType: string,
 ): Promise<EntryCollection<T>> {
   const client = initContentfulClient();
   const entries = (await client.getEntries({

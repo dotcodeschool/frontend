@@ -1,6 +1,10 @@
 import { getCourseData } from "@/lib/utils";
 
-export async function generateMetadata({ params }: { params: { course: string } }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: { course: string };
+}) {
   const course = await getCourseData(params.course);
 
   return {

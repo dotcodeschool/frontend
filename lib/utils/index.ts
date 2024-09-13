@@ -8,7 +8,10 @@ import { useDatabase } from "@/lib/hooks/useDatabase";
 import { IParsedDiff } from "@/lib/types/IParsedDiff";
 import { getContentByType } from "@/lib/utils";
 
-import { TypeCourseModuleFields, TypeCourseModuleSkeleton } from "../types/contentful";
+import {
+  TypeCourseModuleFields,
+  TypeCourseModuleSkeleton,
+} from "../types/contentful";
 
 export { getContentById, getContentByType } from "./get-content";
 
@@ -48,10 +51,12 @@ export function parseDiff(diff: string): IParsedDiff {
   return files;
 }
 
-export async function getCourseData(courseSlug: string): Promise<TypeCourseModuleFields> {
+export async function getCourseData(
+  courseSlug: string,
+): Promise<TypeCourseModuleFields> {
   const res = await getContentByType<TypeCourseModuleSkeleton>("courseModule");
   const entry = res.items.find(
-    (item: Entry<TypeCourseModuleSkeleton>) => item.fields.slug === courseSlug
+    (item: Entry<TypeCourseModuleSkeleton>) => item.fields.slug === courseSlug,
   );
 
   if (isNil(entry)) {
@@ -77,7 +82,7 @@ export function slugToTitleCase(slug: string): string {
 
 export async function findRepo(
   courseSlug: string,
-  userId: string
+  userId: string,
 ): Promise<Repository | undefined> {
   const { findOne } = useDatabase();
   try {
@@ -93,7 +98,9 @@ export async function findRepo(
   }
 }
 
-export async function getCourseIdFromSlug(courseSlug: string): Promise<ObjectId | undefined> {
+export async function getCourseIdFromSlug(
+  courseSlug: string,
+): Promise<ObjectId | undefined> {
   const { findOne } = useDatabase();
   try {
     const result = await findOne("courses", { slug: courseSlug });

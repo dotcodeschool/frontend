@@ -26,11 +26,17 @@ const MDXComponents = {
   ol: (props: BoxProps) => <Box as="ol" pt={2} pl={4} ml={2} {...props} />,
   li: (props: BoxProps) => <Box as="li" pb={4} {...props} />,
 
-  code: (props: CodeProps) => <Code colorScheme="orange" variant="subtle" {...props} />,
-
-  pre: ({ children, ...props }: { children: ReactElement; props: IPreComponentProps }) => (
-    <PreComponent {...props}>{children}</PreComponent>
+  code: (props: CodeProps) => (
+    <Code colorScheme="orange" variant="subtle" {...props} />
   ),
+
+  pre: ({
+    children,
+    ...props
+  }: {
+    children: ReactElement;
+    props: IPreComponentProps;
+  }) => <PreComponent {...props}>{children}</PreComponent>,
 
   blockquote: (props: BoxProps) => (
     <Box

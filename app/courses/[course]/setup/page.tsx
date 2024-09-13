@@ -15,7 +15,11 @@ import { findRepo } from "@/lib/utils";
 
 import StepsComponent from "./components/Steps";
 
-export default async function SetupPage({ params }: { params: { course: string } }) {
+export default async function SetupPage({
+  params,
+}: {
+  params: { course: string };
+}) {
   const { course } = params;
   const session = await auth();
   if (!session) {
@@ -23,11 +27,14 @@ export default async function SetupPage({ params }: { params: { course: string }
       redirectTo: `/courses/${course}/setup`,
     });
   }
-  const getUserResponse = await axios.get("http://localhost:3000/api/get-user", {
-    params: {
-      user: session?.user,
+  const getUserResponse = await axios.get(
+    "http://localhost:3000/api/get-user",
+    {
+      params: {
+        user: session?.user,
+      },
     },
-  });
+  );
   const userId = getUserResponse.data._id;
   const repo = await findRepo(course, userId);
   const hasEnrolled = !isNil(repo);
@@ -48,7 +55,7 @@ export default async function SetupPage({ params }: { params: { course: string }
             />
           ),
         };
-      })
+      }),
     ),
   };
   return (

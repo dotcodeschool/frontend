@@ -127,7 +127,11 @@ function ModuleList({
       <Heading as="h2" size="lg" mb={6}>
         What you&apos;ll learn:
       </Heading>
-      <Grid templateColumns={["repeat(1, 1fr)", "repeat(2, 1fr)"]} gap={4} mb={4}>
+      <Grid
+        templateColumns={["repeat(1, 1fr)", "repeat(2, 1fr)"]}
+        gap={4}
+        mb={4}
+      >
         {sectionsData.map((section, index) => (
           <GridItem key={index} colSpan={1}>
             <Flex align="center">
@@ -216,7 +220,9 @@ async function CourseContent({
             key={index}
             index={index}
             module={module.fields as unknown as TypeSectionFields}
-            numOfCompletedLessons={size(progressData?.[Number(index + 1).toString()])}
+            numOfCompletedLessons={size(
+              progressData?.[Number(index + 1).toString()],
+            )}
             isOnMachineCourse={isOnMachineCourse}
             hasEnrolled={hasEnrolled}
             slug={slug.toString()}

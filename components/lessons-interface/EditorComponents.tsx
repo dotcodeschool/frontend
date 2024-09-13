@@ -52,10 +52,13 @@ export function EditorProvider({
 }: EditorProviderProps) {
   const [tabIndex, setTabIndex] = useState(initialTabIndex);
   const [showDiff, setShowDiff] = useState(initialShowDiff);
-  const [doesAnswerMatch, setDoesAnswerMatch] = useState(initialDoesAnswerMatch);
+  const [doesAnswerMatch, setDoesAnswerMatch] = useState(
+    initialDoesAnswerMatch,
+  );
   const [isAnswerOpen, setIsAnswerOpen] = useState(initialIsAnswerOpen);
   const [incorrectFiles, setIncorrectFiles] = useState<TypeFile[]>([]);
-  const [editorContent, setEditorContent] = useState<TypeFile[]>(initialContent);
+  const [editorContent, setEditorContent] =
+    useState<TypeFile[]>(initialContent);
 
   const toggleAnswer = () => {
     setIsAnswerOpen((prevIsAnswerOpen) => !prevIsAnswerOpen);
@@ -87,31 +90,36 @@ export function EditorProvider({
       (acc, file) => {
         const solutionFile = find(
           solution,
-          (solutionFile: TypeFile) => solutionFile.fileName === file.fileName
+          (solutionFile: TypeFile) => solutionFile.fileName === file.fileName,
         );
 
         if (!solutionFile) {
           return true && acc;
         }
         const solutionCodeWithoutComments = stripComments(solutionFile.code);
-        const solutionCodeWithoutCommentsAndWhitespace = solutionCodeWithoutComments.replace(
-          /\s/g,
-          ""
-        );
+        const solutionCodeWithoutCommentsAndWhitespace =
+          solutionCodeWithoutComments.replace(/\s/g, "");
         const fileCodeWithoutComments = stripComments(file.code);
-        const fileCodeWithoutCommentsAndWhitespace = fileCodeWithoutComments.replace(/\s/g, "");
+        const fileCodeWithoutCommentsAndWhitespace =
+          fileCodeWithoutComments.replace(/\s/g, "");
         const doFilesMatch =
-          solutionCodeWithoutCommentsAndWhitespace === fileCodeWithoutCommentsAndWhitespace;
+          solutionCodeWithoutCommentsAndWhitespace ===
+          fileCodeWithoutCommentsAndWhitespace;
         if (!doFilesMatch) {
-          setIncorrectFiles((prevIncorrectFiles) => [...prevIncorrectFiles, file]);
+          setIncorrectFiles((prevIncorrectFiles) => [
+            ...prevIncorrectFiles,
+            file,
+          ]);
         } else {
           setIncorrectFiles((prevIncorrectFiles) =>
-            prevIncorrectFiles.filter((incorrectFile) => incorrectFile.fileName !== file.fileName)
+            prevIncorrectFiles.filter(
+              (incorrectFile) => incorrectFile.fileName !== file.fileName,
+            ),
           );
         }
         return doFilesMatch && acc;
       },
-      true
+      true,
     );
     setDoesAnswerMatch(doesAnswerMatch);
   };
@@ -132,7 +140,9 @@ export function EditorProvider({
     toggleDiff,
   };
 
-  return <EditorContext.Provider value={value}>{children}</EditorContext.Provider>;
+  return (
+    <EditorContext.Provider value={value}>{children}</EditorContext.Provider>
+  );
 }
 
 export const useEditor = (): EditorContextType => {
@@ -208,10 +218,19 @@ export function EditorComponents({
           {mdxContent}
         </Box>
       )}
-      <Flex height="calc(100vh - 129px)" w="full" key={2} px={{ base: 4, md: 0 }}>
+      <Flex
+        height="calc(100vh - 129px)"
+        w="full"
+        key={2}
+        px={{ base: 4, md: 0 }}
+      >
         <EditorProvider initialContent={editorContent} solution={solution}>
           <EditorTabs {...editorProps} />
-          <FullscreenEditorModal isOpen={isOpen} onClose={onClose} editorProps={editorProps} />
+          <FullscreenEditorModal
+            isOpen={isOpen}
+            onClose={onClose}
+            editorProps={editorProps}
+          />
         </EditorProvider>
       </Flex>
     </Box>

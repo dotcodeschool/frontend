@@ -14,7 +14,11 @@ export function useDatabase() {
     return collection.findOne(query);
   };
 
-  const updateOne = async (collectionName: string, filter: object, update: object) => {
+  const updateOne = async (
+    collectionName: string,
+    filter: object,
+    update: object,
+  ) => {
     const collection = await getCollection(collectionName);
     return collection.updateOne(filter, update);
   };

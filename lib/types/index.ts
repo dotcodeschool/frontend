@@ -1,31 +1,42 @@
-export type PracticeFrequencyOptions = "every_day" | "once_a_week" | "once_a_month";
-export interface PracticeFrequency {
+export type {
+  Accountability,
+  AnswerOptions,
+  PracticeFrequency,
+  PracticeFrequencyOptions,
+  Relationship,
+  RepositorySetup,
+  SetupQuestion,
+};
+
+type PracticeFrequencyOptions = "every_day" | "once_a_week" | "once_a_month";
+
+type PracticeFrequency = {
   value: PracticeFrequencyOptions;
   display: "Every day" | "Once a week" | "Once a month";
-}
+};
 
-export interface Accountability {
+type Accountability = {
   value: boolean;
   display: "Yes please" | "I'll pass";
-}
+};
 
-export type AnswerOptions = PracticeFrequency | Accountability;
+type AnswerOptions = PracticeFrequency | Accountability;
 
-export interface SetupQuestion {
+type SetupQuestion = {
   id: string;
   question: string;
   description: string;
   options: AnswerOptions[];
-}
+};
 
-export interface RepositorySetup {
+type RepositorySetup = {
   id: string;
   title: string;
   description: string;
   steps: { title: string; code: React.ReactElement | string }[];
-}
+};
 
-export interface Relationship {
+type Relationship = {
   id: string;
   type: string;
-}
+};

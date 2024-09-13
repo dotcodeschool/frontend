@@ -9,12 +9,13 @@ export async function generateMetadata({
   const { course: courseSlug, lesson, chapter } = params;
   const courseTitle = slugToTitleCase(courseSlug);
   const course = await getCourseData(courseSlug);
-  const sectionFields = (course.sections as unknown as TypeSectionSkeleton[])[Number(lesson) - 1]
-    .fields;
+  const sectionFields = (course.sections as unknown as TypeSectionSkeleton[])[
+    Number(lesson) - 1
+  ].fields;
   const sectionTitle = sectionFields.title;
-  const lessonId = (sectionFields.lessons as unknown as TypeLesson<"WITH_ALL_LOCALES">[])[
-    Number(chapter) - 1
-  ].sys.id;
+  const lessonId = (
+    sectionFields.lessons as unknown as TypeLesson<"WITH_ALL_LOCALES">[]
+  )[Number(chapter) - 1].sys.id;
   const lessonData = await getContentById(lessonId);
   const lessonTitle = lessonData.fields.title;
   const title = `${lessonTitle} - ${sectionTitle} - ${courseTitle} | Dot Code School`;

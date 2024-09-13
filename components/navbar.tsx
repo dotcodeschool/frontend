@@ -70,7 +70,12 @@ function Logo() {
 
 function StartCourseButton({ ...props }: ChakraProps) {
   return (
-    <PrimaryButton as={Link} href="/courses" _hover={{ textDecor: "none" }} {...props}>
+    <PrimaryButton
+      as={Link}
+      href="/courses"
+      _hover={{ textDecor: "none" }}
+      {...props}
+    >
       Courses
     </PrimaryButton>
   );
@@ -84,7 +89,11 @@ type UserDetailProps = {
 
 function UserDetails({ name, image, email }: UserDetailProps) {
   return (
-    <HStack px={{ base: 0, md: 4 }} pt={{ base: 0, md: 2 }} pb={{ base: 0, md: 4 }}>
+    <HStack
+      px={{ base: 0, md: 4 }}
+      pt={{ base: 0, md: 2 }}
+      pb={{ base: 0, md: 4 }}
+    >
       <Avatar name={name} src={image} />
       <VStack spacing={0} align="start">
         <Text fontWeight="semibold">{name}</Text>
@@ -100,7 +109,12 @@ function Auth() {
   const { data: session } = useSession();
   return session ? (
     <Fragment>
-      <VStack display={{ base: "flex", md: "none" }} spacing={4} w="full" align="start">
+      <VStack
+        display={{ base: "flex", md: "none" }}
+        spacing={4}
+        w="full"
+        align="start"
+      >
         <UserDetails
           name={session.user?.name || undefined}
           image={session.user?.image || undefined}
@@ -138,7 +152,11 @@ function Auth() {
       </Box>
     </Fragment>
   ) : (
-    <PrimaryButton onClick={() => handleSignIn()} px={8} w={{ base: "full", md: "fit-content" }}>
+    <PrimaryButton
+      onClick={() => handleSignIn()}
+      px={8}
+      w={{ base: "full", md: "fit-content" }}
+    >
       Login
     </PrimaryButton>
   );
@@ -195,7 +213,12 @@ interface NavbarProps {
   };
 }
 
-function Navbar({ navLinks = [], cta = true, isLessonInterface, lessonDetails }: NavbarProps) {
+function Navbar({
+  navLinks = [],
+  cta = true,
+  isLessonInterface,
+  lessonDetails,
+}: NavbarProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data: session, status } = useSession();
 
@@ -216,26 +239,29 @@ function Navbar({ navLinks = [], cta = true, isLessonInterface, lessonDetails }:
   useEffect(() => {
     if (status === "authenticated") {
       const pendingUpdates: IPendingUpdate[] = JSON.parse(
-        localStorage.getItem("pendingUpdates") || "[]"
+        localStorage.getItem("pendingUpdates") || "[]",
       );
 
-      const updates = pendingUpdates.map(({ courseId, lessonId, chapterId }: IPendingUpdate) => {
-        const progress: Record<string, Record<string, Record<string, boolean>>> = JSON.parse(
-          localStorage.getItem("progress") || "{}"
-        );
-        // Update the progress
-        if (!progress[courseId]) {
-          progress[courseId] = {};
-        }
-        if (!progress[courseId][lessonId]) {
-          progress[courseId][lessonId] = {};
-        }
-        progress[courseId][lessonId][chapterId] = true;
-        return {
-          user: session?.user,
-          progress,
-        };
-      });
+      const updates = pendingUpdates.map(
+        ({ courseId, lessonId, chapterId }: IPendingUpdate) => {
+          const progress: Record<
+            string,
+            Record<string, Record<string, boolean>>
+          > = JSON.parse(localStorage.getItem("progress") || "{}");
+          // Update the progress
+          if (!progress[courseId]) {
+            progress[courseId] = {};
+          }
+          if (!progress[courseId][lessonId]) {
+            progress[courseId][lessonId] = {};
+          }
+          progress[courseId][lessonId][chapterId] = true;
+          return {
+            user: session?.user,
+            progress,
+          };
+        },
+      );
 
       if (pendingUpdates.length > 0) {
         axios
@@ -297,7 +323,12 @@ function Navbar({ navLinks = [], cta = true, isLessonInterface, lessonDetails }:
         _hover={{ bg: "transparent" }}
         _active={{ bg: "transparent" }}
       />
-      <DrawerMenu isOpen={isOpen} onClose={onClose} navLinks={navLinks} cta={cta} />
+      <DrawerMenu
+        isOpen={isOpen}
+        onClose={onClose}
+        navLinks={navLinks}
+        cta={cta}
+      />
     </Flex>
   );
 }

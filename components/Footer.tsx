@@ -36,6 +36,8 @@ const socialLinks = [
  * <Footer />
  * ```
  */
+
+// eslint-disable-next-line max-lines-per-function
 export const Footer = () => (
   <Box as="footer" mt={20} py={12} textAlign="center">
     <HStack justify="center" spacing={8}>

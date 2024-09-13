@@ -63,7 +63,12 @@ function CourseContentSkeleton() {
               </VStack>
             </AccordionButton>
             <AccordionPanel pb={12} w="90%" pt={0}>
-              <SkeletonText mt={4} noOfLines={3} spacing={4} skeletonHeight="4" />
+              <SkeletonText
+                mt={4}
+                noOfLines={3}
+                spacing={4}
+                skeletonHeight="4"
+              />
               <Skeleton height="40px" width="120px" mt={12} />
             </AccordionPanel>
           </AccordionItem>

@@ -14,7 +14,10 @@ export interface TypeSectionFields {
   lessons: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<TypeLessonSkeleton>>;
 }
 
-export type TypeSectionSkeleton = EntrySkeletonType<TypeSectionFields, "section">;
+export type TypeSectionSkeleton = EntrySkeletonType<
+  TypeSectionFields,
+  "section"
+>;
 export type TypeSection<
   Modifiers extends ChainModifiers,
   Locales extends LocaleCode = LocaleCode,

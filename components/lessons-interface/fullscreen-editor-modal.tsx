@@ -8,7 +8,11 @@ interface FullscreenEditorModalProps {
   editorProps: EditorTabsProps;
 }
 
-function FullscreenEditorModal({ isOpen, onClose, editorProps }: FullscreenEditorModalProps) {
+function FullscreenEditorModal({
+  isOpen,
+  onClose,
+  editorProps,
+}: FullscreenEditorModalProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="full">
       <ModalOverlay />

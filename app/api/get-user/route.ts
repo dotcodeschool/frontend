@@ -9,7 +9,10 @@ export async function GET(req: NextRequest) {
   const email = searchParams.get("user[email]");
 
   if (!email) {
-    return NextResponse.json({ error: "User parameter is required" }, { status: 400 });
+    return NextResponse.json(
+      { error: "User parameter is required" },
+      { status: 400 },
+    );
   }
 
   try {
@@ -17,6 +20,9 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(result);
   } catch (error) {
     console.error("MongoDB error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 },
+    );
   }
 }

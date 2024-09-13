@@ -1,6 +1,11 @@
 "use client";
 
-import { HamburgerIcon, ChevronLeftIcon, ChevronRightIcon, CheckIcon } from "@chakra-ui/icons";
+import {
+  HamburgerIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  CheckIcon,
+} from "@chakra-ui/icons";
 import {
   Box,
   Flex,
@@ -28,7 +33,11 @@ import { useCallback, useEffect, useState } from "react";
 import { MdCode, MdNumbers } from "react-icons/md";
 
 import { useProgress } from "@/lib/hooks/useProgress";
-import { TypeLessonFields, TypeLessonSkeleton, TypeSectionFields } from "@/lib/types/contentful";
+import {
+  TypeLessonFields,
+  TypeLessonSkeleton,
+  TypeSectionFields,
+} from "@/lib/types/contentful";
 
 interface SectionProps {
   courseId: string;
@@ -45,9 +54,9 @@ function Section({
   current,
   isActive,
 }: SectionProps) {
-  const lessonsArray: TypeLessonFields[] = (lessons as unknown as TypeLessonSkeleton[]).map(
-    ({ fields }: { fields: TypeLessonFields }) => fields
-  );
+  const lessonsArray: TypeLessonFields[] = (
+    lessons as unknown as TypeLessonSkeleton[]
+  ).map(({ fields }: { fields: TypeLessonFields }) => fields);
 
   return (
     <AccordionItem border="none">
@@ -64,7 +73,12 @@ function Section({
           color={isActive ? "green.300" : "gray.300"}
           fontSize="xl"
         />
-        <Tooltip label={title.toString()} aria-label={title.toString()} openDelay={750} hasArrow>
+        <Tooltip
+          label={title.toString()}
+          aria-label={title.toString()}
+          openDelay={750}
+          hasArrow
+        >
           <Text textAlign="left" flex={1} pl={2} isTruncated>
             {title.toString()}
           </Text>
@@ -75,7 +89,11 @@ function Section({
         {map(lessonsArray, (lesson, index) => {
           const slug = `${courseId}/lesson/${Number(sectionIndex + 1)}/chapter/${Number(index + 1)}`;
           return (
-            <Link key={index} href={`/courses/${slug}`} _hover={{ textDecor: "none" }}>
+            <Link
+              key={index}
+              href={`/courses/${slug}`}
+              _hover={{ textDecor: "none" }}
+            >
               <Text
                 bg={slug === current ? "whiteAlpha.200" : ""}
                 color={slug === current ? "white" : "gray.300"}
@@ -135,11 +153,17 @@ function BottomNavbar({
     // TODO: Refactor this to a custom hook
     const syncProgress = async () => {
       if (session) {
-        const pendingUpdates = JSON.parse(localStorage.getItem("pendingUpdates") || "[]");
+        const pendingUpdates = JSON.parse(
+          localStorage.getItem("pendingUpdates") || "[]",
+        );
         pendingUpdates.forEach(
-          (update: { courseId: string; lessonId: string; chapterId: string }) => {
+          (update: {
+            courseId: string;
+            lessonId: string;
+            chapterId: string;
+          }) => {
             saveProgress(update.courseId, update.lessonId, update.chapterId);
-          }
+          },
         );
         localStorage.setItem("pendingUpdates", "[]");
       }
@@ -148,7 +172,16 @@ function BottomNavbar({
   }, [session, saveProgress]);
 
   return (
-    <Box position="fixed" w="100%" bottom={0} left={0} py={4} px={4} bg="gray.900" zIndex={1000}>
+    <Box
+      position="fixed"
+      w="100%"
+      bottom={0}
+      left={0}
+      py={4}
+      px={4}
+      bg="gray.900"
+      zIndex={1000}
+    >
       <Flex justify="space-between" align="center">
         <IconButton
           aria-label="Open navigation drawer"
@@ -206,7 +239,11 @@ function BottomNavbar({
         </Flex>
       </Flex>
 
-      <Drawer isOpen={isDrawerOpen} placement="left" onClose={handleDrawerClose}>
+      <Drawer
+        isOpen={isDrawerOpen}
+        placement="left"
+        onClose={handleDrawerClose}
+      >
         <DrawerOverlay>
           <DrawerContent>
             <DrawerCloseButton />

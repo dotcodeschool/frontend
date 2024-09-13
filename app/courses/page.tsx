@@ -11,7 +11,7 @@ export { generateMetadata } from "./metadata";
 export default async function CoursesPage() {
   const data = await getContentByType("courseModule");
   const courses: TypeCourseModuleFields[] = data.items.map(
-    (item) => item.fields as unknown as TypeCourseModuleFields
+    (item) => item.fields as unknown as TypeCourseModuleFields,
   );
   return (
     <Box maxW="8xl" mx="auto" px={[4, 12]}>

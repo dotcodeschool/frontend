@@ -35,7 +35,11 @@ export function useProgress() {
     }
   };
 
-  const saveProgress = async (courseId: string, lessonId: string, chapterId: string) => {
+  const saveProgress = async (
+    courseId: string,
+    lessonId: string,
+    chapterId: string,
+  ) => {
     const updatedProgress = {
       ...progress,
       [courseId]: {
@@ -62,7 +66,9 @@ export function useProgress() {
     } catch (error) {
       console.error("Failed to save progress:", error);
       // Add the failed update to a queue for retry
-      const pendingUpdates = JSON.parse(localStorage.getItem("pendingUpdates") || "[]");
+      const pendingUpdates = JSON.parse(
+        localStorage.getItem("pendingUpdates") || "[]",
+      );
       pendingUpdates.push({ courseId, lessonId, chapterId });
       localStorage.setItem("pendingUpdates", JSON.stringify(pendingUpdates));
     }
@@ -76,7 +82,8 @@ export function useProgress() {
         if (!merged[courseId][lessonId]) merged[courseId][lessonId] = {};
         Object.keys(server[courseId][lessonId]).forEach((chapterId) => {
           merged[courseId][lessonId][chapterId] =
-            local[courseId]?.[lessonId]?.[chapterId] || server[courseId][lessonId][chapterId];
+            local[courseId]?.[lessonId]?.[chapterId] ||
+            server[courseId][lessonId][chapterId];
         });
       });
     });
