@@ -24,16 +24,14 @@ const socialLinks = [
   },
 ];
 
-export default function footer() {
-  return (
-    <Box as="footer" mt={20} py={12} textAlign="center">
-      <HStack spacing={8} justify="center">
-        {socialLinks.map((link) => (
-          <Link key={link.label} href={link.href} isExternal>
-            <link.icon size={24} />
-          </Link>
-        ))}
-      </HStack>
-    </Box>
-  );
-}
+export const Footer = () => (
+  <Box as="footer" mt={20} py={12} textAlign="center">
+    <HStack justify="center" spacing={8}>
+      {socialLinks.map((link) => (
+        <Link href={link.href} isExternal key={link.label}>
+          <link.icon size={24} />
+        </Link>
+      ))}
+    </HStack>
+  </Box>
+);
