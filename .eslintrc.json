@@ -31,7 +31,8 @@
     {
       "files": ["**/page.tsx", "**/layout.tsx", "**/*.page.tsx", "**/*.layout.tsx", "**/index.ts"],
       "rules": {
-        "filename-rules/match": "off"
+        "filename-rules/match": "off",
+        "import/no-default-export": "off"
       }
     }
   ],
