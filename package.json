@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "check": "next lint",
-    "lint": "next lint --fix -d .",
+    "lint": "next lint --report-unused-disable-directives-severity \"error\" --no-inline-config",
     "fmt": "prettier --write .",
     "sort": "sort-json",
     "prepare": "husky"
