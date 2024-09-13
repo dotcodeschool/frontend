@@ -30,11 +30,8 @@
     },
     {
       "files": [
-        "**/page.tsx",
-        "**/layout.tsx",
-        "**/*.page.tsx",
-        "**/*.layout.tsx",
-        "**/index.ts"
+        "**/{page,layout,metadata,index}.{ts,tsx}",
+        "**/*.{page,layout}.tsx"
       ],
       "rules": {
         "filename-rules/match": "off",
@@ -347,7 +344,8 @@
           "try",
           "throw",
           "case",
-          "default"
+          "default",
+          "return"
         ]
       }
     ],
