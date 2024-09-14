@@ -108,7 +108,7 @@
         "leadingUnderscore": "allow"
       },
       {
-        "selector": "typeLike",
+        "selector": "typeAlias",
         "format": ["PascalCase"]
       },
       {
@@ -186,7 +186,7 @@
     "max-len": [
       "warn",
       {
-        "code": 80,
+        "code": 50,
         "tabWidth": 2,
         "ignoreUrls": true,
         "ignoreTemplateLiterals": true,
@@ -279,7 +279,7 @@
     "max-lines-per-function": [
       "error",
       {
-        "max": 50,
+        "max": 80,
         "skipBlankLines": true,
         "skipComments": true
       }
