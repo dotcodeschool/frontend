@@ -114,6 +114,10 @@
       {
         "selector": "import",
         "format": null
+      },
+      {
+        "selector": "typeParameter",
+        "format": ["PascalCase"]
       }
     ],
     "@typescript-eslint/no-restricted-imports": [
@@ -208,7 +212,7 @@
     "jsdoc/tag-lines": ["warn", "never", { "startLines": 1 }],
     "jsdoc/require-param": ["warn", { "checkDestructuredRoots": false }],
     "jsdoc/require-jsdoc": [
-      "warn",
+      "off",
       {
         "publicOnly": true,
         "require": {
