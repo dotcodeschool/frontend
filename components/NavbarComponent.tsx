@@ -2,28 +2,28 @@
 
 import { HamburgerIcon } from "@chakra-ui/icons";
 import {
+  Avatar,
   Box,
-  Flex,
-  Spacer,
-  IconButton,
-  useDisclosure,
-  Drawer,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  DrawerHeader,
-  DrawerBody,
-  Link,
-  HStack,
-  VStack,
-  Text,
-  ChakraProps,
   Button,
+  ChakraProps,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
+  Flex,
+  HStack,
+  IconButton,
+  Link,
   Menu,
   MenuButton,
-  MenuList,
   MenuItem,
-  Avatar,
+  MenuList,
+  Spacer,
+  Text,
+  useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { map } from "lodash";
@@ -38,48 +38,43 @@ import logo from "@/public/logo.svg";
 
 import PrimaryButton from "./primary-button";
 
-interface NavLink {
+type NavLink = {
   name: string;
   href: string;
-}
+};
 
-const NavLinks = ({ navLinks }: { navLinks: NavLink[] }) => {
-  return map(navLinks, (link) => (
+const NavLinks = ({ navLinks }: { navLinks: NavLink[] }) =>
+  map(navLinks, (link) => (
     <Link
+      _hover={{ textDecoration: "none", bg: "gray.700" }}
       key={link.name}
       px={6}
       py={2}
       w="full"
-      _hover={{ textDecoration: "none", bg: "gray.700" }}
     >
       {link.name}
     </Link>
   ));
-};
 
-function Logo() {
-  return (
-    <HStack as={Link} href="/" _hover={{ textDecor: "none" }}>
-      <Image src={logo} alt="dotcodeschool" height={32} />
-      <Text fontFamily="monospace" fontSize="lg" fontWeight="semibold">
-        dotcodeschool
-      </Text>
-    </HStack>
-  );
-}
+const Logo = () => (
+  <HStack _hover={{ textDecor: "none" }} as={Link} href="/">
+    <Image alt="dotcodeschool" height={32} src={logo} />
+    <Text fontFamily="monospace" fontSize="lg" fontWeight="semibold">
+      dotcodeschool
+    </Text>
+  </HStack>
+);
 
-function StartCourseButton({ ...props }: ChakraProps) {
-  return (
-    <PrimaryButton
-      as={Link}
-      href="/courses"
-      _hover={{ textDecor: "none" }}
-      {...props}
-    >
-      Courses
-    </PrimaryButton>
-  );
-}
+const StartCourseButton = ({ ...props }: ChakraProps) => (
+  <PrimaryButton
+    _hover={{ textDecor: "none" }}
+    as={Link}
+    href="/courses"
+    {...props}
+  >
+    Courses
+  </PrimaryButton>
+);
 
 type UserDetailProps = {
   name?: string;
@@ -87,38 +82,37 @@ type UserDetailProps = {
   email?: string;
 };
 
-function UserDetails({ name, image, email }: UserDetailProps) {
-  return (
-    <HStack
-      px={{ base: 0, md: 4 }}
-      pt={{ base: 0, md: 2 }}
-      pb={{ base: 0, md: 4 }}
-    >
-      <Avatar name={name} src={image} />
-      <VStack spacing={0} align="start">
-        <Text fontWeight="semibold">{name}</Text>
-        <Text fontSize="sm" fontWeight="normal" color="gray.400">
-          {email}
-        </Text>
-      </VStack>
-    </HStack>
-  );
-}
+const UserDetails = ({ name, image, email }: UserDetailProps) => (
+  <HStack
+    pb={{ base: 0, md: 4 }}
+    pt={{ base: 0, md: 2 }}
+    px={{ base: 0, md: 4 }}
+  >
+    <Avatar name={name} src={image} />
+    <VStack align="start" spacing={0}>
+      <Text fontWeight="semibold">{name}</Text>
+      <Text color="gray.400" fontSize="sm" fontWeight="normal">
+        {email}
+      </Text>
+    </VStack>
+  </HStack>
+);
 
-function Auth() {
+const Auth = () => {
   const { data: session } = useSession();
+
   return session ? (
-    <Fragment>
+    <>
       <VStack
+        align="start"
         display={{ base: "flex", md: "none" }}
         spacing={4}
         w="full"
-        align="start"
       >
         <UserDetails
-          name={session.user?.name || undefined}
-          image={session.user?.image || undefined}
           email={session.user?.email || undefined}
+          image={session.user?.image || undefined}
+          name={session.user?.name || undefined}
         />
         <Button
           onClick={() => handleSignOut()}
@@ -134,23 +128,23 @@ function Auth() {
             <HStack>
               <Avatar
                 name={session.user?.name || undefined}
-                src={session.user?.image || undefined}
                 size="sm"
+                src={session.user?.image || undefined}
               />
             </HStack>
           </MenuButton>
           <MenuList>
             <UserDetails
-              name={session.user?.name || undefined}
-              image={session.user?.image || undefined}
               email={session.user?.email || undefined}
+              image={session.user?.image || undefined}
+              name={session.user?.name || undefined}
             />
             <hr />
             <MenuItem onClick={() => handleSignOut()}>Logout</MenuItem>
           </MenuList>
         </Menu>
       </Box>
-    </Fragment>
+    </>
   ) : (
     <PrimaryButton
       onClick={() => handleSignIn()}
@@ -160,9 +154,9 @@ function Auth() {
       Login
     </PrimaryButton>
   );
-}
+};
 
-function DrawerMenu({
+const DrawerMenu = ({
   navLinks,
   cta,
   isOpen,
@@ -172,35 +166,33 @@ function DrawerMenu({
   cta: boolean;
   isOpen: boolean;
   onClose: () => void;
-}) {
-  return (
-    <Drawer placement="top" onClose={onClose} isOpen={isOpen}>
-      <DrawerOverlay />
-      <DrawerContent bg="gray.800" color="white">
-        <DrawerCloseButton />
-        <DrawerHeader>
-          <Logo />
-        </DrawerHeader>
-        <DrawerBody px={0}>
-          <VStack align="start" spacing={0}>
-            {navLinks && <NavLinks navLinks={navLinks} />}
-            <VStack p={6} w="full">
-              {cta ? <StartCourseButton w="full" /> : <Auth />}
-            </VStack>
+}) => (
+  <Drawer isOpen={isOpen} onClose={onClose} placement="top">
+    <DrawerOverlay />
+    <DrawerContent bg="gray.800" color="white">
+      <DrawerCloseButton />
+      <DrawerHeader>
+        <Logo />
+      </DrawerHeader>
+      <DrawerBody px={0}>
+        <VStack align="start" spacing={0}>
+          {navLinks ? <NavLinks navLinks={navLinks} /> : null}
+          <VStack p={6} w="full">
+            {cta ? <StartCourseButton w="full" /> : <Auth />}
           </VStack>
-        </DrawerBody>
-      </DrawerContent>
-    </Drawer>
-  );
-}
+        </VStack>
+      </DrawerBody>
+    </DrawerContent>
+  </Drawer>
+);
 
-interface IPendingUpdate {
+type IPendingUpdate = {
   courseId: string;
   lessonId: string;
   chapterId: string;
-}
+};
 
-interface NavbarProps {
+type NavbarProps = {
   navLinks?: NavLink[];
   cta?: boolean;
   isLessonInterface?: boolean;
@@ -211,14 +203,14 @@ interface NavbarProps {
     chapters: TypeLessonFields[];
     githubUrl: string;
   };
-}
+};
 
-function Navbar({
+const Navbar = ({
   navLinks = [],
   cta = true,
   isLessonInterface,
   lessonDetails,
-}: NavbarProps) {
+}: NavbarProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data: session, status } = useSession();
 
@@ -256,8 +248,9 @@ function Navbar({
             progress[courseId][lessonId] = {};
           }
           progress[courseId][lessonId][chapterId] = true;
+
           return {
-            user: session?.user,
+            user: session.user,
             progress,
           };
         },
@@ -280,57 +273,59 @@ function Navbar({
 
   return (
     <Flex
-      position={isLessonInterface ? "sticky" : "static"}
-      top={0}
-      zIndex={10}
       align="center"
-      justify="space-between"
-      py={2}
-      px={[6, 12]}
       bg={isLessonInterface ? "gray.900" : "gray.800"}
       borderBottom={isLessonInterface ? "1px solid" : "none"}
       borderBottomColor="gray.700"
       color="white"
+      justify="space-between"
+      position={isLessonInterface ? "sticky" : "static"}
+      px={[6, 12]}
+      py={2}
+      top={0}
+      zIndex={10}
     >
       <Logo />
       <Spacer />
       <HStack display={{ base: "none", md: "flex" }} spacing={4}>
-        {navLinks && !isLessonInterface && <NavLinks navLinks={navLinks} />}
-        {isLessonInterface && (
+        {navLinks && !isLessonInterface ? (
+          <NavLinks navLinks={navLinks} />
+        ) : null}
+        {isLessonInterface ? (
           <Button
-            as={Link}
-            leftIcon={<FaPen />}
-            variant="outline"
-            href={`${githubUrl}/issues/new?assignees=&labels=feedback&template=feedback.md&title=Dot+Code+School+Suggestion:+Feedback+for+Section+${lessonId}+-+Chapter+${chapterId}:+${currentChapter}`}
-            w="full"
             _hover={{
               textDecoration: "none",
             }}
+            as={Link}
+            href={`${githubUrl}/issues/new?assignees=&labels=feedback&template=feedback.md&title=Dot+Code+School+Suggestion:+Feedback+for+Section+${lessonId}+-+Chapter+${chapterId}:+${currentChapter}`}
             isExternal
+            leftIcon={<FaPen />}
+            variant="outline"
+            w="full"
           >
             Submit Feedback
           </Button>
-        )}
+        ) : null}
         {cta ? <StartCourseButton /> : <Auth />}
       </HStack>
       <IconButton
+        _active={{ bg: "transparent" }}
+        _hover={{ bg: "transparent" }}
         aria-label="Toggle navigation"
-        icon={<HamburgerIcon />}
-        display={{ base: "block", md: "none" }}
-        onClick={isOpen ? onClose : onOpen}
         bg="transparent"
         color="white"
-        _hover={{ bg: "transparent" }}
-        _active={{ bg: "transparent" }}
+        display={{ base: "block", md: "none" }}
+        icon={<HamburgerIcon />}
+        onClick={isOpen ? onClose : onOpen}
       />
       <DrawerMenu
-        isOpen={isOpen}
-        onClose={onClose}
-        navLinks={navLinks}
         cta={cta}
+        isOpen={isOpen}
+        navLinks={navLinks}
+        onClose={onClose}
       />
     </Flex>
   );
-}
+};
 
 export default Navbar;
