@@ -2,8 +2,7 @@ export const questions = [
   {
     id: "practice_frequency",
     question: "How often do you intend to practice?",
-    description:
-      "Learners that maintain a consistent cadence are most likely to meet their learning objectives.",
+    description: `Learners that maintain a consistent cadence are most likely to meet their learning objectives.`,
     options: [
       {
         value: "every_day",
@@ -22,8 +21,7 @@ export const questions = [
   {
     id: "accountability",
     question: "Would you like us to email you occasional friendly nudges?",
-    description:
-      "This helps you stay accountable, as well as provides tips on maximising your learning experience.",
+    description: `This helps you stay accountable, as well as provides tips on maximising your learning experience.`,
     options: [
       {
         value: true,
@@ -49,7 +47,7 @@ export const repositorySetup = {
     },
     {
       title: "2. Push an empty commit",
-      code: "```bash\ngit commit --allow-empty -m 'test'\ngit push origin master\n```",
+      code: `\`\`\`bash\ngit commit --allow-empty -m 'test'\ngit push origin master\n\`\`\``,
     },
   ],
 };
