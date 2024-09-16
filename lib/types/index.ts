@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 
-export type { MDXComponents as typeMDXComponents } from "mdx/types";
+export type { MDXComponents as TypeMDXComponents } from "mdx/types";
+
 export type {
   Accountability,
   AnswerOptions,
