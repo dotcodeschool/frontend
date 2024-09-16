@@ -12,9 +12,8 @@ import {
 } from "@chakra-ui/react";
 import { ReactElement } from "react";
 
-import { IPreComponentProps } from "@/lib/types/IPreComponentProps";
-
 import { PreComponent } from "./pre-component";
+import { PreComponentProps } from "./types";
 
 const MDXComponents = {
   h1: (props: HeadingProps) => <Heading as="h1" mt={12} size="xl" {...props} />,
@@ -35,7 +34,7 @@ const MDXComponents = {
     ...props
   }: {
     children: ReactElement;
-    props: IPreComponentProps;
+    props: PreComponentProps;
   }) => <PreComponent {...props}>{children}</PreComponent>,
 
   blockquote: (props: BoxProps) => (

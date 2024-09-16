@@ -4,12 +4,12 @@ import { Box } from "@chakra-ui/react";
 import { Highlight, themes } from "prism-react-renderer";
 import { useEffect, useState } from "react";
 
-import { IPreComponentProps } from "@/lib/types/IPreComponentProps";
+import { PreComponentProps } from "../types";
 
 import { CopyButton } from "./CopyButton";
 import { HighlightedCode } from "./HighlightedCode";
 
-const PreComponent = ({ children }: { children: IPreComponentProps }) => {
+const PreComponent = ({ children }: { children: PreComponentProps }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
 

@@ -1,24 +1,14 @@
 import { Box } from "@chakra-ui/react";
-import {
-  LineInputProps,
-  LineOutputProps,
-  Token,
-  TokenInputProps,
-  TokenOutputProps,
-} from "prism-react-renderer";
 import { Key } from "react";
+
+import { HighlightedCodeProps } from "../types";
 
 const HighlightedCode = ({
   style,
   tokens,
   getLineProps,
   getTokenProps,
-}: {
-  style: object;
-  tokens: Token[][];
-  getLineProps: (input: LineInputProps) => LineOutputProps;
-  getTokenProps: (input: TokenInputProps) => TokenOutputProps;
-}) => (
+}: HighlightedCodeProps) => (
   <Box
     as="pre"
     overflowX="auto"

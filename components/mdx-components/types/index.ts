@@ -1,3 +1,11 @@
+import {
+  LineInputProps,
+  LineOutputProps,
+  Token,
+  TokenInputProps,
+  TokenOutputProps,
+} from "prism-react-renderer";
+
 type CopyButtonProps = {
   code: string;
   isHovered: boolean;
@@ -5,4 +13,20 @@ type CopyButtonProps = {
   setCopySuccess: (success: boolean) => void;
 };
 
-export type { CopyButtonProps };
+type HighlightedCodeProps = {
+  style: object;
+  tokens: Token[][];
+  getLineProps: (input: LineInputProps) => LineOutputProps;
+  getTokenProps: (input: TokenInputProps) => TokenOutputProps;
+};
+
+type PreComponentProps = {
+  props: PreComponentChildProps;
+};
+
+type PreComponentChildProps = {
+  children: string;
+  className?: string;
+};
+
+export type { CopyButtonProps, HighlightedCodeProps, PreComponentProps };
