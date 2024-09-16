@@ -30,7 +30,7 @@
     },
     {
       "files": [
-        "**/{page,layout,metadata,index}.{ts,tsx}",
+        "**/{page,layout,providers,metadata,index}.{ts,tsx}",
         "**/*.{page,layout}.tsx"
       ],
       "rules": {
