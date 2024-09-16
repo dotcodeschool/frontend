@@ -1,9 +1,9 @@
 import { ObjectId } from "mongodb";
 
-export interface User {
+export type User = {
   _id?: ObjectId;
   name?: string;
   email?: string;
   image?: string;
   emailVerified?: boolean | null;
-}
+};
