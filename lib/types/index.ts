@@ -1,3 +1,6 @@
+import { ObjectId } from "mongodb";
+
+export type { MDXComponents as typeMDXComponents } from "mdx/types";
 export type {
   Accountability,
   AnswerOptions,
@@ -37,6 +40,6 @@ type RepositorySetup = {
 };
 
 type Relationship = {
-  id: string;
+  id: ObjectId;
   type: string;
 };
