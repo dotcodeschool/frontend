@@ -4,8 +4,8 @@ export type TypeFile = {
   language: string;
 };
 
-export interface IFiles {
+export type TyleFiles = {
   source: TypeFile[];
   template: TypeFile[];
   solution: TypeFile[];
-}
+};
