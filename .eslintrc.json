@@ -204,7 +204,6 @@
         "ignoreRegExpLiterals": true
       }
     ],
-    "simple-import-sort/imports": "warn",
     "simple-import-sort/exports": "warn",
     "@typescript-eslint/no-unnecessary-type-arguments": "warn",
     "@typescript-eslint/no-unnecessary-condition": "warn",
