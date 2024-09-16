@@ -37,6 +37,12 @@
         "filename-rules/match": "off",
         "import/no-default-export": "off"
       }
+    },
+    {
+      "files": ["lib/db/mongodb.ts"],
+      "rules": {
+        "no-var": "off"
+      }
     }
   ],
   "parser": "@typescript-eslint/parser",
