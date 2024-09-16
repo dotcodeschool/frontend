@@ -35,7 +35,8 @@
       ],
       "rules": {
         "filename-rules/match": "off",
-        "import/no-default-export": "off"
+        "import/no-default-export": "off",
+        "require-await": "off"
       }
     },
     {
