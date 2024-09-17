@@ -11,7 +11,7 @@
     "lint": "pnpm check --fix",
     "lint:strict": "pnpm check:strict --fix",
     "fmt": "prettier --write .",
-    "setup": "node ./lib/utils/contentfulSetup",
+    "setup": "node ./lib/utils/contentfulSetup && pnpm gen",
     "gen": "DOTENV_CONFIG_PATH=./.env.local graphql-codegen --config codegen.yml --require dotenv/config",
     "sort": "sort-json",
     "prepare": "husky"
