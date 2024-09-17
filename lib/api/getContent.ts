@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// TODO: Handle the cases where data is not found or some other error occurs
 const fetchGraphQL = async <T>(
   query: string,
   collectionName: string,
