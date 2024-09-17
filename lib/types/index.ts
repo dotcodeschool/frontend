@@ -44,3 +44,5 @@ type Relationship = {
   id: ObjectId;
   type: string;
 };
+
+export * from "./schema";

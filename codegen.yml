@@ -1,0 +1,9 @@
+overwrite: true
+schema:
+  - https://graphql.contentful.com/content/v1/spaces/${CONTENTFUL_SPACE_ID}/environments/${CONTENTFUL_ENVIRONMENT}:
+      headers:
+        Authorization: "Bearer ${CONTENTFUL_ACCESS_TOKEN}"
+generates:
+  lib/types/schema.ts:
+    plugins:
+      - typescript
