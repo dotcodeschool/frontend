@@ -2,9 +2,7 @@ import { Box, Heading, Stack } from "@chakra-ui/react";
 
 import { Footer, Navbar } from "@/components";
 
-import { FeaturesList } from "./components/FeaturesList";
-import { Header } from "./components/Header";
-import { LandingCTA } from "./components/LandingCTA";
+import { FeaturesList, Header, LandingCTA } from "./components";
 
 export { generateMetadata } from "./metadata";
 
