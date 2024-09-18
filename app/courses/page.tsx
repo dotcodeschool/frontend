@@ -2,17 +2,14 @@ import { Box, Card, Heading, Link, Stack, Text } from "@chakra-ui/react";
 import { IoArrowBack } from "react-icons/io5";
 
 import { ButtonPrimary, Navbar } from "@/components";
-import { QUERY_COURSE_CATALOG, fetchGraphQL } from "@/lib/api";
 import { CourseOverview } from "@/lib/types";
-import { getContentfulData } from "@/lib/api/contentful";
+
+import { getCourseCatalog } from "./helpers";
 
 export { generateMetadata } from "./metadata";
 
 const CoursesPage = async () => {
-  const courses: Array<CourseOverview> = await getContentfulData<
-    "courseModuleCollection",
-    Array<CourseOverview>
-  >(QUERY_COURSE_CATALOG, "courseModuleCollection");
+  const courses: Array<CourseOverview> = await getCourseCatalog;
 
   return (
     <Box maxW="8xl" mx="auto" px={[4, 12]}>
