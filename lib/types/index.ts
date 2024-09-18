@@ -48,3 +48,4 @@ type Relationship = {
 export * from "./schema";
 export * from "./contentfulUtils";
 export * from "./typeFile";
+export * from "./typeProgress";

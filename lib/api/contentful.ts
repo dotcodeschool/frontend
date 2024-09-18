@@ -35,8 +35,6 @@ const fetchGraphQL = async <T extends QueryKey>(
   return data;
 };
 
-export { fetchGraphQL, getContentfulData };
-
 const extractData = <T extends QueryKey>(
   data: Pick<Query, T>,
   key: T,
@@ -61,3 +59,5 @@ const isCollectionResult = (result: any): result is { items: any[] } => {
 const extractCollectionData = <T>(result: { items: T[] }): NonNullable<T>[] => {
   return result.items.filter((item): item is NonNullable<T> => item != null);
 };
+
+export { fetchGraphQL, getContentfulData, extractData };

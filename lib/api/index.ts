@@ -16,7 +16,14 @@ const getUser = async (userId: ObjectId) => {
   return users.findOne({ _id: userId });
 };
 
-const getCourseBySlug = async (slug: string) => {
+const getUserByEmail = async (email: string) => {
+  const database = await db();
+  const users = database.collection<User>("users");
+  
+  return users.findOne({ email });
+};
+
+const getCourseFromDb = async (slug: string) => {
   const database = await db();
   const courses = database.collection<Course>("courses");
 
@@ -36,7 +43,7 @@ const findUserRepositoryByCourse = async (
 ) => {
   const repositories = await getRepositories();
   const userObjectId = new ObjectId(userId);
-  const course = await getCourseBySlug(courseSlug);
+  const course = await getCourseFromDb(courseSlug);
   const courseId = course?._id ?? null;
 
   if (!courseId) {
@@ -53,6 +60,6 @@ const findUserRepositoryByCourse = async (
   });
 };
 
-export { findUserRepositoryByCourse, getUser };
+export { findUserRepositoryByCourse, getUser, getUserByEmail };
 export { fetchGraphQL } from "./contentful";
 export { QUERY_COURSE_CATALOG, QUERY_COURSE_GRAPHQL_FIELDS } from "./queries";
