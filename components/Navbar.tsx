@@ -25,18 +25,17 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import axios from "axios";
 import { map } from "lodash";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import { Fragment, useEffect } from "react";
+import { useEffect } from "react";
 import { FaPen } from "react-icons/fa";
 
 import { handleSignIn, handleSignOut } from "@/lib/middleware/actions";
-import { TypeLessonFields } from "@/lib/types/contentful";
 import logo from "@/public/logo.svg";
 
-import PrimaryButton from "./primary-button";
+import { ButtonPrimary } from "./button-primary";
+import { Lesson } from "@/lib/types";
 
 type NavLink = {
   name: string;
@@ -66,14 +65,14 @@ const Logo = () => (
 );
 
 const StartCourseButton = ({ ...props }: ChakraProps) => (
-  <PrimaryButton
+  <ButtonPrimary
     _hover={{ textDecor: "none" }}
     as={Link}
     href="/courses"
     {...props}
   >
     Courses
-  </PrimaryButton>
+  </ButtonPrimary>
 );
 
 type UserDetailProps = {
@@ -146,13 +145,13 @@ const Auth = () => {
       </Box>
     </>
   ) : (
-    <PrimaryButton
+    <ButtonPrimary
       onClick={() => handleSignIn()}
       px={8}
       w={{ base: "full", md: "fit-content" }}
     >
       Login
-    </PrimaryButton>
+    </ButtonPrimary>
   );
 };
 
@@ -200,7 +199,7 @@ type NavbarProps = {
     courseId: string;
     lessonId: string;
     chapterId: string;
-    chapters: TypeLessonFields[];
+    chapters: Lesson[];
     githubUrl: string;
   };
 };
@@ -257,10 +256,14 @@ const Navbar = ({
       );
 
       if (pendingUpdates.length > 0) {
-        axios
-          .post("/api/update-progress", {
-            updates,
-          })
+        fetch("/api/update-progress", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updates),
+          cache: "no-store",
+        })
           .then(() => {
             localStorage.removeItem("pendingUpdates");
           })
@@ -328,4 +331,4 @@ const Navbar = ({
   );
 };
 
-export default Navbar;
+export { Navbar };

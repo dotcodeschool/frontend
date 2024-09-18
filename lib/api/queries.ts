@@ -10,6 +10,18 @@ const QUERY_COURSE_CATALOG = `query {
   }
 }`;
 
+const QUERY_COURSE_OVERVIEW_FIELDS = `{
+  title
+  description
+  sectionsCollection {
+    items {
+      title
+      description
+    }
+  }
+  slug
+}`;
+
 const QUERY_COURSE_GRAPHQL_FIELDS = `{
   slug
   title
@@ -33,4 +45,8 @@ const QUERY_COURSE_GRAPHQL_FIELDS = `{
   }
 }`;
 
-export { QUERY_COURSE_CATALOG, QUERY_COURSE_GRAPHQL_FIELDS };
+export {
+  QUERY_COURSE_CATALOG,
+  QUERY_COURSE_GRAPHQL_FIELDS,
+  QUERY_COURSE_OVERVIEW_FIELDS,
+};

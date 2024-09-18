@@ -46,3 +46,5 @@ type Relationship = {
 };
 
 export * from "./schema";
+export * from "./contentfulUtils";
+export * from "./typeFile";

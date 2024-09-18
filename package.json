@@ -26,7 +26,6 @@
     "@emotion/styled": "^11.11.0",
     "@monaco-editor/react": "^4.6.0",
     "@vercel/speed-insights": "^1.0.12",
-    "axios": "^1.6.2",
     "contentful-import": "^9.4.58",
     "framer-motion": "^10.16.12",
     "lottie-react": "^2.4.0",

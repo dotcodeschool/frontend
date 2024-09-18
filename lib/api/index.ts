@@ -54,5 +54,5 @@ const findUserRepositoryByCourse = async (
 };
 
 export { findUserRepositoryByCourse, getUser };
-export { fetchGraphQL } from "./getContent";
+export { fetchGraphQL } from "./contentful";
 export { QUERY_COURSE_CATALOG, QUERY_COURSE_GRAPHQL_FIELDS } from "./queries";

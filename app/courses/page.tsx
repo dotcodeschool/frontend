@@ -3,18 +3,15 @@ import { IoArrowBack } from "react-icons/io5";
 
 import { ButtonPrimary, Navbar } from "@/components";
 import { QUERY_COURSE_CATALOG, fetchGraphQL } from "@/lib/api";
-import { CourseModule } from "@/lib/types";
+import { CourseOverview } from "@/lib/types";
+import { getContentfulData } from "@/lib/api/contentful";
 
 export { generateMetadata } from "./metadata";
 
 const CoursesPage = async () => {
-  const courses = await fetchGraphQL<
-    Array<
-      Pick<
-        CourseModule,
-        "slug" | "title" | "level" | "language" | "description"
-      >
-    >
+  const courses: Array<CourseOverview> = await getContentfulData<
+    "courseModuleCollection",
+    Array<CourseOverview>
   >(QUERY_COURSE_CATALOG, "courseModuleCollection");
 
   return (
