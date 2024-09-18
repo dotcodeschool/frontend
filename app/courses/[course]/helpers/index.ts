@@ -1,14 +1,14 @@
-import { QUERY_COURSE_OVERVIEW_FIELDS } from "../queries";
-import { CourseDetails, CourseQuery } from "../types";
 import { getContentfulData } from "@/lib/api/contentful";
+
+import { CourseDetails, CourseQuery } from "../types";
 
 const getCourseDetails = async (
   slug: string,
-  query: CourseQuery,
+  queryFields: CourseQuery,
 ): Promise<CourseDetails | null> => {
   const QUERY_COURSE_OVERVIEW: string = `query {
     courseModuleCollection(where: { slug: "${slug}" }) {
-      items ${QUERY_COURSE_OVERVIEW_FIELDS}
+      items ${queryFields}
     }
   }`;
 

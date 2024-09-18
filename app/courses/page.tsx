@@ -9,7 +9,7 @@ import { getCourseCatalog } from "./helpers";
 export { generateMetadata } from "./metadata";
 
 const CoursesPage = async () => {
-  const courses: Array<CourseOverview> = await getCourseCatalog;
+  const courses: Array<CourseOverview> = await getCourseCatalog();
 
   return (
     <Box maxW="8xl" mx="auto" px={[4, 12]}>
