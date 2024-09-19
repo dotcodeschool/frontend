@@ -5,7 +5,7 @@ import { IoArrowBack } from "react-icons/io5";
 import { Navbar } from "@/components";
 
 import { CourseContent } from "./components/CourseContent";
-import CourseContentSkeleton from "./components/CourseContentSkeleton";
+import { CourseContentSkeleton } from "./components/CourseContentSkeleton";
 
 export { generateMetadata } from "./metadata";
 

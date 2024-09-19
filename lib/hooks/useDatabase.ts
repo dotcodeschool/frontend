@@ -2,7 +2,7 @@ import { Collection, Db } from "mongodb";
 
 import { clientPromise } from "@/lib/db/mongodb";
 
-export const useDatabase = () => {
+const useDatabase = () => {
   const getCollection = async (collectionName: string): Promise<Collection> => {
     const client = await clientPromise;
     const db: Db = client.db(process.env.DB_NAME);
@@ -31,3 +31,5 @@ export const useDatabase = () => {
     updateOne,
   };
 };
+
+export { useDatabase };

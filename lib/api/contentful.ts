@@ -1,12 +1,13 @@
 import { ExtractedData, Query, QueryKey, QueryResult } from "../types";
 
-async function getContentfulData<T extends QueryKey, U>(
+const getContentfulData = async <T extends QueryKey, U>(
   query: string,
   operationName: T,
-): Promise<U> {
+): Promise<U> => {
   const data = await fetchGraphQL(query);
+
   return extractData(data, operationName) as U;
-}
+};
 
 const fetchGraphQL = async <T extends QueryKey>(
   query: string,
@@ -52,12 +53,10 @@ const extractData = <T extends QueryKey>(
   return result as ExtractedData<QueryResult<T>>;
 };
 
-const isCollectionResult = (result: any): result is { items: any[] } => {
-  return "items" in result && Array.isArray(result.items);
-};
+const isCollectionResult = (result: any): result is { items: any[] } =>
+  "items" in result && Array.isArray(result.items);
 
-const extractCollectionData = <T>(result: { items: T[] }): NonNullable<T>[] => {
-  return result.items.filter((item): item is NonNullable<T> => item != null);
-};
+const extractCollectionData = <T>(result: { items: T[] }): NonNullable<T>[] =>
+  result.items.filter((item): item is NonNullable<T> => item != null);
 
-export { fetchGraphQL, getContentfulData, extractData };
+export { extractData, fetchGraphQL, getContentfulData };

@@ -1,6 +1,7 @@
 import { getContentfulData } from "@/lib/api/contentful";
 
-import { CourseDetails, CourseQuery } from "../types";
+import { QUERY_LESSONS_COLLECTION_ID_AND_TOTAL } from "../queries";
+import { CourseDetails, CourseQuery, LessonIdAndTotalData } from "../types";
 
 const getCourseDetails = async (
   slug: string,
@@ -22,4 +23,29 @@ const getCourseDetails = async (
   return result;
 };
 
-export { getCourseDetails };
+const getLessonCollectionIdAndTotal = async (sectionId: string) => {
+  const QUERY = `query {
+    section(id: \"${sectionId}\") ${QUERY_LESSONS_COLLECTION_ID_AND_TOTAL}
+  }`;
+
+  const { lessonsCollection }: LessonIdAndTotalData = await getContentfulData(
+    QUERY,
+    "section",
+  );
+
+  return lessonsCollection;
+};
+
+const getLessonCollectionTotal = async (sectionId: string) => {
+  const lessonsData = await getLessonCollectionIdAndTotal(sectionId);
+
+  console.log(lessonsData.items[0].sys.id);
+
+  return lessonsData.total;
+};
+
+export {
+  getCourseDetails,
+  getLessonCollectionIdAndTotal,
+  getLessonCollectionTotal,
+};

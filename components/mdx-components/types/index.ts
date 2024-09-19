@@ -21,12 +21,10 @@ type HighlightedCodeProps = {
 };
 
 type PreComponentProps = {
-  props: PreComponentChildProps;
-};
-
-type PreComponentChildProps = {
-  children: string;
-  className?: string;
+  children: {
+    children: string;
+    className?: string;
+  };
 };
 
 export type { CopyButtonProps, HighlightedCodeProps, PreComponentProps };

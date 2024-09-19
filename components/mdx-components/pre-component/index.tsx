@@ -9,15 +9,12 @@ import { PreComponentProps } from "../types";
 import { CopyButton } from "./CopyButton";
 import { HighlightedCode } from "./HighlightedCode";
 
-const PreComponent = ({ children }: { children: PreComponentProps }) => {
+const PreComponent: React.FC<PreComponentProps> = ({ children }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
 
-  const code = children.props.children.trim();
-  const languageFromClassName = children.props.className?.replace(
-    "language-",
-    "",
-  );
+  const code = children.children.trim();
+  const languageFromClassName = children.className?.replace("language-", "");
   const language = languageFromClassName ?? "rust";
 
   useEffect(() => {

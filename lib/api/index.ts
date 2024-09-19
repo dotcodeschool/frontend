@@ -1,4 +1,5 @@
 import { ObjectId } from "mongodb";
+import { Session } from "next-auth";
 
 import { Course, Repository, User } from "@/lib/db/models";
 import { clientPromise } from "@/lib/db/mongodb";
@@ -19,8 +20,23 @@ const getUser = async (userId: ObjectId) => {
 const getUserByEmail = async (email: string) => {
   const database = await db();
   const users = database.collection<User>("users");
-  
+
   return users.findOne({ email });
+};
+
+const getProgressData = async (session: Session | null) => {
+  if (session && session.user?.email) {
+    try {
+      const user = await getUserByEmail(session.user.email);
+      const data = user?.progress;
+
+      return data;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  return null;
 };
 
 const getCourseFromDb = async (slug: string) => {
@@ -60,6 +76,6 @@ const findUserRepositoryByCourse = async (
   });
 };
 
-export { findUserRepositoryByCourse, getUser, getUserByEmail };
+export { findUserRepositoryByCourse, getProgressData, getUser, getUserByEmail };
 export { fetchGraphQL } from "./contentful";
-export { QUERY_COURSE_CATALOG, QUERY_COURSE_GRAPHQL_FIELDS } from "./queries";
+export { QUERY_COURSE_GRAPHQL_FIELDS } from "./queries";

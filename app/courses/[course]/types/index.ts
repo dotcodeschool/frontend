@@ -1,6 +1,11 @@
 import { MDXRemoteSerializeResult } from "next-mdx-remote";
 
-import { CourseModule, Section, TypeFile } from "@/lib/types";
+import {
+  CourseModule,
+  Section,
+  SectionLessonsCollection,
+  TypeFile,
+} from "@/lib/types";
 
 import {
   QUERY_COURSE_OVERVIEW_FIELDS,
@@ -19,9 +24,7 @@ type ModuleProps = {
   index: number;
   module: Section;
   slug: string;
-  numOfCompletedLessons: number;
   isOnMachineCourse: boolean;
-  hasEnrolled: boolean;
 };
 
 type EditorContextType = {
@@ -34,11 +37,16 @@ type EditorContextType = {
   toggleDiff: () => void;
 };
 
-type CourseDetails = Required<
-  Omit<
-    CourseModule,
-    "sys" | "__typename" | "_id" | "contentfulMetadata" | "linkedFrom"
-  >
+type CourseDetails = Pick<
+  CourseModule,
+  | "title"
+  | "description"
+  | "author"
+  | "level"
+  | "language"
+  | "format"
+  | "sectionsCollection"
+  | "slug"
 >;
 
 type CourseQuery =
@@ -47,11 +55,16 @@ type CourseQuery =
 
 type CourseMetadata = Pick<CourseModule, "title" | "description">;
 
+type LessonIdAndTotalData = {
+  lessonsCollection: Pick<SectionLessonsCollection, "items" | "total">;
+};
+
 export type {
   CourseDetails,
   CourseMetadata,
   CourseQuery,
   EditorContextType,
+  LessonIdAndTotalData,
   Module,
   ModuleProps,
 };
