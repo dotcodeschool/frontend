@@ -10,6 +10,7 @@ export type {
   Relationship,
   RepositorySetup,
   SetupQuestion,
+  UserInfo,
 };
 
 type PracticeFrequencyOptions = "every_day" | "once_a_week" | "once_a_month";
@@ -45,7 +46,13 @@ type Relationship = {
   type: string;
 };
 
-export * from "./schema";
+type UserInfo = {
+  email: string;
+  name: string;
+  image?: string;
+};
+
 export * from "./contentfulUtils";
+export * from "./schema";
 export * from "./typeFile";
 export * from "./typeProgress";

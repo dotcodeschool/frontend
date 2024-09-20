@@ -1,0 +1,48 @@
+import {
+  Avatar,
+  Box,
+  Button,
+  HStack,
+  Menu,
+  MenuButton,
+  MenuList,
+} from "@chakra-ui/react";
+
+import { auth } from "@/auth";
+import { getUserInfo, isUserInfoError } from "@/lib/helpers";
+
+import { ButtonLogin, ButtonLogout } from "./authentication";
+import { UserDetails } from "./UserDetails";
+
+const UserMenu = async () => {
+  const session = await auth();
+  const user = getUserInfo(session);
+
+  if (isUserInfoError(user)) {
+    const errorMessage = user.message;
+    console.error(errorMessage);
+
+    return <ButtonLogin />;
+  }
+
+  const { email, image, name } = user;
+
+  return (
+    <Box display={{ base: "none", md: "block" }}>
+      <Menu>
+        <MenuButton as={Button} variant="unstyled">
+          <HStack>
+            <Avatar name={name} size="sm" src={image} />
+          </HStack>
+        </MenuButton>
+        <MenuList>
+          <UserDetails email={email} image={image} name={name} />
+          <hr />
+          <ButtonLogout isMenu={true} />
+        </MenuList>
+      </Menu>
+    </Box>
+  );
+};
+
+export { UserMenu };

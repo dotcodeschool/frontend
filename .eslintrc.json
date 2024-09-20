@@ -370,8 +370,12 @@
     ],
     "import/no-extraneous-dependencies": [
       "error",
-
-      { "devDependencies": ["**/*.{test,spec,story,stories}.{ts,tsx}"] }
+      {
+        "devDependencies": [
+          "**/*.{test,spec,story,stories}.{ts,tsx}",
+          "lib/{utils,helpers}/*.ts"
+        ]
+      }
     ],
     "react/function-component-definition": [
       "warn",

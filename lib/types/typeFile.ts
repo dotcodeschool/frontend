@@ -10,4 +10,4 @@ type TyleFiles = {
   solution: TypeFile[];
 };
 
-export type { TypeFile, TyleFiles };
+export type { TyleFiles, TypeFile };
