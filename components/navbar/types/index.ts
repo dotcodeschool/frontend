@@ -2,7 +2,7 @@ type NavbarProps = {
   navLinks?: NavLink[];
   cta?: boolean;
   isLessonInterface?: boolean;
-  feedbackUrl: string;
+  feedbackUrl?: string;
 };
 
 type NavLink = {

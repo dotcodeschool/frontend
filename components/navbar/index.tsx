@@ -48,7 +48,7 @@ const Navbar = ({
       <Spacer />
       <HStack display={{ base: "none", md: "flex" }} spacing={4}>
         <NavMenu isLessonInterface={isLessonInterface} navLinks={navLinks} />
-        {isLessonInterface ? (
+        {feedbackUrl ? (
           <Button
             _hover={{
               textDecoration: "none",

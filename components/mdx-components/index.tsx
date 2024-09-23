@@ -9,11 +9,11 @@ import {
   Text,
   TextProps,
 } from "@chakra-ui/react";
+import { isValidElement } from "react";
 
 import { TypeMDXComponents } from "@/lib/types";
 
 import { PreComponent } from "./pre-component";
-import { PreComponentProps } from "./types";
 
 const MDXComponents: TypeMDXComponents = {
   h1: (props: HeadingProps) => <Heading as="h1" mt={12} size="xl" {...props} />,
@@ -45,9 +45,15 @@ const MDXComponents: TypeMDXComponents = {
   ),
 
   pre: (props: React.ComponentProps<"pre">) => {
-    const { children, ...rest } = props;
+    const { children } = props;
 
-    return <PreComponent {...rest}>{children}</PreComponent>;
+    if (isValidElement(children) && typeof children.props === "object") {
+      return <PreComponent {...children.props} />;
+    }
+
+    console.warn("Unexpected child type for <pre>: ", children);
+
+    return <pre {...props} />;
   },
 
   blockquote: (

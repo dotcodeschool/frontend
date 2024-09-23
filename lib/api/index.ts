@@ -55,10 +55,9 @@ const getRepositories = async () => {
 
 const findUserRepositoryByCourse = async (
   courseSlug: string,
-  userId: string,
+  userId: ObjectId,
 ) => {
   const repositories = await getRepositories();
-  const userObjectId = new ObjectId(userId);
   const course = await getCourseFromDb(courseSlug);
   const courseId = course?._id ?? null;
 
@@ -71,7 +70,7 @@ const findUserRepositoryByCourse = async (
   return repositories.findOne({
     relationships: {
       course: { id: courseId },
-      user: { id: userObjectId },
+      user: { id: userId },
     },
   });
 };

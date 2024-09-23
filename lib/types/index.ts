@@ -29,6 +29,7 @@ type AnswerOptions = PracticeFrequency | Accountability;
 
 type SetupQuestion = {
   id: string;
+  kind: "setup_question";
   question: string;
   description: string;
   options: AnswerOptions[];
@@ -36,6 +37,7 @@ type SetupQuestion = {
 
 type RepositorySetup = {
   id: string;
+  kind: "repo_setup";
   title: string;
   description: string;
   steps: { title: string; code: React.ReactElement | string }[];
