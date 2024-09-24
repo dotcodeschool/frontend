@@ -1,4 +1,5 @@
 import { getContentfulData } from "@/lib/api/contentful";
+import { getUserRepo } from "@/lib/helpers";
 
 import { QUERY_LESSONS_COLLECTION_ID_AND_TOTAL } from "../queries";
 import { CourseDetails, CourseQuery, LessonIdAndTotalData } from "../types";
@@ -39,13 +40,21 @@ const getLessonCollectionIdAndTotal = async (sectionId: string) => {
 const getLessonCollectionTotal = async (sectionId: string) => {
   const lessonsData = await getLessonCollectionIdAndTotal(sectionId);
 
-  console.log(lessonsData.items[0].sys.id);
-
   return lessonsData.total;
+};
+
+const getStartCourseUrl = async (format: string | null, slug: string) => {
+  const setupUrl = `/courses/${slug}/setup`;
+  const lessonsUrl = `/courses/${slug}/lesson/1/chapter/1`;
+  const isOnMachineCourse = format === "onMachineCourse";
+  const repo = await getUserRepo(slug);
+
+  return isOnMachineCourse && repo ? lessonsUrl : setupUrl;
 };
 
 export {
   getCourseDetails,
   getLessonCollectionIdAndTotal,
   getLessonCollectionTotal,
+  getStartCourseUrl,
 };

@@ -5,21 +5,12 @@ import React from "react";
 import { ButtonPrimary } from "@/components";
 import { isSectionArray } from "@/lib/helpers";
 
-import { getCourseDetails } from "../helpers";
+import { getCourseDetails, getStartCourseUrl } from "../helpers";
 import { QUERY_COURSE_OVERVIEW_FIELDS } from "../queries";
 import { CourseDetails } from "../types";
 
 import { CourseHeader } from "./CourseHeader";
 import { ModuleItem, ModuleList } from "./modules";
-
-const getStartCourseUrl = (format: string | null, slug: string) => {
-  const setupUrl = `/courses/${slug}/setup`;
-  const lessonsUrl = `/courses/${slug}/lesson/1/chapter/1`;
-  const isOnMachineCourse = format === "onMachineCourse";
-  const hasEnrolled = false;
-
-  return isOnMachineCourse && !hasEnrolled ? setupUrl : lessonsUrl;
-};
 
 const CourseContent = async ({ slug }: { slug: string }) => {
   const courseDetails = await getCourseDetails(
@@ -38,7 +29,7 @@ const CourseContent = async ({ slug }: { slug: string }) => {
     return notFound();
   }
 
-  const startCourseUrl = getStartCourseUrl(format ?? null, slug);
+  const startCourseUrl = await getStartCourseUrl(format ?? null, slug);
 
   return (
     <Box maxW="4xl" mx="auto">
