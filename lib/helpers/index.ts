@@ -1,29 +1,6 @@
 import { Session } from "next-auth";
 
-import { auth } from "@/auth";
-
-import { findUserRepositoryByCourse, getUserByEmail } from "../api";
 import { Maybe, Section, UserInfo } from "../types";
-
-const getUserRepo = async (courseSlug: string) => {
-  const session = await auth();
-  const userInfo = getUserInfo(session);
-
-  if (userInfo instanceof Error) {
-    console.error(userInfo.message);
-
-    return null;
-  }
-
-  const user = await getUserByEmail(userInfo.email);
-  const userId = user?._id ?? null;
-
-  if (!userId) {
-    return null;
-  }
-
-  return findUserRepositoryByCourse(courseSlug, userId);
-};
 
 const getUserInfo = (session: Session | null): UserInfo | Error => {
   const user = session?.user;
@@ -53,4 +30,4 @@ const isSectionArray = (arr: Maybe<Section>[]): arr is Section[] =>
 const isUserInfoError = (result: UserInfo | Error): result is Error =>
   result instanceof Error;
 
-export { getUserInfo, getUserRepo, isSectionArray, isUserInfoError };
+export { getUserInfo, isSectionArray, isUserInfoError };

@@ -1,8 +1,11 @@
 import { ObjectId } from "mongodb";
 import { Session } from "next-auth";
 
+import { auth } from "@/auth";
 import { Course, Repository, User } from "@/lib/db/models";
 import { clientPromise } from "@/lib/db/mongodb";
+
+import { getUserInfo } from "../helpers";
 
 const db = async () => {
   const client = await clientPromise;
@@ -22,6 +25,26 @@ const getUserByEmail = async (email: string) => {
   const users = database.collection<User>("users");
 
   return users.findOne({ email });
+};
+
+const getUserRepo = async (courseSlug: string) => {
+  const session = await auth();
+  const userInfo = getUserInfo(session);
+
+  if (userInfo instanceof Error) {
+    console.error(userInfo.message);
+
+    return null;
+  }
+
+  const user = await getUserByEmail(userInfo.email);
+  const userId = user?._id ?? null;
+
+  if (!userId) {
+    return null;
+  }
+
+  return findUserRepositoryByCourse(courseSlug, userId);
 };
 
 const getProgressData = async (session: Session | null) => {
