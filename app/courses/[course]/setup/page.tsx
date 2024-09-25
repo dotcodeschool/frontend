@@ -5,7 +5,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { auth } from "@/auth";
 import { MDXComponents, Navbar } from "@/components";
 import { findUserRepositoryByCourse, getUserByEmail } from "@/lib/api";
-import { questions as questionsData, repositorySetup } from "@/lib/db/data";
+import { questions as questionsData } from "@/lib/db/data";
 import { handleSignIn } from "@/lib/middleware/actions";
 import { RepositorySetup } from "@/lib/types";
 
@@ -35,7 +35,9 @@ const getUserIdByEmail = async (email: string) => {
 };
 
 // Helper function to serialize repository setup steps
-const serializeRepositorySetup = async (): Promise<RepositorySetup> => ({
+const serializeRepositorySetup = async (
+  repositorySetup: RepositorySetup,
+): Promise<RepositorySetup> => ({
   ...repositorySetup,
   steps: await Promise.all(
     repositorySetup.steps.map(async (step) => {
@@ -72,7 +74,27 @@ const SetupPage = async ({ params }: { params: { course: string } }) => {
     return redirect(`/courses/${course}/lesson/1/chapter/1`);
   }
 
-  const serializedRepositorySetup = await serializeRepositorySetup();
+  const repositorySetup: RepositorySetup = {
+    id: "repository-setup",
+    kind: "repo_setup",
+    title: "Repository Setup",
+    description:
+      "We've prepared a starter repository with some Rust code for you.",
+    steps: [
+      {
+        title: "1. Clone the repository",
+        code: `\`\`\`bash
+        git clone https://git.dotcodeschool.com/${repo?.repo_name} dotcodeschool-${course}\ncd dotcodeschool-${course}
+        \`\`\``,
+      },
+      {
+        title: "2. Push an empty commit",
+        code: `\`\`\`bash\ngit commit --allow-empty -m 'test'\ngit push origin master\n\`\`\``,
+      },
+    ],
+  };
+
+  const repoSetupContent = await serializeRepositorySetup(repositorySetup);
 
   return (
     <Box maxW="6xl" mx="auto" px={[4, 12]}>
@@ -80,8 +102,8 @@ const SetupPage = async ({ params }: { params: { course: string } }) => {
       <StepsComponent
         courseSlug={course}
         questions={questionsData}
-        repo={JSON.stringify(repo)}
-        repositorySetup={serializedRepositorySetup}
+        repo={JSON.parse(JSON.stringify(repo))}
+        repositorySetup={repoSetupContent}
         startingLessonUrl={`/courses/${course}/lesson/1/chapter/1`}
       />
     </Box>

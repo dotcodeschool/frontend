@@ -1,4 +1,4 @@
-import { RepositorySetup, SetupQuestion } from "@/lib/types";
+import { SetupQuestion } from "@/lib/types";
 
 export const questions: SetupQuestion[] = [
   {
@@ -38,21 +38,3 @@ export const questions: SetupQuestion[] = [
     ],
   },
 ];
-
-export const repositorySetup: RepositorySetup = {
-  id: "repository-setup",
-  kind: "repo_setup",
-  title: "Repository Setup",
-  description:
-    "We've prepared a starter repository with some Rust code for you.",
-  steps: [
-    {
-      title: "1. Clone the repository",
-      code: "```bash\ngit clone https://git.dotcodeschool.com/c03cd646f5dd167f dotcodeschool-rust-state-machine\ncd dotcodeschool-rust-state-machine\n```",
-    },
-    {
-      title: "2. Push an empty commit",
-      code: `\`\`\`bash\ngit commit --allow-empty -m 'test'\ngit push origin master\n\`\`\``,
-    },
-  ],
-};
