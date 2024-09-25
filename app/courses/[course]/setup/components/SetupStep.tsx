@@ -30,6 +30,7 @@ export const SetupStep: React.FC<SetupStepProps> = ({
 }) => {
   const loadingText = `
   We're setting up your repository... It shouldn't take too long.`;
+
   const isSetupQuestion = checkSetupQuestion(step);
   const renderContent = () => {
     if (isSetupQuestion) {

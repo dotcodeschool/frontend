@@ -51,8 +51,6 @@ const createRepository = async (
     return userInfo;
   }
 
-  console.log(userInfo);
-
   const data = await fetch("/api/get-user", {
     method: "POST",
     headers: {

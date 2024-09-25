@@ -8,51 +8,128 @@ import {
   Heading,
   Text,
 } from "@chakra-ui/react";
+import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 
-import { AnswerOptions, PracticeFrequencyOptions } from "@/lib/types";
+import {
+  AnswerOptions,
+  PracticeFrequencyOptions,
+  SetupQuestion,
+} from "@/lib/types";
 
 import { createRepository } from "../helpers";
 import { StepsComponentProps } from "../types";
 
 import { SetupStep } from "./SetupStep";
+import { StepsComponentSkeleton } from "./StepComponentSkeleton";
+
+type UseInitialStateProps = {
+  repo: { test_ok?: boolean } | null;
+  questions: SetupQuestion[];
+};
+
+const updateAnswers = (
+  questions: { id: string }[],
+  currentStep: number,
+  answers: Record<string, boolean | PracticeFrequencyOptions>,
+  option: AnswerOptions,
+): Record<string, boolean | PracticeFrequencyOptions> => ({
+  ...answers,
+  [questions[currentStep].id]: option.value,
+});
+
+const handleFinalStep = async (
+  session: Session,
+  setLoadingRepo: (value: boolean) => void,
+  setShowRepositorySetup: (value: boolean) => void,
+  updatedAnswers: Record<string, boolean | PracticeFrequencyOptions>,
+  courseSlug: string,
+): Promise<void> => {
+  setLoadingRepo(true);
+  setShowRepositorySetup(true);
+  const repo = await createRepository(session, updatedAnswers, courseSlug);
+  if (repo) {
+    setLoadingRepo(false);
+  }
+};
+
+const useInitialState = ({ repo, questions }: UseInitialStateProps) => {
+  const [currentStep, setCurrentStep] = useState(repo ? questions.length : 0);
+  const [answers, setAnswers] = useState<
+    Record<string, boolean | string | number>
+  >({});
+  const [showRepositorySetup, setShowRepositorySetup] = useState(Boolean(repo));
+  const [loadingRepo, setLoadingRepo] = useState(false);
+  const [gitPushReceived, setGitPushReceived] = useState(
+    repo?.test_ok ?? false,
+  );
+
+  return {
+    currentStep,
+    setCurrentStep,
+    answers,
+    setAnswers,
+    showRepositorySetup,
+    setShowRepositorySetup,
+    loadingRepo,
+    setLoadingRepo,
+    gitPushReceived,
+    setGitPushReceived,
+  };
+};
 
 const StepsComponent = ({
   questions,
   repositorySetup,
   startingLessonUrl,
   courseSlug,
+  repo,
 }: StepsComponentProps) => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const isLoading = status === "loading";
+
+  const {
+    currentStep,
+    setCurrentStep,
+    answers,
+    setAnswers,
+    showRepositorySetup,
+    setShowRepositorySetup,
+    loadingRepo,
+    setLoadingRepo,
+    gitPushReceived,
+    setGitPushReceived,
+  } = useInitialState({ repo, questions });
+
+  if (isLoading) {
+    return <StepsComponentSkeleton />;
+  }
 
   if (!session) {
     throw new Error("No session found!");
   }
 
-  const [currentStep, setCurrentStep] = useState(0);
-  const [answers, setAnswers] = useState({});
-  const [showRepositorySetup, setShowRepositorySetup] = useState(false);
-  const [loadingRepo, setLoadingRepo] = useState(false);
-  const [gitPushReceived, setGitPushReceived] = useState(false);
-
   const handleOptionClick = async (option: AnswerOptions) => {
-    const updatedAnswers = updateAnswers(option);
+    const updatedAnswers = updateAnswers(
+      questions,
+      currentStep,
+      answers,
+      option,
+    );
+    setAnswers(updatedAnswers);
+
     if (isLastStep()) {
-      await handleFinalStep(updatedAnswers);
+      await handleFinalStep(
+        session,
+        setLoadingRepo,
+        setShowRepositorySetup,
+        updatedAnswers,
+        courseSlug,
+      );
     } else {
       goToNextStep();
     }
-  };
-
-  const updateAnswers = (option: AnswerOptions) => {
-    const updatedAnswers = {
-      ...answers,
-      [questions[currentStep].id]: option.value,
-    };
-    setAnswers(updatedAnswers);
-
-    return updatedAnswers;
   };
 
   const isLastStep = () => currentStep >= questions.length - 1;
@@ -60,27 +137,6 @@ const StepsComponent = ({
   const goToNextStep = () => {
     setCurrentStep(currentStep + 1);
   };
-
-  const handleFinalStep = async (
-    updatedAnswers: Record<string, boolean | PracticeFrequencyOptions>,
-  ) => {
-    setLoadingRepo(true);
-    setShowRepositorySetup(true);
-    const repo = await createRepository(session, updatedAnswers, courseSlug);
-    if (repo) {
-      setLoadingRepo(false);
-    }
-  };
-
-  // Simulate receiving a git push after 10 seconds
-  if (showRepositorySetup) {
-    setTimeout(() => {
-      setLoadingRepo(false);
-    }, 2000);
-    setTimeout(() => {
-      setGitPushReceived(true);
-    }, 10000);
-  }
 
   const currentQuestion = questions[currentStep];
   const currentStepLabel = `Step ${currentStep + 1} of ${questions.length}`;

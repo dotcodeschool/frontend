@@ -7,6 +7,7 @@ export type Repository = {
   repo_name: string;
   repo_template: string;
   tester_url: string;
+  test_ok?: boolean;
   relationships: Array<Relationship>;
   expected_practice_frequency: PracticeFrequencyOptions;
   is_reminders_enabled: boolean;

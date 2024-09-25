@@ -1,5 +1,6 @@
-import { ObjectId } from "mongodb";
+import { ObjectId, WithId } from "mongodb";
 
+import { Repository } from "@/lib/db/models";
 import { PracticeFrequencyOptions, SetupQuestion } from "@/lib/types";
 
 type CreateRepoRequest = {
@@ -20,6 +21,7 @@ type StepsComponentProps = {
   };
   startingLessonUrl: string;
   courseSlug: string;
+  repo: WithId<Repository> | null;
 };
 
 export type { CreateRepoRequest, StepsComponentProps };

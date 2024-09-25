@@ -91,13 +91,17 @@ const findUserRepositoryByCourse = async (
   }
 
   return repositories.findOne({
-    relationships: {
-      course: { id: courseId },
-      user: { id: userId },
-    },
+    "relationships.course.id": courseId,
+    "relationships.user.id": userId,
   });
 };
 
-export { findUserRepositoryByCourse, getProgressData, getUser, getUserByEmail };
+export {
+  findUserRepositoryByCourse,
+  getProgressData,
+  getUser,
+  getUserByEmail,
+  getUserRepo,
+};
 export { fetchGraphQL } from "./contentful";
 export { QUERY_COURSE_GRAPHQL_FIELDS } from "./queries";

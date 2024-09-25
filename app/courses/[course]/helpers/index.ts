@@ -1,5 +1,5 @@
+import { getUserRepo } from "@/lib/api";
 import { getContentfulData } from "@/lib/api/contentful";
-import { getUserRepo } from "@/lib/helpers";
 
 import { QUERY_LESSONS_COLLECTION_ID_AND_TOTAL } from "../queries";
 import { CourseDetails, CourseQuery, LessonIdAndTotalData } from "../types";
@@ -45,11 +45,21 @@ const getLessonCollectionTotal = async (sectionId: string) => {
 
 const getStartCourseUrl = async (format: string | null, slug: string) => {
   const setupUrl = `/courses/${slug}/setup`;
+  const repoSetupUrl = `${setupUrl}?step=repo_test`;
   const lessonsUrl = `/courses/${slug}/lesson/1/chapter/1`;
-  const isOnMachineCourse = format === "onMachineCourse";
+  const isNotOnMachineCourse = format !== "onMachineCourse";
+
+  if (isNotOnMachineCourse) {
+    return lessonsUrl;
+  }
+
   const repo = await getUserRepo(slug);
 
-  return isOnMachineCourse && repo ? lessonsUrl : setupUrl;
+  if (!repo?.test_ok) {
+    return repoSetupUrl;
+  }
+
+  return lessonsUrl;
 };
 
 export {

@@ -1,5 +1,4 @@
 import { Box } from "@chakra-ui/react";
-import { ObjectId } from "mongodb";
 import { redirect } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 
@@ -35,13 +34,6 @@ const getUserIdByEmail = async (email: string) => {
   return getUserResponse?._id;
 };
 
-// Helper function to check if the user is enrolled in the course
-const checkUserEnrollment = async (userId: ObjectId, course: string) => {
-  const repo = await findUserRepositoryByCourse(course, userId);
-
-  return !repo;
-};
-
 // Helper function to serialize repository setup steps
 const serializeRepositorySetup = async (): Promise<RepositorySetup> => ({
   ...repositorySetup,
@@ -74,8 +66,9 @@ const SetupPage = async ({ params }: { params: { course: string } }) => {
     throw new Error("User not found");
   }
 
-  const hasEnrolled = await checkUserEnrollment(userId, course);
-  if (!hasEnrolled) {
+  const repo = await findUserRepositoryByCourse(course, userId);
+
+  if (repo?.test_ok) {
     return redirect(`/courses/${course}/lesson/1/chapter/1`);
   }
 
@@ -87,6 +80,7 @@ const SetupPage = async ({ params }: { params: { course: string } }) => {
       <StepsComponent
         courseSlug={course}
         questions={questionsData}
+        repo={JSON.stringify(repo)}
         repositorySetup={serializedRepositorySetup}
         startingLessonUrl={`/courses/${course}/lesson/1/chapter/1`}
       />
