@@ -402,6 +402,7 @@ export async function getStaticProps({
     }
     return slug === course;
   });
+
   const modules: any = _course?.fields.sections;
   const rawSections = getSections(_course).map((section) => ({
     id: section.sys.id,
@@ -417,7 +418,7 @@ export async function getStaticProps({
       );
       const lessons = rawLessons.map((lesson) => ({
         id: lesson.sys.id,
-        title: lesson.fields.lessonName,
+        title: lesson.fields.title,
       }));
       return {
         id: section.id,
@@ -451,7 +452,7 @@ export async function getStaticProps({
     map(files.fields.solution, fetchFile),
   ).catch(console.error);
 
-  const lessonContent: any = entry.fields.lessonContent;
+  const lessonContent: any = entry.fields.content;
 
   const mdxSource = await serialize(lessonContent);
 
@@ -470,7 +471,7 @@ export async function getStaticProps({
     id: entry.sys.id,
     index,
     lesson: `${course}/lesson/${parsedLesson}/chapter/${index + 1}`,
-    title: entry.fields.lessonName,
+    title: entry.fields.title,
   }));
 
   return {
@@ -513,6 +514,7 @@ function mapSectionsToLessons(sections: any[]) {
       id: section.sys.id,
       title: section.fields.title,
       description: section.fields.description,
+      lessons: section.fields.lessons
     };
   });
 }

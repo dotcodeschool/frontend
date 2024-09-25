@@ -25,12 +25,12 @@ export default function CoursesPage({ courses }: { courses: any[] }) {
           >
             <Stack>
               <Heading as="h2" size="md">
-                {course.moduleName}
+                {course.title}
               </Heading>
               <Text>
                 {course.level} • {course.language}
               </Text>
-              <Text py={2}>{course.moduleDescription}</Text>
+              <Text py={2}>{course.description}</Text>
               <PrimaryButton
                 mt={4}
                 as={Link}

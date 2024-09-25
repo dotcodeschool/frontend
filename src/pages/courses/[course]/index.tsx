@@ -279,7 +279,7 @@ export async function getStaticProps({
     throw new Error("No course found with the provided slug");
   }
 
-  const { moduleName, moduleDescription, author, level, language } =
+  const { title, description, author, level, language } =
     entry.fields as any;
 
   const authorFields = author.fields;
@@ -305,11 +305,11 @@ export async function getStaticProps({
       }
 
       const lessonDescription = get(lesson, "fields.description") || "";
-      console.log(lessonDescription);
+      
       const serializedLessonDescription = typeof lessonDescription === "string" ?
         await serialize(lessonDescription) : console.error("Lesson description is not a string");
 
-      console.log(serializedLessonDescription);
+        console.log(lesson)
 
       return {
         index,
@@ -324,12 +324,12 @@ export async function getStaticProps({
   return {
     props: {
       slug: params.course,
-      title: moduleName,
+      title,
       author: {
         name,
         url,
       },
-      description: moduleDescription,
+      description: description,
       modules,
       tags: { language, level },
     },

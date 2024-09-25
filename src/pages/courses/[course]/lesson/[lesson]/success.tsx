@@ -198,7 +198,7 @@ export async function getStaticProps({ params }: any) {
   return {
     props: {
       slug: course?.fields.slug,
-      course: course?.fields.moduleName,
+      course: course?.fields.title,
       lesson: params.lesson,
       totalLessonsInCourse,
     },
