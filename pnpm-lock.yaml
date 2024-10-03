@@ -61,9 +61,6 @@ importers:
       react:
         specifier: ^18.3.1
         version: 18.3.1
-      react-copy-to-clipboard:
-        specifier: ^5.1.0
-        version: 5.1.0(react@18.3.1)
       react-dom:
         specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
@@ -7610,14 +7607,6 @@ packages:
     peerDependencies:
       react: ^15.3.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
 
-  react-copy-to-clipboard@5.1.0:
-    resolution:
-      {
-        integrity: sha512-k61RsNgAayIJNoy9yDsYzDe/yAZAzEbEgcz3DZMhF686LEyukcE1hzurxe85JandPUG+yTfGVFzuEw3xt8WP/A==,
-      }
-    peerDependencies:
-      react: ^15.3.0 || 16 || 17 || 18
-
   react-dom@18.3.1:
     resolution:
       {
@@ -14852,12 +14841,6 @@ snapshots:
   react-clientside-effect@1.2.6(react@18.3.1):
     dependencies:
       "@babel/runtime": 7.25.6
-      react: 18.3.1
-
-  react-copy-to-clipboard@5.1.0(react@18.3.1):
-    dependencies:
-      copy-to-clipboard: 3.3.3
-      prop-types: 15.8.1
       react: 18.3.1
 
   react-dom@18.3.1(react@18.3.1):

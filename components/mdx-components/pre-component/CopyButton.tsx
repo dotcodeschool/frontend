@@ -1,11 +1,9 @@
-import { CopyToClipboard } from "react-copy-to-clipboard";
-
 import { CopyButtonProps } from "../types";
 
 import { CopyIconButton } from "./CopyIconButton";
 
 const CopyButton = ({
-  code,
+  text,
   isHovered,
   copySuccess,
   setCopySuccess,
@@ -15,9 +13,11 @@ const CopyButton = ({
   }
 
   return (
-    <CopyToClipboard onCopy={() => setCopySuccess(true)} text={code}>
-      <CopyIconButton copySuccess={copySuccess} />
-    </CopyToClipboard>
+    <CopyIconButton
+      copySuccess={copySuccess}
+      setCopySuccess={setCopySuccess}
+      text={text}
+    />
   );
 };
 

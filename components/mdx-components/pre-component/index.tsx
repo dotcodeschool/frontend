@@ -42,10 +42,10 @@ const PreComponent: React.FC<PreComponentProps> = ({ children, className }) => {
         )}
       </Highlight>
       <CopyButton
-        code={code}
         copySuccess={copySuccess}
         isHovered={isHovered}
         setCopySuccess={setCopySuccess}
+        text={code}
       />
     </Box>
   );

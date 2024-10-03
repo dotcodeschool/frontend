@@ -7,7 +7,7 @@ import {
 } from "prism-react-renderer";
 
 type CopyButtonProps = {
-  code: string;
+  text: string;
   isHovered: boolean;
   copySuccess: boolean;
   setCopySuccess: (success: boolean) => void;
