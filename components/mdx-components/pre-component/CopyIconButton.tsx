@@ -1,6 +1,21 @@
 import { CheckIcon, CopyIcon } from "@chakra-ui/icons";
 import { IconButton } from "@chakra-ui/react";
 
+const copySuccessButtonProps = {
+  as: CheckIcon,
+  bg: "gray.600",
+  color: "green.200",
+  cursor: "default",
+  _hover: { color: "green.200", bg: "gray.600" },
+};
+
+const defaultButtonProps = {
+  as: CopyIcon,
+  color: "gray.400",
+  cursor: "pointer",
+  _hover: { color: "gray.200", bg: "gray.600" },
+};
+
 const CopyIconButton = ({
   text,
   copySuccess,
@@ -25,17 +40,14 @@ const CopyIconButton = ({
 
   return (
     <IconButton
-      _hover={{ color: "gray.200", bg: "gray.600" }}
       aria-label="Copy code to clipboard"
-      as={copySuccess ? CheckIcon : CopyIcon}
-      color={copySuccess ? "green.200" : "gray.400"}
-      cursor={copySuccess ? "default" : "pointer"}
       onClick={copyToClipboard}
       p={2}
       position="absolute"
       right={3}
       size="sm"
       top={3}
+      {...(copySuccess ? copySuccessButtonProps : defaultButtonProps)}
     />
   );
 };
