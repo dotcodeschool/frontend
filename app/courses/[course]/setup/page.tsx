@@ -82,13 +82,19 @@ const SetupPage = async ({ params }: { params: { course: string } }) => {
       "We've prepared a starter repository with some Rust code for you.",
     steps: [
       {
-        title: "1. Clone the repository",
+        title: "1. Install DotCodeSchool CLI",
+        code: `\`\`\`bash
+        curl -sSf https://dotcodeschool.com/install.sh | sh
+        \`\`\``,
+      },
+      {
+        title: "2. Clone the repository",
         code: `\`\`\`bash
         git clone https://git.dotcodeschool.com/${repo?.repo_name} dotcodeschool-${course}\ncd dotcodeschool-${course}
         \`\`\``,
       },
       {
-        title: "2. Push an empty commit",
+        title: "3. Push an empty commit",
         code: `\`\`\`bash\ngit commit --allow-empty -m 'test'\ngit push origin master\n\`\`\``,
       },
     ],
