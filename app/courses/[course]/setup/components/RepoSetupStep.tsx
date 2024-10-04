@@ -7,7 +7,7 @@ const RepoSetupStep = ({
   title: string;
   code: React.ReactElement | string;
 }) => (
-  <Box bg="gray.800" borderRadius="md" p={4} w="full">
+  <Box borderRadius="md" w="full">
     <Heading mb={2} size="sm">
       {title}
     </Heading>

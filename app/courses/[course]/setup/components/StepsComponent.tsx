@@ -57,7 +57,7 @@ const handleFinalStep = async (
 const useInitialState = ({ repo, questions }: UseInitialStateProps) => {
   const [currentStep, setCurrentStep] = useState(repo ? questions.length : 0);
   const [answers, setAnswers] = useState<
-    Record<string, boolean | string | number>
+    Record<string, boolean | PracticeFrequencyOptions>
   >({});
   const [showRepositorySetup, setShowRepositorySetup] = useState(Boolean(repo));
   const [loadingRepo, setLoadingRepo] = useState(false);
