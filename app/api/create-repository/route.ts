@@ -8,7 +8,7 @@ export const POST = async (request: NextRequest) => {
     const body = JSON.stringify(convertKeysToSnakeCase(jsonData));
 
     const response = await fetch(
-      `${process.env.BACKEND_URL}/api/v0/create-repository`,
+      `${process.env.BACKEND_URL}/api/v0/repository`,
       {
         method: "POST",
         headers: {
