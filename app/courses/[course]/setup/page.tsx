@@ -1,10 +1,14 @@
 import { Box } from "@chakra-ui/react";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 
 import { auth } from "@/auth";
 import { MDXComponents, Navbar } from "@/components";
-import { findUserRepositoryByCourse, getUserByEmail } from "@/lib/api";
+import {
+  findUserRepositoryByCourse,
+  getCourseFromDb,
+  getUserByEmail,
+} from "@/lib/api";
 import { questions as questionsData } from "@/lib/db/data";
 import { handleSignIn } from "@/lib/middleware/actions";
 import { RepositorySetup } from "@/lib/types";
@@ -68,10 +72,11 @@ const SetupPage = async ({ params }: { params: { course: string } }) => {
     throw new Error("User not found");
   }
 
+  const courseData = await getCourseFromDb(course);
   const repo = await findUserRepositoryByCourse(course, userId);
 
-  if (repo?.test_ok) {
-    return redirect(`/courses/${course}/lesson/1/chapter/1`);
+  if (!courseData) {
+    return notFound();
   }
 
   const repositorySetup: RepositorySetup = {
@@ -106,11 +111,13 @@ const SetupPage = async ({ params }: { params: { course: string } }) => {
     <Box maxW="6xl" mx="auto" px={[4, 12]}>
       <Navbar cta={false} />
       <StepsComponent
+        courseId={courseData._id}
         courseSlug={course}
+        initialRepo={repo}
         questions={questionsData}
-        repo={JSON.parse(JSON.stringify(repo))}
         repositorySetup={repoSetupContent}
         startingLessonUrl={`/courses/${course}/lesson/1/chapter/1`}
+        userId={userId}
       />
     </Box>
   );

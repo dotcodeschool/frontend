@@ -96,12 +96,21 @@ const findUserRepositoryByCourse = async (
   });
 };
 
+const repositoryStream = async () => {
+  const database = await db();
+  const repositories = database.collection<Repository>("repositories");
+
+  return repositories.watch();
+};
+
 export {
   findUserRepositoryByCourse,
+  getCourseFromDb,
   getProgressData,
   getUser,
   getUserByEmail,
   getUserRepo,
+  repositoryStream,
 };
 export { fetchGraphQL } from "./contentful";
 export { QUERY_COURSE_GRAPHQL_FIELDS } from "./queries";

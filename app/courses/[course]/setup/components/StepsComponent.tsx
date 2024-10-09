@@ -7,135 +7,138 @@ import {
   CardHeader,
   Heading,
   Text,
+  useToast,
 } from "@chakra-ui/react";
-import { Session } from "next-auth";
+import { ObjectId, WithId } from "mongodb";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-import {
-  AnswerOptions,
-  PracticeFrequencyOptions,
-  SetupQuestion,
-} from "@/lib/types";
+import { Repository } from "@/lib/db/models";
+import { AnswerOptions, SetupQuestion, RepositorySetup } from "@/lib/types";
 
 import { createRepository } from "../helpers";
-import { StepsComponentProps } from "../types";
 
+import { RepositorySteps } from "./RepositoryStepBlocks";
 import { SetupStep } from "./SetupStep";
 import { StepsComponentSkeleton } from "./StepComponentSkeleton";
+import { MDXRemote } from "next-mdx-remote";
+import { serialize } from "next-mdx-remote/serialize";
+import { MDXComponents } from "@/components/mdx-components";
 
-type UseInitialStateProps = {
-  repo: { test_ok?: boolean } | null;
+interface StepsComponentProps {
   questions: SetupQuestion[];
-};
+  startingLessonUrl: string;
+  courseSlug: string;
+  initialRepo: WithId<Repository> | null;
+  userId: ObjectId;
+  repositorySetup: RepositorySetup;
+  courseId: ObjectId;
+}
 
-const updateAnswers = (
-  questions: { id: string }[],
-  currentStep: number,
-  answers: Record<string, boolean | PracticeFrequencyOptions>,
-  option: AnswerOptions,
-): Record<string, boolean | PracticeFrequencyOptions> => ({
-  ...answers,
-  [questions[currentStep].id]: option.value,
-});
-
-const handleFinalStep = async (
-  session: Session,
-  setLoadingRepo: (value: boolean) => void,
-  setShowRepositorySetup: (value: boolean) => void,
-  updatedAnswers: Record<string, boolean | PracticeFrequencyOptions>,
-  courseSlug: string,
-): Promise<void> => {
-  setLoadingRepo(true);
-  setShowRepositorySetup(true);
-  const repo = await createRepository(session, updatedAnswers, courseSlug);
-  if (repo) {
-    setLoadingRepo(false);
-  }
-};
-
-const useInitialState = ({ repo, questions }: UseInitialStateProps) => {
-  const [currentStep, setCurrentStep] = useState(repo ? questions.length : 0);
-  const [answers, setAnswers] = useState<
-    Record<string, boolean | PracticeFrequencyOptions>
-  >({});
-  const [showRepositorySetup, setShowRepositorySetup] = useState(Boolean(repo));
-  const [loadingRepo, setLoadingRepo] = useState(false);
-  const [gitPushReceived, setGitPushReceived] = useState(
-    repo?.test_ok ?? false,
-  );
-
-  return {
-    currentStep,
-    setCurrentStep,
-    answers,
-    setAnswers,
-    showRepositorySetup,
-    setShowRepositorySetup,
-    loadingRepo,
-    setLoadingRepo,
-    gitPushReceived,
-    setGitPushReceived,
-  };
-};
-
-const StepsComponent = ({
+const StepsComponent: React.FC<StepsComponentProps> = ({
   questions,
-  repositorySetup,
   startingLessonUrl,
   courseSlug,
-  repo,
-}: StepsComponentProps) => {
+  initialRepo,
+  userId,
+  repositorySetup,
+  courseId,
+}) => {
   const { data: session, status } = useSession();
   const isLoading = status === "loading";
+  const toast = useToast();
 
-  const {
-    currentStep,
-    setCurrentStep,
-    answers,
-    setAnswers,
-    showRepositorySetup,
-    setShowRepositorySetup,
-    loadingRepo,
-    setLoadingRepo,
-    gitPushReceived,
-    setGitPushReceived,
-  } = useInitialState({ repo, questions });
+  const [currentStep, setCurrentStep] = useState(0);
+  const [showRepositorySetup, setShowRepositorySetup] = useState(
+    Boolean(initialRepo),
+  );
+  const [loadingRepo, setLoadingRepo] = useState(false);
+  const [answers, setAnswers] = useState<
+    Record<string, AnswerOptions["value"]>
+  >({});
+  const [repoName, setRepoName] = useState<string>();
+  const [repo, setRepo] = useState<WithId<Repository> | null>(initialRepo);
+  const [repoSetupSteps, setRepoSetupSteps] =
+    useState<RepositorySetup>(repositorySetup);
 
-  if (isLoading) {
+  useEffect(() => {
+    if (initialRepo) {
+      setRepo(initialRepo);
+      setShowRepositorySetup(true);
+    } else if (repoName) {
+      const x = async () => {
+        const mdxSource = await serialize(`\`\`\`bash
+        git clone https://git.dotcodeschool.com/${repoName} dotcodeschool-${courseSlug}\ncd dotcodeschool-${courseSlug}
+        \`\`\``);
+        const code = <MDXRemote {...mdxSource} components={MDXComponents} />;
+        const updatedSteps = repositorySetup.steps.map((step, index) =>
+          index === 1
+            ? {
+                title: step.title,
+                code,
+              }
+            : step,
+        );
+        setRepoSetupSteps((prev) => ({
+          ...prev,
+          steps: updatedSteps,
+        }));
+      }
+      x()
+    }
+  }, [initialRepo, repoName]);
+
+  useEffect(() => {
+    console.log("STATE repo:", repo);
+  }, [repo]);
+
+  if (isLoading || !session) {
     return <StepsComponentSkeleton />;
   }
 
-  if (!session) {
-    throw new Error("No session found!");
-  }
-
   const handleOptionClick = async (option: AnswerOptions) => {
-    const updatedAnswers = updateAnswers(
-      questions,
-      currentStep,
-      answers,
-      option,
-    );
+    const updatedAnswers = {
+      ...answers,
+      [questions[currentStep].id]: option.value,
+    };
     setAnswers(updatedAnswers);
 
-    if (isLastStep()) {
-      await handleFinalStep(
-        session,
-        setLoadingRepo,
-        setShowRepositorySetup,
-        updatedAnswers,
-        courseSlug,
-      );
+    if (currentStep >= questions.length - 1) {
+      setShowRepositorySetup(true);
+      setLoadingRepo(true);
+      try {
+        const createdRepo = await createRepository(
+          session,
+          updatedAnswers,
+          courseSlug,
+        );
+        if (typeof createdRepo?.repo_name === "string") {
+          setRepoName(createdRepo?.repo_name);
+          toast({
+            title: "Repository created successfully",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+        } else {
+          throw new Error("Invalid repository name received");
+        }
+      } catch (error) {
+        console.error("Failed to create repository:", error);
+        toast({
+          title: "Failed to create repository",
+          description:
+            error instanceof Error ? error.message : "Unknown error occurred",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      } finally {
+        setLoadingRepo(false);
+      }
     } else {
-      goToNextStep();
+      setCurrentStep(currentStep + 1);
     }
-  };
-
-  const isLastStep = () => currentStep >= questions.length - 1;
-
-  const goToNextStep = () => {
-    setCurrentStep(currentStep + 1);
   };
 
   const currentQuestion = questions[currentStep];
@@ -148,11 +151,12 @@ const StepsComponent = ({
       </CardHeader>
       <CardBody>
         {showRepositorySetup ? (
-          <SetupStep
-            gitPushReceived={gitPushReceived}
-            isLoading={loadingRepo}
+          <RepositorySteps
+            gitPushReceived={false}
+            repoSetupComplete={false}
             startingLessonUrl={startingLessonUrl}
-            step={repositorySetup}
+            steps={repoSetupSteps}
+            isLoading={loadingRepo}
           />
         ) : (
           <SetupStep onOptionClick={handleOptionClick} step={currentQuestion} />

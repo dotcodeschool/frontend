@@ -18,7 +18,13 @@ export const POST = async (request: NextRequest) => {
       },
     );
 
-    return NextResponse.json(response, { status: response.status });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const responseData = await response.json();
+
+    return NextResponse.json(responseData);
   } catch (error) {
     console.error("An error occurred while creating the repository", error);
 

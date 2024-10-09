@@ -1,7 +1,9 @@
 import { Heading, Text } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import React from "react";
+import { ObjectId, WithId } from "mongodb";
+import React, { useEffect, useState } from "react";
 
+import { Repository } from "@/lib/db/models";
 import { AnswerOptions, RepositorySetup, SetupQuestion } from "@/lib/types";
 
 import { QuestionOptions } from "./QuestionOptions";
@@ -14,9 +16,13 @@ type SetupStepProps = {
   isLoading?: boolean;
   gitPushReceived?: boolean;
   startingLessonUrl?: string;
+  repoSetupComplete?: boolean;
+  courseSlug?: string;
+  userId?: ObjectId;
+  courseId?: ObjectId;
+  initialRepo?: WithId<Repository> | null;
 };
 
-// typeguard to narrow step type
 const checkSetupQuestion = (
   step: SetupQuestion | RepositorySetup,
 ): step is SetupQuestion => step.kind === "setup_question";
@@ -27,11 +33,25 @@ export const SetupStep: React.FC<SetupStepProps> = ({
   isLoading,
   gitPushReceived = false,
   startingLessonUrl,
+  repoSetupComplete = false,
+  courseSlug,
+  userId,
+  courseId,
+  initialRepo,
 }) => {
-  const loadingText = `
-  We're setting up your repository... It shouldn't take too long.`;
+  const [repo, setRepo] = useState<WithId<Repository> | null>(
+    initialRepo ?? null,
+  );
+  const loadingText = `We're setting up your repository... It shouldn't take too long.`;
+
+  useEffect(() => {
+    if (initialRepo) {
+      setRepo(initialRepo);
+    }
+  }, [initialRepo]);
 
   const isSetupQuestion = checkSetupQuestion(step);
+
   const renderContent = () => {
     if (isSetupQuestion) {
       return (
@@ -39,15 +59,16 @@ export const SetupStep: React.FC<SetupStepProps> = ({
       );
     }
 
-    if (isLoading) {
+    if (isLoading || !courseSlug || !repo) {
       return <RepoStepLoadingSkeleton />;
     }
 
     return (
       <RepositorySteps
         gitPushReceived={gitPushReceived}
+        repoSetupComplete={repoSetupComplete}
         startingLessonUrl={startingLessonUrl}
-        steps={step.steps}
+        steps={(step as RepositorySetup).steps}
       />
     );
   };
@@ -64,7 +85,7 @@ export const SetupStep: React.FC<SetupStepProps> = ({
         {isSetupQuestion ? step.question : step.title}
       </Heading>
       <Text color="gray.400" mb={6}>
-        {isLoading ? loadingText : step.description}
+        {isLoading || !repo ? loadingText : step.description}
       </Text>
       {renderContent()}
     </motion.div>

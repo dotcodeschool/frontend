@@ -1,9 +1,11 @@
 import { Session } from "next-auth";
 
 import { getUserInfo } from "@/lib/helpers";
-import { PracticeFrequencyOptions } from "@/lib/types";
+import { PracticeFrequencyOptions, RepositorySetup } from "@/lib/types";
 
 import { CreateRepoRequest } from "../types";
+import { WithId } from "mongodb";
+import { Repository } from "@/lib/db/models";
 
 const validateAnswers = (
   answers: Record<string, boolean | PracticeFrequencyOptions>,
@@ -48,55 +50,99 @@ const createRepository = async (
   const userInfo = getUserInfo(session);
 
   if (userInfo instanceof Error) {
+    console.error("Error getting user info:", userInfo.message);
     return userInfo;
   }
 
-  const data = await fetch("/api/get-user", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      userEmail: userInfo.email,
-    }),
-  });
+  try {
+    const response = await fetch("/api/get-user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userEmail: userInfo.email,
+      }),
+    });
 
-  const user = await data.json();
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-  if (!user?._id) {
-    return Error("User not found in database");
-  }
+    const user = await response.json();
 
-  const validatedAnswers = validateAnswers(updatedAnswers);
+    if (!user?._id) {
+      throw new Error("User not found in database");
+    }
 
-  if (validatedAnswers instanceof Error) {
-    return validatedAnswers;
-  }
+    const validatedAnswers = validateAnswers(updatedAnswers);
 
-  const { expectedPracticeFrequency, isReminderEnabled } = validatedAnswers;
+    if (validatedAnswers instanceof Error) {
+      throw validatedAnswers;
+    }
 
-  const req: CreateRepoRequest = {
-    repoTemplate: courseSlug,
-    userId: user._id,
-    expectedPracticeFrequency,
-    isReminderEnabled,
-  };
+    const { expectedPracticeFrequency, isReminderEnabled } = validatedAnswers;
 
-  const response = await fetch(`/api/create-repository`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(req),
-  });
+    const req: CreateRepoRequest = {
+      repoTemplate: courseSlug,
+      userId: user._id,
+      expectedPracticeFrequency,
+      isReminderEnabled,
+    };
 
-  if (response.status === 200) {
-    // TODO: Update the user's repositories
-    console.log(response);
-  } else {
-    // TODO: add proper error handling to provide user feedback
-    console.error("Failed to create repository");
+    const createRepoResponse = await fetch("/api/create-repository", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(req),
+    });
+
+    if (!createRepoResponse.ok) {
+      throw new Error(`HTTP error! status: ${createRepoResponse.status}`);
+    }
+
+    const createRepoResult = await createRepoResponse.json();
+    console.log("Create repository response:", createRepoResult);
+
+    return createRepoResult;
+  } catch (error) {
+    console.error("Error in createRepository:", error);
+    throw error;
   }
 };
 
-export { createRepository };
+const generateRepositorySetup = (
+  repo: WithId<Repository>,
+  courseSlug: string,
+): RepositorySetup => ({
+  id: "repository-setup",
+  kind: "repo_setup",
+  title: "Repository Setup",
+  description:
+    "We've prepared a starter repository with some Rust code for you.",
+  steps: [
+    {
+      title: "1. Install DotCodeSchool CLI",
+      code: `\`\`\`bash
+      curl -sSf https://dotcodeschool.com/install.sh | sh
+      \`\`\``,
+    },
+    {
+      title: "2. Clone the repository",
+      code: `\`\`\`bash
+        git clone https://git.dotcodeschool.com/${repo.repo_name} dotcodeschool-${courseSlug}
+        cd dotcodeschool-${courseSlug}
+        \`\`\``,
+    },
+    {
+      title: "3. Push an empty commit",
+      code: `\`\`\`bash
+      git commit --allow-empty -m 'test'
+      git push origin master
+      \`\`\``,
+    },
+  ],
+});
+
+export { createRepository, generateRepositorySetup };
