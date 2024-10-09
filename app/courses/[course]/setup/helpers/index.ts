@@ -1,11 +1,11 @@
+import { WithId } from "mongodb";
 import { Session } from "next-auth";
 
+import { Repository } from "@/lib/db/models";
 import { getUserInfo } from "@/lib/helpers";
 import { PracticeFrequencyOptions, RepositorySetup } from "@/lib/types";
 
 import { CreateRepoRequest } from "../types";
-import { WithId } from "mongodb";
-import { Repository } from "@/lib/db/models";
 
 const validateAnswers = (
   answers: Record<string, boolean | PracticeFrequencyOptions>,
@@ -42,6 +42,44 @@ const validateAnswers = (
   };
 };
 
+const getUser = async (userEmail: string) => {
+  const response = await fetch("/api/get-user", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ userEmail }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  const user = await response.json();
+
+  if (!user?._id) {
+    throw new Error("User not found in database");
+  }
+
+  return user;
+};
+
+const createRepoRequest = async (req: CreateRepoRequest) => {
+  const response = await fetch("/api/create-repository", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(req),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return response.json();
+};
+
 const createRepository = async (
   session: Session,
   updatedAnswers: Record<string, boolean | PracticeFrequencyOptions>,
@@ -51,30 +89,12 @@ const createRepository = async (
 
   if (userInfo instanceof Error) {
     console.error("Error getting user info:", userInfo.message);
+
     return userInfo;
   }
 
   try {
-    const response = await fetch("/api/get-user", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userEmail: userInfo.email,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const user = await response.json();
-
-    if (!user?._id) {
-      throw new Error("User not found in database");
-    }
-
+    const user = await getUser(userInfo.email);
     const validatedAnswers = validateAnswers(updatedAnswers);
 
     if (validatedAnswers instanceof Error) {
@@ -90,24 +110,10 @@ const createRepository = async (
       isReminderEnabled,
     };
 
-    const createRepoResponse = await fetch("/api/create-repository", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(req),
-    });
-
-    if (!createRepoResponse.ok) {
-      throw new Error(`HTTP error! status: ${createRepoResponse.status}`);
-    }
-
-    const createRepoResult = await createRepoResponse.json();
-    console.log("Create repository response:", createRepoResult);
-
-    return createRepoResult;
+    return await createRepoRequest(req);
   } catch (error) {
     console.error("Error in createRepository:", error);
+
     throw error;
   }
 };

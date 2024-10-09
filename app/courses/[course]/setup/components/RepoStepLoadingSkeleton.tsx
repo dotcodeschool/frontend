@@ -16,9 +16,9 @@ const RepoStepLoadingSkeleton = () => (
       width="100%"
     />
     <Skeleton
-      mt={6}
       endColor="gray.500"
       height={8}
+      mt={6}
       startColor="gray.700"
       width="75%"
     />
@@ -29,9 +29,9 @@ const RepoStepLoadingSkeleton = () => (
       width="100%"
     />
     <Skeleton
-      mt={6}
       endColor="gray.500"
       height={8}
+      mt={6}
       startColor="gray.700"
       width="75%"
     />
