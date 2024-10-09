@@ -10,6 +10,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { ObjectId, WithId } from "mongodb";
+import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
 import { useCallback, useState } from "react";
 
@@ -33,14 +34,47 @@ type StepsComponentProps = {
   courseId: ObjectId;
 };
 
+const handleCreateRepository = async (
+  session: Session,
+  answers: Record<string, AnswerOptions["value"]>,
+  courseSlug: string,
+  setRepoName: (name: string) => void,
+  toast: ReturnType<typeof useToast>,
+) => {
+  try {
+    const createdRepo = await createRepository(session, answers, courseSlug);
+    if (typeof createdRepo?.repo_name === "string") {
+      setRepoName(createdRepo.repo_name);
+      toast({
+        title: "Repository created successfully",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    } else {
+      throw new Error("Invalid repository name received");
+    }
+  } catch (error) {
+    console.error("Failed to create repository:", error);
+    toast({
+      title: "Failed to create repository",
+      description:
+        error instanceof Error ? error.message : "Unknown error occurred",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+    });
+
+    throw error;
+  }
+};
+
 const StepsComponent: React.FC<StepsComponentProps> = ({
   questions,
   startingLessonUrl,
   courseSlug,
   initialRepo,
-  userId,
   repositorySetup,
-  courseId,
 }) => {
   const { data: session, status } = useSession();
   const isLoading = status === "loading";
@@ -74,32 +108,16 @@ const StepsComponent: React.FC<StepsComponentProps> = ({
         setLoadingRepo(true);
 
         try {
-          const createdRepo = await createRepository(
+          await handleCreateRepository(
             session,
             updatedAnswers,
             courseSlug,
+            setRepoName,
+            toast,
           );
-          if (typeof createdRepo?.repo_name === "string") {
-            setRepoName(createdRepo?.repo_name);
-            toast({
-              title: "Repository created successfully",
-              status: "success",
-              duration: 3000,
-              isClosable: true,
-            });
-          } else {
-            throw new Error("Invalid repository name received");
-          }
         } catch (error) {
-          console.error("Failed to create repository:", error);
-          toast({
-            title: "Failed to create repository",
-            description:
-              error instanceof Error ? error.message : "Unknown error occurred",
-            status: "error",
-            duration: 5000,
-            isClosable: true,
-          });
+          // Error is already handled in handleCreateRepository
+          console.error("Repository creation failed:", error);
         } finally {
           setLoadingRepo(false);
         }
