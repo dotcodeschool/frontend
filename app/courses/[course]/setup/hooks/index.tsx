@@ -1,4 +1,4 @@
-import { WithId } from "mongodb";
+import { ObjectId, WithId } from "mongodb";
 import { MDXRemote } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
 import { useEffect, useState } from "react";
@@ -19,11 +19,32 @@ const useRepositorySetup = (
   const [repoName, setRepoName] = useState<string>();
   const [repoSetupSteps, setRepoSetupSteps] =
     useState<RepositorySetup>(repositorySetup);
+  const [gitPushReceived, setGitPushReceived] = useState(
+    initialRepo?.test_ok ?? false,
+  );
+  const [repoId, setRepoId] = useState<ObjectId | null>(
+    initialRepo?._id ?? null,
+  );
 
   useEffect(() => {
     if (initialRepo) {
       setShowRepositorySetup(true);
+      setGitPushReceived(initialRepo.test_ok ?? false);
     } else if (repoName) {
+      setShowRepositorySetup(true);
+      const fetchRepoData = async () => {
+        try {
+          const response = await fetch(`/api/repository?repoName=${repoName}`);
+          if (response.ok) {
+            const repoData = await response.json();
+            setRepoId(repoData._id);
+            setGitPushReceived(repoData.test_ok ?? false);
+          }
+        } catch (error) {
+          console.error("Error fetching repository data:", error);
+        }
+      };
+
       const updateRepoSetup = async () => {
         const mdxSource = await serialize(`\`\`\`bash
         git clone https://git.dotcodeschool.com/${repoName} dotcodeschool-${courseSlug}\ncd dotcodeschool-${courseSlug}
@@ -34,9 +55,34 @@ const useRepositorySetup = (
         );
         setRepoSetupSteps((prev) => ({ ...prev, steps: updatedSteps }));
       };
+
+      void fetchRepoData();
       void updateRepoSetup();
     }
   }, [initialRepo, repoName, repositorySetup.steps, courseSlug]);
+
+  useEffect(() => {
+    if (!repoId) {
+      return;
+    }
+
+    const eventSource = new EventSource("/api/repository-updates");
+
+    eventSource.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (
+        data.operationType === "update" &&
+        data.documentKey._id === repoId.toString() &&
+        data.updateDescription?.updatedFields?.test_ok === true
+      ) {
+        setGitPushReceived(true);
+      }
+    };
+
+    return () => {
+      eventSource.close();
+    };
+  }, [repoId]);
 
   return {
     showRepositorySetup,
@@ -46,6 +92,7 @@ const useRepositorySetup = (
     repoName,
     setRepoName,
     repoSetupSteps,
+    gitPushReceived,
   };
 };
 

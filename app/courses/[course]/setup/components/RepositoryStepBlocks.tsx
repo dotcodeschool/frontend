@@ -12,13 +12,11 @@ const RepositorySteps = ({
   steps,
   gitPushReceived,
   startingLessonUrl,
-  repoSetupComplete,
   isLoading,
 }: {
   steps: RepositorySetup;
   gitPushReceived: boolean;
   startingLessonUrl?: string;
-  repoSetupComplete: boolean;
   isLoading: boolean;
 }) =>
   isLoading ? (

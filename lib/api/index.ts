@@ -107,6 +107,7 @@ export {
   findUserRepositoryByCourse,
   getCourseFromDb,
   getProgressData,
+  getRepositories,
   getUser,
   getUserByEmail,
   getUserRepo,

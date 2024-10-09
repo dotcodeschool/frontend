@@ -195,6 +195,7 @@ const StepsComponent: React.FC<StepsComponentProps> = ({
     setLoadingRepo,
     setRepoName,
     repoSetupSteps,
+    gitPushReceived,
   } = useRepositorySetup(initialRepo, repositorySetup, courseSlug);
 
   const handleOptionClick = useOptionClickHandler({
@@ -227,9 +228,8 @@ const StepsComponent: React.FC<StepsComponentProps> = ({
       <CardBody>
         {showRepositorySetup ? (
           <RepositorySteps
-            gitPushReceived={false}
+            gitPushReceived={gitPushReceived}
             isLoading={loadingRepo}
-            repoSetupComplete={false}
             startingLessonUrl={startingLessonUrl}
             steps={repoSetupSteps}
           />
