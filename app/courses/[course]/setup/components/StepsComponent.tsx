@@ -12,7 +12,7 @@ import {
 import { ObjectId, WithId } from "mongodb";
 import { Session } from "next-auth";
 import { useSession } from "next-auth/react";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 
 import { Repository } from "@/lib/db/models";
 import { AnswerOptions, SetupQuestion, RepositorySetup } from "@/lib/types";
@@ -34,13 +34,64 @@ type StepsComponentProps = {
   courseId: ObjectId;
 };
 
+type RepositorySetupContext = {
+  session: Session | null;
+  answers: Record<string, AnswerOptions["value"]>;
+  courseSlug: string;
+  setShowRepositorySetup: (show: boolean) => void;
+  setLoadingRepo: (loading: boolean) => void;
+  setRepoName: (name: string) => void;
+  toast: ReturnType<typeof useToast>;
+};
+
+const handleRepositorySetup = async (context: RepositorySetupContext) => {
+  const {
+    setShowRepositorySetup,
+    setLoadingRepo,
+    session,
+    answers,
+    courseSlug,
+    setRepoName,
+    toast,
+  } = context;
+
+  setShowRepositorySetup(true);
+  setLoadingRepo(true);
+
+  try {
+    await handleCreateRepository(
+      session,
+      answers,
+      courseSlug,
+      setRepoName,
+      toast,
+    );
+  } catch (error) {
+    console.error("Repository setup failed:", error);
+  } finally {
+    setLoadingRepo(false);
+  }
+};
+
 const handleCreateRepository = async (
-  session: Session,
+  session: Session | null,
   answers: Record<string, AnswerOptions["value"]>,
   courseSlug: string,
   setRepoName: (name: string) => void,
   toast: ReturnType<typeof useToast>,
 ) => {
+  if (!session) {
+    toast({
+      title: "Session error",
+      description: "No active session found",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+    });
+
+    throw new Error("No active session");
+  }
+
   try {
     const createdRepo = await createRepository(session, answers, courseSlug);
     if (typeof createdRepo?.repo_name === "string") {
@@ -69,6 +120,58 @@ const handleCreateRepository = async (
   }
 };
 
+const useOptionClickHandler =
+  ({
+    questions,
+    currentStep,
+    setCurrentStep,
+    answers,
+    setAnswers,
+    handleRepositorySetup,
+    session,
+    courseSlug,
+    setShowRepositorySetup,
+    setLoadingRepo,
+    setRepoName,
+    toast,
+  }: {
+    questions: SetupQuestion[];
+    currentStep: number;
+    setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
+    answers: Record<string, AnswerOptions["value"]>;
+    setAnswers: React.Dispatch<
+      React.SetStateAction<Record<string, AnswerOptions["value"]>>
+    >;
+    handleRepositorySetup: (context: RepositorySetupContext) => Promise<void>;
+    session: Session | null;
+    courseSlug: string;
+    setShowRepositorySetup: (show: boolean) => void;
+    setLoadingRepo: (loading: boolean) => void;
+    setRepoName: (name: string) => void;
+    toast: ReturnType<typeof useToast>;
+  }) =>
+  (option: AnswerOptions) => {
+    const updatedAnswers = {
+      ...answers,
+      [questions[currentStep].id]: option.value,
+    };
+    setAnswers(updatedAnswers);
+
+    if (currentStep >= questions.length - 1) {
+      void handleRepositorySetup({
+        session,
+        answers: updatedAnswers,
+        courseSlug,
+        setShowRepositorySetup,
+        setLoadingRepo,
+        setRepoName,
+        toast,
+      });
+    } else {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
 const StepsComponent: React.FC<StepsComponentProps> = ({
   questions,
   startingLessonUrl,
@@ -90,53 +193,24 @@ const StepsComponent: React.FC<StepsComponentProps> = ({
     setShowRepositorySetup,
     loadingRepo,
     setLoadingRepo,
-    repoName,
     setRepoName,
     repoSetupSteps,
   } = useRepositorySetup(initialRepo, repositorySetup, courseSlug);
 
-  const handleOptionClick = useCallback(
-    async (option: AnswerOptions) => {
-      const updatedAnswers = {
-        ...answers,
-        [questions[currentStep].id]: option.value,
-      };
-      setAnswers(updatedAnswers);
-
-      if (currentStep >= questions.length - 1) {
-        setShowRepositorySetup(true);
-        setLoadingRepo(true);
-
-        try {
-          await handleCreateRepository(
-            session,
-            updatedAnswers,
-            courseSlug,
-            setRepoName,
-            toast,
-          );
-        } catch (error) {
-          // Error is already handled in handleCreateRepository
-          console.error("Repository creation failed:", error);
-        } finally {
-          setLoadingRepo(false);
-        }
-      } else {
-        setCurrentStep(currentStep + 1);
-      }
-    },
-    [
-      answers,
-      courseSlug,
-      currentStep,
-      questions,
-      session,
-      setLoadingRepo,
-      setRepoName,
-      setShowRepositorySetup,
-      toast,
-    ],
-  );
+  const handleOptionClick = useOptionClickHandler({
+    questions,
+    currentStep,
+    setCurrentStep,
+    answers,
+    setAnswers,
+    handleRepositorySetup,
+    session,
+    courseSlug,
+    setShowRepositorySetup,
+    setLoadingRepo,
+    setRepoName,
+    toast,
+  });
 
   if (isLoading || !session) {
     return <StepsComponentSkeleton />;
@@ -160,7 +234,14 @@ const StepsComponent: React.FC<StepsComponentProps> = ({
             steps={repoSetupSteps}
           />
         ) : (
-          <SetupStep onOptionClick={handleOptionClick} step={currentQuestion} />
+          <SetupStep
+            onOptionClick={(option) => {
+              handleOptionClick(option);
+
+              return Promise.resolve();
+            }}
+            step={currentQuestion}
+          />
         )}
       </CardBody>
       <CardFooter justifyContent="space-between">
