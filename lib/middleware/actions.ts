@@ -2,10 +2,10 @@
 
 import { signIn, signOut } from "@/auth";
 
-export async function handleSignIn(options?: { redirectTo?: string }) {
+export const handleSignIn = async (options?: { redirectTo?: string }) => {
   await signIn("", options);
-}
+};
 
-export async function handleSignOut() {
+export const handleSignOut = async () => {
   await signOut();
-}
+};

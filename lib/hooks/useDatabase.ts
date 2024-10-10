@@ -1,16 +1,18 @@
 import { Collection, Db } from "mongodb";
 
-import clientPromise from "@/lib/db/mongodb";
+import { clientPromise } from "@/lib/db/mongodb";
 
-export function useDatabase() {
+const useDatabase = () => {
   const getCollection = async (collectionName: string): Promise<Collection> => {
     const client = await clientPromise;
-    const db: Db = client.db("dcs-test");
+    const db: Db = client.db(process.env.DB_NAME);
+
     return db.collection(collectionName);
   };
 
   const findOne = async (collectionName: string, query: object) => {
     const collection = await getCollection(collectionName);
+
     return collection.findOne(query);
   };
 
@@ -20,6 +22,7 @@ export function useDatabase() {
     update: object,
   ) => {
     const collection = await getCollection(collectionName);
+
     return collection.updateOne(filter, update);
   };
 
@@ -27,4 +30,6 @@ export function useDatabase() {
     findOne,
     updateOne,
   };
-}
+};
+
+export { useDatabase };

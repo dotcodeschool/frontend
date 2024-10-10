@@ -1,13 +1,13 @@
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { TypeProgressData } from "../types/typeProgress";
 
-import { IProgressData } from "../types/IProgress";
-
-export function useProgress() {
+const useProgress = () => {
   const { data: session } = useSession();
-  const [progress, setProgress] = useState<IProgressData>(() => {
+  const [progress, setProgress] = useState<TypeProgressData>(() => {
     const savedProgress = localStorage.getItem("progress");
+
     return savedProgress ? JSON.parse(savedProgress) : {};
   });
 
@@ -45,7 +45,7 @@ export function useProgress() {
       [courseId]: {
         ...(progress[courseId] || {}),
         [lessonId]: {
-          ...(progress[courseId]?.[lessonId] || {}),
+          ...(progress[courseId][lessonId] || {}),
           [chapterId]: true,
         },
       },
@@ -74,20 +74,28 @@ export function useProgress() {
     }
   };
 
-  const mergeProgress = (local: IProgressData, server: IProgressData) => {
-    const merged: IProgressData = { ...local };
+  const mergeProgress = (local: TypeProgressData, server: TypeProgressData) => {
+    const merged: TypeProgressData = { ...local };
     Object.keys(server).forEach((courseId) => {
-      if (!merged[courseId]) merged[courseId] = {};
+      if (!merged[courseId]) {
+        merged[courseId] = {};
+      }
       Object.keys(server[courseId]).forEach((lessonId) => {
-        if (!merged[courseId][lessonId]) merged[courseId][lessonId] = {};
+        if (!merged[courseId][lessonId]) {
+          merged[courseId][lessonId] = {};
+        }
         Object.keys(server[courseId][lessonId]).forEach((chapterId) => {
           merged[courseId][lessonId][chapterId] =
-            local[courseId]?.[lessonId]?.[chapterId] ||
+            local[courseId][lessonId][chapterId] ||
             server[courseId][lessonId][chapterId];
         });
       });
     });
+
     return merged;
   };
+
   return { progress, saveProgress };
-}
+};
+
+export { useProgress };

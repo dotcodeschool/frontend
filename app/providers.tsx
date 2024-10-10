@@ -6,12 +6,10 @@ import { SessionProvider } from "next-auth/react";
 
 import theme from "@/ui/theme";
 
-export function Providers({ children }: { children: React.ReactNode }) {
-  return (
-    <CacheProvider>
-      <ChakraProvider theme={theme}>
-        <SessionProvider>{children}</SessionProvider>
-      </ChakraProvider>
-    </CacheProvider>
-  );
-}
+export const Providers = ({ children }: { children: React.ReactNode }) => (
+  <CacheProvider>
+    <ChakraProvider theme={theme}>
+      <SessionProvider>{children}</SessionProvider>
+    </ChakraProvider>
+  </CacheProvider>
+);

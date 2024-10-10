@@ -30,12 +30,19 @@
     },
     {
       "files": [
-        "**/{page,layout,metadata,index}.{ts,tsx}",
+        "**/{page,layout,providers,metadata,index}.{ts,tsx}",
         "**/*.{page,layout}.tsx"
       ],
       "rules": {
         "filename-rules/match": "off",
-        "import/no-default-export": "off"
+        "import/no-default-export": "off",
+        "require-await": "off"
+      }
+    },
+    {
+      "files": ["lib/db/mongodb.ts"],
+      "rules": {
+        "no-var": "off"
       }
     }
   ],
@@ -114,6 +121,10 @@
       {
         "selector": "import",
         "format": null
+      },
+      {
+        "selector": "typeParameter",
+        "format": ["PascalCase"]
       }
     ],
     "@typescript-eslint/no-restricted-imports": [
@@ -193,7 +204,6 @@
         "ignoreRegExpLiterals": true
       }
     ],
-    "simple-import-sort/imports": "warn",
     "simple-import-sort/exports": "warn",
     "@typescript-eslint/no-unnecessary-type-arguments": "warn",
     "@typescript-eslint/no-unnecessary-condition": "warn",
@@ -208,7 +218,7 @@
     "jsdoc/tag-lines": ["warn", "never", { "startLines": 1 }],
     "jsdoc/require-param": ["warn", { "checkDestructuredRoots": false }],
     "jsdoc/require-jsdoc": [
-      "warn",
+      "off",
       {
         "publicOnly": true,
         "require": {
@@ -360,8 +370,12 @@
     ],
     "import/no-extraneous-dependencies": [
       "error",
-
-      { "devDependencies": ["**/*.{test,spec,story,stories}.{ts,tsx}"] }
+      {
+        "devDependencies": [
+          "**/*.{test,spec,story,stories}.{ts,tsx}",
+          "lib/{utils,helpers}/*.ts"
+        ]
+      }
     ],
     "react/function-component-definition": [
       "warn",

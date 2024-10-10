@@ -1,57 +1,57 @@
 import { Box, Card, Heading, Link, Stack, Text } from "@chakra-ui/react";
 import { IoArrowBack } from "react-icons/io5";
 
-import Navbar from "@/components/navbar";
-import PrimaryButton from "@/components/primary-button";
-import { TypeCourseModuleFields } from "@/lib/types/contentful";
-import { getContentByType } from "@/lib/utils";
+import { ButtonPrimary, Navbar } from "@/components";
+import { CourseOverview } from "@/lib/types";
+
+import { getCourseCatalog } from "./helpers";
 
 export { generateMetadata } from "./metadata";
 
-export default async function CoursesPage() {
-  const data = await getContentByType("courseModule");
-  const courses: TypeCourseModuleFields[] = data.items.map(
-    (item) => item.fields as unknown as TypeCourseModuleFields,
-  );
+const CoursesPage = async () => {
+  const courses: Array<CourseOverview> = await getCourseCatalog();
+
   return (
     <Box maxW="8xl" mx="auto" px={[4, 12]}>
       <Navbar cta={false} />
       <Box maxW="4xl" mx="auto">
-        <Link href="/" color="green.500" fontSize="5xl">
+        <Link color="green.500" fontSize="5xl" href="/">
           <IoArrowBack />
         </Link>
-        <Heading as="h1" size="xl" fontWeight="800" my={4}>
+        <Heading as="h1" fontWeight="800" my={4} size="xl">
           Courses
         </Heading>
-        {courses.map((course) => (
+        {courses.map(({ slug, title, description, level, language }) => (
           <Card
-            key={course.slug.toString()}
             direction={{ base: "column", md: "row" }}
-            overflow="hidden"
+            key={slug}
             my={4}
+            overflow="hidden"
             p={8}
           >
             <Stack>
               <Heading as="h2" size="md">
-                {course.title.toString()}
+                {title}
               </Heading>
               <Text>
-                {course.level.toString()} • {course.language.toString()}
+                {level} • {language}
               </Text>
-              <Text py={2}>{course.description.toString()}</Text>
-              <PrimaryButton
-                mt={4}
-                as={Link}
-                href={`/courses/${course.slug}`}
+              <Text py={2}>{description}</Text>
+              <ButtonPrimary
                 _hover={{ textDecor: "none" }}
+                as={Link}
+                href={`/courses/${slug}`}
+                mt={4}
                 w="fit-content"
               >
                 Start Course
-              </PrimaryButton>
+              </ButtonPrimary>
             </Stack>
           </Card>
         ))}
       </Box>
     </Box>
   );
-}
+};
+
+export default CoursesPage;

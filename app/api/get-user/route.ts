@@ -1,28 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { useDatabase } from "@/lib/hooks/useDatabase";
+import { getUserByEmail } from "@/lib/api";
 
-export async function GET(req: NextRequest) {
-  const { findOne } = useDatabase();
+export const POST = async (req: NextRequest) => {
+  const data = await req.json();
 
-  const searchParams = req.nextUrl.searchParams;
-  const email = searchParams.get("user[email]");
-
-  if (!email) {
+  if (typeof data?.userEmail !== "string") {
     return NextResponse.json(
-      { error: "User parameter is required" },
+      { error: "Bad Request: `userEmail` must be of type `string`" },
       { status: 400 },
     );
   }
 
   try {
-    const result = await findOne("users", { email });
+    const result = await getUserByEmail(data.userEmail);
+
     return NextResponse.json(result);
   } catch (error) {
     console.error("MongoDB error:", error);
+
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },
     );
   }
-}
+};

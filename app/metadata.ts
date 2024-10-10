@@ -1,6 +1,9 @@
-export async function generateMetadata() {
-  const title = `Dot Code School | Learn Blockchain & Web3 Development Fast`;
-  const description = `Learn to build web3 applications and custom blockchains using the Polkadot SDK. Master blockchain development through hands-on learning with our interactive courses!`;
+import { defaultMetaDescription, defaultMetaTitle } from "@/lib/constants";
+
+export const generateMetadata = () => {
+  const title = defaultMetaTitle;
+  const description = defaultMetaDescription;
+
   return {
     title,
     description,
@@ -16,4 +19,4 @@ export async function generateMetadata() {
       description,
     },
   };
-}
+};

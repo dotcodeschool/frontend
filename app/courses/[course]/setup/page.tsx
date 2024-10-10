@@ -1,72 +1,126 @@
 import { Box } from "@chakra-ui/react";
-import axios from "axios";
-import { isNil } from "lodash";
-import { MDXComponents as MDXComponentsType } from "mdx/types";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 
 import { auth } from "@/auth";
-import MDXComponents from "@/components/lessons-interface/mdx-components";
-import Navbar from "@/components/navbar";
-import { questions as questionsData, repositorySetup } from "@/lib/db/data";
+import { MDXComponents, Navbar } from "@/components";
+import {
+  findUserRepositoryByCourse,
+  getCourseFromDb,
+  getUserByEmail,
+} from "@/lib/api";
+import { questions as questionsData } from "@/lib/db/data";
 import { handleSignIn } from "@/lib/middleware/actions";
-import { SetupQuestion } from "@/lib/types";
-import { findRepo } from "@/lib/utils";
+import { RepositorySetup } from "@/lib/types";
 
-import StepsComponent from "./components/Steps";
+import { StepsComponent } from "./components/StepsComponent";
 
-export default async function SetupPage({
-  params,
-}: {
-  params: { course: string };
-}) {
-  const { course } = params;
+// TODO: Move helper functions to ./helpers/index.ts
+
+// Helper function to authenticate the user
+const authenticateUser = async (course: string) => {
   const session = await auth();
-  if (!session) {
+  if (!session || !session.user || typeof session.user.email !== "string") {
     await handleSignIn({
       redirectTo: `/courses/${course}/setup`,
     });
+
+    return null;
   }
-  const getUserResponse = await axios.get(
-    "http://localhost:3000/api/get-user",
-    {
-      params: {
-        user: session?.user,
+
+  return session.user.email;
+};
+
+// Helper function to get user ID by email
+const getUserIdByEmail = async (email: string) => {
+  const getUserResponse = await getUserByEmail(email);
+
+  return getUserResponse?._id;
+};
+
+// Helper function to serialize repository setup steps
+const serializeRepositorySetup = async (
+  repositorySetup: RepositorySetup,
+): Promise<RepositorySetup> => ({
+  ...repositorySetup,
+  steps: await Promise.all(
+    repositorySetup.steps.map(async (step) => {
+      if (typeof step.code !== "string") {
+        console.error("Code must be of type 'string'");
+
+        throw new Error("Code must be of type 'string'");
+      }
+
+      return {
+        ...step,
+        code: <MDXRemote components={MDXComponents} source={step.code} />,
+      };
+    }),
+  ),
+});
+
+const SetupPage = async ({ params }: { params: { course: string } }) => {
+  const { course } = params;
+
+  const email = await authenticateUser(course);
+  if (!email) {
+    return null;
+  }
+
+  const userId = await getUserIdByEmail(email);
+  if (!userId) {
+    throw new Error("User not found");
+  }
+
+  const courseData = await getCourseFromDb(course);
+  const repo = await findUserRepositoryByCourse(course, userId);
+
+  if (!courseData) {
+    return notFound();
+  }
+
+  const repositorySetup: RepositorySetup = {
+    id: "repository-setup",
+    kind: "repo_setup",
+    title: "Repository Setup",
+    description:
+      "We've prepared a starter repository with some Rust code for you.",
+    steps: [
+      {
+        title: "1. Install DotCodeSchool CLI",
+        code: `\`\`\`bash
+        curl -sSf https://dotcodeschool.com/install.sh | sh
+        \`\`\``,
       },
-    },
-  );
-  const userId = getUserResponse.data._id;
-  const repo = await findRepo(course, userId);
-  const hasEnrolled = !isNil(repo);
-  if (!hasEnrolled) {
-    return redirect(`/courses/${course}/lesson/1/chapter/1`); // TODO: this should redirect to the last lesson the user was on or the first lesson if they haven't started
-  }
-  // convert the code in steps array in questions data's isCustom to serialized code
-  const serializedRepositorySetup = {
-    ...repositorySetup,
-    steps: await Promise.all(
-      repositorySetup.steps.map(async (step) => {
-        return {
-          ...step,
-          code: (
-            <MDXRemote
-              source={step.code}
-              components={MDXComponents as Readonly<MDXComponentsType>}
-            />
-          ),
-        };
-      }),
-    ),
+      {
+        title: "2. Clone the repository",
+        code: `\`\`\`bash
+        git clone https://git.dotcodeschool.com/${repo?.repo_name} dotcodeschool-${course}\ncd dotcodeschool-${course}
+        \`\`\``,
+      },
+      {
+        title: "3. Push an empty commit",
+        code: `\`\`\`bash\ngit commit --allow-empty -m 'test'\ngit push origin master\n\`\`\``,
+      },
+    ],
   };
+
+  const repoSetupContent = await serializeRepositorySetup(repositorySetup);
+
   return (
     <Box maxW="6xl" mx="auto" px={[4, 12]}>
       <Navbar cta={false} />
       <StepsComponent
-        questions={questionsData as SetupQuestion[]}
-        repositorySetup={serializedRepositorySetup}
-        startingLessonUrl={`/courses/${course}/lesson/1/chapter/1`}
+        courseId={courseData._id}
         courseSlug={course}
+        initialRepo={repo}
+        questions={questionsData}
+        repositorySetup={repoSetupContent}
+        startingLessonUrl={`/courses/${course}/lesson/1/chapter/1`}
+        userId={userId}
       />
     </Box>
   );
-}
+};
+
+export default SetupPage;
