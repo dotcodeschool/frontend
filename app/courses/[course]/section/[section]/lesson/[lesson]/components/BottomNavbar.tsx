@@ -20,7 +20,7 @@ import { NavigationButtons } from "./NavigationButtons";
 
 type BottomNavbarProps = {
   courseId: string;
-  lessonId: string;
+  sectionIndex: number;
   chapterId: string;
   current: string;
   prev?: string;
@@ -30,7 +30,7 @@ type BottomNavbarProps = {
 
 const BottomNavbar = ({
   courseId,
-  lessonId,
+  sectionIndex,
   current,
   prev,
   next,
@@ -73,7 +73,7 @@ const BottomNavbar = ({
             <NavDrawerContent
               courseId={courseId}
               current={current}
-              lessonId={lessonId}
+              sectionIndex={sectionIndex}
               sections={sections}
             />
           </DrawerContent>

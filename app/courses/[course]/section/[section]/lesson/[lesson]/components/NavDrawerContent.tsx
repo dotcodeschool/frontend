@@ -8,12 +8,12 @@ const NavDrawerContent = ({
   sections,
   courseId,
   current,
-  lessonId,
+  sectionIndex,
 }: {
   sections: Section[];
   courseId: string;
   current: string;
-  lessonId: string;
+  sectionIndex: number;
 }) => (
   <DrawerBody
     px={0}
@@ -29,12 +29,12 @@ const NavDrawerContent = ({
       ":hover::-webkit-scrollbar-thumb": { background: "white.700" },
     }}
   >
-    <Accordion allowMultiple defaultIndex={[Number(lessonId) - 1]}>
+    <Accordion allowMultiple defaultIndex={[sectionIndex]}>
       {sections.map((section, index) => (
         <SectionComponent
           courseId={courseId}
           current={current}
-          isActive={index === Number(lessonId) - 1}
+          isActive={index === sectionIndex}
           key={index}
           section={{ ...section }}
           sectionIndex={index}

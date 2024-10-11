@@ -32,9 +32,9 @@ const LessonPage = async ({
         chapterId={params.lesson}
         courseId={params.course}
         current={`${params.course}/section/${params.section}/lesson/${params.lesson}`}
-        lessonId={params.lesson}
         next={lessonPageData.next}
         prev={lessonPageData.prev}
+        sectionIndex={parseInt(params.section) - 1}
         sections={lessonPageData.sections}
       />
     </Box>
