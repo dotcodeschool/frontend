@@ -42,7 +42,7 @@ type BottomNavbarProps = {
   current: string;
   prev?: string;
   next?: string;
-  sections: TypeSectionFields[];
+  // sections: TypeSectionFields[];
 };
 
 const BottomNavbar = ({
@@ -52,7 +52,7 @@ const BottomNavbar = ({
   current,
   prev,
   next,
-  sections,
+  // sections,
 }: BottomNavbarProps) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { data: session } = useSession();
@@ -182,7 +182,7 @@ const BottomNavbar = ({
               }}
             >
               <Accordion allowMultiple defaultIndex={[Number(lessonId) - 1]}>
-                {map(sections, (section, index) => (
+                {/* {map(sections, (section, index) => (
                   <SectionComponent
                     courseId={courseId}
                     current={current}
@@ -191,7 +191,7 @@ const BottomNavbar = ({
                     section={{ ...section }}
                     sectionIndex={index}
                   />
-                ))}
+                ))} */}
               </Accordion>
             </DrawerBody>
           </DrawerContent>

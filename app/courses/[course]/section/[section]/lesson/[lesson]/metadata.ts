@@ -15,7 +15,6 @@ export const generateMetadata = async ({
     courseSlug,
     QUERY_COURSE_OVERVIEW_FIELDS,
   );
-  console.log(course);
   const sectionTitle = `Section`;
   const lessonTitle = `Lesson`;
   const title = `${lessonTitle} - ${sectionTitle} - ${courseTitle} | Dot Code School`;

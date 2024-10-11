@@ -43,6 +43,9 @@ const QUERY_COURSE_INFORMATION = `
         title
         slug
         githubUrl
+        sectionsCollection {
+          total
+        }
       }
     }
   }
@@ -56,6 +59,9 @@ const QUERY_SECTION_INFORMATION = `
           items {
             title
             description
+            lessonsCollection {
+              total
+            }
           }
         }
       }
@@ -79,6 +85,7 @@ const QUERY_LESSON_INFORMATION = `
                     items {
                       url
                       fileName
+                      title
                       contentType
                     }
                   }

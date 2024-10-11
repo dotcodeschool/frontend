@@ -35,6 +35,40 @@ const constructFeedbackUrl = (
   return `${githubUrl}/issues/new?assignees=&labels=feedback&template=feedback.md&title=${encodedTitle}`;
 };
 
+const getStartingFiles = (lesson: Lesson) => {
+  const startingFiles: TypeFile[] = lesson.files?.sourceCollection
+    ? lesson.files.sourceCollection.items.map((file) => {
+        startingFiles.push({
+          fileName: file?.title ?? "",
+          code: "TODO",
+          language: file?.fileName?.split(".").pop() ?? "rust",
+        });
+      })
+    : lesson.files?.templateCollection?.items.map((file) => {
+        startingFiles.push({
+          fileName: file?.title ?? "",
+          code: "TODO",
+          language: file?.fileName?.split(".").pop() ?? "rust",
+        });
+      });
+
+  return startingFiles;
+};
+
+const getSolutionFiles = (lesson: Lesson) => {
+  const collection = lesson.files?.solutionCollection;
+  const solutionFiles: TypeFile[] | null =
+    collection && collection.items.length > 0
+      ? collection.items.map((file) => ({
+          fileName: file?.title ?? "",
+          code: "TODO",
+          language: file?.fileName?.split(".").pop() ?? "rust",
+        }))
+      : null;
+
+  return solutionFiles;
+};
+
 const LessonPage = async ({
   params,
 }: {
@@ -52,7 +86,15 @@ const LessonPage = async ({
 
   const sectionData = await getSectionData(course, sectionIndex);
 
+  console.log("section", sectionData);
+
   const lessonData = await getLessonData(course, sectionIndex, lessonIndex);
+  console.log("lesson", lessonData);
+
+  const startingFiles = getStartingFiles(lessonData);
+
+  const solution = getSolutionFiles(lessonData);
+  const readOnly = solution.length === 0;
 
   const feedbackUrl = constructFeedbackUrl(
     courseData.githubUrl ?? "https://github.com/dotcodeschool/frontend",
@@ -61,6 +103,17 @@ const LessonPage = async ({
     lesson,
     lessonData.title,
   );
+  
+  const prev =
+    lessonIndex > 0
+      ? `${course}/section/${section}/lesson/${lessonIndex}`
+      : sectionIndex > 0
+      ? `${course}/section/${sectionIndex}/lesson/${sectionData.lessonsCollection.total}`
+      : null;
+  const next =
+    lessonIndex < sectionData.lessonsCollection.total - 1
+      ? `${course}/section/${section}/lesson/${lessonIndex + 2}`
+      : sectionIndex < courseData.sectionsCollection.total - 1 ? `${course}/section/${sectionIndex + 2}/lesson/1` : null;
 
   return (
     <Box
@@ -72,7 +125,7 @@ const LessonPage = async ({
         <IconButtonFeedback url={feedbackUrl} />
         <Box display={{ base: "none", md: "block" }}>
           <EditorComponents
-            editorContent={startingFilesWithCodeAndLanguage}
+            editorContent={startingFiles}
             mdxContent={
               <MDXRemote
                 components={MDXComponents}
@@ -98,7 +151,7 @@ const LessonPage = async ({
           </GridItem>
           <GridItem colSpan={[12, 7]} overflow="clip">
             <EditorComponents
-              editorContent={startingFilesWithCodeAndLanguage}
+              editorContent={startingFiles}
               readOnly={readOnly}
               showHints={!readOnly}
               solution={solution}
@@ -113,7 +166,6 @@ const LessonPage = async ({
         lessonId={lesson}
         next={next}
         prev={prev}
-        sections={sectionsWithLessons}
       />
     </Box>
   );
