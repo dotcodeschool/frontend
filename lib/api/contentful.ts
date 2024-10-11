@@ -8,7 +8,7 @@ const getContentfulData = async <T extends QueryKey, U>(
 ): Promise<U> => {
   const data = await fetchGraphQL<T>(query, variables);
 
-  return extractData(data, operationName, path);
+  return extractData(data, operationName, path) as U;
 };
 
 const fetchGraphQL = async <T extends QueryKey>(

@@ -5,13 +5,7 @@ import {
 } from "@/app/courses/[course]/queries";
 import { CourseDetails } from "@/app/courses/[course]/types";
 import { getContentfulData } from "@/lib/api/contentful";
-import {
-  ExtractedData,
-  QueryResult,
-  Section,
-  TypeFile,
-  Lesson,
-} from "@/lib/types";
+import { Section, TypeFile, Lesson } from "@/lib/types";
 
 const getCourseData = async (courseSlug: string) =>
   await getContentfulData<"courseModuleCollection", CourseDetails>(
@@ -22,7 +16,10 @@ const getCourseData = async (courseSlug: string) =>
   );
 
 const getSectionData = async (courseSlug: string, sectionIndex: number) => {
-  const result = await getContentfulData<"courseModuleCollection", Section>(
+  const result: Section[] = await getContentfulData<
+    "courseModuleCollection",
+    Section[]
+  >(
     QUERY_SECTION_INFORMATION,
     "courseModuleCollection",
     {
@@ -40,9 +37,9 @@ const getLessonData = async (
   sectionIndex: number,
   lessonIndex: number,
 ) => {
-  const result = await getContentfulData<
+  const result: Lesson[] = await getContentfulData<
     "courseModuleCollection",
-    ExtractedData<QueryResult<"courseModuleCollection">>
+    Lesson[]
   >(
     QUERY_LESSON_INFORMATION,
     "courseModuleCollection",
@@ -106,25 +103,19 @@ const getSolutionFiles = (lesson: Lesson) => {
 
 const getNavigation = (
   course: string,
-  section: string,
-  lesson: string,
   sectionIndex: number,
   lessonIndex: number,
-  sectionData: any,
-  courseData: any,
+  sectionData: Pick<Section, "lessonsCollection">,
+  courseData: CourseDetails,
 ) => {
   const prev = getPreviousNavigation(
     course,
-    section,
-    lesson,
     sectionIndex,
     lessonIndex,
     sectionData,
   );
   const next = getNextNavigation(
     course,
-    section,
-    lesson,
     sectionIndex,
     lessonIndex,
     sectionData,
@@ -136,16 +127,20 @@ const getNavigation = (
 
 const getPreviousNavigation = (
   course: string,
-  section: string,
-  lesson: string,
   sectionIndex: number,
   lessonIndex: number,
-  sectionData: any,
+  sectionData: Pick<Section, "lessonsCollection">,
 ) => {
+  const total = sectionData.lessonsCollection?.total;
+
+  if (!total) {
+    return undefined;
+  }
+
   if (lessonIndex > 0) {
-    return `${course}/section/${section}/lesson/${lessonIndex}`;
+    return `${course}/section/${sectionIndex - 1}/lesson/${lessonIndex}`;
   } else if (sectionIndex > 0) {
-    return `${course}/section/${sectionIndex}/lesson/${sectionData.lessonsCollection.total}`;
+    return `${course}/section/${sectionIndex}/lesson/${total}`;
   }
 
   return undefined;
@@ -153,15 +148,18 @@ const getPreviousNavigation = (
 
 const getNextNavigation = (
   course: string,
-  section: string,
-  lesson: string,
   sectionIndex: number,
   lessonIndex: number,
-  sectionData: any,
-  courseData: any,
+  sectionData: Pick<Section, "lessonsCollection">,
+  courseData: CourseDetails,
 ) => {
-  if (lessonIndex < sectionData.lessonsCollection.total - 1) {
-    return `${course}/section/${section}/lesson/${lessonIndex + 2}`;
+  const total = sectionData.lessonsCollection?.total;
+  if (!total) {
+    return undefined;
+  }
+
+  if (lessonIndex < total - 1) {
+    return `${course}/section/${sectionIndex + 1}/lesson/${lessonIndex + 2}`;
   } else if (sectionIndex < (courseData.sectionsCollection?.total ?? 0) - 1) {
     return `${course}/section/${sectionIndex + 2}/lesson/1`;
   }
@@ -191,13 +189,11 @@ const getLessonPageData = async (params: {
     course,
     section,
     lesson,
-    lessonData.title,
+    lessonData.title ?? "",
   );
 
   const { prev, next } = getNavigation(
     course,
-    section,
-    lesson,
     sectionIndex,
     lessonIndex,
     sectionData,
