@@ -47,6 +47,7 @@ type CourseDetails = Pick<
   | "format"
   | "sectionsCollection"
   | "slug"
+  | "githubUrl"
 >;
 
 type CourseQuery =

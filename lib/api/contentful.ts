@@ -3,14 +3,16 @@ import { ExtractedData, Query, QueryKey, QueryResult } from "../types";
 const getContentfulData = async <T extends QueryKey, U>(
   query: string,
   operationName: T,
+  variables?: Record<string, any>,
 ): Promise<U> => {
-  const data = await fetchGraphQL(query);
+  const data = await fetchGraphQL(query, variables);
 
   return extractData(data, operationName) as U;
 };
 
 const fetchGraphQL = async <T extends QueryKey>(
   query: string,
+  variables?: Record<string, any>,
 ): Promise<Pick<Query, T>> => {
   const response = await fetch(
     `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}/environments/development`,
@@ -20,7 +22,7 @@ const fetchGraphQL = async <T extends QueryKey>(
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.CONTENTFUL_ACCESS_TOKEN}`,
       },
-      body: JSON.stringify({ query }),
+      body: JSON.stringify({ query, variables }),
       next: {
         revalidate: 3600,
       },

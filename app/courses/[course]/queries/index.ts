@@ -36,8 +36,80 @@ const QUERY_LESSONS_COLLECTION_ID_AND_TOTAL = `{
   }
 }`;
 
+const QUERY_COURSE_INFORMATION = `
+  query GetCourseInformation($courseSlug: String!) {
+    courseModuleCollection(where: { slug: $courseSlug }, limit: 1) {
+      items {
+        title
+        slug
+        githubUrl
+      }
+    }
+  }
+  `;
+
+const QUERY_SECTION_INFORMATION = `
+  query GetSectionInformation($courseSlug: String!, $sectionIndex: Int!) {
+    courseModuleCollection(where: { slug: $courseSlug }, limit: 1) {
+      items {
+        sectionsCollection(limit: 1, skip: $sectionIndex) {
+          items {
+            title
+            description
+          }
+        }
+      }
+    }
+  }
+  `;
+
+const QUERY_LESSON_INFORMATION = `
+  query GetLessonInformation($courseSlug: String!, $sectionIndex: Int!, $lessonIndex: Int!) {
+    courseModuleCollection(where: { slug: $courseSlug }, limit: 1) {
+      items {
+        sectionsCollection(limit: 1, skip: $sectionIndex) {
+          items {
+            lessonsCollection(limit: 1, skip: $lessonIndex) {
+              items {
+                title
+                slug
+                content
+                files {
+                  sourceCollection {
+                    items {
+                      url
+                      fileName
+                      contentType
+                    }
+                  }
+                  templateCollection {
+                    items {
+                      url
+                      fileName
+                      contentType
+                    }
+                  }
+                  solutionCollection {
+                    items {
+                      url
+                      fileName
+                      contentType
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }`;
+
 export {
+  QUERY_COURSE_INFORMATION,
   QUERY_COURSE_OVERVIEW_FIELDS,
   QUERY_COURSE_OVERVIEW_METADATA_FIELDS,
+  QUERY_LESSON_INFORMATION,
   QUERY_LESSONS_COLLECTION_ID_AND_TOTAL,
+  QUERY_SECTION_INFORMATION,
 };
