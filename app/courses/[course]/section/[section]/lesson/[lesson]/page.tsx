@@ -35,6 +35,7 @@ const LessonPage = async ({
         lessonId={params.lesson}
         next={lessonPageData.next}
         prev={lessonPageData.prev}
+        sections={lessonPageData.sections}
       />
     </Box>
   );

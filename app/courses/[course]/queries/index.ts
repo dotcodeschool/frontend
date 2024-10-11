@@ -36,6 +36,28 @@ const QUERY_LESSONS_COLLECTION_ID_AND_TOTAL = `{
   }
 }`;
 
+const QUERY_ALL_SECTIONS = `
+  query GetAllSections($courseSlug: String!) {
+    courseModuleCollection(where: { slug: $courseSlug }, limit: 1) {
+      items {
+        sectionsCollection {
+          items {
+            title
+            description
+            lessonsCollection {
+              items {
+                title
+                slug
+              }
+              total
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 const QUERY_COURSE_INFORMATION = `
   query GetCourseInformation($courseSlug: String!) {
     courseModuleCollection(where: { slug: $courseSlug }, limit: 1) {
@@ -113,6 +135,7 @@ const QUERY_LESSON_INFORMATION = `
   }`;
 
 export {
+  QUERY_ALL_SECTIONS,
   QUERY_COURSE_INFORMATION,
   QUERY_COURSE_OVERVIEW_FIELDS,
   QUERY_COURSE_OVERVIEW_METADATA_FIELDS,

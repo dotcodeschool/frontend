@@ -1,4 +1,5 @@
 import {
+  QUERY_ALL_SECTIONS,
   QUERY_COURSE_INFORMATION,
   QUERY_LESSON_INFORMATION,
   QUERY_SECTION_INFORMATION,
@@ -30,6 +31,17 @@ const getSectionData = async (courseSlug: string, sectionIndex: number) => {
   );
 
   return result[0];
+};
+
+const getAllSections = async (courseSlug: string) => {
+  const result = await getContentfulData<"courseModuleCollection", Section[]>(
+    QUERY_ALL_SECTIONS,
+    "courseModuleCollection",
+    { courseSlug },
+    "items.0.sectionsCollection.items",
+  );
+
+  return result;
 };
 
 const getLessonData = async (
@@ -200,6 +212,8 @@ const getLessonPageData = async (params: {
     courseData,
   );
 
+  const allSections = await getAllSections(course);
+
   return {
     lessonData,
     startingFiles,
@@ -208,6 +222,7 @@ const getLessonPageData = async (params: {
     feedbackUrl,
     prev,
     next,
+    sections: allSections,
   };
 };
 

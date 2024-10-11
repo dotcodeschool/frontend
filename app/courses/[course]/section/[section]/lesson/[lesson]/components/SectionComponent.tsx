@@ -9,6 +9,8 @@ import {
 } from "@chakra-ui/react";
 import { MdCode, MdNumbers } from "react-icons/md";
 
+import { Lesson, Section } from "@/lib/types";
+
 import { LessonLink } from "./LessonLink";
 
 type SectionProps = {
@@ -36,13 +38,23 @@ const getIconProps = (isActive: boolean) => ({
 const SectionComponent = ({
   courseId,
   sectionIndex,
-  section: { title, lessons },
+  section: { title, lessonsCollection },
   current,
   isActive,
 }: SectionProps) => {
-  const lessonsArray = lessons.map(
-    ({ fields }: { fields: TypeLessonFields }) => fields,
-  );
+  if (!title) {
+    console.error("Section title is missing", sectionIndex, title);
+
+    return null;
+  }
+
+  if (!lessonsCollection?.items) {
+    return null;
+  }
+
+  const lessonsArray: string[] = lessonsCollection.items
+    .filter((item): item is Lesson => item !== null)
+    .map(({ title }) => title ?? "");
 
   const buttonStyles = getButtonStyles(isActive);
   const iconProps = getIconProps(isActive);
@@ -51,21 +63,16 @@ const SectionComponent = ({
     <AccordionItem border="none">
       <AccordionButton {...buttonStyles} py={4}>
         <Icon {...iconProps} />
-        <Tooltip
-          aria-label={title.toString()}
-          hasArrow
-          label={title.toString()}
-          openDelay={750}
-        >
+        <Tooltip aria-label={title} hasArrow label={title} openDelay={750}>
           <Text flex={1} isTruncated pl={2} textAlign="left">
-            {title.toString()}
+            {title}
           </Text>
         </Tooltip>
         <AccordionIcon />
       </AccordionButton>
       <AccordionPanel px={0}>
         {lessonsArray.map((lesson, index) => {
-          const slug = `${courseId}/lesson/${Number(sectionIndex + 1)}/chapter/${Number(index + 1)}`;
+          const slug = `${courseId}/section/${Number(sectionIndex + 1)}/lesson/${Number(index + 1)}`;
 
           return (
             <LessonLink
