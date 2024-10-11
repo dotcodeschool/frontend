@@ -80,35 +80,36 @@ const constructFeedbackUrl = (
 };
 
 const getStartingFiles = (lesson: Lesson) => {
-  const startingFiles: TypeFile[] = lesson.files?.sourceCollection
-    ? lesson.files.sourceCollection.items.map((file) => {
-        startingFiles.push({
-          fileName: file?.title ?? "",
-          code: "TODO",
-          language: file?.fileName?.split(".").pop() ?? "rust",
-        });
-      })
-    : lesson.files?.templateCollection?.items.map((file) => {
-        startingFiles.push({
-          fileName: file?.title ?? "",
-          code: "TODO",
-          language: file?.fileName?.split(".").pop() ?? "rust",
-        });
-      });
+  let startingFiles: TypeFile[] = [];
+
+  if (lesson.files?.sourceCollection) {
+    startingFiles = lesson.files.sourceCollection.items.map((file) => ({
+      fileName: file?.title ?? "",
+      code: "TODO",
+      language: file?.fileName?.split(".").pop() ?? "rust",
+    }));
+  } else if (lesson.files?.templateCollection) {
+    startingFiles = lesson.files.templateCollection.items.map((file) => ({
+      fileName: file?.title ?? "",
+      code: "TODO",
+      language: file?.fileName?.split(".").pop() ?? "rust",
+    }));
+  }
 
   return startingFiles;
 };
 
 const getSolutionFiles = (lesson: Lesson) => {
   const collection = lesson.files?.solutionCollection;
-  const solutionFiles: TypeFile[] =
-    collection && collection.items.length > 0
-      ? collection.items.map((file) => ({
-          fileName: file?.title ?? "",
-          code: "TODO",
-          language: file?.fileName?.split(".").pop() ?? "rust",
-        }))
-      : [];
+  let solutionFiles: TypeFile[] = [];
+
+  if (collection && collection.items.length > 0) {
+    solutionFiles = collection.items.map((file) => ({
+      fileName: file?.title ?? "",
+      code: "TODO",
+      language: file?.fileName?.split(".").pop() ?? "rust",
+    }));
+  }
 
   return solutionFiles;
 };
