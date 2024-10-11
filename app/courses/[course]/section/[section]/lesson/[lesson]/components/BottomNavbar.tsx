@@ -66,8 +66,6 @@ const BottomNavbar = ({
     setIsDrawerOpen(false);
   };
 
-  console.log(sections);
-
   // const progressData = useProgress();
   // const saveProgress = useCallback(progressData.saveProgress, []);
 

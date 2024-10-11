@@ -113,18 +113,20 @@ const getSolutionFiles = (lesson: Lesson) => {
   return solutionFiles;
 };
 
-const getNavigation = (
+const getNavigation = async (
   course: string,
   sectionIndex: number,
   lessonIndex: number,
   sectionData: Pick<Section, "lessonsCollection">,
   courseData: CourseDetails,
 ) => {
+  const previousSectionData = await getSectionData(course, sectionIndex - 1);
   const prev = getPreviousNavigation(
     course,
     sectionIndex,
     lessonIndex,
     sectionData,
+    previousSectionData,
   );
   const next = getNextNavigation(
     course,
@@ -142,6 +144,7 @@ const getPreviousNavigation = (
   sectionIndex: number,
   lessonIndex: number,
   sectionData: Pick<Section, "lessonsCollection">,
+  previousSectionData?: Pick<Section, "lessonsCollection">,
 ) => {
   const total = sectionData.lessonsCollection?.total;
 
@@ -150,9 +153,12 @@ const getPreviousNavigation = (
   }
 
   if (lessonIndex > 0) {
-    return `${course}/section/${sectionIndex - 1}/lesson/${lessonIndex}`;
+    return `${course}/section/${sectionIndex + 1}/lesson/${lessonIndex}`;
   } else if (sectionIndex > 0) {
-    return `${course}/section/${sectionIndex}/lesson/${total}`;
+    const prevTotal = previousSectionData?.lessonsCollection?.total;
+    const previousSectionTotal = prevTotal ?? 0;
+
+    return `${course}/section/${sectionIndex}/lesson/${previousSectionTotal}`;
   }
 
   return undefined;
@@ -204,7 +210,7 @@ const getLessonPageData = async (params: {
     lessonData.title ?? "",
   );
 
-  const { prev, next } = getNavigation(
+  const { prev, next } = await getNavigation(
     course,
     sectionIndex,
     lessonIndex,
