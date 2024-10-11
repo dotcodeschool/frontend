@@ -34,6 +34,7 @@ import { MdCode, MdNumbers } from "react-icons/md";
 
 import { useProgress } from "@/lib/hooks";
 import { Section } from "@/lib/types";
+
 import { SectionComponent } from "./SectionComponent";
 
 type BottomNavbarProps = {

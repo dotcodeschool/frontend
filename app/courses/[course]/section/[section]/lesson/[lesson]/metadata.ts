@@ -1,8 +1,6 @@
-// TODO: Update with new utils
-
-import { getCourseDetails } from "@/app/courses/[course]/helpers";
-import { QUERY_COURSE_OVERVIEW_FIELDS } from "@/app/courses/[course]/queries";
 import { slugToTitle } from "@/lib/utils";
+
+import { getLessonData, getSectionData } from "./helpers";
 
 export const generateMetadata = async ({
   params,
@@ -10,17 +8,18 @@ export const generateMetadata = async ({
   params: { course: string; section: string; lesson: string };
 }) => {
   const { course: courseSlug, section, lesson } = params;
-  const courseTitle = slugToTitle(courseSlug);
-  const course = await getCourseDetails(
+  const sectionData = await getSectionData(courseSlug, parseInt(section) - 1);
+  const lessonData = await getLessonData(
     courseSlug,
-    QUERY_COURSE_OVERVIEW_FIELDS,
+    parseInt(section) - 1,
+    parseInt(lesson) - 1,
   );
-  const sectionTitle = `Section`;
-  const lessonTitle = `Lesson`;
+
+  const courseTitle = slugToTitle(courseSlug);
+  const sectionTitle = sectionData.title;
+  const lessonTitle = lessonData.title;
   const title = `${lessonTitle} - ${sectionTitle} - ${courseTitle} | Dot Code School`;
-  const description = course?.sectionsCollection?.items
-    .find((value) => value?.description)
-    ?.toString();
+  const description = sectionData.description;
 
   return {
     title,

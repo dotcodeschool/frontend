@@ -18,7 +18,7 @@ const DesktopView = ({
       mdxContent={
         <MDXRemote
           components={MDXComponents}
-          source={lessonPageData.lessonData.content || ""}
+          source={lessonPageData.lessonData.content ?? ""}
         />
       }
       readOnly={lessonPageData.readOnly}

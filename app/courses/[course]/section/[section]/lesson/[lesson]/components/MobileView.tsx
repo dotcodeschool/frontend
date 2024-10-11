@@ -21,7 +21,7 @@ const MobileView = ({
     <GridItem colSpan={[12, 5]} overflowY="auto" pt={4} px={6}>
       <MDXRemote
         components={MDXComponents}
-        source={lessonPageData.lessonData.content || ""}
+        source={lessonPageData.lessonData.content ?? ""}
       />
     </GridItem>
     <GridItem colSpan={[12, 7]} overflow="clip">
