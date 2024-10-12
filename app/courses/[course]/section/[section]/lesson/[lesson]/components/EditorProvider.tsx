@@ -99,11 +99,13 @@ export const EditorProvider = ({
         const fileClean = stripAndClean(file.code);
         const doFilesMatch = solutionClean === fileClean;
 
-        setIncorrectFiles((prev) =>
-          doFilesMatch
-            ? prev.filter((f) => f.fileName !== file.fileName)
-            : [...prev, file],
-        );
+        setIncorrectFiles((prev) => {
+          if (doFilesMatch) {
+            return prev.filter((f) => f.fileName !== file.fileName);
+          }
+
+          return [...prev, file];
+        });
 
         return doFilesMatch && acc;
       },
