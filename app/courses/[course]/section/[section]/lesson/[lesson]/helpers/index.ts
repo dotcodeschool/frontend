@@ -73,7 +73,7 @@ const constructFeedbackUrl = (
   lessonTitle: string,
 ) => {
   const encodedTitle = encodeURIComponent(`
-    Dot Code School Suggestion: Feedback for Section ${section} - Lesson ${lesson}: ${lessonTitle}`);
+Dot Code School Suggestion: Feedback for Section ${section} - Lesson ${lesson}: ${lessonTitle}`);
 
   return `${githubUrl}/issues/new?assignees=&labels=feedback&template=feedback.md&title=${encodedTitle}`;
 };

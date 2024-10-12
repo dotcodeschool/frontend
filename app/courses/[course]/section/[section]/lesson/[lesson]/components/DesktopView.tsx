@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import { MDXRemote } from "next-mdx-remote/rsc";
 
-import { MDXComponents } from "@/components";
+import { MDXComponents, Navbar } from "@/components";
 
 import { getLessonPageData } from "../helpers";
 
@@ -13,6 +13,11 @@ const DesktopView = ({
   lessonPageData: Awaited<ReturnType<typeof getLessonPageData>>;
 }) => (
   <Box display={{ base: "none", md: "block" }}>
+    <Navbar
+      cta={false}
+      feedbackUrl={lessonPageData.feedbackUrl}
+      isLessonInterface={true}
+    />
     <EditorComponents
       editorContent={lessonPageData.startingFiles}
       mdxContent={
