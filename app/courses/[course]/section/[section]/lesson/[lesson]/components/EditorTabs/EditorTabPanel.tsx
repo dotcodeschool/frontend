@@ -22,7 +22,84 @@ type EditorTabPanelProps = {
   toggleAnswer: () => void;
 };
 
-export const EditorTabPanel = ({
+const getCodeWithoutComments = (showHints: boolean, code: string) =>
+  showHints ? stripComments(code) : "";
+
+const getSolutionCode = (
+  solution: TypeFile[],
+  fileName: string,
+  defaultCode: string,
+) => find(solution, (file) => file.fileName === fileName)?.code ?? defaultCode;
+
+type RenderEditorProps = {
+  file: TypeFile;
+  index: number;
+  isAnswerOpen: boolean;
+  readOnly: boolean;
+  editorContent: TypeFile[];
+  setEditorContent: React.Dispatch<React.SetStateAction<TypeFile[]>>;
+};
+const renderEditor = ({
+  file,
+  index,
+  isAnswerOpen,
+  readOnly,
+  editorContent,
+  setEditorContent,
+}: RenderEditorProps) => (
+  <Editor
+    defaultLanguage={file.language || "rust"}
+    defaultValue={file.code || "// placeholder"}
+    height={isAnswerOpen ? "0%" : "100%"}
+    key={index + file.fileName}
+    onChange={(value) => {
+      const newEditorContent = [...editorContent];
+      newEditorContent[index].code = value?.toString() ?? "";
+      setEditorContent(newEditorContent);
+    }}
+    options={{ readOnly: readOnly || file.language === "diff" }}
+    theme="vs-dark"
+    value={file.code}
+  />
+);
+
+const renderDiffEditor = (userCode: string, solutionCode: string) => (
+  <DiffEditor
+    height="100%"
+    modified={solutionCode}
+    options={{ readOnly: true }}
+    original={userCode}
+    theme="vs-dark"
+  />
+);
+
+const renderHintsPanel = (
+  isAnswerOpen: boolean,
+  doesAnswerMatch: boolean,
+  compareAnswerAndUpdateState: () => void,
+  toggleAnswer: () => void,
+) => (
+  <HStack alignItems="center" bg="#2e2e2e" p={2} w="full">
+    <Button
+      leftIcon={<Icon as={isAnswerOpen ? IoEyeOffOutline : MdCompareArrows} />}
+      onClick={() => {
+        compareAnswerAndUpdateState();
+        toggleAnswer();
+      }}
+      variant="outline"
+    >
+      {isAnswerOpen ? "Hide" : "Compare"} Answer
+    </Button>
+    {isAnswerOpen && doesAnswerMatch ? (
+      <HStack>
+        <Icon as={IoCheckmarkDone} color="green.300" />
+        <Text color="green.300">Your solution matches ours</Text>
+      </HStack>
+    ) : null}
+  </HStack>
+);
+
+export const EditorTabPanel: React.FC<EditorTabPanelProps> = ({
   file,
   index,
   showHints,
@@ -34,68 +111,37 @@ export const EditorTabPanel = ({
   doesAnswerMatch,
   compareAnswerAndUpdateState,
   toggleAnswer,
-}: EditorTabPanelProps) => {
-  const userCodeWithoutComments = showHints
-    ? stripComments(editorContent[index]?.code)
-    : "";
-  const solutionWithoutComments = showHints
-    ? stripComments(
-        find(
-          solution,
-          ({ fileName }) => fileName === editorContent[index].fileName,
-        )?.code ??
-          editorContent[index]?.code ??
-          "",
-      )
-    : "";
+}) => {
+  const parsedCode = getCodeWithoutComments(
+    showHints,
+    editorContent[index]?.code || "",
+  );
+  const solutionCode = getSolutionCode(
+    solution,
+    editorContent[index].fileName,
+    editorContent[index]?.code || "",
+  );
+  const parsedSolution = getCodeWithoutComments(showHints, solutionCode);
 
   return (
     <TabPanel h="full" p={0} pb={0}>
-      <Editor
-        defaultLanguage={file.language ?? "rust"}
-        defaultValue={file.code ?? "// placeholder"}
-        height={isAnswerOpen ? "0%" : "100%"}
-        key={index + file.fileName}
-        onChange={(value) => {
-          const newEditorContent = [...editorContent];
-          newEditorContent[index].code = value?.toString() ?? "";
-          setEditorContent(newEditorContent);
-        }}
-        options={{ readOnly: readOnly || file.language === "diff" }}
-        theme="vs-dark"
-        value={file.code}
-      />
-      {isAnswerOpen ? (
-        <DiffEditor
-          height="100%"
-          modified={solutionWithoutComments}
-          options={{ readOnly: true }}
-          original={userCodeWithoutComments}
-          theme="vs-dark"
-        />
-      ) : null}
-      {showHints ? (
-        <HStack alignItems="center" bg="#2e2e2e" p={2} w="full">
-          <Button
-            leftIcon={
-              <Icon as={isAnswerOpen ? IoEyeOffOutline : MdCompareArrows} />
-            }
-            onClick={() => {
-              compareAnswerAndUpdateState();
-              toggleAnswer();
-            }}
-            variant="outline"
-          >
-            {isAnswerOpen ? "Hide" : "Compare"} Answer
-          </Button>
-          {doesAnswerMatch && isAnswerOpen ? (
-            <HStack>
-              <Icon as={IoCheckmarkDone} color="green.300" />
-              <Text color="green.300">Your solution matches ours</Text>
-            </HStack>
-          ) : null}
-        </HStack>
-      ) : null}
+      {renderEditor({
+        file,
+        index,
+        isAnswerOpen,
+        readOnly,
+        editorContent,
+        setEditorContent,
+      })}
+      {isAnswerOpen ? renderDiffEditor(parsedCode, parsedSolution) : null}
+      {showHints
+        ? renderHintsPanel(
+            isAnswerOpen,
+            doesAnswerMatch,
+            compareAnswerAndUpdateState,
+            toggleAnswer,
+          )
+        : null}
     </TabPanel>
   );
 };
