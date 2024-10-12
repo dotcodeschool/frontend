@@ -7,7 +7,7 @@ import { EditorTabList } from "./EditorTabList";
 import { EditorTabPanels } from "./EditorTabPanels";
 import { useEditorTabs } from "./hooks/useEditorTabs";
 
-type EditorTabsProps = {
+export type EditorTabsProps = {
   showHints: boolean;
   readOnly: boolean;
   isOpen: boolean;
@@ -20,8 +20,13 @@ export const EditorTabsComponent = ({
   isOpen,
   handleFullscreenToggle,
 }: EditorTabsProps) => {
-  const { tabIndex, handleTabsChange, editorContent, ...editorProps } =
-    useEditorTabs();
+  const {
+    tabIndex,
+    handleTabsChange,
+    editorContent,
+    showDiff,
+    ...editorProps
+  } = useEditorTabs();
 
   return (
     <Tabs
@@ -36,6 +41,7 @@ export const EditorTabsComponent = ({
         editorContent={editorContent}
         handleFullscreenToggle={handleFullscreenToggle}
         isOpen={isOpen}
+        showDiff={showDiff}
         {...editorProps}
       />
       <EditorTabPanels
