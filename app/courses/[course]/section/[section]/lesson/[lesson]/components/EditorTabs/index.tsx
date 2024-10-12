@@ -11,7 +11,7 @@ export type EditorTabsProps = {
   showHints: boolean;
   readOnly: boolean;
   isOpen: boolean;
-  handleFullscreenToggle: () => void;
+  handleFullscreenToggle: (e: React.MouseEvent) => void;
 };
 
 export const EditorTabsComponent = ({

@@ -1,160 +1,17 @@
 "use client";
 
 import { Box, Flex } from "@chakra-ui/react";
-import { find, reduce } from "lodash";
 import dynamic from "next/dynamic";
-import { createContext, useContext, useState } from "react";
-import stripComments from "strip-comments";
+import { useState } from "react";
 
 import { TypeFile } from "@/lib/types";
 
+import { EditorProvider } from "./EditorProvider";
 import { FullscreenEditorModal } from "./FullscreenEditorModal";
 
 import { EditorTabs } from ".";
 
 const SplitPane = dynamic(() => import("react-split-pane"), { ssr: false });
-
-const EditorContext = createContext<EditorContextType | null>(null);
-
-type EditorProviderProps = {
-  children: React.ReactNode;
-  initialContent: TypeFile[];
-  initialTabIndex?: number;
-  initialShowDiff?: boolean;
-  initialDoesAnswerMatch?: boolean;
-  initialIsAnswerOpen?: boolean;
-  solution: TypeFile[];
-};
-
-type EditorContextType = {
-  compareAnswerAndUpdateState: () => void;
-  doesAnswerMatch: boolean;
-  incorrectFiles: TypeFile[];
-  isAnswerOpen: boolean;
-  tabIndex: number;
-  setTabIndex: React.Dispatch<React.SetStateAction<number>>;
-  solution: TypeFile[];
-  showDiff: boolean;
-  setShowDiff: React.Dispatch<React.SetStateAction<boolean>>;
-  editorContent: TypeFile[];
-  setEditorContent: React.Dispatch<React.SetStateAction<TypeFile[]>>;
-  toggleAnswer: () => void;
-  toggleDiff: () => void;
-};
-
-export const EditorProvider = ({
-  children,
-  initialContent,
-  initialTabIndex = 0,
-  initialShowDiff = false,
-  initialDoesAnswerMatch = false,
-  initialIsAnswerOpen = false,
-  solution,
-}: EditorProviderProps) => {
-  const [tabIndex, setTabIndex] = useState(initialTabIndex);
-  const [showDiff, setShowDiff] = useState(initialShowDiff);
-  const [doesAnswerMatch, setDoesAnswerMatch] = useState(
-    initialDoesAnswerMatch,
-  );
-  const [isAnswerOpen, setIsAnswerOpen] = useState(initialIsAnswerOpen);
-  const [incorrectFiles, setIncorrectFiles] = useState<TypeFile[]>([]);
-  const [editorContent, setEditorContent] =
-    useState<TypeFile[]>(initialContent);
-
-  const toggleAnswer = () => {
-    setIsAnswerOpen((prevIsAnswerOpen) => !prevIsAnswerOpen);
-  };
-
-  const toggleDiff = () => {
-    setShowDiff((prevShowDiff) => {
-      const newShowDiff = !prevShowDiff;
-
-      if (newShowDiff) {
-        const diffIndex = editorContent.length - 1;
-        if (diffIndex !== -1) {
-          setTabIndex(diffIndex);
-        }
-      } else if (tabIndex === editorContent.length - 1) {
-        const lastNonDiffIndex = editorContent.length - 2;
-        if (lastNonDiffIndex !== -1) {
-          setTabIndex(lastNonDiffIndex);
-        }
-      }
-
-      return newShowDiff;
-    });
-  };
-
-  const compareAnswerAndUpdateState = () => {
-    const doesAnswerMatch = reduce(
-      editorContent,
-      (acc, file) => {
-        const solutionFile = find(
-          solution,
-          (solutionFile: TypeFile) => solutionFile.fileName === file.fileName,
-        );
-
-        if (!solutionFile) {
-          return true && acc;
-        }
-        const solutionCodeWithoutComments = stripComments(solutionFile.code);
-        const solutionCodeWithoutCommentsAndWhitespace =
-          solutionCodeWithoutComments.replace(/\s/g, "");
-        const fileCodeWithoutComments = stripComments(file.code);
-        const fileCodeWithoutCommentsAndWhitespace =
-          fileCodeWithoutComments.replace(/\s/g, "");
-        const doFilesMatch =
-          solutionCodeWithoutCommentsAndWhitespace ===
-          fileCodeWithoutCommentsAndWhitespace;
-        if (!doFilesMatch) {
-          setIncorrectFiles((prevIncorrectFiles) => [
-            ...prevIncorrectFiles,
-            file,
-          ]);
-        } else {
-          setIncorrectFiles((prevIncorrectFiles) =>
-            prevIncorrectFiles.filter(
-              (incorrectFile) => incorrectFile.fileName !== file.fileName,
-            ),
-          );
-        }
-
-        return doFilesMatch && acc;
-      },
-      true,
-    );
-    setDoesAnswerMatch(doesAnswerMatch);
-  };
-
-  const value: EditorContextType = {
-    compareAnswerAndUpdateState,
-    doesAnswerMatch,
-    incorrectFiles,
-    isAnswerOpen,
-    tabIndex,
-    setTabIndex,
-    solution,
-    showDiff,
-    setShowDiff,
-    editorContent,
-    setEditorContent,
-    toggleAnswer,
-    toggleDiff,
-  };
-
-  return (
-    <EditorContext.Provider value={value}>{children}</EditorContext.Provider>
-  );
-};
-
-export const useEditor = (): EditorContextType => {
-  const context = useContext(EditorContext);
-  if (context === null) {
-    throw new Error("useEditor must be used within an EditorProvider");
-  }
-
-  return context;
-};
 
 export const EditorComponents = ({
   showHints,
@@ -187,7 +44,7 @@ export const EditorComponents = ({
 
   const editorProps = {
     showHints,
-    readOnly,
+    readOnly: readOnly ?? false,
     editorContent,
     isOpen,
     handleFullscreenToggle,

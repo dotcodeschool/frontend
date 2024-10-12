@@ -1,7 +1,7 @@
 import { useToast } from "@chakra-ui/react";
 import { useCallback, useEffect, useRef } from "react";
 
-import { useEditor } from "../../EditorComponents";
+import { useEditor } from "../../EditorProvider";
 
 export const useEditorTabs = () => {
   const editorContext = useEditor();
