@@ -25,6 +25,7 @@ const lessonNavStyle: FlexProps = {
   borderBottomColor: "gray.700",
   position: "sticky" as const,
   top: 0,
+  paddingX: 4,
 };
 
 const Navbar = ({
