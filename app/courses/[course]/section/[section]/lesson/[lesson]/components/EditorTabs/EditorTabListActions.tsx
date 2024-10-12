@@ -4,7 +4,22 @@ import React from "react";
 import { FiMaximize2, FiMinimize2 } from "react-icons/fi";
 import { IoGitCompareOutline } from "react-icons/io5";
 
-export const EditorTabListActions = ({
+import { TypeFile } from "@/lib/types";
+
+const getFullscreenLabel = (isOpen: boolean) =>
+  isOpen ? "Exit Fullscreen Code Editor" : "Enter Fullscreen Code Editor";
+
+const getFullscreenIcon = (isOpen: boolean) =>
+  isOpen ? <FiMinimize2 size={18} /> : <FiMaximize2 size={18} />;
+
+export const EditorTabListActions: React.FC<{
+  editorContent: TypeFile[];
+  isOpen: boolean;
+  handleFullscreenToggle: () => void;
+  showDiff: boolean;
+  toggleDiff: () => void;
+  isUserInteraction: React.MutableRefObject<boolean>;
+}> = ({
   editorContent,
   isOpen,
   handleFullscreenToggle,
@@ -37,20 +52,14 @@ export const EditorTabListActions = ({
     </Tooltip>
     <Tooltip
       hasArrow
-      label={
-        isOpen ? "Exit Fullscreen Code Editor" : "Enter Fullscreen Code Editor"
-      }
+      label={getFullscreenLabel(isOpen)}
       maxW={32}
       textAlign="center"
     >
       <IconButton
-        aria-label={
-          isOpen
-            ? "Exit Fullscreen Code Editor"
-            : "Enter Fullscreen Code Editor"
-        }
+        aria-label={getFullscreenLabel(isOpen)}
         bg="none"
-        icon={isOpen ? <FiMinimize2 size={18} /> : <FiMaximize2 size={18} />}
+        icon={getFullscreenIcon(isOpen)}
         onClick={handleFullscreenToggle}
         p={0}
         size="sm"
