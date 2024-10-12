@@ -123,6 +123,16 @@ export const EditorTabPanel: React.FC<EditorTabPanelProps> = ({
   );
   const parsedSolution = getCodeWithoutComments(showHints, solutionCode);
 
+  let hintsPanel = null;
+  if (showHints) {
+    hintsPanel = renderHintsPanel(
+      isAnswerOpen,
+      doesAnswerMatch,
+      compareAnswerAndUpdateState,
+      toggleAnswer,
+    );
+  }
+
   return (
     <TabPanel h="full" p={0} pb={0}>
       {renderEditor({
@@ -134,14 +144,7 @@ export const EditorTabPanel: React.FC<EditorTabPanelProps> = ({
         setEditorContent,
       })}
       {isAnswerOpen ? renderDiffEditor(parsedCode, parsedSolution) : null}
-      {showHints
-        ? renderHintsPanel(
-            isAnswerOpen,
-            doesAnswerMatch,
-            compareAnswerAndUpdateState,
-            toggleAnswer,
-          )
-        : null}
+      {hintsPanel}
     </TabPanel>
   );
 };
