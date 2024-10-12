@@ -28,7 +28,9 @@ import {
 import { MdCompareArrows } from "react-icons/md";
 import stripComments from "strip-comments";
 
-import { useEditor } from "./EditorComponents";
+import { useEditor } from "../EditorComponents";
+
+import { useEditorTabs } from "./hooks/useEditorTabs";
 
 export type EditorTabsProps = {
   showHints: boolean;
@@ -44,61 +46,20 @@ const EditorTabsComponent = ({
   handleFullscreenToggle,
 }: EditorTabsProps) => {
   const {
-    compareAnswerAndUpdateState,
-    doesAnswerMatch,
-    incorrectFiles,
-    isAnswerOpen,
     tabIndex,
-    setTabIndex,
-    solution,
+    handleTabsChange,
     editorContent,
-    setEditorContent,
+    incorrectFiles,
     showDiff,
-    toggleAnswer,
+    isAnswerOpen,
+    handleTabClick,
+    isUserInteraction,
     toggleDiff,
-  } = useEditor();
-  const isUserInteraction = useRef(false);
-
-  const toast = useToast();
-
-  const handleTabsChange = useCallback(
-    (index: number) => {
-      if (isUserInteraction.current) {
-        setTabIndex(index);
-      }
-      isUserInteraction.current = false;
-    },
-    [setTabIndex],
-  );
-
-  const handleTabClick = useCallback(() => {
-    isUserInteraction.current = true;
-  }, []);
-
-  useEffect(() => {
-    if (isAnswerOpen) {
-      toast.closeAll();
-      if (doesAnswerMatch) {
-        toast({
-          title: "Your solution matches ours",
-          description:
-            "Great job! Your solution matches ours. You can now move on to the next step.",
-          status: "success",
-          duration: 9000,
-          isClosable: true,
-        });
-      } else {
-        toast({
-          title: "Your solution doesn't match ours",
-          description:
-            "This doesn't mean you're wrong! We just might have different ways of solving the problem.",
-          status: "warning",
-          duration: 9000,
-          isClosable: true,
-        });
-      }
-    }
-  }, [doesAnswerMatch, isAnswerOpen, toast]);
+    solution,
+    doesAnswerMatch,
+    compareAnswerAndUpdateState,
+    toggleAnswer,
+  } = useEditorTabs();
 
   return (
     <Tabs

@@ -31,6 +31,9 @@ importers:
       "@monaco-editor/react":
         specifier: ^4.6.0
         version: 4.6.0(monaco-editor@0.51.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      "@types/lodash":
+        specifier: ^4.17.7
+        version: 4.17.7
       "@vercel/speed-insights":
         specifier: ^1.0.12
         version: 1.0.12(next@14.2.7(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
@@ -40,6 +43,9 @@ importers:
       framer-motion:
         specifier: ^10.16.12
         version: 10.18.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      lodash:
+        specifier: ^4.17.21
+        version: 4.17.21
       lottie-react:
         specifier: ^2.4.0
         version: 2.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -110,9 +116,6 @@ importers:
       "@stylistic/eslint-plugin-ts":
         specifier: ^2.8.0
         version: 2.8.0(eslint@8.57.0)(typescript@5.5.4)
-      "@types/lodash":
-        specifier: ^4.17.7
-        version: 4.17.7
       "@types/mdx":
         specifier: ^2.0.13
         version: 2.0.13
@@ -191,9 +194,6 @@ importers:
       lint-staged:
         specifier: ^15.2.10
         version: 15.2.10
-      lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
       prettier:
         specifier: ^3.3.2
         version: 3.3.3
