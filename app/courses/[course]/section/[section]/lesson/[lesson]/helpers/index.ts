@@ -6,7 +6,7 @@ import {
 } from "@/app/courses/[course]/queries";
 import { CourseDetails } from "@/app/courses/[course]/types";
 import { getContentfulData } from "@/lib/api/contentful";
-import { Section, TypeFile, Lesson } from "@/lib/types";
+import { Section, TypeFile, Lesson, Asset, Maybe } from "@/lib/types";
 
 const getCourseData = async (courseSlug: string) =>
   await getContentfulData<"courseModuleCollection", CourseDetails>(
@@ -68,7 +68,6 @@ const getLessonData = async (
 
 const constructFeedbackUrl = (
   githubUrl: string,
-  course: string,
   section: string,
   lesson: string,
   lessonTitle: string,
@@ -79,36 +78,64 @@ const constructFeedbackUrl = (
   return `${githubUrl}/issues/new?assignees=&labels=feedback&template=feedback.md&title=${encodedTitle}`;
 };
 
-const getStartingFiles = (lesson: Lesson) => {
-  let startingFiles: TypeFile[] = [];
+const getLanguage = (fileName: Maybe<string>) => {
+  switch (fileName?.split(".").pop()) {
+    case "rs":
+      return "rust";
 
-  if (lesson.files?.sourceCollection) {
-    startingFiles = lesson.files.sourceCollection.items.map((file) => ({
-      fileName: file?.title ?? "",
-      code: "TODO",
-      language: file?.fileName?.split(".").pop() ?? "rust",
-    }));
-  } else if (lesson.files?.templateCollection) {
-    startingFiles = lesson.files.templateCollection.items.map((file) => ({
-      fileName: file?.title ?? "",
-      code: "TODO",
-      language: file?.fileName?.split(".").pop() ?? "rust",
-    }));
+    case "toml":
+      return "rust";
+
+    default:
+      return fileName?.split(".").pop() ?? "plaintext";
+  }
+};
+
+const fetchFile = async (file: Maybe<Asset>) => {
+  if (!file) {
+    throw new Error("File not found");
+  }
+  const { url, fileName } = file;
+
+  if (!url || !fileName) {
+    throw new Error("File not found");
+  }
+  const language = getLanguage(fileName);
+
+  const response = await fetch(url);
+  const code = await response.text();
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return {
+    fileName,
+    code,
+    language,
+  };
+};
+
+const getStartingFiles = async (lesson: Lesson) => {
+  let startingFiles: TypeFile[] = [];
+  const source = lesson.files?.sourceCollection;
+  const template = lesson.files?.templateCollection;
+
+  if (source && source.items.length > 0) {
+    startingFiles = await Promise.all(source.items.map(fetchFile));
+  } else if (template && template.items.length > 0) {
+    startingFiles = await Promise.all(template.items.map(fetchFile));
   }
 
   return startingFiles;
 };
 
-const getSolutionFiles = (lesson: Lesson) => {
+const getSolutionFiles = async (lesson: Lesson) => {
   const collection = lesson.files?.solutionCollection;
   let solutionFiles: TypeFile[] = [];
 
   if (collection && collection.items.length > 0) {
-    solutionFiles = collection.items.map((file) => ({
-      fileName: file?.title ?? "",
-      code: "TODO",
-      language: file?.fileName?.split(".").pop() ?? "rust",
-    }));
+    solutionFiles = await Promise.all(collection.items.map(fetchFile));
   }
 
   return solutionFiles;
@@ -199,13 +226,12 @@ const getLessonPageData = async (params: {
   const sectionData = await getSectionData(course, sectionIndex);
   const lessonData = await getLessonData(course, sectionIndex, lessonIndex);
 
-  const startingFiles = getStartingFiles(lessonData);
-  const solution = getSolutionFiles(lessonData);
+  const startingFiles = await getStartingFiles(lessonData);
+  const solution = await getSolutionFiles(lessonData);
   const readOnly = solution.length === 0;
 
   const feedbackUrl = constructFeedbackUrl(
     courseData.githubUrl ?? "https://github.com/dotcodeschool/frontend",
-    course,
     section,
     lesson,
     lessonData.title ?? "",
