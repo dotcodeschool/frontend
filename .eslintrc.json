@@ -197,7 +197,7 @@
     "max-len": [
       "warn",
       {
-        "code": 50,
+        "code": 80,
         "tabWidth": 2,
         "ignoreUrls": true,
         "ignoreTemplateLiterals": true,
