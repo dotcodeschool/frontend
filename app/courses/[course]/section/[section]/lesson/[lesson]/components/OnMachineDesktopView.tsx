@@ -6,7 +6,7 @@ import { MDXComponents, Navbar } from "@/components";
 import { getLessonPageData } from "../helpers";
 
 import { ProgressMarker } from "./ProgressMarker";
-import { TestLogDisplayModal } from "./TestLogDisplayModal";
+import { TestLogAccordion } from "./TestLogAccordion";
 
 const OnMachineDesktopView = ({
   lessonPageData,
@@ -40,7 +40,7 @@ const OnMachineDesktopView = ({
           components={MDXComponents}
           source={lessonPageData.lessonData.content ?? ""}
         />
-        <TestLogDisplayModal />
+        <TestLogAccordion didTestPass={true} />
         <ProgressMarker />
       </Box>
     </Box>

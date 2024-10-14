@@ -8,11 +8,12 @@ import {
   ModalCloseButton,
   ModalContent,
   ModalFooter,
-  ModalHeader,
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
+import { IoTerminal } from "react-icons/io5";
 
+import { LogTabs } from "./LogTabs";
 import { TestStatus } from "./TestStatus";
 
 const modalBodyProps = {
@@ -27,14 +28,15 @@ const TestLogDisplayModal = () => {
 
   return (
     <>
-      <Button onClick={onOpen}>Show logs</Button>
+      <Button leftIcon={<IoTerminal />} onClick={onOpen} size="sm">
+        View logs
+      </Button>
       <Modal isOpen={isOpen} onClose={onClose} size="full">
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader {...modalBodyProps}>Modal Title</ModalHeader>
+        <ModalContent bg="gray.900">
           <ModalCloseButton />
           <ModalBody {...modalBodyProps}>
-            <p>Test log content</p>
+            <LogTabs />
           </ModalBody>
           <ModalFooter>
             <HStack
