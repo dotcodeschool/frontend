@@ -1,5 +1,6 @@
 import { Box, HStack } from "@chakra-ui/react";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import rehypeMdxCodeProps from "rehype-mdx-code-props";
 
 import { MDXComponents, Navbar } from "@/components";
 
@@ -39,6 +40,11 @@ const OnMachineDesktopView = ({
       <Box maxW="4xl" mx="auto">
         <MDXRemote
           components={MDXComponents}
+          options={{
+            mdxOptions: {
+              rehypePlugins: [rehypeMdxCodeProps],
+            },
+          }}
           source={lessonPageData.lessonData.content ?? ""}
         />
         <TestLogAccordion didTestPass={true} />

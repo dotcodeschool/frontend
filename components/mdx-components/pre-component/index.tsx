@@ -3,13 +3,109 @@
 import { Box, HStack, Spacer, Text } from "@chakra-ui/react";
 import { Highlight, themes } from "prism-react-renderer";
 import { useEffect, useState } from "react";
+import { FaFile, FaInfoCircle } from "react-icons/fa";
 import { FiTerminal } from "react-icons/fi";
+import { MdLock, MdTerminal } from "react-icons/md";
+import { PiCertificateFill } from "react-icons/pi";
+import {
+  SiBun,
+  SiDocker,
+  SiGit,
+  SiJavascript,
+  SiMarkdown,
+  SiMdx,
+  SiNodedotjs,
+  SiPnpm,
+  SiReact,
+  SiRust,
+  SiToml,
+  SiTypescript,
+  SiYarn,
+} from "react-icons/si";
+import { VscJson } from "react-icons/vsc";
 
 import { PreComponentProps } from "../types";
 
 import { CopyButton } from "./CopyButton";
 import { CopyIconButton } from "./CopyIconButton";
 import { HighlightedCode } from "./HighlightedCode";
+
+// eslint-disable-next-line complexity
+const getFileIcon = (filename: string) => {
+  switch (filename) {
+    case "bun.lockb":
+      return <SiBun />;
+
+    case "package.json":
+      return <SiNodedotjs />;
+
+    case "pnpm-lock.yaml":
+      return <SiPnpm />;
+
+    case "yarn.lock":
+      return <SiYarn />;
+
+    case "Dockerfile":
+      return <SiDocker />;
+
+    case "LICENSE":
+      return <PiCertificateFill />;
+
+    // TODO: find a better icon for Makefile
+    case "Makefile":
+      return <FaFile />;
+
+    case "README.md":
+      return <FaInfoCircle />;
+  }
+
+  const parsedFilename = filename.split(".").pop();
+
+  if (parsedFilename?.startsWith("git")) {
+    return <SiGit />;
+  }
+
+  switch (parsedFilename) {
+    case "js":
+      return <SiJavascript />;
+
+    case "json":
+      return <VscJson />;
+
+    case "jsx":
+      return <SiReact />;
+
+    case "lock":
+      return <MdLock />;
+
+    case "md":
+      return <SiMarkdown />;
+
+    case "mdx":
+      return <SiMdx />;
+
+    case "rs":
+      return <SiRust />;
+
+    case "sh":
+      return <MdTerminal />;
+
+    case "toml":
+      return <SiToml />;
+
+    case "ts":
+      return <SiTypescript />;
+
+    case "tsx":
+      return <SiReact />;
+
+    case "Terminal":
+      return <FiTerminal />;
+
+    default:
+      return <FaFile />;
+  }
+};
 
 const PreComponent: React.FC<PreComponentProps> = ({
   children,
@@ -54,7 +150,7 @@ const PreComponent: React.FC<PreComponentProps> = ({
           p={2}
           width="100%"
         >
-          <FiTerminal />
+          {getFileIcon(filename)}
           <Text>{filename}</Text>
           <Spacer />
           <CopyIconButton

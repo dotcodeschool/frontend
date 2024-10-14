@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { Suspense } from "react";
+import rehypeMdxCodeProps from "rehype-mdx-code-props";
 
 import { MDXComponents } from "@/components";
 import { Section, TypeMDXComponents } from "@/lib/types";
@@ -51,7 +52,15 @@ const ModuleItem = ({
       </AccordionButton>
       <AccordionPanel pb={12} pt={0} w="90%">
         <Suspense fallback={<Text>Loading...</Text>}>
-          <MDXRemote components={components} source={description ?? ""} />
+          <MDXRemote
+            components={components}
+            options={{
+              mdxOptions: {
+                rehypePlugins: [rehypeMdxCodeProps],
+              },
+            }}
+            source={description ?? ""}
+          />
         </Suspense>
         <ButtonStartLesson
           hasEnrolled={hasEnrolled}

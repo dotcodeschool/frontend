@@ -1,6 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import rehypeMdxCodeProps from "rehype-mdx-code-props";
 
 import { auth } from "@/auth";
 import { MDXComponents, Navbar } from "@/components";
@@ -53,7 +54,17 @@ const serializeRepositorySetup = async (
 
       return {
         ...step,
-        code: <MDXRemote components={MDXComponents} source={step.code} />,
+        code: (
+          <MDXRemote
+            components={MDXComponents}
+            options={{
+              mdxOptions: {
+                rehypePlugins: [rehypeMdxCodeProps],
+              },
+            }}
+            source={step.code}
+          />
+        ),
       };
     }),
   ),
