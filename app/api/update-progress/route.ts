@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import clientPromise from "@/lib/db/mongodb";
+
 import { IProgressUpdate } from "@/lib/types/IProgress";
 
-export async function POST(req: NextRequest) {
+export const POST = async (req: NextRequest) => {
   const client = await clientPromise;
   const db = client.db("dcs-test");
 
@@ -22,6 +23,7 @@ export async function POST(req: NextRequest) {
           }
         }
       }
+
       return {
         updateOne: {
           filter: { email: user.email },
@@ -35,9 +37,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ result });
   } catch (error) {
     console.error("Error updating progress:", error);
+
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },
     );
   }
-}
+};

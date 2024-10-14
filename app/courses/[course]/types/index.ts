@@ -1,14 +1,18 @@
 import { MDXRemoteSerializeResult } from "next-mdx-remote";
 
-import { TypeSectionFields } from "@/lib/types/contentful";
-import { TypeFile } from "@/lib/types/TypeFile";
+import {
+  CourseModule,
+  Section,
+  SectionLessonsCollection,
+  TypeFile,
+} from "@/lib/types";
 
-export type Author = {
-  name: string;
-  url: string;
-};
+import {
+  QUERY_COURSE_OVERVIEW_FIELDS,
+  QUERY_COURSE_OVERVIEW_METADATA_FIELDS,
+} from "../queries";
 
-export type Module = {
+type Module = {
   id: string;
   index: number;
   title: string;
@@ -16,25 +20,14 @@ export type Module = {
   numOfLessons: number;
 };
 
-export interface ModuleProps {
+type ModuleProps = {
   index: number;
-  module: TypeSectionFields;
+  module: Section;
   slug: string;
-  numOfCompletedLessons: number;
   isOnMachineCourse: boolean;
-  hasEnrolled: boolean;
-}
+};
 
-export interface CourseContentProps {
-  slug: string;
-  title: string;
-  author: Author;
-  description: string;
-  modules: Module[];
-  tags: { language: string; level: string };
-}
-
-export interface EditorContextType {
+type EditorContextType = {
   tabIndex: number;
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
   showDiff: boolean;
@@ -42,4 +35,37 @@ export interface EditorContextType {
   editorContent: TypeFile[];
   setEditorContent: React.Dispatch<React.SetStateAction<TypeFile[]>>;
   toggleDiff: () => void;
-}
+};
+
+type CourseDetails = Pick<
+  CourseModule,
+  | "title"
+  | "description"
+  | "author"
+  | "level"
+  | "language"
+  | "format"
+  | "sectionsCollection"
+  | "slug"
+  | "githubUrl"
+>;
+
+type CourseQuery =
+  | typeof QUERY_COURSE_OVERVIEW_FIELDS
+  | typeof QUERY_COURSE_OVERVIEW_METADATA_FIELDS;
+
+type CourseMetadata = Pick<CourseModule, "title" | "description">;
+
+type LessonIdAndTotalData = {
+  lessonsCollection: Pick<SectionLessonsCollection, "items" | "total">;
+};
+
+export type {
+  CourseDetails,
+  CourseMetadata,
+  CourseQuery,
+  EditorContextType,
+  LessonIdAndTotalData,
+  Module,
+  ModuleProps,
+};

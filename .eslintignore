@@ -2,7 +2,7 @@ node_modules
 .next
 out
 public
-lib/types/contentful
+lib/types/schema.ts
 next-env.d.ts
 next.config.mjs
 *.config.js
