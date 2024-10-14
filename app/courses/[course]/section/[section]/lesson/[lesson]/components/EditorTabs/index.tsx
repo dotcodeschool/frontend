@@ -9,6 +9,7 @@ import { useEditorTabs } from "./hooks/useEditorTabs";
 
 export type EditorTabsProps = {
   showHints: boolean;
+  showActions?: boolean;
   readOnly: boolean;
   isOpen: boolean;
   handleFullscreenToggle: (e: React.MouseEvent) => void;
@@ -18,6 +19,7 @@ export const EditorTabsComponent = ({
   showHints,
   readOnly,
   isOpen,
+  showActions = true,
   handleFullscreenToggle,
 }: EditorTabsProps) => {
   const {
@@ -41,6 +43,7 @@ export const EditorTabsComponent = ({
         editorContent={editorContent}
         handleFullscreenToggle={handleFullscreenToggle}
         isOpen={isOpen}
+        showActions={showActions}
         showDiff={showDiff}
         {...editorProps}
       />

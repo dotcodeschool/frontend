@@ -8,6 +8,7 @@ import { EditorTabListActions } from "./EditorTabListActions";
 export const EditorTabList = ({
   editorContent,
   isOpen,
+  showActions = true,
   handleFullscreenToggle,
   ...props
 }) => (
@@ -30,11 +31,13 @@ export const EditorTabList = ({
         ))
       )}
     </Flex>
-    <EditorTabListActions
-      editorContent={editorContent}
-      handleFullscreenToggle={handleFullscreenToggle}
-      isOpen={isOpen}
-      {...props}
-    />
+    {showActions ? (
+      <EditorTabListActions
+        editorContent={editorContent}
+        handleFullscreenToggle={handleFullscreenToggle}
+        isOpen={isOpen}
+        {...props}
+      />
+    ) : null}
   </TabList>
 );

@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, HStack } from "@chakra-ui/react";
 import { MDXRemote } from "next-mdx-remote/rsc";
 
 import { MDXComponents, Navbar } from "@/components";
@@ -6,6 +6,7 @@ import { MDXComponents, Navbar } from "@/components";
 import { getLessonPageData } from "../helpers";
 
 import { ProgressMarker } from "./ProgressMarker";
+import { SolutionModal } from "./SolutionModal";
 import { TestLogAccordion } from "./TestLogAccordion";
 
 const OnMachineDesktopView = ({
@@ -13,7 +14,7 @@ const OnMachineDesktopView = ({
 }: {
   lessonPageData: Awaited<ReturnType<typeof getLessonPageData>>;
 }) => (
-  <Box display={{ base: "block", md: "block" }}>
+  <Box display={{ base: "none", md: "block" }}>
     <Navbar
       cta={false}
       feedbackUrl={lessonPageData.feedbackUrl}
@@ -41,6 +42,10 @@ const OnMachineDesktopView = ({
           source={lessonPageData.lessonData.content ?? ""}
         />
         <TestLogAccordion didTestPass={true} />
+
+        <HStack justify="center" mt={6} spacing={4}>
+          <SolutionModal />
+        </HStack>
         <ProgressMarker />
       </Box>
     </Box>
