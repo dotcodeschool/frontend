@@ -17,8 +17,7 @@ const useRepositorySetup = (
   );
   const [loadingRepo, setLoadingRepo] = useState(false);
   const [repoName, setRepoName] = useState<string>();
-  const [repoSetupSteps, setRepoSetupSteps] =
-    useState<RepositorySetup>(repositorySetup);
+  const [repoSetupSteps, setRepoSetupSteps] = useState(repositorySetup);
   const [gitPushReceived, setGitPushReceived] = useState(
     initialRepo?.test_ok ?? false,
   );
@@ -70,11 +69,11 @@ const useRepositorySetup = (
 
     eventSource.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      if (
-        data.operationType === "update" &&
-        data.documentKey._id === repoId.toString() &&
-        data.updateDescription?.updatedFields?.test_ok === true
-      ) {
+      const isUpdate = data.operationType === "update";
+      const isRepo = data.documentKey._id === repoId.toString();
+      const isTestOk = data.updateDescription.updatedFields.test_ok;
+
+      if (isUpdate && isRepo && isTestOk) {
         setGitPushReceived(true);
       }
     };

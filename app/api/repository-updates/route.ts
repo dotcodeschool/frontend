@@ -10,16 +10,13 @@ export const GET = async (req: NextRequest) => {
   const responseStream = new TransformStream();
   const writer = responseStream.writable.getWriter();
 
-  const res = new Response(
-    responseStream.readable as unknown as ReadableStream<Uint8Array>,
-    {
-      headers: {
-        "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache",
-        Connection: "keep-alive",
-      },
+  const res = new Response(responseStream.readable, {
+    headers: {
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache",
+      Connection: "keep-alive",
     },
-  );
+  });
 
   const sendUpdate = async (data: ChangeStreamDocument<Repository>) => {
     await writer.write(
