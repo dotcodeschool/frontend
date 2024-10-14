@@ -7,7 +7,7 @@ import { getLessonPageData } from "../helpers";
 
 import { EditorComponents } from "./EditorComponents";
 
-const MobileView = ({
+const InBrowserMobileView = ({
   lessonPageData,
 }: {
   lessonPageData: Awaited<ReturnType<typeof getLessonPageData>>;
@@ -35,4 +35,4 @@ const MobileView = ({
   </Grid>
 );
 
-export { MobileView };
+export { InBrowserMobileView };

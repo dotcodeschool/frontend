@@ -5,7 +5,7 @@ import { Box } from "@chakra-ui/react";
 import { BottomNavbar } from "./components";
 import { IconButtonFeedback } from "./components/IconButtonFeedback";
 import { InBrowserDesktopView } from "./components/InBrowserDesktopView";
-import { MobileView } from "./components/MobileView";
+import { InBrowserMobileView } from "./components/InBrowserMobileView";
 import { getLessonPageData } from "./helpers";
 
 export { generateMetadata } from "./metadata";
@@ -26,7 +26,7 @@ const LessonPage = async ({
       <Box>
         <IconButtonFeedback url={lessonPageData.feedbackUrl} />
         <InBrowserDesktopView lessonPageData={lessonPageData} />
-        <MobileView lessonPageData={lessonPageData} />
+        <InBrowserMobileView lessonPageData={lessonPageData} />
       </Box>
       <BottomNavbar
         chapterId={params.lesson}
