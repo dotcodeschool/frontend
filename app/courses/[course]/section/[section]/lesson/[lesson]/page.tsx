@@ -3,8 +3,8 @@ import "@/styles/resizer.css";
 import { Box } from "@chakra-ui/react";
 
 import { BottomNavbar } from "./components";
-import { DesktopView } from "./components/DesktopView";
 import { IconButtonFeedback } from "./components/IconButtonFeedback";
+import { InBrowserDesktopView } from "./components/InBrowserDesktopView";
 import { MobileView } from "./components/MobileView";
 import { getLessonPageData } from "./helpers";
 
@@ -25,7 +25,7 @@ const LessonPage = async ({
     >
       <Box>
         <IconButtonFeedback url={lessonPageData.feedbackUrl} />
-        <DesktopView lessonPageData={lessonPageData} />
+        <InBrowserDesktopView lessonPageData={lessonPageData} />
         <MobileView lessonPageData={lessonPageData} />
       </Box>
       <BottomNavbar

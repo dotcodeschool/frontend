@@ -7,7 +7,7 @@ import { getLessonPageData } from "../helpers";
 
 import { EditorComponents } from "./EditorComponents";
 
-const DesktopView = ({
+const InBrowserDesktopView = ({
   lessonPageData,
 }: {
   lessonPageData: Awaited<ReturnType<typeof getLessonPageData>>;
@@ -33,4 +33,4 @@ const DesktopView = ({
   </Box>
 );
 
-export { DesktopView };
+export { InBrowserDesktopView };
