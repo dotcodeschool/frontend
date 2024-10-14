@@ -65,6 +65,8 @@ const QUERY_COURSE_INFORMATION = `
         title
         slug
         githubUrl
+        format
+        formatData
         sectionsCollection {
           total
         }
