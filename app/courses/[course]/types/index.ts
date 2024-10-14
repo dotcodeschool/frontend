@@ -45,6 +45,7 @@ type CourseDetails = Pick<
   | "level"
   | "language"
   | "format"
+  | "formatData"
   | "sectionsCollection"
   | "slug"
   | "githubUrl"

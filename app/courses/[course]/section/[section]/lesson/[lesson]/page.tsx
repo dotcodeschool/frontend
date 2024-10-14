@@ -6,6 +6,7 @@ import { BottomNavbar } from "./components";
 import { IconButtonFeedback } from "./components/IconButtonFeedback";
 import { InBrowserDesktopView } from "./components/InBrowserDesktopView";
 import { InBrowserMobileView } from "./components/InBrowserMobileView";
+import { OnMachineDesktopView } from "./components/OnMachineDesktopView";
 import { getLessonPageData } from "./helpers";
 
 export { generateMetadata } from "./metadata";
@@ -17,6 +18,19 @@ const LessonPage = async ({
 }) => {
   const lessonPageData = await getLessonPageData(params);
 
+  const renderContent = () => {
+    if (lessonPageData.format === "inBrowserCourse") {
+      return (
+        <>
+          <InBrowserDesktopView lessonPageData={lessonPageData} />
+          <InBrowserMobileView lessonPageData={lessonPageData} />
+        </>
+      );
+    } else {
+      return <OnMachineDesktopView lessonPageData={lessonPageData} />;
+    }
+  };
+
   return (
     <Box
       h="100vh"
@@ -25,8 +39,7 @@ const LessonPage = async ({
     >
       <Box>
         <IconButtonFeedback url={lessonPageData.feedbackUrl} />
-        <InBrowserDesktopView lessonPageData={lessonPageData} />
-        <InBrowserMobileView lessonPageData={lessonPageData} />
+        {renderContent()}
       </Box>
       <BottomNavbar
         chapterId={params.lesson}

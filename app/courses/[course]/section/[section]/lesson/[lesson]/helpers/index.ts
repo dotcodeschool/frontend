@@ -228,6 +228,7 @@ const getLessonPageData = async (params: {
 
   const startingFiles = await getStartingFiles(lessonData);
   const solution = await getSolutionFiles(lessonData);
+  const { format, formatData } = courseData;
   const readOnly = solution.length === 0;
 
   const feedbackUrl = constructFeedbackUrl(
@@ -249,6 +250,8 @@ const getLessonPageData = async (params: {
 
   return {
     lessonData,
+    format,
+    formatData,
     startingFiles,
     solution,
     readOnly,
