@@ -5,6 +5,7 @@ import {
   TokenInputProps,
   TokenOutputProps,
 } from "prism-react-renderer";
+import { ReactNode } from "react";
 
 type CopyButtonProps = {
   text: string;
@@ -21,8 +22,9 @@ type HighlightedCodeProps = {
 };
 
 type PreComponentProps = {
-  children: string;
+  children?: string | ReactNode | null | undefined;
   className?: string;
+  filename?: string;
 };
 
 export type { CopyButtonProps, HighlightedCodeProps, PreComponentProps };

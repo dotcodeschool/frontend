@@ -14,7 +14,6 @@ const HighlightedCode = ({
     overflowX="auto"
     px={6}
     py={4}
-    rounded={8}
     style={style}
     sx={{
       "::-webkit-scrollbar": { height: "6px", borderRadius: "8px" },

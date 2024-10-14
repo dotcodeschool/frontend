@@ -14,6 +14,7 @@ import { isValidElement } from "react";
 import { TypeMDXComponents } from "@/lib/types";
 
 import { PreComponent } from "./pre-component";
+import { PreComponentProps } from "./types";
 
 const MDXComponents: TypeMDXComponents = {
   h1: (props: HeadingProps) => <Heading as="h1" mt={12} size="xl" {...props} />,
@@ -44,11 +45,11 @@ const MDXComponents: TypeMDXComponents = {
     <Code colorScheme="orange" variant="subtle" {...props} />
   ),
 
-  pre: (props: React.ComponentProps<"pre">) => {
-    const { children } = props;
+  pre: (props: React.ComponentProps<"pre"> & PreComponentProps) => {
+    const { children, filename } = props;
 
     if (isValidElement(children) && typeof children.props === "object") {
-      return <PreComponent {...children.props} />;
+      return <PreComponent filename={filename} {...children.props} />;
     }
 
     console.warn("Unexpected child type for <pre>: ", children);

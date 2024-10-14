@@ -13,6 +13,7 @@ import { MDXRemote } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
 import { useEffect, useState } from "react";
 import { IoArrowDown, IoArrowUp } from "react-icons/io5";
+import rehypeMdxCodeProps from "rehype-mdx-code-props";
 
 import { MDXComponents } from "@/components/mdx-components";
 
@@ -24,10 +25,15 @@ const TestLogAccordion = ({ didTestPass }: { didTestPass: boolean }) => {
 
   useEffect(() => {
     const fetchMdx = async () => {
-      const source = `\`\`\`bash
+      const source = `\`\`\`bash filename="Terminal"
     dotcodeschool test
     \`\`\``;
-      const mdxSource = await serialize(source);
+      const mdxSource = await serialize(source, {
+        mdxOptions: {
+          rehypePlugins: [rehypeMdxCodeProps],
+        },
+      });
+
       setCode(<MDXRemote {...mdxSource} components={MDXComponents} />);
     };
     void fetchMdx();
