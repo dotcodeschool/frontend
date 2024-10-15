@@ -23,7 +23,7 @@ export const useEditorTabs = () => {
   }, []);
 
   useEffect(() => {
-    if (editorContext.isAnswerOpen) {
+    if (!editorContext.isOnMachineCourse && editorContext.isAnswerOpen) {
       toast.closeAll();
       if (editorContext.doesAnswerMatch) {
         toast({

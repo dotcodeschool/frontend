@@ -15,7 +15,13 @@ import { TypeFile } from "@/lib/types";
 import { EditorProvider } from "./EditorProvider";
 import { EditorTabs } from "./EditorTabs";
 
-const SolutionModal = () => {
+const SolutionModal = ({
+  template,
+  solution,
+}: {
+  template: TypeFile[];
+  solution: TypeFile[];
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleFullscreenToggle = (e: React.MouseEvent) => {
@@ -28,18 +34,13 @@ const SolutionModal = () => {
     }
   };
 
-  const dummyContent: TypeFile[] = [
-    {
-      fileName: "solution.js",
-      language: "javascript",
-      code: `function solution() {
-  // your solution here
-  }`,
-    },
-  ];
-
   return (
-    <EditorProvider initialContent={dummyContent} solution={[]}>
+    <EditorProvider
+      initialContent={template}
+      initialIsAnswerOpen={true}
+      isOnMachineCourse={true}
+      solution={solution}
+    >
       <Button leftIcon={<FaFileCode />} my={4} onClick={onOpen} variant="ghost">
         View solution
       </Button>

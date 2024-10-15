@@ -1,4 +1,5 @@
 import { Box, HStack } from "@chakra-ui/react";
+import { isEmpty } from "lodash";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypeMdxCodeProps from "rehype-mdx-code-props";
 
@@ -49,9 +50,14 @@ const OnMachineDesktopView = ({
         />
         <TestLogAccordion didTestPass={true} />
 
-        <HStack justify="center" mt={6} spacing={4}>
-          <SolutionModal />
-        </HStack>
+        {isEmpty(lessonPageData.solution) ? null : (
+          <HStack justify="center" mt={6} spacing={4}>
+            <SolutionModal
+              solution={lessonPageData.solution}
+              template={lessonPageData.startingFiles}
+            />
+          </HStack>
+        )}
         <ProgressMarker />
       </Box>
     </Box>

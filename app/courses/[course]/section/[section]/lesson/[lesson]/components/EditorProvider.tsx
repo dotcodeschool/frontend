@@ -13,6 +13,7 @@ type EditorProviderProps = {
   initialShowDiff?: boolean;
   initialDoesAnswerMatch?: boolean;
   initialIsAnswerOpen?: boolean;
+  isOnMachineCourse?: boolean;
   solution: TypeFile[];
 };
 
@@ -21,6 +22,7 @@ type EditorContextType = {
   doesAnswerMatch: boolean;
   incorrectFiles: TypeFile[];
   isAnswerOpen: boolean;
+  isOnMachineCourse: boolean;
   tabIndex: number;
   setTabIndex: React.Dispatch<React.SetStateAction<number>>;
   solution: TypeFile[];
@@ -60,6 +62,7 @@ export const EditorProvider = ({
   initialShowDiff = false,
   initialDoesAnswerMatch = false,
   initialIsAnswerOpen = false,
+  isOnMachineCourse = false,
   solution,
 }: EditorProviderProps) => {
   const [tabIndex, setTabIndex] = useState(initialTabIndex);
@@ -119,6 +122,7 @@ export const EditorProvider = ({
     doesAnswerMatch,
     incorrectFiles,
     isAnswerOpen,
+    isOnMachineCourse,
     tabIndex,
     setTabIndex,
     solution,
