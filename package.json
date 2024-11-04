@@ -29,6 +29,7 @@
     "@vercel/speed-insights": "^1.0.12",
     "contentful-import": "^9.4.58",
     "framer-motion": "^10.16.12",
+    "ioredis": "^5.4.1",
     "lodash": "^4.17.21",
     "lottie-react": "^2.4.0",
     "mongodb": "^6.3.0",

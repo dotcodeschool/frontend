@@ -78,7 +78,7 @@ const TestLogAccordion = ({ didTestPass }: { didTestPass: boolean }) => {
                 command:
               </Text>
               <Box my={4}>{code}</Box>
-              <TestLogDisplayModal />
+              <TestLogDisplayModal logstreamId="test" />
             </AccordionPanel>
           </>
         )}

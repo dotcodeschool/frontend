@@ -10,9 +10,14 @@ import {
   ModalFooter,
   ModalOverlay,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { IoTerminal } from "react-icons/io5";
 
+import { isLogEntry } from "../utils/typeGuards";
+
+import { LogMessage, type LogEntry } from "./LogMessage";
 import { LogTabs } from "./LogTabs";
 import { TestStatus } from "./TestStatus";
 
@@ -22,7 +27,11 @@ const modalBodyProps = {
   w: "full",
 };
 
-const TestLogDisplayModal = () => {
+type TestLogDisplayModalProps = {
+  logstreamId: string;
+};
+
+const TestLogDisplayModal = ({ logstreamId }: TestLogDisplayModalProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const didTestPass = true;
 
@@ -36,7 +45,7 @@ const TestLogDisplayModal = () => {
         <ModalContent bg="gray.900">
           <ModalCloseButton />
           <ModalBody {...modalBodyProps}>
-            <LogTabs />
+            <LogTabs logstreamId={logstreamId} />
           </ModalBody>
           <ModalFooter>
             <HStack
