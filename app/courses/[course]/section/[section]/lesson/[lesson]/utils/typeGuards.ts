@@ -6,7 +6,9 @@ export const isObject = (value: unknown): value is object =>
 export const isString = (value: unknown): value is string =>
   typeof value === "string";
 
-const validateLogEntryTypes = (data: Record<keyof LogEntry, unknown>): boolean => {
+const validateLogEntryTypes = (
+  data: Record<keyof LogEntry, unknown>,
+): boolean => {
   const isValid =
     isString(data.eventType) &&
     isString(data.message) &&

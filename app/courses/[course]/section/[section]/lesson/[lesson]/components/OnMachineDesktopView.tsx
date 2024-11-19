@@ -1,9 +1,11 @@
 import { Box, HStack } from "@chakra-ui/react";
 import { isEmpty } from "lodash";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import { useEffect, useState } from "react";
 import rehypeMdxCodeProps from "rehype-mdx-code-props";
 
 import { MDXComponents, Navbar } from "@/components";
+import { getUserRepo } from "@/lib/api";
 
 import { getLessonPageData } from "../helpers";
 
@@ -12,8 +14,10 @@ import { SolutionModal } from "./SolutionModal";
 import { TestLogAccordion } from "./TestLogAccordion";
 
 const OnMachineDesktopView = ({
+  courseSlug,
   lessonPageData,
 }: {
+  courseSlug: string;
   lessonPageData: Awaited<ReturnType<typeof getLessonPageData>>;
 }) => {
   const isSolutionEmpty = isEmpty(lessonPageData.solution);
@@ -51,7 +55,7 @@ const OnMachineDesktopView = ({
             }}
             source={lessonPageData.lessonData.content ?? ""}
           />
-          <TestLogAccordion didTestPass={true} />
+          <TestLogAccordion courseSlug={courseSlug} didTestPass={true} />
 
           {isSolutionEmpty ? null : (
             <HStack justify="center" mt={6} spacing={4}>

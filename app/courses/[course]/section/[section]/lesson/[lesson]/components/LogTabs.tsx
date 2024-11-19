@@ -12,7 +12,7 @@ import { IoTerminal } from "react-icons/io5";
 import { LogEntry, LogMessage } from "./LogMessage";
 import { useEffect, useState } from "react";
 
-const LogTabs = ({logstreamId}: { logstreamId : string}) => {
+const LogTabs = ({ logstreamId }: { logstreamId: string }) => {
   const [logs, setLogs] = useState<LogEntry[]>([]);
 
   useEffect(() => {
@@ -42,8 +42,14 @@ const LogTabs = ({logstreamId}: { logstreamId : string}) => {
           console.log("Parsed event data:", data);
 
           // Only process non-keepalive messages
-          if (data.eventType !== 'keepalive') {
-            if (data && typeof data === 'object' && 'eventType' in data && 'message' in data && 'timestamp' in data) {
+          if (data.eventType !== "keepalive") {
+            if (
+              data &&
+              typeof data === "object" &&
+              "eventType" in data &&
+              "message" in data &&
+              "timestamp" in data
+            ) {
               console.log("Valid log entry, adding to logs:", data);
               setLogs((prevLogs) => {
                 const newLogs = [...prevLogs, data];
@@ -53,9 +59,9 @@ const LogTabs = ({logstreamId}: { logstreamId : string}) => {
             } else {
               console.log("Invalid log entry format:", data);
               console.log("Missing properties:", {
-                hasEventType: 'eventType' in data,
-                hasMessage: 'message' in data,
-                hasTimestamp: 'timestamp' in data
+                hasEventType: "eventType" in data,
+                hasMessage: "message" in data,
+                hasTimestamp: "timestamp" in data,
               });
             }
           }

@@ -27,7 +27,12 @@ const LessonPage = async ({
         </>
       );
     } else {
-      return <OnMachineDesktopView lessonPageData={lessonPageData} />;
+      return (
+        <OnMachineDesktopView
+          courseSlug={params.course}
+          lessonPageData={lessonPageData}
+        />
+      );
     }
   };
 
