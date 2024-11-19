@@ -15,53 +15,57 @@ const OnMachineDesktopView = ({
   lessonPageData,
 }: {
   lessonPageData: Awaited<ReturnType<typeof getLessonPageData>>;
-}) => (
-  <Box display={{ base: "none", md: "block" }}>
-    <Navbar
-      cta={false}
-      feedbackUrl={lessonPageData.feedbackUrl}
-      isLessonInterface={true}
-    />
-    <Box
-      h={["fit-content", "calc(100vh - 140px)"]}
-      key={1}
-      mr={1}
-      overflowY="auto"
-      pt={6}
-      px={[6, 12]}
-      sx={{
-        overflowX: "auto",
-        height: "100%",
-        "::-webkit-scrollbar": {
-          width: "2px",
-        },
-        ":hover::-webkit-scrollbar-thumb": { background: "whiteAlpha.300" },
-      }}
-    >
-      <Box maxW="4xl" mx="auto">
-        <MDXRemote
-          components={MDXComponents}
-          options={{
-            mdxOptions: {
-              rehypePlugins: [rehypeMdxCodeProps],
-            },
-          }}
-          source={lessonPageData.lessonData.content ?? ""}
-        />
-        <TestLogAccordion didTestPass={true} />
+}) => {
+  const isSolutionEmpty = isEmpty(lessonPageData.solution);
 
-        {isEmpty(lessonPageData.solution) ? null : (
-          <HStack justify="center" mt={6} spacing={4}>
-            <SolutionModal
-              solution={lessonPageData.solution}
-              template={lessonPageData.startingFiles}
-            />
-          </HStack>
-        )}
-        <ProgressMarker />
+  return (
+    <Box display={{ base: "none", md: "block" }}>
+      <Navbar
+        cta={false}
+        feedbackUrl={lessonPageData.feedbackUrl}
+        isLessonInterface={true}
+      />
+      <Box
+        h={["fit-content", "calc(100vh - 140px)"]}
+        key={1}
+        mr={1}
+        overflowY="auto"
+        pt={6}
+        px={[6, 12]}
+        sx={{
+          overflowX: "auto",
+          height: "100%",
+          "::-webkit-scrollbar": {
+            width: "2px",
+          },
+          ":hover::-webkit-scrollbar-thumb": { background: "whiteAlpha.300" },
+        }}
+      >
+        <Box maxW="4xl" mx="auto">
+          <MDXRemote
+            components={MDXComponents}
+            options={{
+              mdxOptions: {
+                rehypePlugins: [rehypeMdxCodeProps],
+              },
+            }}
+            source={lessonPageData.lessonData.content ?? ""}
+          />
+          <TestLogAccordion didTestPass={true} />
+
+          {isSolutionEmpty ? null : (
+            <HStack justify="center" mt={6} spacing={4}>
+              <SolutionModal
+                solution={lessonPageData.solution}
+                template={lessonPageData.startingFiles}
+              />
+            </HStack>
+          )}
+          <ProgressMarker />
+        </Box>
       </Box>
     </Box>
-  </Box>
-);
+  );
+};
 
 export { OnMachineDesktopView };

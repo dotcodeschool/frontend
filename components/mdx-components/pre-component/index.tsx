@@ -131,6 +131,7 @@ const PreComponent: React.FC<PreComponentProps> = ({
     <Box
       border="1px solid"
       borderColor="gray.600"
+      mb={8}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       overflow="hidden"

@@ -40,7 +40,7 @@ const TestLogAccordion = ({ didTestPass }: { didTestPass: boolean }) => {
   }, []);
 
   return (
-    <Accordion allowToggle bg="grap.700">
+    <Accordion allowToggle>
       <AccordionItem
         border="1px solid"
         borderColor="whiteAlpha.200"
