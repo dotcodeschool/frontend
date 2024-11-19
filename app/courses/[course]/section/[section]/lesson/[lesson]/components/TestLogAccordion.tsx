@@ -59,7 +59,9 @@ const TestLogAccordion = ({ didTestPass }: { didTestPass: boolean }) => {
               >
                 Test Runner:
               </Text>
-              <TestStatus didTestPass={didTestPass} />
+              {/* TODO: Implement test status feature
+                <TestStatus didTestPass={didTestPass} />
+              */}
               <Button
                 as="span"
                 colorScheme="gray"
