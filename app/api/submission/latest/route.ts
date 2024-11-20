@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
 import { MongoClient } from "mongodb";
+import { NextRequest, NextResponse } from "next/server";
 
 if (!process.env.MONGODB_URI) {
   throw new Error("Please define the MONGODB_URI environment variable");
@@ -7,7 +7,7 @@ if (!process.env.MONGODB_URI) {
 
 const client = new MongoClient(process.env.MONGODB_URI);
 
-export async function GET(request: NextRequest) {
+export const GET = async (request: NextRequest) => {
   try {
     const { searchParams } = new URL(request.url);
     const repoName = searchParams.get("repo_name");
@@ -41,6 +41,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ logstream_id: latestSubmission.logstream_id });
   } catch (error) {
     console.error("Error fetching latest submission:", error);
+
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -48,4 +49,4 @@ export async function GET(request: NextRequest) {
   } finally {
     await client.close();
   }
-}
+};

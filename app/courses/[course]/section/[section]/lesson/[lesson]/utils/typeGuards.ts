@@ -33,11 +33,13 @@ export const hasLogEntryShape = (
 export const isLogEntry = (data: unknown): data is LogEntry => {
   if (!isObject(data)) {
     console.log("Not an object:", data);
+
     return false;
   }
 
   if (!hasLogEntryShape(data)) {
     console.log("Missing required fields:", data);
+
     return false;
   }
 

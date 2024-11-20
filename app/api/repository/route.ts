@@ -19,7 +19,7 @@ export const GET = async (request: NextRequest) => {
     if (courseSlug) {
       // Use getUserRepo for courseSlug queries
       const repo = await getUserRepo(courseSlug);
-      
+
       if (!repo) {
         return NextResponse.json(
           { error: "Repository not found" },

@@ -26,16 +26,21 @@ type TestLogAccordionProps = {
   courseSlug: string;
 };
 
-const TestLogAccordion = ({ didTestPass, courseSlug }: TestLogAccordionProps) => {
+const TestLogAccordion = ({
+  didTestPass,
+  courseSlug,
+}: TestLogAccordionProps) => {
   const [code, setCode] = useState<React.ReactElement>();
   const [logstreamId, setLogstreamId] = useState<string | null>(null);
   const [repoName, setRepoName] = useState<string | null>(null);
   const toast = useToast();
-  
+
   useEffect(() => {
     const fetchRepo = async () => {
       try {
-        const response = await fetch(`/api/repository?courseSlug=${courseSlug}`);
+        const response = await fetch(
+          `/api/repository?courseSlug=${courseSlug}`,
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch repository");
         }
@@ -52,7 +57,7 @@ const TestLogAccordion = ({ didTestPass, courseSlug }: TestLogAccordionProps) =>
         });
       }
     };
-  
+
     void fetchRepo();
   }, [courseSlug, toast]);
 
