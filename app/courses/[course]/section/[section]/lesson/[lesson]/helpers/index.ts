@@ -27,7 +27,7 @@ const getSectionData = async (courseSlug: string, sectionIndex: number) => {
       courseSlug,
       sectionIndex,
     },
-    "items.0.sectionsCollection",
+    "items.0.sectionsCollection.items",
   );
 
   return result[0];
@@ -60,7 +60,7 @@ const getLessonData = async (
       sectionIndex,
       lessonIndex,
     },
-    "items.0.sectionsCollection.items.0.lessonsCollection",
+    "items.0.sectionsCollection.items.0.lessonsCollection.items",
   );
 
   return result[0];

@@ -1,23 +1,22 @@
-import { ChakraProps } from "@chakra-ui/react";
+"use client";
 
-import { auth } from "@/auth";
+import { ChakraProps } from "@chakra-ui/react";
+import { useSession } from "next-auth/react";
+
 import { getUserInfo, isUserInfoError } from "@/lib/helpers";
 
 import { ButtonLogin } from "./authentication";
 import { ButtonStartCourse } from "./ButtonStartCourse";
 import { UserMenu } from "./UserMenu";
 
-const UserActions = async ({
+const UserActions = ({
   cta = true,
   ...restProps
 }: { cta: boolean } & ChakraProps) => {
-  const session = await auth();
+  const { data: session } = useSession();
   const user = getUserInfo(session);
 
   if (isUserInfoError(user)) {
-    const errorMessage = user.message;
-    console.error(errorMessage);
-
     return <ButtonLogin />;
   }
 

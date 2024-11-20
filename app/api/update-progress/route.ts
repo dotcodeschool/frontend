@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import clientPromise from "@/lib/db/mongodb";
-
-import { IProgressUpdate } from "@/lib/types/IProgress";
+import { clientPromise } from "@/lib/db/mongodb";
+import { TypeProgressData, TypeProgressUpdate } from "@/lib/types";
 
 export const POST = async (req: NextRequest) => {
   const client = await clientPromise;
@@ -10,9 +9,10 @@ export const POST = async (req: NextRequest) => {
 
   try {
     const data = await req.json();
-    const updates: IProgressUpdate[] = data.updates;
-
-    const operations = updates.map((update) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const updates: any = data.updates;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const operations = updates.map((update: any) => {
       const { user, progress } = update;
       const updateObject: Record<string, boolean> = {};
       for (const courseId in progress) {

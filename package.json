@@ -27,6 +27,7 @@
     "@monaco-editor/react": "^4.6.0",
     "@types/lodash": "^4.17.7",
     "@vercel/speed-insights": "^1.0.12",
+    "ansi-to-html": "^0.7.2",
     "contentful-import": "^9.4.58",
     "framer-motion": "^10.16.12",
     "ioredis": "^5.4.1",

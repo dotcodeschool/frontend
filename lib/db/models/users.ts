@@ -13,6 +13,7 @@ export type User = {
       data: Array<Relationship>;
     };
   };
+  progress?: Record<string, Record<number, Record<number, boolean>>>;
   preferences?: {
     notifications: {
       milestoneAlerts: boolean;

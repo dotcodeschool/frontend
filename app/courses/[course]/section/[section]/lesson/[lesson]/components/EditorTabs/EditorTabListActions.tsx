@@ -15,7 +15,7 @@ const getFullscreenIcon = (isOpen: boolean) =>
 export const EditorTabListActions: React.FC<{
   editorContent: TypeFile[];
   isOpen: boolean;
-  handleFullscreenToggle: () => void;
+  handleFullscreenToggle: (e: React.MouseEvent) => void;
   showDiff: boolean;
   toggleDiff: () => void;
   isUserInteraction: React.MutableRefObject<boolean>;

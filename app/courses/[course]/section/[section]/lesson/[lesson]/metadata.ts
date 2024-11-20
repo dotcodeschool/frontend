@@ -9,6 +9,7 @@ export const generateMetadata = async ({
 }) => {
   const { course: courseSlug, section, lesson } = params;
   const sectionData = await getSectionData(courseSlug, parseInt(section) - 1);
+
   const lessonData = await getLessonData(
     courseSlug,
     parseInt(section) - 1,

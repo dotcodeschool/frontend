@@ -45,17 +45,17 @@ const extractData = <T extends QueryKey>(
   key: T,
   path?: string,
 ): ExtractedData<QueryResult<T>> => {
-  let result = data[key];
+  const result = data[key] as QueryResult<T>;
 
   if (result == null) {
     throw new Error(`No data found for key: ${key}`);
   }
 
   if (path) {
-    result = getNestedValue(result, path);
+    return getNestedValue(result, path) as ExtractedData<QueryResult<T>>;
   }
 
-  return processResult(result);
+  return processResult<T>(result);
 };
 
 type NestedObject = {
@@ -71,9 +71,11 @@ const getNestedValue = (obj: unknown, path: string): unknown =>
     throw new Error(`Invalid path: ${path}`);
   }, obj as NestedObject);
 
-const processResult = <T>(result: unknown): ExtractedData<QueryResult<T>> => {
+const processResult = <T extends QueryKey>(
+  result: QueryResult<T>,
+): ExtractedData<QueryResult<T>> => {
   if (isCollectionResult(result)) {
-    return extractCollectionData(result);
+    return extractCollectionData(result) as ExtractedData<QueryResult<T>>;
   }
 
   return result as ExtractedData<QueryResult<T>>;

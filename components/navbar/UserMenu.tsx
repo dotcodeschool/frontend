@@ -8,15 +8,15 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react";
+import { useSession } from "next-auth/react";
 
-import { auth } from "@/auth";
 import { getUserInfo, isUserInfoError } from "@/lib/helpers";
 
 import { ButtonLogin, ButtonLogout } from "./authentication";
 import { UserDetails } from "./UserDetails";
 
-const UserMenu = async () => {
-  const session = await auth();
+const UserMenu = () => {
+  const { data: session } = useSession();
   const user = getUserInfo(session);
 
   if (isUserInfoError(user)) {

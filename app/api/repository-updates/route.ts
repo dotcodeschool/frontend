@@ -7,10 +7,16 @@ import { repositoryStream } from "@/lib/api";
 import { Repository } from "@/lib/db/models";
 
 export const GET = async (_req: NextRequest) => {
-  const responseStream = new TransformStream();
+  const responseStream = new TransformStream<Uint8Array>();
   const writer = responseStream.writable.getWriter();
 
-  const res = new Response(responseStream.readable, {
+  /* eslint-disable @typescript-eslint/consistent-type-assertions */
+  const readable =
+    responseStream.readable as unknown as ReadableStream<Uint8Array>;
+
+  /* eslint-enable @typescript-eslint/consistent-type-assertions */
+
+  const res = new Response(readable, {
     headers: {
       "Content-Type": "text/event-stream",
       "Cache-Control": "no-cache",
