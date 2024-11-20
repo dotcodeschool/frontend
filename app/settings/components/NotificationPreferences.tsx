@@ -25,31 +25,49 @@ type CourseReminder = {
 };
 
 export const NotificationPreferences = () => {
-  const [milestoneAlerts, setMilestoneAlerts] = useState(true);
-  const [newCourseAlerts, setNewCourseAlerts] = useState(true);
+  const [milestoneAlerts, setMilestoneAlerts] = useState(false);
+  const [newCourseAlerts, setNewCourseAlerts] = useState(false);
   const [courseReminders, setCourseReminders] = useState<CourseReminder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
-    const fetchRepositories = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch("/api/user-repositories");
-        if (!response.ok) {
-          throw new Error("Failed to fetch repositories");
+        const [reposResponse, prefsResponse] = await Promise.all([
+          fetch("/api/user-repositories"),
+          fetch("/api/user-preferences"),
+        ]);
+
+        if (!reposResponse.ok || !prefsResponse.ok) {
+          throw new Error("Failed to fetch data");
         }
-        const data = await response.json();
-        setCourseReminders(data);
+
+        const [reposData, prefsData] = await Promise.all([
+          reposResponse.json(),
+          prefsResponse.json(),
+        ]);
+
+        setCourseReminders(reposData);
+        setMilestoneAlerts(prefsData.milestoneAlerts);
+        setNewCourseAlerts(prefsData.newCourseAlerts);
       } catch (error) {
-        console.error("Error fetching repositories:", error);
+        console.error("Error fetching data:", error);
+        toast({
+          title: "Error loading preferences",
+          description: "Failed to load your preferences. Please try again.",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchRepositories();
-  }, []);
+    fetchData();
+  }, [toast]);
 
   const handleFrequencyChange = (
     courseId: string,
@@ -75,16 +93,21 @@ export const NotificationPreferences = () => {
   const handleSavePreferences = async () => {
     setIsSaving(true);
     try {
-      const response = await fetch('/api/user-repositories', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ courseReminders }),
-      });
+      const [reposResponse, prefsResponse] = await Promise.all([
+        fetch("/api/user-repositories", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ courseReminders }),
+        }),
+        fetch("/api/user-preferences", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ milestoneAlerts, newCourseAlerts }),
+        }),
+      ]);
 
-      if (!response.ok) {
-        throw new Error('Failed to save preferences');
+      if (!reposResponse.ok || !prefsResponse.ok) {
+        throw new Error("Failed to save preferences");
       }
 
       toast({
@@ -95,7 +118,7 @@ export const NotificationPreferences = () => {
         isClosable: true,
       });
     } catch (error) {
-      console.error('Error saving preferences:', error);
+      console.error("Error saving preferences:", error);
       toast({
         title: "Error saving preferences",
         description: "Failed to save your preferences. Please try again.",
@@ -149,10 +172,11 @@ export const NotificationPreferences = () => {
         </Box>
 
         <Flex justify="flex-end">
-          <Button 
-            colorScheme="green" 
-            onClick={handleSavePreferences} 
+          <Button
+            colorScheme="green"
+            onClick={handleSavePreferences}
             size="md"
+            isDisabled={isLoading}
             isLoading={isSaving}
             loadingText="Saving..."
           >

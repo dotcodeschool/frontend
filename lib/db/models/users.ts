@@ -8,5 +8,15 @@ export type User = {
   email?: string;
   image?: string;
   emailVerified?: boolean | null;
-  relationships?: Array<Relationship>;
+  relationships?: {
+    repositories: {
+      data: Array<Relationship>;
+    };
+  };
+  preferences?: {
+    notifications: {
+      milestoneAlerts: boolean;
+      newCourseAlerts: boolean;
+    };
+  };
 };

@@ -5,6 +5,7 @@ import {
   HStack,
   Menu,
   MenuButton,
+  MenuItem,
   MenuList,
 } from "@chakra-ui/react";
 
@@ -38,6 +39,9 @@ const UserMenu = async () => {
         <MenuList>
           <UserDetails email={email} image={image} name={name} />
           <hr />
+          <MenuItem as="a" href="/settings">
+            Settings
+          </MenuItem>
           <ButtonLogout isMenu={true} />
         </MenuList>
       </Menu>
