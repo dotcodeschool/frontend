@@ -28,7 +28,6 @@ const parseByteString = (str: string): number[] | null => {
 };
 
 const bytesToString = (bytes: number[]): string => {
-  // Create a Uint8Array from the byte array and use TextDecoder for proper UTF-8 handling
   const uint8Array = new Uint8Array(bytes);
 
   return new TextDecoder("utf-8").decode(uint8Array);

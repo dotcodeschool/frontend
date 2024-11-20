@@ -1,4 +1,3 @@
-import { ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 
 import { auth } from "@/auth";
@@ -21,7 +20,7 @@ export const GET = async () => {
     }
 
     // Return default preferences if not set
-    const preferences = user.preferences?.notifications || {
+    const preferences = user.preferences?.notifications ?? {
       milestoneAlerts: true,
       newCourseAlerts: true,
     };

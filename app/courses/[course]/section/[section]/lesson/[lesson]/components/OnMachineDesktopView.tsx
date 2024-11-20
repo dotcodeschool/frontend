@@ -1,11 +1,9 @@
 import { Box, HStack } from "@chakra-ui/react";
 import { isEmpty } from "lodash";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { useEffect, useState } from "react";
 import rehypeMdxCodeProps from "rehype-mdx-code-props";
 
 import { MDXComponents, Navbar } from "@/components";
-import { getUserRepo } from "@/lib/api";
 
 import { getLessonPageData } from "../helpers";
 

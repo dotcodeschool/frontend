@@ -6,7 +6,7 @@ import { NextRequest } from "next/server";
 import { repositoryStream } from "@/lib/api";
 import { Repository } from "@/lib/db/models";
 
-export const GET = async (req: NextRequest) => {
+export const GET = async (_req: NextRequest) => {
   const responseStream = new TransformStream();
   const writer = responseStream.writable.getWriter();
 

@@ -5,7 +5,6 @@ import { auth } from "@/auth";
 import { Course, Repository, User } from "@/lib/db/models";
 import { clientPromise } from "@/lib/db/mongodb";
 
-import { redis } from "../db/redis";
 import { getUserInfo } from "../helpers";
 
 const db = async () => {
@@ -104,33 +103,6 @@ const repositoryStream = async () => {
   return repositories.watch();
 };
 
-const processMessage = (message) => {
-  console.log("Id: %s. Data: %O", message[0], message[1]);
-  if (message[1][1] === "log") {
-    const bytesString = message[1][3];
-    const bytesArray = JSON.parse(bytesString);
-    const bytes = new Uint8Array(bytesArray);
-    const decoder = new TextDecoder("utf-8");
-    const decoded = decoder.decode(bytes);
-    console.log(JSON.stringify(JSON.parse(decoded), null, 2));
-  }
-};
-
-const logstream = async (logstreamId: string, lastId = "$") => {
-  const results = await redis.xread(
-    "BLOCK",
-    1000000,
-    "STREAMS",
-    logstreamId,
-    lastId,
-  );
-  const [key, messages] = results[0];
-
-  messages.forEach(processMessage);
-
-  await logstream(key, messages[messages.length - 1][0]);
-};
-
 export {
   findUserRepositoryByCourse,
   getCourseFromDb,
@@ -139,7 +111,6 @@ export {
   getUser,
   getUserByEmail,
   getUserRepo,
-  logstream,
   repositoryStream,
 };
 export { fetchGraphQL } from "./contentful";

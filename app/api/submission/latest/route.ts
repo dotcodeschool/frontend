@@ -24,10 +24,10 @@ export const GET = async (request: NextRequest) => {
 
     // Find the latest submission for the given repo_name
     const latestSubmission = await db.collection("submissions").findOne(
-      { repo_name: repoName },
+      { repo_name: repoName }, // eslint-disable-line camelcase
       {
-        sort: { created_at: -1 },
-        projection: { logstream_id: 1 },
+        sort: { created_at: -1 }, // eslint-disable-line camelcase
+        projection: { logstream_id: 1 }, // eslint-disable-line camelcase
       },
     );
 
@@ -38,6 +38,7 @@ export const GET = async (request: NextRequest) => {
       );
     }
 
+    // eslint-disable-next-line camelcase
     return NextResponse.json({ logstream_id: latestSubmission.logstream_id });
   } catch (error) {
     console.error("Error fetching latest submission:", error);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/consistent-type-assertions */
 import { ExtractedData, Query, QueryKey, QueryResult } from "../types";
 
 const getContentfulData = async <T extends QueryKey, U>(
@@ -57,14 +58,18 @@ const extractData = <T extends QueryKey>(
   return processResult(result);
 };
 
+type NestedObject = {
+  [key: string]: NestedObject | unknown;
+};
+
 const getNestedValue = (obj: unknown, path: string): unknown =>
-  path.split(".").reduce((acc: any, part: string) => {
+  path.split(".").reduce((acc: NestedObject, part: string) => {
     if (acc && typeof acc === "object" && part in acc) {
-      return acc[part];
+      return acc[part] as NestedObject;
     }
 
     throw new Error(`Invalid path: ${path}`);
-  }, obj);
+  }, obj as NestedObject);
 
 const processResult = <T>(result: unknown): ExtractedData<QueryResult<T>> => {
   if (isCollectionResult(result)) {

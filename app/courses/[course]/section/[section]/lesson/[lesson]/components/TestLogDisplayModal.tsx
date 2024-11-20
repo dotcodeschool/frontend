@@ -10,14 +10,9 @@ import {
   ModalFooter,
   ModalOverlay,
   useDisclosure,
-  VStack,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
 import { IoTerminal } from "react-icons/io5";
 
-import { isLogEntry } from "../utils/typeGuards";
-
-import { LogMessage, type LogEntry } from "./LogMessage";
 import { LogTabs } from "./LogTabs";
 import { TestStatus } from "./TestStatus";
 

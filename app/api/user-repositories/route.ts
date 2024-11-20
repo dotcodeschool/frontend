@@ -30,7 +30,7 @@ export const GET = async () => {
     // Transform the data to match the expected format
     const courseReminders = userRepos.map((repo: Repository) => ({
       courseId: repo.relationships.course.id.toString(),
-      courseName: repo.repo_template, // Using repo_template as course name for now
+      courseName: repo.repo_template, // Using repo_template for now
       enabled: repo.is_reminder_enabled,
       frequency: repo.expected_practice_frequency,
     }));
@@ -72,7 +72,9 @@ export const PUT = async (request: Request) => {
         },
         {
           $set: {
+            // eslint-disable-next-line camelcase
             is_reminder_enabled: reminder.enabled,
+            // eslint-disable-next-line camelcase
             expected_practice_frequency: reminder.frequency,
           },
         },
