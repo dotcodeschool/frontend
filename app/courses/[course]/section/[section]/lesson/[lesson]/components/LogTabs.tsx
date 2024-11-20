@@ -8,12 +8,14 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { useEffect, useState, useRef } from "react";
 import { IoTerminal } from "react-icons/io5";
+
 import { LogEntry, LogMessage } from "./LogMessage";
-import { useEffect, useState } from "react";
 
 const LogTabs = ({ logstreamId }: { logstreamId: string }) => {
   const [logs, setLogs] = useState<LogEntry[]>([]);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let eventSource: EventSource | null = null;
@@ -54,6 +56,7 @@ const LogTabs = ({ logstreamId }: { logstreamId: string }) => {
               setLogs((prevLogs) => {
                 const newLogs = [...prevLogs, data];
                 console.log("Updated logs array:", newLogs);
+
                 return newLogs;
               });
             } else {
@@ -93,6 +96,13 @@ const LogTabs = ({ logstreamId }: { logstreamId: string }) => {
     };
   }, [logstreamId]);
 
+  // Effect to scroll to bottom when new logs are added
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [logs]);
+
   return (
     <Tabs variant="unstyled">
       <TabList borderBottom="none">
@@ -104,10 +114,13 @@ const LogTabs = ({ logstreamId }: { logstreamId: string }) => {
       <TabIndicator bg="gray.400" borderRadius="1px" height="3px" mt="-1.5px" />
       <TabPanels pt={2}>
         <TabPanel
+          ref={scrollRef}
           background="gray.800"
           border="1px solid"
           borderColor="gray.600"
           rounded="md"
+          maxH="70vh"
+          overflow="auto"
         >
           <VStack align="stretch" spacing={2}>
             {logs.length === 0 ? (
