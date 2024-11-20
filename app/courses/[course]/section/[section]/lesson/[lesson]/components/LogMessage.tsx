@@ -9,7 +9,7 @@ export type LogEntry = {
 };
 
 export const LogMessage = ({ log }: { log: LogEntry }) => (
-  <Text fontFamily="mono" fontSize="sm">
+  <Text display="block" fontFamily="mono" fontSize="sm" whiteSpace="pre-wrap">
     <Text as="span" color="blue.300">
       [{log.eventType}]
     </Text>{" "}

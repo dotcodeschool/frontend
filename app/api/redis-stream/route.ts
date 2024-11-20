@@ -30,6 +30,7 @@ const parseByteString = (str: string): number[] | null => {
 const bytesToString = (bytes: number[]): string => {
   // Create a Uint8Array from the byte array and use TextDecoder for proper UTF-8 handling
   const uint8Array = new Uint8Array(bytes);
+
   return new TextDecoder("utf-8").decode(uint8Array);
 };
 
@@ -40,6 +41,21 @@ const handleStringBytes = (bytes: string): string => {
   }
 
   return bytes;
+};
+
+const parseJsonMessage = (str: string): string => {
+  try {
+    const parsed = JSON.parse(str);
+    // Log the full message details to console
+    console.log("Parsed message:", parsed);
+
+    // Return only the output field
+    return parsed.output || str;
+  } catch (error) {
+    console.error("Failed to parse JSON message:", error);
+
+    return str;
+  }
 };
 
 const convertBytesToString = (bytes: unknown): string => {
@@ -68,10 +84,12 @@ const parseStreamFields = (messageId: string, fields: string[]): StreamData => {
 
   const eventType = fieldMap.get("event_type");
   const bytes = fieldMap.get("bytes");
+  const messageStr = convertBytesToString(bytes);
+  const message = parseJsonMessage(messageStr);
 
   return {
     eventType: typeof eventType === "string" ? eventType : "unknown",
-    message: convertBytesToString(bytes),
+    message,
     timestamp: new Date(parseInt(messageId.split("-")[0])).toISOString(),
   };
 };
