@@ -27,8 +27,11 @@ const parseByteString = (str: string): number[] | null => {
   return null;
 };
 
-const bytesToString = (bytes: number[]): string =>
-  String.fromCharCode(...bytes);
+const bytesToString = (bytes: number[]): string => {
+  // Create a Uint8Array from the byte array and use TextDecoder for proper UTF-8 handling
+  const uint8Array = new Uint8Array(bytes);
+  return new TextDecoder("utf-8").decode(uint8Array);
+};
 
 const handleStringBytes = (bytes: string): string => {
   const parsedBytes = parseByteString(bytes);
@@ -41,10 +44,11 @@ const handleStringBytes = (bytes: string): string => {
 
 const convertBytesToString = (bytes: unknown): string => {
   if (bytes instanceof Buffer) {
-    return bytes.toString();
+    // Use Buffer's built-in UTF-8 decoding
+    return bytes.toString("utf-8");
   }
   if (bytes instanceof Uint8Array) {
-    return new TextDecoder().decode(bytes);
+    return new TextDecoder("utf-8").decode(bytes);
   }
   if (typeof bytes === "string") {
     return handleStringBytes(bytes);
