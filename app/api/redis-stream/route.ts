@@ -1,5 +1,4 @@
 import { Redis } from "ioredis";
-import { type StreamResponse } from "./types";
 
 type StreamData = {
   eventType: string;
@@ -7,24 +6,96 @@ type StreamData = {
   timestamp: string;
 };
 
+const isNumberArray = (value: unknown): value is number[] =>
+  Array.isArray(value) && value.every((b) => typeof b === "number");
+
+const parseByteString = (str: string): number[] | null => {
+  try {
+    // Remove brackets and split by comma
+    const numbers = str
+      .replace(/[\[\]]/g, "")
+      .split(",")
+      .map((n) => parseInt(n.trim(), 10));
+
+    if (numbers.every((n) => !isNaN(n))) {
+      return numbers;
+    }
+  } catch {
+    // If parsing fails, return null
+  }
+
+  return null;
+};
+
+const bytesToString = (bytes: number[]): string =>
+  String.fromCharCode(...bytes);
+
+const handleStringBytes = (bytes: string): string => {
+  const parsedBytes = parseByteString(bytes);
+  if (parsedBytes) {
+    return bytesToString(parsedBytes);
+  }
+
+  return bytes;
+};
+
+const convertBytesToString = (bytes: unknown): string => {
+  if (bytes instanceof Buffer) {
+    return bytes.toString();
+  }
+  if (bytes instanceof Uint8Array) {
+    return new TextDecoder().decode(bytes);
+  }
+  if (typeof bytes === "string") {
+    return handleStringBytes(bytes);
+  }
+  if (isNumberArray(bytes)) {
+    return bytesToString(bytes);
+  }
+
+  return "";
+};
+
 const parseStreamFields = (messageId: string, fields: string[]): StreamData => {
-  const fieldMap = new Map<string, string>();
+  const fieldMap = new Map<string, unknown>();
   for (let i = 0; i < fields.length; i += 2) {
     fieldMap.set(fields[i], fields[i + 1]);
   }
 
+  const eventType = fieldMap.get("event_type");
+  const bytes = fieldMap.get("bytes");
+
   return {
-    eventType: fieldMap.get("event_type") ?? "unknown",
-    message: fieldMap.get("bytes") ?? "",
+    eventType: typeof eventType === "string" ? eventType : "unknown",
+    message: convertBytesToString(bytes),
     timestamp: new Date(parseInt(messageId.split("-")[0])).toISOString(),
   };
+};
+
+const handleStreamMessages = async (
+  messages: [string, string[]][],
+  writeSSE: (data: StreamData) => Promise<void>,
+  isConnectionClosed: () => boolean,
+): Promise<string | undefined> => {
+  let lastId: string | undefined;
+
+  for (const [id, fields] of messages) {
+    if (isConnectionClosed()) {
+      return lastId;
+    }
+    const data = parseStreamFields(id, fields);
+    await writeSSE(data);
+    lastId = id;
+  }
+
+  return lastId;
 };
 
 const createStreamHandler = (
   redis: Redis,
   writer: WritableStreamDefaultWriter<Uint8Array>,
 ) => {
-  let isConnectionClosed = false;
+  let closed = false;
   const encoder = new TextEncoder();
 
   const writeSSE = async (data: StreamData): Promise<void> => {
@@ -36,50 +107,60 @@ const createStreamHandler = (
     await writer.write(encoder.encode(`: keep-alive\n\n`));
   };
 
+  const isConnectionClosed = (): boolean => closed;
+
   const cleanup = (): void => {
-    isConnectionClosed = true;
+    closed = true;
     void writer.close();
     redis.disconnect();
   };
 
+  const readStreamMessages = async (
+    logstreamId: string,
+    lastId: string,
+  ): Promise<string> => {
+    const response = await redis.xread(
+      "BLOCK",
+      1000,
+      "STREAMS",
+      logstreamId,
+      lastId,
+    );
+
+    if (!response?.[0]) {
+      return lastId;
+    }
+
+    const [, messages] = response[0];
+    const newLastId = await handleStreamMessages(
+      messages,
+      writeSSE,
+      isConnectionClosed,
+    );
+
+    return newLastId ?? lastId;
+  };
+
   const processMessages = async (logstreamId: string): Promise<void> => {
-    const initialMessage: StreamData = {
+    await writeSSE({
       eventType: "info",
       message: "Connected to log stream",
       timestamp: new Date().toISOString(),
-    };
-    await writeSSE(initialMessage);
+    });
 
     const pastMessages = await redis.xrange(logstreamId, "-", "+");
-
-    for (const [id, fields] of pastMessages) {
-      if (isConnectionClosed) return;
-      const data = parseStreamFields(id, fields);
-      await writeSSE(data);
-    }
+    let currentId =
+      (await handleStreamMessages(
+        pastMessages,
+        writeSSE,
+        isConnectionClosed,
+      )) ?? "$";
 
     const keepAliveInterval = setInterval(() => void writeKeepAlive(), 30000);
 
     try {
-      let lastId = "$";
-      while (!isConnectionClosed) {
-        const response = await redis.xread(
-          "BLOCK",
-          1000,
-          "STREAMS",
-          logstreamId,
-          lastId,
-        );
-
-        if (response?.[0]) {
-          const [, messages] = response[0];
-          for (const [id, fields] of messages) {
-            if (isConnectionClosed) return;
-            const data = parseStreamFields(id, fields);
-            await writeSSE(data);
-            lastId = id;
-          }
-        }
+      while (!isConnectionClosed()) {
+        currentId = await readStreamMessages(logstreamId, currentId);
       }
     } finally {
       clearInterval(keepAliveInterval);
