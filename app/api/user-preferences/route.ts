@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 
 import { auth } from "@/auth";
 import { getUserByEmail } from "@/lib/api";
-import { getUserInfo } from "@/lib/helpers";
 import { clientPromise } from "@/lib/db/mongodb";
+import { getUserInfo } from "@/lib/helpers";
 
 export const GET = async () => {
   try {
@@ -29,6 +29,7 @@ export const GET = async () => {
     return NextResponse.json(preferences);
   } catch (error) {
     console.error("Error fetching user preferences:", error);
+
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },
@@ -71,6 +72,7 @@ export const PUT = async (request: Request) => {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error updating user preferences:", error);
+
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },

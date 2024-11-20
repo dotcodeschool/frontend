@@ -1,11 +1,13 @@
 import { Container, Heading } from "@chakra-ui/react";
 import { redirect } from "next/navigation";
-import { auth } from "../../auth";
 
-import { NotificationPreferences } from "./components/NotificationPreferences";
 import { Navbar } from "@/components/navbar";
 
-export default async function SettingsPage() {
+import { auth } from "@/auth";
+
+import { NotificationPreferences } from "./components/NotificationPreferences";
+
+const SettingsPage = async () => {
   const session = await auth();
 
   if (!session) {
@@ -25,4 +27,6 @@ export default async function SettingsPage() {
       </Container>
     </>
   );
-}
+};
+
+export default SettingsPage;

@@ -92,6 +92,7 @@ export const NotificationPreferences = () => {
 
   const handleSavePreferences = async () => {
     setIsSaving(true);
+
     try {
       const [reposResponse, prefsResponse] = await Promise.all([
         fetch("/api/user-repositories", {
@@ -164,7 +165,7 @@ export const NotificationPreferences = () => {
                 />
               ))
             ) : (
-              <Box py={4} textAlign="center" color="gray.400">
+              <Box color="gray.400" py={4} textAlign="center">
                 No course reminders available
               </Box>
             )}
@@ -174,11 +175,11 @@ export const NotificationPreferences = () => {
         <Flex justify="flex-end">
           <Button
             colorScheme="green"
-            onClick={handleSavePreferences}
-            size="md"
             isDisabled={isLoading}
             isLoading={isSaving}
             loadingText="Saving..."
+            onClick={handleSavePreferences}
+            size="md"
           >
             Save Preferences
           </Button>

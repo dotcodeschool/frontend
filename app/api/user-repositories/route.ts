@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 
 import { auth } from "@/auth";
 import { getUserByEmail, getRepositories } from "@/lib/api";
-import { getUserInfo } from "@/lib/helpers";
 import { Repository } from "@/lib/db/models";
+import { getUserInfo } from "@/lib/helpers";
 
 export const GET = async () => {
   try {
@@ -38,6 +38,7 @@ export const GET = async () => {
     return NextResponse.json(courseReminders);
   } catch (error) {
     console.error("Error fetching user repositories:", error);
+
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },
@@ -81,6 +82,7 @@ export const PUT = async (request: Request) => {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error updating repositories:", error);
+
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },
