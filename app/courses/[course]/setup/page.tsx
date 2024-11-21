@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypeMdxCodeProps from "rehype-mdx-code-props";
@@ -18,10 +18,10 @@ import { StepsComponent } from "./components/StepsComponent";
 
 // TODO: Move helper functions to ./helpers/index.ts
 
-// Helper function to authenticate the user
-const authenticateUser = async (course: string) => {
+// Helper function to authenticate the user and get their ID
+const authenticateUserAndGetId = async (course: string) => {
   const session = await auth();
-  if (!session || !session.user || typeof session.user.email !== "string") {
+  if (!session?.user?.email) {
     await handleSignIn({
       redirectTo: `/courses/${course}/setup`,
     });
@@ -29,14 +29,25 @@ const authenticateUser = async (course: string) => {
     return null;
   }
 
-  return session.user.email;
-};
+  try {
+    const user = await getUserByEmail(session.user.email);
+    // Only redirect to sign in if user truly doesn't exist
+    // Not if we got a DB error
+    if (user === null) {
+      await handleSignIn({
+        redirectTo: `/courses/${course}/setup`,
+      });
 
-// Helper function to get user ID by email
-const getUserIdByEmail = async (email: string) => {
-  const getUserResponse = await getUserByEmail(email);
+      return null;
+    }
 
-  return getUserResponse?._id;
+    return user._id;
+  } catch (error) {
+    // Log the error but don't redirect on DB errors
+    console.error("Database error:", error);
+
+    return null;
+  }
 };
 
 // Helper function to serialize repository setup steps
@@ -73,22 +84,17 @@ const serializeRepositorySetup = async (
 const SetupPage = async ({ params }: { params: { course: string } }) => {
   const { course } = params;
 
-  const email = await authenticateUser(course);
-  if (!email) {
-    return null;
-  }
-
-  const userId = await getUserIdByEmail(email);
+  const userId = await authenticateUserAndGetId(course);
   if (!userId) {
-    throw new Error("User not found");
+    return <Text>loading...</Text>;
   }
 
   const courseData = await getCourseFromDb(course);
-  const repo = await findUserRepositoryByCourse(course, userId);
-
   if (!courseData) {
     return notFound();
   }
+
+  const repo = await findUserRepositoryByCourse(course, userId);
 
   const repositorySetup: RepositorySetup = {
     id: "repository-setup",

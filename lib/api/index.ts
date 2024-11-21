@@ -29,6 +29,7 @@ const getUserByEmail = async (email: string) => {
 
 const getUserRepo = async (courseSlug: string) => {
   const session = await auth();
+  console.log("session", session);
   const userInfo = getUserInfo(session);
 
   if (userInfo instanceof Error) {
