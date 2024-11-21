@@ -6,6 +6,8 @@ import { getUserByEmail, getRepositories } from "@/lib/api";
 import { Repository } from "@/lib/db/models";
 import { getUserInfo } from "@/lib/helpers";
 
+export const dynamic = "force-dynamic";
+
 export const GET = async () => {
   try {
     const session = await auth();

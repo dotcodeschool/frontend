@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getRepositories, getUserRepo } from "@/lib/api";
 import { convertKeysToSnakeCase } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 const getRepoByName = async (repoName: string) => {
   const filter = convertKeysToSnakeCase({ repoName });
   const repositories = await getRepositories();

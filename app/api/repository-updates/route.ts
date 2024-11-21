@@ -6,6 +6,8 @@ import { NextRequest } from "next/server";
 import { repositoryStream } from "@/lib/api";
 import { Repository } from "@/lib/db/models";
 
+export const dynamic = "force-dynamic";
+
 export const GET = async (_req: NextRequest) => {
   const responseStream = new TransformStream<Uint8Array>();
   const writer = responseStream.writable.getWriter();

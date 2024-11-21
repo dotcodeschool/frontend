@@ -5,6 +5,8 @@ import { getUserByEmail } from "@/lib/api";
 import { clientPromise } from "@/lib/db/mongodb";
 import { getUserInfo } from "@/lib/helpers";
 
+export const dynamic = "force-dynamic";
+
 export const GET = async () => {
   try {
     const session = await auth();
