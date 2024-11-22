@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "check": "next lint",
     "check:strict": "pnpm check --report-unused-disable-directives-severity \"error\" --no-inline-config",
@@ -14,10 +14,12 @@
     "setup": "node ./lib/utils/contentfulSetup && pnpm gen",
     "gen": "DOTENV_CONFIG_PATH=./.env.local graphql-codegen --config codegen.yml --require dotenv/config",
     "sort": "sort-json",
-    "prepare": "husky"
+    "prepare": "husky",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^2.0.9",
+    "@auth/prisma-adapter": "^2.7.4",
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/next-js": "^2.2.0",
     "@chakra-ui/react": "^2.8.2",
@@ -25,6 +27,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@monaco-editor/react": "^4.6.0",
+    "@prisma/client": "^5.22.0",
     "@types/lodash": "^4.17.7",
     "@vercel/speed-insights": "^1.0.12",
     "ansi-to-html": "^0.7.2",
@@ -87,6 +90,7 @@
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
     "prettier": "^3.3.2",
+    "prisma": "^5.22.0",
     "sort-json": "^2.0.1",
     "typescript": "^5"
   },

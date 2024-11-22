@@ -1,14 +1,15 @@
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
-import NextAuth, { NextAuthConfig } from "next-auth";
-import GitHub from "next-auth/providers/github";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import NextAuth from "next-auth";
 
-import { clientPromise } from "@/lib/db/mongodb";
+import { authConfig } from "./auth.config";
+import { clientPromise } from "./lib/db/mongodb";
+import { prisma } from "./lib/db/prisma";
 
-const adapter = MongoDBAdapter(clientPromise);
-
-export const authConfig: NextAuthConfig = {
-  providers: [GitHub],
-  adapter,
-};
-
-export const { auth, handlers, signIn, signOut } = NextAuth(authConfig);
+export const { auth, handlers, signIn, signOut } = NextAuth({
+  ...authConfig,
+  adapter: PrismaAdapter(prisma),
+  session: {
+    strategy: "jwt",
+  },
+});
