@@ -15,7 +15,8 @@
     "gen": "DOTENV_CONFIG_PATH=./.env.local graphql-codegen --config codegen.yml --require dotenv/config",
     "sort": "sort-json",
     "prepare": "husky",
-    "postinstall": "prisma generate"
+    "prismaDev": "dotenv -e .env.local -- pnpm dlx prisma db push",
+    "postinstall": "pnpm add --save-dev dotenv-cli && prisma generate && pnpm run prismaDev"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^2.0.9",
@@ -75,6 +76,7 @@
     "commitizen": "^4.3.0",
     "cz-conventional-changelog": "^3.3.0",
     "dotenv": "^16.4.5",
+    "dotenv-cli": "^7.4.4",
     "eslint": "^8",
     "eslint-config-next": "14.2.7",
     "eslint-config-prettier": "^9.1.0",
