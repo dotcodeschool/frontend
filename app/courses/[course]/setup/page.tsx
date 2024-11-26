@@ -21,6 +21,7 @@ import { StepsComponent } from "./components/StepsComponent";
 // Helper function to authenticate the user and get their ID
 const authenticateUserAndGetId = async (course: string) => {
   const session = await auth();
+  console.log("[setup] authenticateUserAndGetId session", session);
   if (!session?.user?.email) {
     await handleSignIn({
       redirectTo: `/courses/${course}/setup`,

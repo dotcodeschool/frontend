@@ -2,6 +2,7 @@ import { Accordion, Box, Heading, Text } from "@chakra-ui/react";
 import { notFound } from "next/navigation";
 import React from "react";
 
+import { auth } from "@/auth";
 import { ButtonPrimary } from "@/components";
 import { isSectionArray } from "@/lib/helpers";
 
@@ -28,6 +29,10 @@ const CourseContent = async ({ slug }: { slug: string }) => {
   if (!sections || !isSectionArray(sections)) {
     return notFound();
   }
+
+  const session = await auth();
+
+  console.log("[CourseContent] session", session);
 
   const startCourseUrl = await getStartCourseUrl(format ?? null, slug);
 

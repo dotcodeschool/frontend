@@ -22,9 +22,14 @@ const getUser = async (userId: ObjectId) => {
 
 const getUserByEmail = async (email: string) => {
   const database = await db();
+  console.log("[getUserByEmail] db", database.databaseName);
   const users = database.collection<User>("users");
+  console.log("[getUserByEmail] users", users);
+  const user = users.findOne({ email });
 
-  return users.findOne({ email });
+  console.log("[getUserByEmail] user", await user);
+
+  return user;
 };
 
 const getUserRepo = async (courseSlug: string) => {
@@ -39,6 +44,7 @@ const getUserRepo = async (courseSlug: string) => {
   }
 
   const user = await getUserByEmail(userInfo.email);
+  console.log("[getUserRepo] user", user);
   const userId = user?._id ?? null;
 
   if (!userId) {
