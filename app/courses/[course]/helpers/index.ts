@@ -1,3 +1,5 @@
+import { Session } from "next-auth";
+
 import { getUserRepo } from "@/lib/api";
 import { getContentfulData } from "@/lib/api/contentful";
 
@@ -43,7 +45,11 @@ const getLessonCollectionTotal = async (sectionId: string) => {
   return lessonsData.total;
 };
 
-const getStartCourseUrl = async (format: string | null, slug: string) => {
+const getStartCourseUrl = async (
+  format: string | null,
+  slug: string,
+  sessionContext?: Session,
+) => {
   const setupUrl = `/courses/${slug}/setup`;
   const repoSetupUrl = `${setupUrl}?step=repo_test`;
   const lessonsUrl = `/courses/${slug}/lesson/1/chapter/1`;
@@ -53,7 +59,7 @@ const getStartCourseUrl = async (format: string | null, slug: string) => {
     return lessonsUrl;
   }
 
-  const repo = await getUserRepo(slug);
+  const repo = await getUserRepo(slug, sessionContext);
 
   if (!repo?.test_ok) {
     return repoSetupUrl;

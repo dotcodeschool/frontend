@@ -32,9 +32,10 @@ const getUserByEmail = async (email: string) => {
   return user;
 };
 
-const getUserRepo = async (courseSlug: string) => {
-  const session = await auth();
-  console.log("session", session);
+const getUserRepo = async (courseSlug: string, sessionContext?: Session) => {
+  const session = sessionContext ?? (await auth());
+  // const session = await auth();
+  console.log("[getUserRepo] session", session);
   const userInfo = getUserInfo(session);
 
   if (userInfo instanceof Error) {

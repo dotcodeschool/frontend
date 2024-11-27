@@ -12,7 +12,7 @@ import { CourseDetails } from "../types";
 
 import { CourseHeader } from "./CourseHeader";
 import { ModuleItem, ModuleList } from "./modules";
-
+// eslint-disable-next-line
 const CourseContent = async ({ slug }: { slug: string }) => {
   const courseDetails = await getCourseDetails(
     slug,
@@ -34,7 +34,11 @@ const CourseContent = async ({ slug }: { slug: string }) => {
 
   console.log("[CourseContent] session", session);
 
-  const startCourseUrl = await getStartCourseUrl(format ?? null, slug);
+  const startCourseUrl = await getStartCourseUrl(
+    format ?? null,
+    slug,
+    session ?? undefined,
+  );
 
   return (
     <Box maxW="4xl" mx="auto">
