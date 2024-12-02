@@ -2,6 +2,7 @@ import { Box, Text } from "@chakra-ui/react";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import rehypeMdxCodeProps from "rehype-mdx-code-props";
+import { ErrorBoundary } from "react-error-boundary";
 
 import { auth } from "@/auth";
 import { MDXComponents, Navbar } from "@/components";
@@ -84,15 +85,40 @@ const serializeRepositorySetup = async (
 
 const SetupPage = async ({ params }: { params: { course: string } }) => {
   const { course } = params;
+  console.log("[setup] Course param:", course);
 
   const userId = await authenticateUserAndGetId(course);
   if (!userId) {
+    console.log("[setup] No userId found");
     return <Text>loading...</Text>;
   }
 
   const courseData = await getCourseFromDb(course);
+  console.log("[setup] Course data:", courseData);
   if (!courseData) {
-    return notFound();
+    console.log("[setup] Course not found in database");
+    return (
+      <div
+        style={{
+          margin: "1rem",
+          color: "red",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          fontSize: "2rem",
+          fontWeight: "bold",
+          textAlign: "center",
+          textShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
+
+          borderRadius: "10px",
+        }}
+      >
+        <h1>Course not found</h1>
+      </div>
+    );
+
+    // return notFound();
   }
 
   const repo = await findUserRepositoryByCourse(course, userId);
@@ -126,18 +152,20 @@ const SetupPage = async ({ params }: { params: { course: string } }) => {
   const repoSetupContent = await serializeRepositorySetup(repositorySetup);
 
   return (
-    <Box maxW="6xl" mx="auto" px={[4, 12]}>
-      <Navbar cta={false} />
-      <StepsComponent
-        courseId={courseData._id}
-        courseSlug={course}
-        initialRepo={repo}
-        questions={questionsData}
-        repositorySetup={repoSetupContent}
-        startingLessonUrl={`/courses/${course}/lesson/1/chapter/1`}
-        userId={userId}
-      />
-    </Box>
+    <ErrorBoundary fallback={<div>Something went wrong</div>}>
+      <Box maxW="6xl" mx="auto" px={[4, 12]}>
+        <Navbar cta={false} />
+        <StepsComponent
+          courseId={courseData._id}
+          courseSlug={course}
+          initialRepo={repo}
+          questions={questionsData}
+          repositorySetup={repoSetupContent}
+          startingLessonUrl={`/courses/${course}/lesson/1/chapter/1`}
+          userId={userId}
+        />
+      </Box>
+    </ErrorBoundary>
   );
 };
 

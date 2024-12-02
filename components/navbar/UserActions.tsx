@@ -8,6 +8,7 @@ import { getUserInfo, isUserInfoError } from "@/lib/helpers";
 import { ButtonLogin } from "./authentication";
 import { ButtonStartCourse } from "./ButtonStartCourse";
 import { UserMenu } from "./UserMenu";
+import Link from "next/link";
 
 const UserActions = ({
   cta = true,
@@ -17,7 +18,11 @@ const UserActions = ({
   const user = getUserInfo(session);
 
   if (isUserInfoError(user)) {
-    return <ButtonLogin />;
+    return (
+      <Link href="/login">
+        <ButtonLogin />
+      </Link>
+    );
   }
 
   return cta ? <ButtonStartCourse {...restProps} /> : <UserMenu />;

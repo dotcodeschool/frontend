@@ -10,7 +10,7 @@ import {
 import {
   QUERY_COURSE_OVERVIEW_FIELDS,
   QUERY_COURSE_OVERVIEW_METADATA_FIELDS,
-} from "../queries";
+} from "../../../../queries";
 
 type Module = {
   id: string;

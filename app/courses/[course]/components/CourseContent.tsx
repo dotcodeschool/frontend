@@ -7,7 +7,7 @@ import { ButtonPrimary } from "@/components";
 import { isSectionArray } from "@/lib/helpers";
 
 import { getCourseDetails, getStartCourseUrl } from "../helpers";
-import { QUERY_COURSE_OVERVIEW_FIELDS } from "../queries";
+import { QUERY_COURSE_OVERVIEW_FIELDS } from "../../../../queries";
 import { CourseDetails } from "../types";
 
 import { CourseHeader } from "./CourseHeader";

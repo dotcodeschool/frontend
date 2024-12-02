@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^2.0.9",
-    "@auth/prisma-adapter": "^2.7.4",
+    "@auth/prisma-adapter": "1.6.0",
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/next-js": "^2.2.0",
     "@chakra-ui/react": "^2.8.2",
@@ -43,6 +43,7 @@
     "prism-react-renderer": "^2.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-error-boundary": "^4.1.2",
     "react-icons": "^4.12.0",
     "react-split-pane": "^0.1.92",
     "rehype-highlight": "^7.0.0",
@@ -65,7 +66,7 @@
     "@stylistic/eslint-plugin-ts": "^2.8.0",
     "@types/mdx": "^2.0.13",
     "@types/node": "^20",
-    "@types/react": "^18",
+    "@types/react": "^18.3.12",
     "@types/react-copy-to-clipboard": "^5.0.7",
     "@types/react-dom": "^18",
     "@types/react-lottie": "^1.2.10",
@@ -92,7 +93,7 @@
     "prettier": "^3.3.2",
     "prisma": "^5.22.0",
     "sort-json": "^2.0.1",
-    "typescript": "^5"
+    "typescript": "^5.7.2"
   },
   "config": {
     "commitizen": {

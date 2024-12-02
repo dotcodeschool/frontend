@@ -3,7 +3,7 @@ import { Session } from "next-auth";
 import { getUserRepo } from "@/lib/api";
 import { getContentfulData } from "@/lib/api/contentful";
 
-import { QUERY_LESSONS_COLLECTION_ID_AND_TOTAL } from "../queries";
+import { QUERY_LESSONS_COLLECTION_ID_AND_TOTAL } from "../../../../queries";
 import { CourseDetails, CourseQuery, LessonIdAndTotalData } from "../types";
 
 const getCourseDetails = async (

@@ -3,7 +3,7 @@ import {
   QUERY_COURSE_INFORMATION,
   QUERY_LESSON_INFORMATION,
   QUERY_SECTION_INFORMATION,
-} from "@/app/courses/[course]/queries";
+} from "@/queries";
 import { CourseDetails } from "@/app/courses/[course]/types";
 import { getContentfulData } from "@/lib/api/contentful";
 import { Section, TypeFile, Lesson, Asset, Maybe } from "@/lib/types";

@@ -15,19 +15,19 @@ const db = async () => {
 
 const getUser = async (userId: ObjectId) => {
   const database = await db();
-  const users = database.collection<User>("users");
+  const users = database.collection<User>("user");
 
   return users.findOne({ _id: userId });
 };
 
 const getUserByEmail = async (email: string) => {
   const database = await db();
-  console.log("[getUserByEmail] db", database.databaseName);
-  const users = database.collection<User>("users");
-  console.log("[getUserByEmail] users", users);
+  // console.log("[getUserByEmail] db", database.databaseName);
+  const users = database.collection<User>("user");
+  // console.log("[getUserByEmail] users", users);
   const user = users.findOne({ email });
 
-  console.log("[getUserByEmail] user", await user);
+  // console.log("[getUserByEmail] user", await user);
 
   return user;
 };

@@ -158,14 +158,36 @@ model userProgress {
   relationships UserProgressRelationships
 }
 
-model users {
-  id            String             @id @default(auto()) @map("_id") @db.ObjectId
-  email         String
-  /// Could not determine type: the field only had null or empty values in the sample set.
-  emailVerified Json?
-  image         String
-  name          String
-  preferences   UsersPreferences?
-  progress      UsersProgress?
-  relationships UsersRelationships
+model User {
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  name           String?
+  hashedPassword String?
+  email          String?   @unique
+  emailVerified  DateTime?
+  image          String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  Account        Account[]
+
+  @@map("user")
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  token_type        String?
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  id_token          String? @db.String
+  scope             String?
+  session_state     String?
+  expires_at        Int?
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @unique @db.ObjectId
+
+  @@unique([provider, providerAccountId])
+  @@map("account")
 }
