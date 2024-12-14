@@ -11,4 +11,5 @@ export type Repository = {
   relationships: Record<string, Relationship>;
   expected_practice_frequency: PracticeFrequencyOptions;
   is_reminder_enabled: boolean;
+  lastEmailSent?: string; // ISO date string of when the last reminder email was sent
 };

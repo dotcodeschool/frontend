@@ -1,0 +1,23 @@
+{
+  "name": "reminder-service",
+  "version": "1.0.0",
+  "description": "Lambda function to send practice reminder emails",
+  "type": "module",
+  "main": "dist/reminder-service.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@aws-sdk/client-ses": "^3.712.0",
+    "aws-lambda": "^1.0.7",
+    "date-fns": "^3.6.0",
+    "mongodb": "^6.12.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.146",
+    "@types/node": "^20.17.10",
+    "dotenv": "^16.4.7",
+    "typescript": "^5.7.2"
+  }
+}
