@@ -4,10 +4,13 @@ import GitHub from "next-auth/providers/github";
 // Base config without database adapter for edge compatibility
 export const authConfig = {
   providers: [],
+  debug: true,
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const isCourse = nextUrl.pathname.startsWith("/courses");
+      
+      return true;
 
       if (isCourse) {
         if (isLoggedIn) return true;
