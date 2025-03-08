@@ -514,7 +514,7 @@ function mapSectionsToLessons(sections: any[]) {
       id: section.sys.id,
       title: section.fields.title,
       description: section.fields.description,
-      lessons: section.fields.lessons
+      lessons: section.fields.lessons,
     };
   });
 }

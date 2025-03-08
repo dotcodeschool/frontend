@@ -271,16 +271,13 @@ export async function getStaticProps({
   };
 }) {
   const res = await getContentByType("courseModule");
-  const entry = res.items.find(
-    (item) => item.fields.slug === params.course,
-  );
+  const entry = res.items.find((item) => item.fields.slug === params.course);
 
   if (!entry) {
     throw new Error("No course found with the provided slug");
   }
 
-  const { title, description, author, level, language } =
-    entry.fields as any;
+  const { title, description, author, level, language } = entry.fields as any;
 
   const authorFields = author.fields;
 
@@ -305,11 +302,13 @@ export async function getStaticProps({
       }
 
       const lessonDescription = get(lesson, "fields.description") || "";
-      
-      const serializedLessonDescription = typeof lessonDescription === "string" ?
-        await serialize(lessonDescription) : console.error("Lesson description is not a string");
 
-        console.log(lesson)
+      const serializedLessonDescription =
+        typeof lessonDescription === "string"
+          ? await serialize(lessonDescription)
+          : console.error("Lesson description is not a string");
+
+      console.log(lesson);
 
       return {
         index,

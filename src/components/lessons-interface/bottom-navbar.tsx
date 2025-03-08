@@ -31,7 +31,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { map } from "lodash";
 import axios from "axios";
 import { useSession } from "next-auth/react";
-import ProgressBar from "@/components/lessons-interface/progress-bar";
 
 interface SectionProps {
   courseId: string;

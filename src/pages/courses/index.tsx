@@ -2,7 +2,17 @@ import Navbar from "@/components/navbar";
 import PrimaryButton from "@/components/primary-button";
 import { getContentByType } from "@/pages/api/get-content";
 import { ArrowBackIcon } from "@chakra-ui/icons";
-import { Box, Card, Heading, Link, Stack, Text, Circle, Flex, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Card,
+  Heading,
+  Link,
+  Stack,
+  Text,
+  Circle,
+  Flex,
+  VStack,
+} from "@chakra-ui/react";
 
 interface Course {
   slug: string;
@@ -24,7 +34,8 @@ export default function CoursesPage({ courses }: { courses: Course[] }) {
           Courses
         </Heading>
         <Text color="gray.400" mb={8}>
-          We recommend following the order below for the best learning experience.
+          We recommend following the order below for the best learning
+          experience.
         </Text>
         <VStack spacing={0} align="stretch">
           {courses.map((course, index) => (
@@ -103,18 +114,18 @@ export async function getStaticProps() {
     "rust-state-machine",
     "substrate-kitties",
     "intro-to-papi",
-    "build-your-own-dex"
+    "build-your-own-dex",
   ];
 
   // Sort the courses based on the slug order
   const sortedCourses = entry.sort((a, b) => {
     const indexA = slugOrder.indexOf(a.slug);
     const indexB = slugOrder.indexOf(b.slug);
-    
+
     // If a slug is not in the order array, put it at the end
     if (indexA === -1) return 1;
     if (indexB === -1) return -1;
-    
+
     return indexA - indexB;
   });
 
