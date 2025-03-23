@@ -349,6 +349,7 @@ export default function CourseModule({
         courseId={courseId}
         lessonId={lessonId}
         chapterId={chapterId}
+        chapters={chapters}
         current={current}
         sections={sections}
         doesMatch={doesMatch}

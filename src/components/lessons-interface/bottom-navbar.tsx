@@ -112,6 +112,7 @@ interface BottomNavbarProps {
   prev?: string;
   next?: string;
   sections: any[];
+  chapters: any[];
   toggleAnswer?: () => void;
 }
 
@@ -121,6 +122,7 @@ const BottomNavbar = ({
   courseId,
   lessonId,
   chapterId,
+  chapters,
   current,
   prev,
   next,
@@ -227,7 +229,7 @@ const BottomNavbar = ({
   }, [session, saveProgress]);
   return (
     <>
-      <Progress value={progress} max={sections.length} colorScheme="green" />;
+      <Progress value={progress} max={chapters.length} colorScheme="green" />;
       <Box
         position="fixed"
         w="100%"
