@@ -1,6 +1,7 @@
 import "@/styles/resizer.css";
 
 import { Box } from "@chakra-ui/react";
+import { bundleMdxContent } from "@/lib/mdx-bundle";
 
 import { BottomNavbar } from "./components";
 import { IconButtonFeedback } from "./components/IconButtonFeedback";
@@ -16,7 +17,33 @@ const LessonPage = async ({
 }: {
   params: { course: string; section: string; lesson: string };
 }) => {
-  const lessonPageData = await getLessonPageData(params);
+  const rawLessonPageData = await getLessonPageData(params);
+  
+  // Process the MDX content using the bundler
+  let bundledMdxCode = '';
+  if (rawLessonPageData.lessonData.content) {
+    try {
+      const result = await bundleMdxContent(rawLessonPageData.lessonData.content);
+      bundledMdxCode = result.code;
+    } catch (error) {
+      console.error("Error bundling lesson MDX:", error);
+      // Provide fallback content if bundling fails
+      bundledMdxCode = '';
+    }
+  }
+
+  // Prepare data for client components
+  const lessonPageData = {
+    ...rawLessonPageData,
+    lessonData: {
+      ...rawLessonPageData.lessonData,
+      content: bundledMdxCode,
+    },
+    // Serialize MongoDB objects to plain objects for client components
+    startingFiles: JSON.parse(JSON.stringify(rawLessonPageData.startingFiles)),
+    solution: JSON.parse(JSON.stringify(rawLessonPageData.solution)),
+    sections: JSON.parse(JSON.stringify(rawLessonPageData.sections)),
+  };
 
   const renderContent = () => {
     if (lessonPageData.format === "inBrowserCourse") {

@@ -7,18 +7,13 @@ import {
   Box,
   Text,
 } from "@chakra-ui/react";
-import { MDXRemote } from "next-mdx-remote";
-import { serialize } from "next-mdx-remote/serialize";
 import React, { useEffect, useState } from "react";
-import rehypeMdxCodeProps from "rehype-mdx-code-props";
-
-import { MDXComponents } from "@/components/mdx-components";
 
 import { useLogstream } from "../hooks/useLogstream";
 import { useRepository } from "../hooks/useRepository";
-
 import { AccordionHeader } from "./AccordionHeader";
 import { TestLogDisplayModal } from "./TestLogDisplayModal";
+import { MDXBundlerRenderer } from "@/components/mdx-bundler-renderer";
 
 type TestLogAccordionProps = {
   didTestPass: boolean;
@@ -28,22 +23,37 @@ type TestLogAccordionProps = {
 const TestLogAccordion = ({ courseSlug }: TestLogAccordionProps) => {
   const repoName = useRepository(courseSlug);
   const logstreamId = useLogstream(repoName);
-  const [code, setCode] = useState<React.ReactElement | null>(null);
+  const [mdxCode, setMdxCode] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchMdx = async () => {
-      const source = `\`\`\`bash filename="Terminal"
-    dotcodeschool test
-    \`\`\``;
-      const mdxSource = await serialize(source, {
-        mdxOptions: {
-          rehypePlugins: [rehypeMdxCodeProps],
-        },
-      });
-
-      setCode(<MDXRemote {...mdxSource} components={MDXComponents} />);
+      try {
+        setIsLoading(true);
+        const source = `\`\`\`bash filename="Terminal"
+dotcodeschool test
+\`\`\``;
+        
+        const response = await fetch('/api/bundle-mdx', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ source })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to bundle MDX');
+        }
+        
+        const { code } = await response.json();
+        setMdxCode(code);
+      } catch (error) {
+        console.error('Failed to load MDX:', error);
+      } finally {
+        setIsLoading(false);
+      }
     };
-    void fetchMdx();
+    
+    fetchMdx();
   }, []);
 
   return (
@@ -61,7 +71,17 @@ const TestLogAccordion = ({ courseSlug }: TestLogAccordionProps) => {
                 To run tests again, make changes to your code and run the test
                 command:
               </Text>
-              <Box my={4}>{code}</Box>
+              <Box my={4}>
+                {isLoading ? (
+                  <Box p={4} bg="gray.800" borderRadius="md">Loading...</Box>
+                ) : mdxCode ? (
+                  <MDXBundlerRenderer code={mdxCode} />
+                ) : (
+                  <Box p={4} bg="gray.800" borderRadius="md">
+                    <code>dotcodeschool test</code>
+                  </Box>
+                )}
+              </Box>
               <TestLogDisplayModal logstreamId={logstreamId ?? ""} />
             </AccordionPanel>
           </>

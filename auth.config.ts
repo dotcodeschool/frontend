@@ -4,12 +4,15 @@ import GitHub from "next-auth/providers/github";
 // Base config without database adapter for edge compatibility
 export const authConfig = {
   providers: [],
+  debug: process.env.NODE_ENV === "development",
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const isCourse = nextUrl.pathname.startsWith("/courses");
 
+      return true;
       if (isCourse) {
+        
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
       }

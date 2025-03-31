@@ -1,23 +1,13 @@
 import { Box, HStack } from "@chakra-ui/react";
 import { isEmpty } from "lodash";
-import { MDXRemote } from "next-mdx-remote/rsc";
-import rehypeMdxCodeProps from "rehype-mdx-code-props";
+import { MDXBundlerRenderer } from "@/components/mdx-bundler-renderer";
 
-import { MDXComponents, Navbar } from "@/components";
-
-import { getLessonPageData } from "../helpers";
-
+import { Navbar } from "@/components";
 import { ProgressMarker } from "./ProgressMarker";
 import { SolutionModal } from "./SolutionModal";
 import { TestLogAccordion } from "./TestLogAccordion";
 
-const OnMachineDesktopView = ({
-  courseSlug,
-  lessonPageData,
-}: {
-  courseSlug: string;
-  lessonPageData: Awaited<ReturnType<typeof getLessonPageData>>;
-}) => {
+const OnMachineDesktopView = ({ courseSlug, lessonPageData }:any) => {
   const isSolutionEmpty = isEmpty(lessonPageData.solution);
 
   return (
@@ -44,15 +34,10 @@ const OnMachineDesktopView = ({
         }}
       >
         <Box maxW="4xl" mx="auto">
-          <MDXRemote
-            components={MDXComponents}
-            options={{
-              mdxOptions: {
-                rehypePlugins: [rehypeMdxCodeProps],
-              },
-            }}
-            source={lessonPageData.lessonData.content ?? ""}
-          />
+          {lessonPageData.lessonData.content ? (
+            <MDXBundlerRenderer code={lessonPageData.lessonData.content} />
+          ) : null}
+          
           <TestLogAccordion courseSlug={courseSlug} didTestPass={true} />
 
           {isSolutionEmpty ? null : (

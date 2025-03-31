@@ -1,9 +1,12 @@
+'use client';
+
 import { Box, Heading } from "@chakra-ui/react";
-import React, { ReactElement } from "react";
+import React from "react";
+import { MDXBundlerRenderer } from "@/components/mdx-bundler-renderer";
 
 type RepoSetupStepProps = {
-  title: string | ReactElement;
-  code: string | ReactElement;
+  title: string | React.ReactElement;
+  code: string;
 };
 
 const RepoSetupStep: React.FC<RepoSetupStepProps> = ({ code, title }) => (
@@ -11,7 +14,7 @@ const RepoSetupStep: React.FC<RepoSetupStepProps> = ({ code, title }) => (
     <Heading mb={2} size="sm">
       {title}
     </Heading>
-    {code}
+    <MDXBundlerRenderer code={code} />
   </Box>
 );
 

@@ -23,7 +23,7 @@ const getUser = async (userId: ObjectId) => {
 const getUserByEmail = async (email: string) => {
   const database = await db();
   // console.log("[getUserByEmail] db", database.databaseName);
-  const users = database.collection<User>("users");
+  const users = database.collection<User>("user");
   // console.log("[getUserByEmail] users", users);
   const user = users.findOne({ email });
 
