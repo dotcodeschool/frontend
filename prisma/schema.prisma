@@ -169,6 +169,7 @@ model User {
   updatedAt      DateTime  @updatedAt
   Account        Account[]
   Sessions       Session[]
+  progress       Json?
 
   @@map("user")
 }
