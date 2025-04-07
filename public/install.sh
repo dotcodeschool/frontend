@@ -3,7 +3,7 @@
 set -eu
 
 # allow overriding the version
-VERSION=${DOTCODESCHOOL_CLI_VERSION:-v0.1.0}
+VERSION=${DOTCODESCHOOL_CLI_VERSION:-v0.1.1}
 
 PLATFORM=$(uname -s)
 ARCH=$(uname -m)

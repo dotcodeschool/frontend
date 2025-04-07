@@ -1,9 +1,21 @@
 import { Grid, GridItem } from "@chakra-ui/react";
+
 import { MDXBundlerRenderer } from "@/components/mdx-bundler-renderer";
 
 import { EditorComponents } from "./EditorComponents";
 
-const InBrowserMobileView = ({ lessonPageData }:any) => (
+type LessonPageDataProps = {
+  lessonPageData: {
+    startingFiles: any[];
+    lessonData: {
+      content?: string;
+    };
+    readOnly?: boolean;
+    solution: any[];
+  };
+};
+
+const InBrowserMobileView = ({ lessonPageData }: LessonPageDataProps) => (
   <Grid
     display={{ base: "block", md: "none" }}
     gap={1}

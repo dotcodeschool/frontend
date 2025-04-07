@@ -1,11 +1,11 @@
+// app/courses/[course]/(pages)/setup/page.tsx
 import { Box, Text } from "@chakra-ui/react";
+import { ObjectId } from "mongodb";
 import { notFound } from "next/navigation";
-import { MDXRemote } from "next-mdx-remote/rsc";
-import rehypeMdxCodeProps from "rehype-mdx-code-props";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { auth } from "@/auth";
-import { MDXComponents, Navbar } from "@/components";
+import { Navbar } from "@/components";
 import {
   findUserRepositoryByCourse,
   getCourseFromDb,
@@ -16,8 +16,6 @@ import { handleSignIn } from "@/lib/middleware/actions";
 import { RepositorySetup } from "@/lib/types";
 
 import { StepsComponent } from "./components/StepsComponent";
-
-// TODO: Move helper functions to ./helpers/index.ts
 
 // Helper function to authenticate the user and get their ID
 const authenticateUserAndGetId = async (course: string) => {
@@ -43,7 +41,7 @@ const authenticateUserAndGetId = async (course: string) => {
       return null;
     }
 
-    return user._id;
+    return user._id.toString(); // Convert to string
   } catch (error) {
     // Log the error but don't redirect on DB errors
     console.error("Database error:", error);
@@ -51,37 +49,6 @@ const authenticateUserAndGetId = async (course: string) => {
     return null;
   }
 };
-
-// Helper function to serialize repository setup steps
-const serializeRepositorySetup = async (
-  repositorySetup: RepositorySetup,
-): Promise<RepositorySetup> => ({
-  ...repositorySetup,
-  steps: await Promise.all(
-    repositorySetup.steps.map(async (step) => {
-      if (typeof step.code !== "string") {
-        console.error("Code must be of type 'string'");
-
-        throw new Error("Code must be of type 'string'");
-      }
-
-      return {
-        ...step,
-        code: (
-          <MDXRemote
-            components={MDXComponents}
-            options={{
-              mdxOptions: {
-                rehypePlugins: [rehypeMdxCodeProps],
-              },
-            }}
-            source={step.code}
-          />
-        ),
-      };
-    }),
-  ),
-});
 
 const SetupPage = async ({ params }: { params: { course: string } }) => {
   const { course } = params;
@@ -110,18 +77,18 @@ const SetupPage = async ({ params }: { params: { course: string } }) => {
           fontWeight: "bold",
           textAlign: "center",
           textShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
-
           borderRadius: "10px",
         }}
       >
         <h1>Course not found</h1>
       </div>
     );
-
-    // return notFound();
   }
 
   const repo = await findUserRepositoryByCourse(course, userId);
+  
+  // Serialize the repo object to avoid ObjectId issues
+  const serializedRepo = repo ? JSON.parse(JSON.stringify(repo)) : null;
 
   const repositorySetup: RepositorySetup = {
     id: "repository-setup",
@@ -132,36 +99,30 @@ const SetupPage = async ({ params }: { params: { course: string } }) => {
     steps: [
       {
         title: "1. Install DotCodeSchool CLI",
-        code: `\`\`\`bash
-        curl -sSf https://dotcodeschool.com/install.sh | sh
-        \`\`\``,
+        code: "curl -sSf https://dotcodeschool.com/install.sh | sh",
       },
       {
         title: "2. Clone the repository",
-        code: `\`\`\`bash
-        git clone https://git.dotcodeschool.com/${repo?.repo_name} dotcodeschool-${course}\ncd dotcodeschool-${course}
-        \`\`\``,
+        code: `git clone https://git.dotcodeschool.com/${serializedRepo?.repo_name} dotcodeschool-${course}\ncd dotcodeschool-${course}`,
       },
       {
         title: "3. Push an empty commit",
-        code: `\`\`\`bash\ngit commit --allow-empty -m 'test'\ngit push origin master\n\`\`\``,
+        code: "git commit --allow-empty -m 'test'\ngit push origin master",
       },
     ],
   };
-
-  const repoSetupContent = await serializeRepositorySetup(repositorySetup);
 
   return (
     <ErrorBoundary fallback={<div>Something went wrong</div>}>
       <Box maxW="6xl" mx="auto" px={[4, 12]}>
         <Navbar cta={false} />
         <StepsComponent
-          courseId={courseData._id}
+          courseId={courseData._id.toString()}
           courseSlug={course}
-          initialRepo={repo}
+          initialRepo={serializedRepo}
           questions={questionsData}
-          repositorySetup={repoSetupContent}
-          startingLessonUrl={`/courses/${course}/lesson/1/chapter/1`}
+          repositorySetup={repositorySetup}
+          startingLessonUrl={`/courses/${course}/section/1/lesson/1`}
           userId={userId}
         />
       </Box>

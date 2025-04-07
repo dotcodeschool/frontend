@@ -35,11 +35,14 @@ type SetupQuestion = {
   options: AnswerOptions[];
 };
 
-type RepositorySetupStep = { title: string; code: React.ReactElement | string };
+export type RepositorySetupStep = {
+  title: string;
+  code: string | React.ReactElement;
+};
 
-type RepositorySetup = {
+ type RepositorySetup = {
   id: string;
-  kind: "repo_setup";
+  kind: string;
   title: string;
   description: string;
   steps: RepositorySetupStep[];

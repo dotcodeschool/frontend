@@ -1,10 +1,23 @@
 import { Box } from "@chakra-ui/react";
-import { MDXBundlerRenderer } from "@/components/mdx-bundler-renderer";
 
 import { Navbar } from "@/components";
+import { MDXBundlerRenderer } from "@/components/mdx-bundler-renderer";
+
 import { EditorComponents } from "./EditorComponents";
 
-const InBrowserDesktopView = ({ lessonPageData }: any) => (
+type LessonPageDataProps = {
+  lessonPageData: {
+    startingFiles: any[];
+    lessonData: {
+      content?: string;
+    };
+    readOnly?: boolean;
+    feedbackUrl: string;
+    solution: any[];
+  };
+};
+
+const InBrowserDesktopView = ({ lessonPageData }: LessonPageDataProps) => (
   <Box display={{ base: "none", md: "block" }}>
     <Navbar
       cta={false}

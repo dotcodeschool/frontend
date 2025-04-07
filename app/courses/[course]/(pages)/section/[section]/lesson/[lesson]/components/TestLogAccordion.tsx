@@ -9,11 +9,13 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
+import { MDXBundlerRenderer } from "@/components/mdx-bundler-renderer";
+
 import { useLogstream } from "../hooks/useLogstream";
 import { useRepository } from "../hooks/useRepository";
+
 import { AccordionHeader } from "./AccordionHeader";
 import { TestLogDisplayModal } from "./TestLogDisplayModal";
-import { MDXBundlerRenderer } from "@/components/mdx-bundler-renderer";
 
 type TestLogAccordionProps = {
   didTestPass: boolean;
@@ -33,27 +35,27 @@ const TestLogAccordion = ({ courseSlug }: TestLogAccordionProps) => {
         const source = `\`\`\`bash filename="Terminal"
 dotcodeschool test
 \`\`\``;
-        
-        const response = await fetch('/api/bundle-mdx', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ source })
+
+        const response = await fetch("/api/bundle-mdx", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ source }),
         });
-        
+
         if (!response.ok) {
-          throw new Error('Failed to bundle MDX');
+          throw new Error("Failed to bundle MDX");
         }
-        
+
         const { code } = await response.json();
         setMdxCode(code);
       } catch (error) {
-        console.error('Failed to load MDX:', error);
+        console.error("Failed to load MDX:", error);
       } finally {
         setIsLoading(false);
       }
     };
-    
-    fetchMdx();
+
+    void fetchMdx();
   }, []);
 
   return (
@@ -73,11 +75,13 @@ dotcodeschool test
               </Text>
               <Box my={4}>
                 {isLoading ? (
-                  <Box p={4} bg="gray.800" borderRadius="md">Loading...</Box>
+                  <Box bg="gray.800" borderRadius="md" p={4}>
+                    Loading...
+                  </Box>
                 ) : mdxCode ? (
                   <MDXBundlerRenderer code={mdxCode} />
                 ) : (
-                  <Box p={4} bg="gray.800" borderRadius="md">
+                  <Box bg="gray.800" borderRadius="md" p={4}>
                     <code>dotcodeschool test</code>
                   </Box>
                 )}

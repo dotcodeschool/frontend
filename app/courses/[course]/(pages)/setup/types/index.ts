@@ -1,4 +1,5 @@
-import { ObjectId, WithId } from "mongodb";
+// app/courses/[course]/(pages)/setup/components/types/index.ts
+import { WithId } from "mongodb";
 
 import { Repository } from "@/lib/db/models";
 import {
@@ -9,7 +10,7 @@ import {
 
 type CreateRepoRequest = {
   repoTemplate: string;
-  userId: ObjectId;
+  userId: string;
   expectedPracticeFrequency: PracticeFrequencyOptions;
   isReminderEnabled: boolean;
 };
@@ -18,8 +19,8 @@ type StepsComponentProps = {
   questions: SetupQuestion[];
   startingLessonUrl: string;
   courseSlug: string;
-  userId: ObjectId;
-  courseId: ObjectId;
+  userId: string;
+  courseId: string;
   repositorySetup: RepositorySetup;
   initialRepo: WithId<Repository> | null;
 };

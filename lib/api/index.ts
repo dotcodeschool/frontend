@@ -86,7 +86,7 @@ const getRepositories = async () => {
 
 const findUserRepositoryByCourse = async (
   courseSlug: string,
-  userId: ObjectId,
+  userId: string | ObjectId,
 ) => {
   const repositories = await getRepositories();
   const course = await getCourseFromDb(courseSlug);
@@ -94,13 +94,15 @@ const findUserRepositoryByCourse = async (
 
   if (!courseId) {
     console.error("Course not found");
-
     return null;
   }
 
+  // Convert string to ObjectId if needed
+  const userIdObj = typeof userId === 'string' ? new ObjectId(userId) : userId;
+
   return repositories.findOne({
     "relationships.course.id": courseId,
-    "relationships.user.id": userId,
+    "relationships.user.id": userIdObj,
   });
 };
 

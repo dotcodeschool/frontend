@@ -79,7 +79,6 @@ const createRepoRequest = async (req: CreateRepoRequest) => {
 
   return response.json();
 };
-
 const createRepository = async (
   session: Session,
   updatedAnswers: Record<string, boolean | PracticeFrequencyOptions>,
@@ -89,7 +88,6 @@ const createRepository = async (
 
   if (userInfo instanceof Error) {
     console.error("Error getting user info:", userInfo.message);
-
     return userInfo;
   }
 
@@ -105,7 +103,7 @@ const createRepository = async (
 
     const req: CreateRepoRequest = {
       repoTemplate: courseSlug,
-      userId: user._id,
+      userId: user._id.toString(), // Convert to string
       expectedPracticeFrequency,
       isReminderEnabled,
     };
@@ -113,7 +111,6 @@ const createRepository = async (
     return await createRepoRequest(req);
   } catch (error) {
     console.error("Error in createRepository:", error);
-
     throw error;
   }
 };

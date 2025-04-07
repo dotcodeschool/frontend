@@ -1,13 +1,36 @@
+// app/courses/[course]/(pages)/section/[section]/lesson/[lesson]/components/OnMachineDesktopView.tsx
 import { Box, HStack } from "@chakra-ui/react";
 import { isEmpty } from "lodash";
-import { MDXBundlerRenderer } from "@/components/mdx-bundler-renderer";
 
 import { Navbar } from "@/components";
+import { MDXBundlerRenderer } from "@/components/mdx-bundler-renderer";
+
 import { ProgressMarker } from "./ProgressMarker";
 import { SolutionModal } from "./SolutionModal";
 import { TestLogAccordion } from "./TestLogAccordion";
 
-const OnMachineDesktopView = ({ courseSlug, lessonPageData }:any) => {
+// Add sectionId and lessonId to the props
+
+type OnMachineDesktopViewProps = {
+  courseSlug: string;
+  lessonPageData: {
+    lessonData: {
+      content?: string;
+    };
+    feedbackUrl: string;
+    solution: any[];
+    startingFiles: any[];
+  };
+  sectionId: string;
+  lessonId: string;
+};
+
+const OnMachineDesktopView = ({ 
+  courseSlug, 
+  lessonPageData,
+  sectionId,
+  lessonId
+}: OnMachineDesktopViewProps) => {
   const isSolutionEmpty = isEmpty(lessonPageData.solution);
 
   return (
@@ -37,7 +60,7 @@ const OnMachineDesktopView = ({ courseSlug, lessonPageData }:any) => {
           {lessonPageData.lessonData.content ? (
             <MDXBundlerRenderer code={lessonPageData.lessonData.content} />
           ) : null}
-          
+
           <TestLogAccordion courseSlug={courseSlug} didTestPass={true} />
 
           {isSolutionEmpty ? null : (
@@ -48,7 +71,11 @@ const OnMachineDesktopView = ({ courseSlug, lessonPageData }:any) => {
               />
             </HStack>
           )}
-          <ProgressMarker />
+          <ProgressMarker
+            courseId={courseSlug}
+            sectionId={sectionId}
+            lessonId={lessonId}
+          />
         </Box>
       </Box>
     </Box>

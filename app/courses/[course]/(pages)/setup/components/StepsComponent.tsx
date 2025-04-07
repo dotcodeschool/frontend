@@ -29,9 +29,9 @@ type StepsComponentProps = {
   startingLessonUrl: string;
   courseSlug: string;
   initialRepo: WithId<Repository> | null;
-  userId: ObjectId;
+  userId: ObjectId | string;
   repositorySetup: RepositorySetup;
-  courseId: ObjectId;
+  courseId: ObjectId | string;
 };
 
 type RepositorySetupContext = {
