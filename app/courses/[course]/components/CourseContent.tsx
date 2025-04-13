@@ -54,15 +54,19 @@ const CourseContent = async ({ slug }: { slug: string }) => {
         {sections.length} sections
       </Text>
       <Accordion allowToggle>
-        {sections.map((module, index) => (
-          <ModuleItem
-            index={index}
-            isOnMachineCourse={format === "onMachineCourse"}
-            key={index}
-            module={module}
-            slug={slug}
-          />
-        ))}
+        {sections.map((module, index) => {
+          // Log section information
+          console.log(`[DEBUG] Section ${index+1}: "${module.title}", ID: ${module.sys.id}`);
+          return (
+            <ModuleItem
+              index={index}
+              isOnMachineCourse={format === "onMachineCourse"}
+              key={index}
+              module={module}
+              slug={slug}
+            />
+          );
+        })}
       </Accordion>
     </Box>
   );

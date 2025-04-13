@@ -22,9 +22,8 @@ export const ProgressMarker = ({ courseId, sectionId, lessonId }: ProgressMarker
       console.log("Current progress:", progress);
       console.log(`Checking completion status for: ${courseId}/${sectionId}/${lessonId}`);
       
-      const isLessonComplete = Boolean(
-        progress?.[courseId]?.[sectionId]?.[lessonId]
-      );
+      // FIX: Check if the value is explicitly true, not just if it exists
+      const isLessonComplete = progress?.[courseId]?.[sectionId]?.[lessonId] === true;
       
       console.log("Lesson completion status:", isLessonComplete);
       setIsComplete(isLessonComplete);

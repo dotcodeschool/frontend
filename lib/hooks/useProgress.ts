@@ -177,8 +177,8 @@ export const useProgress = () => {
     sectionId: string,
     lessonId: string,
   ) => {
-    // Determine the new value (toggle current value)
-    const currentValue = Boolean(progress?.[courseId]?.[sectionId]?.[lessonId]);
+    // FIX: Check if the value is explicitly true, not just if it exists
+    const currentValue = progress?.[courseId]?.[sectionId]?.[lessonId] === true;
     const newValue = !currentValue;
     
     console.log(`Setting ${courseId}/${sectionId}/${lessonId} from ${currentValue} to ${newValue}`);
