@@ -73,8 +73,23 @@ const getProgressData = async (session: Session | null) => {
 const getCourseFromDb = async (slug: string) => {
   const database = await db();
   const courses = database.collection<Course>("courses");
-
-  return courses.findOne({ slug });
+  
+  console.log(`[getCourseFromDb] Looking for course with slug: ${slug}`);
+  
+  try {
+    // List all collections to debug
+    const collections = await database.listCollections().toArray();
+    console.log("[getCourseFromDb] Available collections:", collections.map(c => c.name));
+    
+    // Try to find the course
+    const course = await courses.findOne({ slug });
+    console.log("[getCourseFromDb] Course found:", course ? "Yes" : "No");
+    
+    return course;
+  } catch (error) {
+    console.error("[getCourseFromDb] Error:", error);
+    return null;
+  }
 };
 
 const getRepositories = async () => {
