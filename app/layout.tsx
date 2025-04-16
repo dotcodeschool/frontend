@@ -5,7 +5,7 @@ import { Providers } from "@/app/providers";
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => (
   <html lang="en">
-    <body>
+    <body suppressHydrationWarning>
       <ColorModeScript initialColorMode="dark" />
       <Providers>{children}</Providers>
       <SpeedInsights />

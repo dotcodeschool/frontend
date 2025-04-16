@@ -79,7 +79,7 @@ export const useProgress = () => {
     
     try {
       // Create a copy of the progress with all pending updates applied
-      let updatedProgress = { ...currentProgress };
+      const updatedProgress = { ...currentProgress };
       
       for (const { courseId, sectionId, lessonId } of pendingUpdates) {
         updatedProgress[courseId] = updatedProgress[courseId] || {};

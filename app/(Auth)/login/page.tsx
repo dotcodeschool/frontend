@@ -5,7 +5,8 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FaGithub } from "react-icons/fa";
 
-type Props = {};
+// Use Record<string, never> instead of {} for empty object type
+type Props = Record<string, never>;
 
 const Login = (props: Props) => {
   const { data: session } = useSession();
@@ -14,7 +15,7 @@ const Login = (props: Props) => {
     return router.push("/");
   }
 
-  const handleSignIn = async (e: any) => {
+  const handleSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
       await signIn("github");
@@ -23,7 +24,7 @@ const Login = (props: Props) => {
     }
   };
 
-  const handleSignOut = async (e: any) => {
+  const handleSignOut = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
       await signOut();
