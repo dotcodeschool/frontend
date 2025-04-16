@@ -21,12 +21,19 @@ import { StepsComponent } from "./components/StepsComponent";
 const authenticateUserAndGetId = async (course: string) => {
   const session = await auth();
   console.log("[setup] authenticateUserAndGetId session", session);
+  
+  // If no session or no user email, redirect to sign in
   if (!session?.user?.email) {
     await handleSignIn({
       redirectTo: `/courses/${course}/setup`,
     });
-
     return null;
+  }
+
+  // If we have a user ID in the session, use it directly
+  if (session.user.id) {
+    console.log("[setup] Using session user ID:", session.user.id);
+    return session.user.id;
   }
 
   try {
@@ -37,7 +44,6 @@ const authenticateUserAndGetId = async (course: string) => {
       await handleSignIn({
         redirectTo: `/courses/${course}/setup`,
       });
-
       return null;
     }
 
@@ -45,7 +51,13 @@ const authenticateUserAndGetId = async (course: string) => {
   } catch (error) {
     // Log the error but don't redirect on DB errors
     console.error("Database error:", error);
-
+    
+    // If we have a database error but still have a session user ID, use that
+    if (session.user.id) {
+      console.log("[setup] Falling back to session user ID after DB error:", session.user.id);
+      return session.user.id;
+    }
+    
     return null;
   }
 };
