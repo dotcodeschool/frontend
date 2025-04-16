@@ -88,7 +88,7 @@ const SetupPage = async ({ params }: { params: { course: string } }) => {
             Setting up your Rust State Machine course...
           </Text>
           <Text>
-            We're experiencing some technical difficulties with this course. 
+            We are experiencing some technical difficulties with this course. 
             Please try again later or contact support if the issue persists.
           </Text>
           <Text mt={4}>
