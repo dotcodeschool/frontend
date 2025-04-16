@@ -41,16 +41,18 @@ const authenticateUserAndGetId = async (course: string) => {
     // Only redirect to sign in if user truly doesn't exist
     // Not if we got a DB error
     if (user === null) {
+      console.log("[setup] User not found by email, redirecting to sign in");
       await handleSignIn({
         redirectTo: `/courses/${course}/setup`,
       });
       return null;
     }
 
+    console.log("[setup] User found by email:", user._id.toString());
     return user._id.toString(); // Convert to string
   } catch (error) {
     // Log the error but don't redirect on DB errors
-    console.error("Database error:", error);
+    console.error("[setup] Database error:", error);
     
     // If we have a database error but still have a session user ID, use that
     if (session.user.id) {
@@ -78,28 +80,28 @@ const SetupPage = async ({ params }: { params: { course: string } }) => {
     console.log("[setup] Course not found in database");
     
     // Fallback for specific known courses when they're not in the database
-    if (course === "rust-state-machine") {
-      console.log("[setup] Using fallback data for rust-state-machine course");
-      // Create a minimal course object with required fields
-      return (
-        <Box maxW="6xl" mx="auto" px={[4, 12]}>
-          <Navbar cta={false} />
-          <Text fontSize="xl" mt={8} mb={4}>
-            Setting up your Rust State Machine course...
-          </Text>
-          <Text>
-            We are experiencing some technical difficulties with this course. 
-            Please try again later or contact support if the issue persists.
-          </Text>
-          <Text mt={4}>
-            You can also try accessing the course content directly at{" "}
-            <a href={`/courses/${course}/section/1/lesson/1`} style={{ color: "blue", textDecoration: "underline" }}>
-              this link
-            </a>.
-          </Text>
-        </Box>
-      );
-    }
+    // if (course === "rust-state-machine") {
+    //   console.log("[setup] Using fallback data for rust-state-machine course");
+    //   // Create a minimal course object with required fields
+    //   return (
+    //     <Box maxW="6xl" mx="auto" px={[4, 12]}>
+    //       <Navbar cta={false} />
+    //       <Text fontSize="xl" mt={8} mb={4}>
+    //         Setting up your Rust State Machine course...
+    //       </Text>
+    //       <Text>
+    //         We are experiencing some technical difficulties with this course. 
+    //         Please try again later or contact support if the issue persists.
+    //       </Text>
+    //       <Text mt={4}>
+    //         You can also try accessing the course content directly at{" "}
+    //         <a href={`/courses/${course}/section/1/lesson/1`} style={{ color: "blue", textDecoration: "underline" }}>
+    //           this link
+    //         </a>.
+    //       </Text>
+    //     </Box>
+    //   );
+    // }
     
     // Default error for other courses
     return (
