@@ -349,6 +349,7 @@ export default function CourseModule({
         courseId={courseId}
         lessonId={lessonId}
         chapterId={chapterId}
+        chapters={chapters}
         current={current}
         sections={sections}
         doesMatch={doesMatch}
@@ -514,7 +515,7 @@ function mapSectionsToLessons(sections: any[]) {
       id: section.sys.id,
       title: section.fields.title,
       description: section.fields.description,
-      lessons: section.fields.lessons
+      lessons: section.fields.lessons,
     };
   });
 }

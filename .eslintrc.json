@@ -1,9 +1,6 @@
 {
   "parser": "@typescript-eslint/parser",
-  "extends": [
-    "next",
-    "next/core-web-vitals"
-  ],
+  "extends": ["next", "next/core-web-vitals"],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
