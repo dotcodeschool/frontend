@@ -15,8 +15,9 @@ const ProgressBarClient = ({
   slug: string;
   totalLessons: number;
 }) => {
-  const { progress } = useProgress();
+  const { progress, isLoading } = useProgress();
   const [progressPercent, setProgressPercent] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(true);
 
   useEffect(() => {
     if (!progress || !slug) return;
@@ -67,17 +68,29 @@ const ProgressBarClient = ({
     setProgressPercent(calculatedProgress);
   }, [progress, slug, index, totalLessons]);
 
+  // Handle initial animation once data is loaded
+  useEffect(() => {
+    if (!isLoading) {
+      // Small delay to ensure smooth animation after data loads
+      const timer = setTimeout(() => {
+        setIsAnimating(false);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading]);
+
   return (
     <>
       <Progress
         colorScheme="green"
         rounded="full"
         size="sm"
-        value={progressPercent}
+        value={isAnimating ? 0 : progressPercent}
         w="full"
+        transition="width 0.5s ease-in-out, value 0.5s ease-in-out"
       />
       <Text color="gray.400" fontSize="sm" fontWeight="500">
-        {progressPercent}% Complete
+        {isAnimating ? "" : `${progressPercent}% Complete`}
       </Text>
     </>
   );
