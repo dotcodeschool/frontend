@@ -66,17 +66,13 @@ type UsersProgress {
 }
 
 type UsersProgressBuildYourOwnDex {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  s1 UsersProgressBuildYourOwnDex1 @map("1")
+  section1 UsersProgressBuildYourOwnDexSection1 @map("1")
 }
 
-type UsersProgressBuildYourOwnDex1 {
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  l1 Boolean @map("1")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  l2 Boolean @map("2")
-  /// This field was commented out because of an invalid name. Please provide a valid one that matches [a-zA-Z][a-zA-Z0-9_]*
-  l3 Boolean @map("3")
+type UsersProgressBuildYourOwnDexSection1 {
+  lesson1 Boolean @map("1")
+  lesson2 Boolean @map("2")
+  lesson3 Boolean @map("3")
 }
 
 type UsersRelationships {
@@ -90,17 +86,6 @@ type UsersRelationshipsRepositories {
 type UsersRelationshipsRepositoriesData {
   id   String @db.ObjectId
   type String
-}
-
-model accounts {
-  id                String @id @default(auto()) @map("_id") @db.ObjectId
-  access_token      String
-  provider          String
-  providerAccountId String
-  scope             String
-  token_type        String
-  type              String
-  userId            String @db.ObjectId
 }
 
 model courses {
@@ -129,13 +114,6 @@ model repositories {
 
   @@index([repo_name], map: "repo_name_1")
   @@index([relationships.course.id, relationships.user.id], map: "relationships.course.id_1_relationships.user.id_1")
-}
-
-model sessions {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  expires      DateTime @db.Date
-  sessionToken String
-  userId       String   @db.ObjectId
 }
 
 model submissions {
@@ -190,6 +168,23 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
 
 model Session {

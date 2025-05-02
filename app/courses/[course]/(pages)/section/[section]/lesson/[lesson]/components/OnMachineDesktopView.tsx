@@ -1,23 +1,36 @@
+// app/courses/[course]/(pages)/section/[section]/lesson/[lesson]/components/OnMachineDesktopView.tsx
 import { Box, HStack } from "@chakra-ui/react";
 import { isEmpty } from "lodash";
-import { MDXRemote } from "next-mdx-remote/rsc";
-import rehypeMdxCodeProps from "rehype-mdx-code-props";
 
-import { MDXComponents, Navbar } from "@/components";
-
-import { getLessonPageData } from "../helpers";
+import { Navbar } from "@/components";
+import { MDXBundlerRenderer } from "@/components/mdx-bundler-renderer";
 
 import { ProgressMarker } from "./ProgressMarker";
 import { SolutionModal } from "./SolutionModal";
 import { TestLogAccordion } from "./TestLogAccordion";
 
-const OnMachineDesktopView = ({
-  courseSlug,
-  lessonPageData,
-}: {
+// Add sectionId and lessonId to the props
+
+type OnMachineDesktopViewProps = {
   courseSlug: string;
-  lessonPageData: Awaited<ReturnType<typeof getLessonPageData>>;
-}) => {
+  lessonPageData: {
+    lessonData: {
+      content?: string;
+    };
+    feedbackUrl: string;
+    solution: any[];
+    startingFiles: any[];
+  };
+  sectionId: string;
+  lessonId: string;
+};
+
+const OnMachineDesktopView = ({ 
+  courseSlug, 
+  lessonPageData,
+  sectionId,
+  lessonId
+}: OnMachineDesktopViewProps) => {
   const isSolutionEmpty = isEmpty(lessonPageData.solution);
 
   return (
@@ -44,15 +57,10 @@ const OnMachineDesktopView = ({
         }}
       >
         <Box maxW="4xl" mx="auto">
-          <MDXRemote
-            components={MDXComponents}
-            options={{
-              mdxOptions: {
-                rehypePlugins: [rehypeMdxCodeProps],
-              },
-            }}
-            source={lessonPageData.lessonData.content ?? ""}
-          />
+          {lessonPageData.lessonData.content ? (
+            <MDXBundlerRenderer code={lessonPageData.lessonData.content} />
+          ) : null}
+
           <TestLogAccordion courseSlug={courseSlug} didTestPass={true} />
 
           {isSolutionEmpty ? null : (
@@ -63,7 +71,11 @@ const OnMachineDesktopView = ({
               />
             </HStack>
           )}
-          <ProgressMarker />
+          <ProgressMarker
+            courseId={courseSlug}
+            sectionId={sectionId}
+            lessonId={lessonId}
+          />
         </Box>
       </Box>
     </Box>

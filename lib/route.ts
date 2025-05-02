@@ -2,6 +2,7 @@ export const LOGIN = "/login";
 export const ROOT = "/";
 
 export const PUBLIC_ROUTES = [
+  "/static",
   "/login",
   "/register",
   "/api/auth/session",

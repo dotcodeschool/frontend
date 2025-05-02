@@ -1,14 +1,14 @@
-import { ObjectId, WithId } from "mongodb";
+// app/courses/[course]/(pages)/setup/hooks/index.tsx
 import { MDXRemote } from "next-mdx-remote";
 import { serialize } from "next-mdx-remote/serialize";
 import { useEffect, useState } from "react";
 
 import { MDXComponents } from "@/components/mdx-components";
 import { Repository } from "@/lib/db/models";
-import { RepositorySetup } from "@/lib/types";
+import { RepositorySetup, RepositorySetupStep } from "@/lib/types";
 
 const useRepositorySetup = (
-  initialRepo: WithId<Repository> | null,
+  initialRepo: Repository | null,
   repositorySetup: RepositorySetup,
   courseSlug: string,
 ) => {
@@ -17,12 +17,12 @@ const useRepositorySetup = (
   );
   const [loadingRepo, setLoadingRepo] = useState(false);
   const [repoName, setRepoName] = useState<string>();
-  const [repoSetupSteps, setRepoSetupSteps] = useState(repositorySetup);
+  const [repoSetupSteps, setRepoSetupSteps] = useState<RepositorySetup>(repositorySetup);
   const [gitPushReceived, setGitPushReceived] = useState(
     initialRepo?.test_ok ?? false,
   );
-  const [repoId, setRepoId] = useState<ObjectId | null>(
-    initialRepo?._id ?? null,
+  const [repoId, setRepoId] = useState<string | null>(
+    initialRepo?._id?.toString() ?? null,
   );
 
   useEffect(() => {
@@ -36,7 +36,7 @@ const useRepositorySetup = (
           const response = await fetch(`/api/repository?repoName=${repoName}`);
           if (response.ok) {
             const repoData = await response.json();
-            setRepoId(repoData._id);
+            setRepoId(repoData._id?.toString());
             setGitPushReceived(repoData.test_ok ?? false);
           }
         } catch (error) {
@@ -45,43 +45,34 @@ const useRepositorySetup = (
       };
 
       const updateRepoSetup = async () => {
-        const mdxSource = await serialize(`\`\`\`bash
-        git clone https://git.dotcodeschool.com/${repoName} dotcodeschool-${courseSlug}\ncd dotcodeschool-${courseSlug}
-        \`\`\``);
-        const code = <MDXRemote {...mdxSource} components={MDXComponents} />;
-        const updatedSteps = repositorySetup.steps.map((step, index) =>
-          index === 1 ? { title: step.title, code } : step,
-        );
-        setRepoSetupSteps((prev) => ({ ...prev, steps: updatedSteps }));
+        try {
+          // Get the code as a string
+          const codeString = `\`\`\`bash
+git clone https://git.dotcodeschool.com/${repoName} dotcodeschool-${courseSlug}
+cd dotcodeschool-${courseSlug}
+\`\`\``;
+
+          // Create updated steps with the new code
+          const updatedSteps: RepositorySetupStep[] = repositorySetup.steps.map((step, index) =>
+            index === 1 ? { ...step, title: step.title, code: codeString } : step,
+          );
+
+          // Update state with the new steps
+          setRepoSetupSteps({
+            ...repositorySetup,
+            steps: updatedSteps
+          });
+        } catch (error) {
+          console.error("Error updating repo setup:", error);
+        }
       };
 
       void fetchRepoData();
       void updateRepoSetup();
     }
-  }, [initialRepo, repoName, repositorySetup.steps, courseSlug]);
+  }, [initialRepo, repoName, repositorySetup.steps, courseSlug, repositorySetup]);
 
-  useEffect(() => {
-    if (!repoId) {
-      return;
-    }
-
-    const eventSource = new EventSource("/api/repository-updates");
-
-    eventSource.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      const isUpdate = data.operationType === "update";
-      const isRepo = data.documentKey._id === repoId.toString();
-      const isTestOk = data.updateDescription.updatedFields.test_ok;
-
-      if (isUpdate && isRepo && isTestOk) {
-        setGitPushReceived(true);
-      }
-    };
-
-    return () => {
-      eventSource.close();
-    };
-  }, [repoId]);
+  // Rest of your component...
 
   return {
     showRepositorySetup,
