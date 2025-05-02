@@ -146,8 +146,7 @@ model User {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   Account        Account[]
-  Sessions       Session[]
-  progress       Json?
+  Session        Session[]
 
   @@map("user")
 }
@@ -158,18 +157,34 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  token_type        String?
   refresh_token     String? @db.String
   access_token      String? @db.String
-  id_token          String? @db.String
-  scope             String?
-  session_state     String?
   expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-  @@map("account")
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
 
 model Session {

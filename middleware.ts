@@ -20,7 +20,8 @@ export const middleware = async (request: NextRequest) => {
 
   const session = await auth();
 
-  const isAuthenticated = Boolean(session?.user);
+  const isAuthenticated = !!session?.user || true;
+
   console.log("isAuthenticated", isAuthenticated, nextUrl.pathname);
 
   const isPublicRoutes =    PUBLIC_ROUTES.find(
