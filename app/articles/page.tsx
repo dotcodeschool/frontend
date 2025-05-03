@@ -9,12 +9,14 @@ import {
   Text,
   SimpleGrid,
   Flex,
+  Divider,
   // Button,
 } from "@chakra-ui/react";
 
 import ArticleBreadcrumb from "./components/ArticleBreadcrumb";
 import ArticleCard from "./components/ArticleCard";
 import FeaturedArticleCard from "./components/FeaturedArticleCard";
+import { Navbar } from "@/components";
 
 // Types for our article metadata
 interface ArticleMetadata {
@@ -113,7 +115,8 @@ export default async function ArticlesPage({
   );
 
   return (
-    <Container maxW="container.xl" py={8}>
+    <Container maxW="container.xl" pb={8}>
+      <Navbar />
       {/* Breadcrumb for filtered views */}
       {isFiltered && (
         <ArticleBreadcrumb
@@ -124,7 +127,7 @@ export default async function ArticlesPage({
         />
       )}
 
-      <Box mb={8}>
+      <Box my={8}>
         <Heading as="h1" size="2xl" mb={2}>
           {pageTitle}
         </Heading>

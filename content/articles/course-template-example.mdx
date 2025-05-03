@@ -1,0 +1,175 @@
+---
+slug: course-template-example
+title: Course Template Example
+author: Dot Code School Team
+description: A template example showing the structure of a course for authors to reference.
+category: Author Resources
+tags: ["Guide", "Documentation", "Writing", "Style Guide"]
+date: 2025-05-03
+---
+
+# Course Template Example
+
+This template provides a concrete example of how to structure your course files. You can use this as a reference when creating your own courses.
+
+## Example Course Structure
+
+Below is an example of a minimal course structure for a JavaScript basics course:
+
+```
+content/courses/javascript-basics/
+├── javascript-basics.mdx
+└── sections/
+    ├── getting-started/
+    │   ├── getting-started.mdx  # Optional section metadata
+    │   └── lessons/
+    │       ├── introduction/
+    │       │   └── introduction.mdx
+    │       └── setup-environment/
+    │           ├── setup-environment.mdx
+    │           └── files/
+    │               └── source/
+    │                   └── hello.js
+    └── variables-and-types/
+        └── lessons/
+            ├── variables/
+            │   ├── variables.mdx
+            │   └── files/
+            │       ├── template/
+            │       │   └── variables.js
+            │       └── solution/
+            │           └── variables.js
+            └── data-types/
+                └── data-types.mdx
+```
+
+## Example Files Content
+
+### Course Metadata File (javascript-basics.mdx)
+
+```mdx
+---
+slug: javascript-basics
+title: JavaScript Basics
+author: Jane Doe
+description: Learn the fundamentals of JavaScript programming.
+level: Beginner
+language: JavaScript
+github_url: https://github.com/janedoe/javascript-basics
+tags: ["javascript", "web development", "programming"]
+---
+
+This course introduces the fundamentals of JavaScript programming. You'll learn about variables, data types, functions, and more.
+```
+
+### Section Metadata File (getting-started.mdx)
+
+```mdx
+---
+slug: getting-started
+title: Getting Started
+order: 1
+description: Set up your development environment and write your first JavaScript program.
+---
+
+This section will guide you through setting up your development environment and writing your first JavaScript program.
+```
+
+### Lesson File (introduction.mdx)
+
+```mdx
+---
+slug: introduction-to-javascript
+title: Introduction to JavaScript
+order: 1
+---
+
+# Introduction to JavaScript
+
+JavaScript is a versatile programming language primarily used for web development. It allows you to add interactivity to websites and create dynamic user experiences.
+
+## What is JavaScript?
+
+JavaScript was created in 1995 by Brendan Eich while he was working at Netscape Communications Corporation. It was originally designed to be a scripting language for the Netscape Navigator web browser.
+
+Today, JavaScript is used for:
+
+1. Front-end web development
+2. Back-end server development (Node.js)
+3. Mobile app development
+4. Desktop application development
+5. Game development
+
+## Why Learn JavaScript?
+
+JavaScript is one of the most popular programming languages in the world. Here are some reasons to learn it:
+
+- It's essential for web development
+- It has a large and active community
+- It's versatile and can be used for various types of applications
+- It's in high demand in the job market
+
+In the next lesson, we'll set up our development environment and write our first JavaScript program.
+```
+
+### Template File Example (variables.js in template directory)
+
+```javascript
+// TODO: Declare a variable named 'greeting' using the 'const' keyword and assign it the value 'Hello, world!'
+
+// TODO: Create a variable named 'myName' using 'let' and assign it your name
+
+// TODO: Create a variable named 'age' using 'let' and assign it your age
+
+// TODO: Log a message to the console that uses both variables, like: "Hello, my name is [myName] and I am [age] years old."
+
+// TODO: Try to reassign the 'greeting' variable and observe what happens
+```
+
+### Solution File Example (variables.js in solution directory)
+
+```javascript
+// Declare a variable named 'greeting' using the 'const' keyword
+const greeting = 'Hello, world!';
+
+// Create a variable named 'myName' using 'let'
+let myName = 'Jane Doe';
+
+// Create a variable named 'age' using 'let'
+let age = 30;
+
+// Log a message to the console that uses both variables
+console.log(`${greeting} My name is ${myName} and I am ${age} years old.`);
+
+// Try to reassign the 'greeting' variable
+// This will cause an error because 'greeting' is a constant
+// Uncomment the line below to see the error
+// greeting = 'Hi there!';
+```
+
+## Using This Template
+
+To use this template for your own course:
+
+### Option 1: Using the Helper Script
+
+1. Navigate to the `content/courses/course-template` directory in your terminal
+2. Run the helper script with your desired course slug:
+   ```bash
+   ./create-course.sh your-course-slug
+   ```
+3. The script will create a new course directory with the proper structure
+4. Follow the instructions provided by the script to customize your course
+
+### Option 2: Manual Setup
+
+1. Copy the `content/courses/course-template` directory, which contains a ready-to-use template structure with all the examples shown above
+2. Rename the directory to your course slug (e.g., `javascript-basics`)
+3. Rename `course-template.mdx` to match your course slug (e.g., `javascript-basics.mdx`)
+4. Replace the example content with your own course material
+5. Ensure you maintain the same file naming conventions and directory structure
+6. Update the metadata in the course and lesson files to reflect your content
+
+The template directory includes a README.md file with detailed instructions on how to customize it for your specific course.
+
+Remember to follow the guidelines in the [Course Contribution Guide](./course-contribution-guide) for detailed instructions on creating and formatting your course content.
