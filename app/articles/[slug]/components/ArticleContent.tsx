@@ -17,8 +17,13 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
+  IconButton,
+  Tooltip,
+  useToast,
+  useClipboard,
 } from "@chakra-ui/react";
-import { ChevronRightIcon, ArrowBackIcon } from "@chakra-ui/icons";
+import { ChevronRightIcon, ArrowBackIcon, CheckIcon, LinkIcon } from "@chakra-ui/icons";
+import { FaTwitter, FaFacebook, FaLinkedin } from "react-icons/fa";
 import { MDXBundlerRenderer } from "@/components/mdx-bundler-renderer";
 
 interface ArticleData {
@@ -48,6 +53,45 @@ export default function ArticleContent({
   formattedDate,
   relatedArticles,
 }: ArticleContentProps) {
+  const toast = useToast();
+  const { onCopy, hasCopied } = useClipboard(
+    typeof window !== "undefined" ? window.location.href : ""
+  );
+
+  const handleShare = (platform: string) => {
+    if (typeof window === "undefined") return;
+
+    const url = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent(article.title);
+    
+    let shareUrl = "";
+    
+    switch (platform) {
+      case "twitter":
+        shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
+        break;
+      case "facebook":
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        break;
+      case "linkedin":
+        shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+        break;
+      default:
+        return;
+    }
+    
+    window.open(shareUrl, "_blank", "noopener,noreferrer");
+  };
+
+  const handleCopyLink = () => {
+    onCopy();
+    toast({
+      title: "Link copied to clipboard",
+      status: "success",
+      duration: 2000,
+      isClosable: true,
+    });
+  };
   return (
     <>
       {/* Article Header */}
@@ -120,6 +164,47 @@ export default function ArticleContent({
       </Box>
 
       <Divider my={10} />
+
+      {/* Share buttons */}
+      <Flex mt={6} align="center">
+        <Text mr={3} fontWeight="medium">
+          Share:
+        </Text>
+        <HStack spacing={2}>
+          <Tooltip label="Share on Twitter">
+            <IconButton
+              aria-label="Share on Twitter"
+              icon={<FaTwitter />}
+              size="sm"
+              onClick={() => handleShare("twitter")}
+            />
+          </Tooltip>
+          <Tooltip label="Share on Facebook">
+            <IconButton
+              aria-label="Share on Facebook"
+              icon={<FaFacebook />}
+              size="sm"
+              onClick={() => handleShare("facebook")}
+            />
+          </Tooltip>
+          <Tooltip label="Share on LinkedIn">
+            <IconButton
+              aria-label="Share on LinkedIn"
+              icon={<FaLinkedin />}
+              size="sm"
+              onClick={() => handleShare("linkedin")}
+            />
+          </Tooltip>
+          <Tooltip label={hasCopied ? "Copied!" : "Copy link"}>
+            <IconButton
+              aria-label="Copy link"
+              icon={hasCopied ? <CheckIcon /> : <LinkIcon />}
+              size="sm"
+              onClick={handleCopyLink}
+            />
+          </Tooltip>
+        </HStack>
+      </Flex>
 
       {/* Related Articles */}
       {relatedArticles.length > 0 && (
