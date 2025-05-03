@@ -205,6 +205,10 @@ const LessonPage = async ({ params }: LessonPageProps) => {
         next: { link: nextLink, title: nextTitle },
         courseLink: `/courses/${course}`,
       },
+      courseSlug: course,
+      currentSectionId: sectionId,
+      currentLessonId: lessonId,
+      sections: mdxCourse.sections,
     };
 
     return (
