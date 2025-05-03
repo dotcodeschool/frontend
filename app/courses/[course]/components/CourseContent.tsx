@@ -56,7 +56,9 @@ const CourseContent = async ({ slug }: { slug: string }) => {
       <Accordion allowToggle>
         {sections.map((module, index) => {
           // Log section information
-          console.log(`[DEBUG] Section ${index+1}: "${module.title}", ID: ${module.sys.id}`);
+          console.log(
+            `[DEBUG] Section ${index + 1}: "${module.title}", ID: ${module.sys.id}`,
+          );
           return (
             <ModuleItem
               index={index}

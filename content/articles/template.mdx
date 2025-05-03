@@ -1,0 +1,233 @@
+---
+title: "Author's Guide: Creating Articles for DotCodeSchool"
+description: "Everything you need to know about writing educational content for the Polkadot community"
+tags: ["Guide", "Documentation", "Writing", "Style Guide"]
+category: "Author Resources"
+author: "DotCodeSchool Team"
+date: "2025-05-02"
+featured: true
+---
+
+Welcome to the DotCodeSchool content authoring guide! This template demonstrates all the formatting options available to you when writing articles for our platform. Use this as a reference when creating your own educational content.
+
+## Basic Text Formatting
+
+DotCodeSchool supports standard Markdown syntax for basic text formatting:
+
+- **Bold text** is created with `**double asterisks**`
+- _Italic text_ is created with `*single asterisks*`
+- **_Bold and italic_** is created with `***triple asterisks***`
+- [Hyperlinks](https://polkadot.network) use `[link text](https://url.com)` syntax
+
+## Heading Structure
+
+Use headings to organize your content in a hierarchical structure. We support six levels of headings:
+
+# Heading 1 (Article Title)
+
+## Heading 2 (Main Sections)
+
+### Heading 3 (Sub-sections)
+
+#### Heading 4 (Sub-sub-sections)
+
+##### Heading 5 (Small sections)
+
+###### Heading 6 (Minor points)
+
+Good heading structure improves readability and makes your content more accessible. It also generates the table of contents automatically.
+
+## Lists
+
+### Unordered Lists
+
+Create bullet points with asterisks, plus signs, or hyphens:
+
+- Item one
+- Item two
+  - Nested item (indent with two spaces)
+  - Another nested item
+- Item three
+
+### Ordered Lists
+
+Create numbered lists with numbers followed by periods:
+
+1. First step
+2. Second step
+3. Third step
+   1. Sub-step A (indent with three spaces)
+   2. Sub-step B
+
+## Code Examples
+
+### Inline Code
+
+Use backticks to format `inline code` or technical terms within paragraphs.
+
+### Code Blocks
+
+For multi-line code samples, use triple backticks with a language identifier:
+
+```rust
+#[pallet::weight(10_000)]
+pub fn create_item(
+    origin: OriginFor<T>,
+    item_id: u32,
+    item_name: Vec<u8>,
+) -> DispatchResult {
+    let sender = ensure_signed(origin)?;
+
+    // Ensure the item doesn't already exist
+    ensure!(!ItemExists::<T>::contains_key(item_id), Error::<T>::ItemAlreadyExists);
+
+    // Create a new item
+    let bounded_name: BoundedVec<_, _> = item_name.try_into()
+        .map_err(|_| Error::<T>::NameTooLong)?;
+
+    // Store the item
+    Items::<T>::insert(item_id, (bounded_name, sender.clone()));
+
+    // Emit an event
+    Self::deposit_event(Event::ItemCreated(item_id, sender));
+
+    Ok(())
+}
+```
+
+You can also specify a file name for your code blocks:
+
+```typescript filename="app.ts"
+function calculateTotalSupply(api: ApiPromise): Promise<BigNumber> {
+  return api.query.balances.totalIssuance().then((issuance) => {
+    return new BigNumber(issuance.toString());
+  });
+}
+```
+
+The following languages are supported for syntax highlighting:
+
+- rust
+- typescript/javascript
+- go
+- cpp/c++
+- python
+- solidity
+- json
+- toml
+- yaml
+- sql
+- shell/bash
+
+## Blockquotes
+
+Use the `>` character at the beginning of lines to create blockquotes:
+
+> Substrate provides a flexible framework for blockchain development.
+>
+> — Gavin Wood
+
+## Links
+
+[External links](https://polkadot.network) open in a new tab by default.
+
+For internal links to other articles, use relative paths:
+
+[Introduction to Substrate](/articles/intro-to-substrate)
+
+## Images
+
+Include images with the syntax: `[alt text](image-url)`
+
+![Polkadot Logo](https://public.bnbstatic.com/static/academy/uploads/a7cd5a58229d4ba8a3c4baf072a5dd86.png)
+
+Add alternative text within the square brackets for accessibility.
+
+## Callouts and Notes
+
+For important points, use blockquotes with formatting:
+
+> **Tip:** This offers helpful advice for better results.
+
+For additional information, use callouts:
+
+<InfoBox>
+  **Note:** This is an important note that readers should pay attention to.
+</InfoBox>
+
+<Warning>This highlights a potential problem or risk.</Warning>
+
+<Error>This indicates an error or failure.</Error>
+
+<Success>This indicates a successful outcome or achievement.</Success>
+
+## Advanced Examples
+
+### CLI Command Example
+
+When showing command line instructions, use code blocks with the `bash` or `shell` language:
+
+```bash
+# Install the Substrate node template
+git clone https://github.com/substrate-developer-hub/substrate-node-template
+cd substrate-node-template
+cargo build --release
+```
+
+### Terminal Output Example
+
+Show expected output with a code block:
+
+```
+2023-11-15 10:23:45 🔨 Initializing Genesis block/state (state: 0x5843…1f64, header-hash: 0x6ada…0d38)
+2023-11-15 10:23:45 👴 Loading GRANDPA authority set from genesis on what appears to be first startup.
+2023-11-15 10:23:45 ⏱  Loaded block-time = 6s from block 0x6ada72d82c8a4546aefa34a9486a6f0db71cae88460974690d1efa741f70d38 (0 aka 0x6ada…0d38)
+2023-11-15 10:23:45 Starting consensus session on top of parent 0x6ada72d82c8a4546aefa34a9486a6f0db71cae88460974690d1efa741f70d38
+```
+
+### API Examples
+
+When showing API usage, provide context and explanation:
+
+```typescript
+// Connect to a Substrate node
+const api = await ApiPromise.create({ provider: wsProvider });
+
+// Make a query to get the current validators
+const validators = await api.query.session.validators();
+console.log(`Current validators: ${validators.join(", ")}`);
+
+// Subscribe to new blocks
+const unsubscribe = await api.rpc.chain.subscribeNewHeads((header) => {
+  console.log(`New block #${header.number} has hash ${header.hash}`);
+});
+```
+
+## Proper Attribution
+
+When quoting or referencing others' work, always provide proper attribution:
+
+> "The Polkadot network uses a sophisticated governance mechanism that allows it to evolve gracefully over time at the ultimate behest of its assembled stakeholders."
+>
+> — Polkadot Whitepaper
+
+## Best Practices for Authors
+
+1. **Start with an overview**: Briefly explain what the article covers and why it matters.
+2. **Be concise**: Keep sentences clear and straight to the point.
+3. **Use examples**: Illustrate concepts with practical examples.
+4. **Break up text**: Use headings, lists, and code blocks to avoid large text walls.
+5. **Target your audience**: Consider the technical background of your readers.
+6. **Provide context**: Explain why something works, not just how it works.
+7. **Include resources**: Link to additional documentation or tools when relevant.
+8. **Review thoroughly**: Check for technical accuracy and clarity before submitting.
+
+## Submitting Your Content
+
+After preparing your MDX file with proper formatting and frontmatter, submit it via pull request to our content repository. Our editorial team will review it for technical accuracy, clarity, and style before publication.
+
+## Need Help?
+
+If you encounter any issues or have questions about content creation, reach out to the DotCodeSchool team at [batman@dotcodeschool.com](mailto:batman@dotcodeschool.com).
+
+Happy writing!

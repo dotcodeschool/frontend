@@ -40,7 +40,7 @@ export type RepositorySetupStep = {
   code: string | React.ReactElement;
 };
 
- type RepositorySetup = {
+type RepositorySetup = {
   id: string;
   kind: string;
   title: string;

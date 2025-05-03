@@ -8,7 +8,9 @@ declare global {
 const uri = process.env.MONGODB_URI || process.env.DATABASE_URL;
 
 if (!uri) {
-  throw new Error('Invalid/Missing environment variables: Both "MONGODB_URI" and "DATABASE_URL" are missing');
+  throw new Error(
+    'Invalid/Missing environment variables: Both "MONGODB_URI" and "DATABASE_URL" are missing',
+  );
 }
 
 const options = {};
@@ -23,7 +25,7 @@ try {
     uriExists: !!process.env.MONGODB_URI,
     databaseUrlExists: !!process.env.DATABASE_URL,
     // Only log the domain part of the connection string for security
-    uriDomain: uri ? new URL(uri).hostname : 'not-set',
+    uriDomain: uri ? new URL(uri).hostname : "not-set",
   });
 } catch (error) {
   console.error("[MongoDB] Error parsing connection URI:", error);

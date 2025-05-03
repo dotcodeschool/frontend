@@ -24,7 +24,8 @@ export const middleware = async (request: NextRequest) => {
 
   console.log("isAuthenticated", isAuthenticated, nextUrl.pathname);
 
-  const isPublicRoutes =    PUBLIC_ROUTES.find(
+  const isPublicRoutes =
+    PUBLIC_ROUTES.find(
       (route) =>
         nextUrl.pathname.startsWith(route) || nextUrl.pathname === ROOT,
     ) && !PROTECTED_SUBROUTES.find((route) => nextUrl.pathname.includes(route));

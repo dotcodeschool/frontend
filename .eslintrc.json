@@ -1,8 +1,5 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "plugin:@typescript-eslint/recommended"
-  ],
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -12,10 +9,7 @@
     "project": "./tsconfig.json",
     "sourceType": "module"
   },
-  "plugins": [
-    "@typescript-eslint",
-    "react"
-  ],
+  "plugins": ["@typescript-eslint", "react"],
   "overrides": [
     {
       "files": ["lib/db/mongodb.ts"],
@@ -26,27 +20,36 @@
   ],
   "rules": {
     "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/no-unused-vars": ["warn", {
-      "argsIgnorePattern": "^_",
-      "varsIgnorePattern": "^_",
-      "caughtErrorsIgnorePattern": "^_"
-    }],
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ],
     "@typescript-eslint/no-non-null-assertion": "warn",
     "@typescript-eslint/no-empty-interface": "warn",
-    "@typescript-eslint/ban-ts-comment": ["warn", {
-      "ts-expect-error": "allow-with-description",
-      "ts-ignore": true,
-      "ts-nocheck": true,
-      "minimumDescriptionLength": 3
-    }],
+    "@typescript-eslint/ban-ts-comment": [
+      "warn",
+      {
+        "ts-expect-error": "allow-with-description",
+        "ts-ignore": true,
+        "ts-nocheck": true,
+        "minimumDescriptionLength": 3
+      }
+    ],
     "prefer-const": "warn",
     "@typescript-eslint/consistent-type-assertions": "off",
     "@typescript-eslint/prefer-nullish-coalescing": "off",
     "@typescript-eslint/restrict-template-expressions": "off",
     "@typescript-eslint/no-unnecessary-condition": "off",
-    "no-console": ["warn", {
-      "allow": ["warn", "error", "info", "dir", "table"]
-    }],
+    "no-console": [
+      "warn",
+      {
+        "allow": ["warn", "error", "info", "dir", "table"]
+      }
+    ],
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
     "import/no-default-export": "off",
@@ -62,7 +65,6 @@
     }
   }
 }
-
 
 // {
 //     "extends": [
@@ -211,7 +213,7 @@
 //       "react/no-children-prop": "error",
 //       "react/no-danger": "error",
 //       "react/no-danger-with-children": "error",
-  
+
 //       "react/no-unstable-nested-components": ["error", { "allowAsProps": true }],
 //       "react/jsx-fragments": "error",
 //       "react/destructuring-assignment": [
@@ -238,7 +240,7 @@
 //       "react/react-in-jsx-scope": "off",
 //       "react/jsx-one-expression-per-line": "off",
 //       "react/prop-types": "off",
-  
+
 //       "@typescript-eslint/no-unused-expressions": [
 //         "error",
 //         {
@@ -332,7 +334,7 @@
 //       "jsdoc/require-returns": "off",
 //       "jsdoc/require-returns-check": "off",
 //       "jsdoc/check-param-names": ["error", { "checkDestructured": false }],
-  
+
 //       "import/order": [
 //         "error",
 //         {
@@ -460,4 +462,3 @@
 //       }
 //     }
 //   }
-  

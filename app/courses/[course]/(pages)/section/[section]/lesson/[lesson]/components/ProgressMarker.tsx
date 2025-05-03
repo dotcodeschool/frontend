@@ -10,7 +10,11 @@ type ProgressMarkerProps = {
   lessonId: string;
 };
 
-export const ProgressMarker = ({ courseId, sectionId, lessonId }: ProgressMarkerProps) => {
+export const ProgressMarker = ({
+  courseId,
+  sectionId,
+  lessonId,
+}: ProgressMarkerProps) => {
   const toast = useToast();
   const { progress, saveProgress, isLoading } = useProgress();
   const [isComplete, setIsComplete] = useState(false);
@@ -20,11 +24,14 @@ export const ProgressMarker = ({ courseId, sectionId, lessonId }: ProgressMarker
   useEffect(() => {
     try {
       console.log("Current progress:", progress);
-      console.log(`Checking completion status for: ${courseId}/${sectionId}/${lessonId}`);
-      
+      console.log(
+        `Checking completion status for: ${courseId}/${sectionId}/${lessonId}`,
+      );
+
       // FIX: Check if the value is explicitly true, not just if it exists
-      const isLessonComplete = progress?.[courseId]?.[sectionId]?.[lessonId] === true;
-      
+      const isLessonComplete =
+        progress?.[courseId]?.[sectionId]?.[lessonId] === true;
+
       console.log("Lesson completion status:", isLessonComplete);
       setIsComplete(isLessonComplete);
     } catch (error) {
@@ -35,16 +42,18 @@ export const ProgressMarker = ({ courseId, sectionId, lessonId }: ProgressMarker
   const handleToggle = async () => {
     setUpdating(true);
     try {
-      console.log(`Toggling progress for: ${courseId}/${sectionId}/${lessonId}`);
+      console.log(
+        `Toggling progress for: ${courseId}/${sectionId}/${lessonId}`,
+      );
       console.log("Current completion status:", isComplete);
-      
+
       // Call saveProgress which will update the database
       await saveProgress(courseId, sectionId, lessonId);
-      
+
       // Toggle local state
       const newStatus = !isComplete;
       setIsComplete(newStatus);
-      
+
       toast({
         title: newStatus ? "Lesson marked as complete" : "Progress updated",
         status: newStatus ? "success" : "info",
@@ -80,8 +89,8 @@ export const ProgressMarker = ({ courseId, sectionId, lessonId }: ProgressMarker
         Finished this lesson?
       </Heading>
       <HStack>
-        <Switch 
-          colorScheme="green" 
+        <Switch
+          colorScheme="green"
           isChecked={isComplete}
           isDisabled={updating || isLoading}
           onChange={handleToggle}

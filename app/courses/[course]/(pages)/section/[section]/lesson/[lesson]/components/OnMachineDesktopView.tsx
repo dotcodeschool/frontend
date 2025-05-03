@@ -25,11 +25,11 @@ type OnMachineDesktopViewProps = {
   lessonId: string;
 };
 
-const OnMachineDesktopView = ({ 
-  courseSlug, 
+const OnMachineDesktopView = ({
+  courseSlug,
   lessonPageData,
   sectionId,
-  lessonId
+  lessonId,
 }: OnMachineDesktopViewProps) => {
   const isSolutionEmpty = isEmpty(lessonPageData.solution);
 

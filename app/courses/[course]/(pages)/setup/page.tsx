@@ -21,7 +21,7 @@ import { StepsComponent } from "./components/StepsComponent";
 const authenticateUserAndGetId = async (course: string) => {
   const session = await auth();
   console.log("[setup] authenticateUserAndGetId session", session);
-  
+
   // If no session or no user email, redirect to sign in
   if (!session?.user?.email) {
     await handleSignIn({
@@ -53,13 +53,16 @@ const authenticateUserAndGetId = async (course: string) => {
   } catch (error) {
     // Log the error but don't redirect on DB errors
     console.error("[setup] Database error:", error);
-    
+
     // If we have a database error but still have a session user ID, use that
     if (session.user.id) {
-      console.log("[setup] Falling back to session user ID after DB error:", session.user.id);
+      console.log(
+        "[setup] Falling back to session user ID after DB error:",
+        session.user.id,
+      );
       return session.user.id;
     }
-    
+
     return null;
   }
 };
@@ -78,7 +81,7 @@ const SetupPage = async ({ params }: { params: { course: string } }) => {
   console.log("[setup] Course data:", courseData);
   if (!courseData) {
     console.log("[setup] Course not found in database");
-    
+
     // Fallback for specific known courses when they're not in the database
     // if (course === "rust-state-machine") {
     //   console.log("[setup] Using fallback data for rust-state-machine course");
@@ -90,7 +93,7 @@ const SetupPage = async ({ params }: { params: { course: string } }) => {
     //         Setting up your Rust State Machine course...
     //       </Text>
     //       <Text>
-    //         We are experiencing some technical difficulties with this course. 
+    //         We are experiencing some technical difficulties with this course.
     //         Please try again later or contact support if the issue persists.
     //       </Text>
     //       <Text mt={4}>
@@ -102,7 +105,7 @@ const SetupPage = async ({ params }: { params: { course: string } }) => {
     //     </Box>
     //   );
     // }
-    
+
     // Default error for other courses
     return (
       <div
@@ -126,7 +129,7 @@ const SetupPage = async ({ params }: { params: { course: string } }) => {
   }
 
   const repo = await findUserRepositoryByCourse(course, userId);
-  
+
   // Serialize the repo object to avoid ObjectId issues
   const serializedRepo = repo ? JSON.parse(JSON.stringify(repo)) : null;
 

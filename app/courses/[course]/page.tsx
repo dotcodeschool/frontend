@@ -18,7 +18,7 @@ const CoursePage = ({ params: { course } }: { params: { course: string } }) => {
         <Link color="green.500" fontSize="5xl" href="/courses">
           <IoArrowBack />
         </Link>
-        
+
         {/* DelayedContentSwitch keeps the skeleton visible until content is fully ready */}
         <DelayedContentSwitch loadingComponent={<CourseContentSkeleton />}>
           <CourseContent slug={course} />

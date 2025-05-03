@@ -9,7 +9,7 @@ export const authConfig = {
     authorized: ({ auth, request: { nextUrl } }) => {
       const isLoggedIn = Boolean(auth?.user);
       const isCourse = nextUrl.pathname.startsWith("/courses");
-      
+
       return true;
 
       if (isCourse) {

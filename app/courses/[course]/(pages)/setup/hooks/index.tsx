@@ -17,7 +17,8 @@ const useRepositorySetup = (
   );
   const [loadingRepo, setLoadingRepo] = useState(false);
   const [repoName, setRepoName] = useState<string>();
-  const [repoSetupSteps, setRepoSetupSteps] = useState<RepositorySetup>(repositorySetup);
+  const [repoSetupSteps, setRepoSetupSteps] =
+    useState<RepositorySetup>(repositorySetup);
   const [gitPushReceived, setGitPushReceived] = useState(
     initialRepo?.test_ok ?? false,
   );
@@ -53,14 +54,17 @@ cd dotcodeschool-${courseSlug}
 \`\`\``;
 
           // Create updated steps with the new code
-          const updatedSteps: RepositorySetupStep[] = repositorySetup.steps.map((step, index) =>
-            index === 1 ? { ...step, title: step.title, code: codeString } : step,
+          const updatedSteps: RepositorySetupStep[] = repositorySetup.steps.map(
+            (step, index) =>
+              index === 1
+                ? { ...step, title: step.title, code: codeString }
+                : step,
           );
 
           // Update state with the new steps
           setRepoSetupSteps({
             ...repositorySetup,
-            steps: updatedSteps
+            steps: updatedSteps,
           });
         } catch (error) {
           console.error("Error updating repo setup:", error);
@@ -70,7 +74,13 @@ cd dotcodeschool-${courseSlug}
       void fetchRepoData();
       void updateRepoSetup();
     }
-  }, [initialRepo, repoName, repositorySetup.steps, courseSlug, repositorySetup]);
+  }, [
+    initialRepo,
+    repoName,
+    repositorySetup.steps,
+    courseSlug,
+    repositorySetup,
+  ]);
 
   // Rest of your component...
 
