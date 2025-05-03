@@ -1,8 +1,7 @@
-// app/articles/page.tsx
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import Link from "next/link";
+import { notFound } from "next/navigation";
 import {
   Box,
   Container,
@@ -10,15 +9,12 @@ import {
   Text,
   SimpleGrid,
   Flex,
-  Tag,
-  TagLabel,
-  Card,
-  CardBody,
-  Stack,
-  HStack,
-  Button,
-  Badge,
+  // Button,
 } from "@chakra-ui/react";
+
+import ArticleBreadcrumb from "./components/ArticleBreadcrumb";
+import ArticleCard from "./components/ArticleCard";
+import FeaturedArticleCard from "./components/FeaturedArticleCard";
 
 // Types for our article metadata
 interface ArticleMetadata {
@@ -35,171 +31,167 @@ interface ArticleWithSlug extends ArticleMetadata {
   slug: string;
 }
 
-export default async function ArticlesPage() {
-  const articles = await getArticles();
-  const categories = Array.from(
-    new Set(articles.map((article) => article.category)),
+type ArticlesSearchParams = {
+  category?: string;
+  tag?: string;
+};
+
+// Helper function to format category or tag labels
+function formatLabel(label: string): string {
+  return label
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
+export default async function ArticlesPage({
+  searchParams,
+}: {
+  searchParams: ArticlesSearchParams;
+}) {
+  const { category, tag } = searchParams;
+  const allArticles = await getArticles();
+
+  // Filter articles based on category or tag if provided
+  let articles = allArticles;
+  let pageTitle = "Articles";
+  let pageDescription =
+    "Technical insights, tutorials, and updates from Polkadot's core developers";
+
+  if (category) {
+    const formattedCategory = formatLabel(category);
+    articles = allArticles.filter(
+      (article) => article.category.toLowerCase() === category.toLowerCase(),
+    );
+    pageTitle = `${formattedCategory} Articles`;
+    pageDescription = `Browse our collection of articles about ${category.toLowerCase()} in the Polkadot ecosystem`;
+
+    if (articles.length === 0) {
+      notFound();
+    }
+  } else if (tag) {
+    const formattedTag = formatLabel(tag);
+    articles = allArticles.filter((article) =>
+      article.tags.some((t) => t.toLowerCase() === tag.toLowerCase()),
+    );
+    pageTitle = `Articles tagged with ${formattedTag}`;
+    pageDescription = `Browse our collection of articles about ${tag.toLowerCase()} in the Polkadot ecosystem`;
+
+    if (articles.length === 0) {
+      notFound();
+    }
+  }
+
+  // Only show featured articles on the main page
+  // const categories = Array.from(
+  //   new Set(allArticles.map((article) => article.category)),
+  // );
+  const featuredArticles = allArticles.filter((article) => article.featured);
+  const isFiltered = !!category || !!tag;
+
+  // Format dates server-side
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  // Format dates for all articles upfront
+  const articlesWithFormattedDates = articles.map((article) => ({
+    ...article,
+    formattedDate: formatDate(article.date),
+  }));
+
+  const featuredArticlesWithFormattedDates = featuredArticles.map(
+    (article) => ({
+      ...article,
+      formattedDate: formatDate(article.date),
+    }),
   );
-  const featuredArticles = articles.filter((article) => article.featured);
 
   return (
     <Container maxW="container.xl" py={8}>
+      {/* Breadcrumb for filtered views */}
+      {isFiltered && (
+        <ArticleBreadcrumb
+          category={category}
+          tag={tag}
+          categoryLabel={category ? formatLabel(category) : undefined}
+          tagLabel={tag ? formatLabel(tag) : undefined}
+        />
+      )}
+
       <Box mb={8}>
         <Heading as="h1" size="2xl" mb={2}>
-          Articles
+          {pageTitle}
         </Heading>
         <Text fontSize="xl" color="gray.400">
-          Technical insights, tutorials, and updates from Polkadot&apos;s core
-          developers
+          {pageDescription}
         </Text>
       </Box>
 
-      {/* Popular Topics */}
-      <Box mb={10}>
+      {/* Popular Topics - always show */}
+      {/* <Box mb={10}>
         <Heading as="h2" size="lg" mb={4}>
           Popular topics
         </Heading>
         <Flex flexWrap="wrap" gap={2}>
-          {categories.map((category) => (
+          {categories.map((categoryName) => (
             <Button
-              key={category}
-              as={Link}
-              href={`/articles/category/${category.toLowerCase()}`}
+              key={categoryName}
+              as="a"
+              href={`/articles?category=${categoryName.toLowerCase()}`}
               size="md"
               variant="outline"
               colorScheme="green"
+              bg={
+                category?.toLowerCase() === categoryName.toLowerCase()
+                  ? "green.900"
+                  : undefined
+              }
             >
-              {category}
+              {categoryName}
             </Button>
           ))}
         </Flex>
-      </Box>
+      </Box> */}
 
-      {/* Featured Articles */}
-      {featuredArticles.length > 0 && (
+      {/* Featured Articles - only show on main page */}
+      {!isFiltered && featuredArticlesWithFormattedDates.length > 0 && (
         <Box mb={10}>
           <Heading as="h2" size="lg" mb={4}>
             Trending
           </Heading>
           <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
-            {featuredArticles.map((article) => (
+            {featuredArticlesWithFormattedDates.map((article) => (
               <FeaturedArticleCard key={article.slug} article={article} />
             ))}
           </SimpleGrid>
         </Box>
       )}
 
-      {/* All Articles */}
+      {/* Articles List */}
       <Box>
         <Flex justify="space-between" align="center" mb={4}>
           <Heading as="h2" size="lg">
-            Browse all articles
+            {isFiltered ? "Articles" : "Browse all articles"}
           </Heading>
           <Text color="gray.500">
-            {articles.length} {articles.length === 1 ? "article" : "articles"}
+            {articlesWithFormattedDates.length}{" "}
+            {articlesWithFormattedDates.length === 1 ? "article" : "articles"}
           </Text>
         </Flex>
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
-          {articles.map((article) => (
+          {articlesWithFormattedDates.map((article) => (
             <ArticleCard key={article.slug} article={article} />
           ))}
         </SimpleGrid>
       </Box>
     </Container>
   );
-}
-
-// Article card component
-function ArticleCard({ article }: { article: ArticleWithSlug }) {
-  return (
-    <Card
-      as={Link}
-      href={`/articles/${article.slug}`}
-      overflow="hidden"
-      variant="outline"
-      _hover={{ shadow: "md" }}
-      transition="all 0.2s"
-    >
-      <CardBody>
-        <Stack spacing={3}>
-          <Heading as="h3" size="md">
-            {article.title}
-          </Heading>
-          <Flex flexWrap="wrap" gap={1}>
-            {article.tags.map((tag) => (
-              <Tag key={tag} size="sm" colorScheme="green" variant="subtle">
-                <TagLabel>{tag}</TagLabel>
-              </Tag>
-            ))}
-          </Flex>
-          <Text color="gray.400" fontSize="sm">
-            {article.description}
-          </Text>
-          <HStack justify="space-between" fontSize="sm" color="gray.500">
-            <Text>{article.author}</Text>
-            <Text>{formatDate(article.date)}</Text>
-          </HStack>
-        </Stack>
-      </CardBody>
-    </Card>
-  );
-}
-
-function FeaturedArticleCard({ article }: { article: ArticleWithSlug }) {
-  return (
-    <Card
-      as={Link}
-      href={`/articles/${article.slug}`}
-      overflow="hidden"
-      variant="outline"
-      borderWidth="1px"
-      borderColor="green.200"
-      bg="green.900"
-      color="gray.100"
-      _hover={{ shadow: "md" }}
-      transition="all 0.2s"
-    >
-      <CardBody>
-        <Badge colorScheme="gray" mb={2}>
-          Featured
-        </Badge>
-        <Stack spacing={3}>
-          <Heading as="h3" size="md">
-            {article.title}
-          </Heading>
-          <Flex flexWrap="wrap" gap={1}>
-            {article.tags.map((tag) => (
-              <Tag
-                key={tag}
-                size="sm"
-                colorScheme="blackAlpha.500"
-                variant="solid"
-              >
-                <TagLabel>{tag}</TagLabel>
-              </Tag>
-            ))}
-          </Flex>
-          <Text color="gray.400" fontSize="sm">
-            {article.description}
-          </Text>
-          <HStack justify="space-between" fontSize="sm" color="gray.500">
-            <Text>{article.author}</Text>
-            <Text>{formatDate(article.date)}</Text>
-          </HStack>
-        </Stack>
-      </CardBody>
-    </Card>
-  );
-}
-
-// Helper function to format date
-function formatDate(dateString: string) {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
 }
 
 // Function to get all articles

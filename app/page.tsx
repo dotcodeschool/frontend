@@ -6,9 +6,14 @@ import { FeaturesList, Header, LandingCTA } from "./components";
 
 export { generateMetadata } from "./metadata";
 
+const navLinks = [
+  { label: "Articles", href: "/articles" },
+  { label: "For Authors", href: "/articles/authors-guide" },
+];
+
 const Home = () => (
   <Box maxW="8xl" mx="auto" px={[4, 12]}>
-    <Navbar />
+    <Navbar navLinks={navLinks} />
     <Header />
     <FeaturesList />
     <Stack align="center" mt={20} pb={20} spacing={8}>
