@@ -1,8 +1,8 @@
 import { Box, Link } from "@chakra-ui/react";
 import React from "react";
 import { IoArrowBack } from "react-icons/io5";
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
 
 import { Navbar } from "@/components";
 
@@ -15,7 +15,9 @@ export { generateMetadata } from "./metadata";
 
 const CoursePage = ({ params: { course } }: { params: { course: string } }) => {
   // Check if this is a local MDX course
-  const mdxCourseExists = fs.existsSync(path.join(process.cwd(), 'content/courses', course));
+  const mdxCourseExists = fs.existsSync(
+    path.join(process.cwd(), "content/courses", course),
+  );
 
   return (
     <Box maxW="8xl" mx="auto" px={[4, 12]}>

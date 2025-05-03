@@ -26,26 +26,18 @@ const LessonNavigation = ({ prev, next }: LessonNavigationProps) => {
       zIndex={10}
     >
       {prev ? (
-        <Link
-          alignItems="center"
-          display="flex"
-          href={prev.link}
-        >
-          <IoArrowBack style={{ marginRight: '8px' }} />
+        <Link alignItems="center" display="flex" href={prev.link}>
+          <IoArrowBack style={{ marginRight: "8px" }} />
           <Text>Previous: {prev.title}</Text>
         </Link>
       ) : (
         <Box />
       )}
-      
+
       {next && (
-        <Link
-          alignItems="center"
-          display="flex"
-          href={next.link}
-        >
+        <Link alignItems="center" display="flex" href={next.link}>
           <Text>Next: {next.title}</Text>
-          <IoArrowForward style={{ marginLeft: '8px' }} />
+          <IoArrowForward style={{ marginLeft: "8px" }} />
         </Link>
       )}
     </Flex>

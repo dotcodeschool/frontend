@@ -20,9 +20,12 @@ export { generateMetadata } from "./metadata";
 const CoursesPage = async () => {
   // Get courses from both Contentful and local MDX files
   const allCourses: Array<CourseOverview> = await getCourseCatalog();
-  
+
   // Log the courses for debugging
-  console.log('All courses:', allCourses.map(course => course.slug));
+  console.log(
+    "All courses:",
+    allCourses.map((course) => course.slug),
+  );
 
   // Define the desired ordering of courses by slug
   const slugOrder = [
@@ -33,18 +36,18 @@ const CoursesPage = async () => {
   ];
 
   // Sort courses according to the slugOrder array
-    const courses = [...allCourses].sort((a, b) => {
-      const indexA = slugOrder.indexOf(a.slug ?? '');
-      const indexB = slugOrder.indexOf(b.slug ?? '');
+  const courses = [...allCourses].sort((a, b) => {
+    const indexA = slugOrder.indexOf(a.slug ?? "");
+    const indexB = slugOrder.indexOf(b.slug ?? "");
 
-      // Handle cases where a slug might not be in the order array
-      if (indexA === -1 && indexB === -1) return 0; // Keep original order for items not in slugOrder
-      if (indexA === -1) return 1; // Put items not in slugOrder at the end
-      if (indexB === -1) return -1; // Put items not in slugOrder at the end
+    // Handle cases where a slug might not be in the order array
+    if (indexA === -1 && indexB === -1) return 0; // Keep original order for items not in slugOrder
+    if (indexA === -1) return 1; // Put items not in slugOrder at the end
+    if (indexB === -1) return -1; // Put items not in slugOrder at the end
 
-      // Sort according to the order in slugOrder
-      return indexA - indexB;
-    });
+    // Sort according to the order in slugOrder
+    return indexA - indexB;
+  });
 
   return (
     <Box maxW="8xl" mx="auto" px={[4, 12]}>

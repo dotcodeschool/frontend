@@ -19,7 +19,7 @@ const CourseHeader = ({
     {author ? (
       <Text>
         Written by{" "}
-        {typeof author === 'string' ? (
+        {typeof author === "string" ? (
           author
         ) : author.name && author.url ? (
           <a
@@ -30,7 +30,9 @@ const CourseHeader = ({
           >
             {author.name}
           </a>
-        ) : author.name}
+        ) : (
+          author.name
+        )}
       </Text>
     ) : null}
     <Text mt={6}>{description}</Text>

@@ -102,7 +102,7 @@ const MdxModuleItem = ({ index, section, slug }: MdxModuleItemProps) => {
             </Link>
             {lesson.hasFiles && (
               <Text color="gray.500" fontSize="xs" ml={2}>
-                {lesson.fileType === 'source' ? 'Source Files' : 'Exercise'}
+                {lesson.fileType === "source" ? "Source Files" : "Exercise"}
               </Text>
             )}
           </Flex>

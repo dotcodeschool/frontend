@@ -192,7 +192,7 @@ const LessonPage = async ({ params }: LessonPageProps) => {
       // Provide a fallback if bundling fails
       bundledContent = `export default function MDXContent() { return <pre>${JSON.stringify(lesson.content)}</pre>; }`;
     }
-    
+
     // Prepare lesson data for the view component
     const lessonData = {
       title: lesson.title,

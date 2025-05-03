@@ -20,18 +20,18 @@ const MdxCourseContent = async ({ slug }: { slug: string }) => {
 
   return (
     <Box maxW="4xl" mx="auto">
-      <CourseHeader 
+      <CourseHeader
         title={mdxCourse.title}
         description={mdxCourse.description}
         author={mdxCourse.author}
         level={mdxCourse.level}
         language={mdxCourse.language}
       />
-      <ButtonPrimary 
-        as="a" 
-        href={`/courses/${slug}/lesson/${mdxCourse.sections[0]?.id}/${mdxCourse.sections[0]?.lessons[0]?.id}`} 
-        mt={8} 
-        px={12} 
+      <ButtonPrimary
+        as="a"
+        href={`/courses/${slug}/lesson/${mdxCourse.sections[0]?.id}/${mdxCourse.sections[0]?.lessons[0]?.id}`}
+        mt={8}
+        px={12}
         size="lg"
       >
         Start

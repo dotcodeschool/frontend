@@ -12,7 +12,7 @@ const SplitPane = dynamic(() => import("react-split-pane"), { ssr: false });
 // Dynamically import the EditorTabs component
 const EditorTabs = dynamic(
   () => import("../../../components/EditorTabs").then((mod) => mod.EditorTabs),
-  { ssr: false }
+  { ssr: false },
 );
 
 type EditorComponentsProps = {

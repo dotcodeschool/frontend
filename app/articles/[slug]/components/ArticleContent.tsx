@@ -22,7 +22,12 @@ import {
   useToast,
   useClipboard,
 } from "@chakra-ui/react";
-import { ChevronRightIcon, ArrowBackIcon, CheckIcon, LinkIcon } from "@chakra-ui/icons";
+import {
+  ChevronRightIcon,
+  ArrowBackIcon,
+  CheckIcon,
+  LinkIcon,
+} from "@chakra-ui/icons";
 import { FaTwitter, FaFacebook, FaLinkedin } from "react-icons/fa";
 import { MDXBundlerRenderer } from "@/components/mdx-bundler-renderer";
 
@@ -55,7 +60,7 @@ export default function ArticleContent({
 }: ArticleContentProps) {
   const toast = useToast();
   const { onCopy, hasCopied } = useClipboard(
-    typeof window !== "undefined" ? window.location.href : ""
+    typeof window !== "undefined" ? window.location.href : "",
   );
 
   const handleShare = (platform: string) => {
@@ -63,9 +68,9 @@ export default function ArticleContent({
 
     const url = encodeURIComponent(window.location.href);
     const title = encodeURIComponent(article.title);
-    
+
     let shareUrl = "";
-    
+
     switch (platform) {
       case "twitter":
         shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${title}`;
@@ -79,7 +84,7 @@ export default function ArticleContent({
       default:
         return;
     }
-    
+
     window.open(shareUrl, "_blank", "noopener,noreferrer");
   };
 

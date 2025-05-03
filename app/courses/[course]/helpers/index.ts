@@ -1,6 +1,6 @@
 import { Session } from "next-auth";
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
 
 import { getUserRepo } from "@/lib/api";
 import { getContentfulData } from "@/lib/api/contentful";
@@ -14,7 +14,7 @@ const getCourseDetails = async (
   queryFields: CourseQuery,
 ): Promise<CourseDetails | null> => {
   // Check if this is a local MDX course
-  const mdxCourseDir = path.join(process.cwd(), 'content/courses', slug);
+  const mdxCourseDir = path.join(process.cwd(), "content/courses", slug);
   if (fs.existsSync(mdxCourseDir)) {
     try {
       const mdxCourse = await getMdxCourseDetails(slug);
@@ -30,11 +30,11 @@ const getCourseDetails = async (
           slug: mdxCourse.slug,
           githubUrl: mdxCourse.githubUrl,
           sectionsCollection: {
-            items: mdxCourse.sections.map(section => ({
+            items: mdxCourse.sections.map((section) => ({
               sys: { id: section.id },
               title: section.title,
               lessonsCollection: {
-                items: section.lessons.map(lesson => ({
+                items: section.lessons.map((lesson) => ({
                   sys: { id: lesson.id },
                   title: lesson.title,
                   slug: lesson.slug,
