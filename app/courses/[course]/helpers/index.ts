@@ -1,15 +1,56 @@
 import { Session } from "next-auth";
+import fs from 'fs';
+import path from 'path';
 
 import { getUserRepo } from "@/lib/api";
 import { getContentfulData } from "@/lib/api/contentful";
 
 import { QUERY_LESSONS_COLLECTION_ID_AND_TOTAL } from "../../../../queries";
 import { CourseDetails, CourseQuery, LessonIdAndTotalData } from "../types";
+import { getMdxCourseDetails } from "./getMdxCourseDetails";
 
 const getCourseDetails = async (
   slug: string,
   queryFields: CourseQuery,
 ): Promise<CourseDetails | null> => {
+  // Check if this is a local MDX course
+  const mdxCourseDir = path.join(process.cwd(), 'content/courses', slug);
+  if (fs.existsSync(mdxCourseDir)) {
+    try {
+      const mdxCourse = await getMdxCourseDetails(slug);
+      if (mdxCourse) {
+        // Convert to CourseDetails format
+        return {
+          title: mdxCourse.title,
+          description: mdxCourse.description,
+          author: mdxCourse.author,
+          level: mdxCourse.level,
+          language: mdxCourse.language,
+          format: mdxCourse.format,
+          slug: mdxCourse.slug,
+          githubUrl: mdxCourse.githubUrl,
+          sectionsCollection: {
+            items: mdxCourse.sections.map(section => ({
+              sys: { id: section.id },
+              title: section.title,
+              lessonsCollection: {
+                items: section.lessons.map(lesson => ({
+                  sys: { id: lesson.id },
+                  title: lesson.title,
+                  slug: lesson.slug,
+                })),
+                total: section.lessons.length,
+              },
+            })),
+          },
+        };
+      }
+    } catch (error) {
+      console.error(`Error loading MDX course ${slug}:`, error);
+    }
+  }
+
+  // Fall back to Contentful if not a local MDX course or if loading failed
   const QUERY_COURSE_OVERVIEW: string = `query {
     courseModuleCollection(where: { slug: "${slug}" }) {
       items ${queryFields}

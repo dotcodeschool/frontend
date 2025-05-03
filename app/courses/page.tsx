@@ -18,10 +18,15 @@ import { getCourseCatalog } from "./helpers";
 export { generateMetadata } from "./metadata";
 
 const CoursesPage = async () => {
+  // Get courses from both Contentful and local MDX files
   const allCourses: Array<CourseOverview> = await getCourseCatalog();
+  
+  // Log the courses for debugging
+  console.log('All courses:', allCourses.map(course => course.slug));
 
   // Define the desired ordering of courses by slug
   const slugOrder = [
+    "sample-course", // Our local MDX course
     "rust-state-machine",
     "substrate-kitties",
     "intro-to-papi",

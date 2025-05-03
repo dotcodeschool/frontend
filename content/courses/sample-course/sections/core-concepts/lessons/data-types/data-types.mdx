@@ -1,0 +1,117 @@
+---
+slug: data-types
+title: Understanding Data Types
+order: 2
+---
+
+# Understanding Data Types
+
+In this lesson, we'll explore the different data types available in [language] and how to work with them effectively.
+
+## What are Data Types?
+
+Data types specify what kind of data a variable can hold. Each data type has its own characteristics and methods that can be used to manipulate the data.
+
+## Common Data Types
+
+### Primitive Data Types
+
+Primitive data types are the basic building blocks of data in [language]:
+
+- **String**: Represents text data
+  ```javascript
+  const name = "John Doe";
+  ```
+
+- **Number**: Represents numeric values
+  ```javascript
+  const age = 30;
+  const price = 19.99;
+  ```
+
+- **Boolean**: Represents logical values (true or false)
+  ```javascript
+  const isActive = true;
+  ```
+
+- **Undefined**: Represents a variable that has been declared but not assigned a value
+  ```javascript
+  let variable;
+  console.log(variable); // undefined
+  ```
+
+- **Null**: Represents the intentional absence of any object value
+  ```javascript
+  const emptyValue = null;
+  ```
+
+### Complex Data Types
+
+Complex data types can store collections of values and more complex entities:
+
+- **Array**: Ordered collection of values
+  ```javascript
+  const fruits = ["apple", "banana", "orange"];
+  ```
+
+- **Object**: Collection of key-value pairs
+  ```javascript
+  const person = {
+    name: "Jane Doe",
+    age: 25,
+    isStudent: true
+  };
+  ```
+
+- **Function**: Reusable block of code
+  ```javascript
+  function greet(name) {
+    return `Hello, ${name}!`;
+  }
+  ```
+
+## Type Conversion
+
+Sometimes you need to convert data from one type to another:
+
+```javascript
+// String to Number
+const numStr = "42";
+const num = Number(numStr);
+console.log(num); // 42
+
+// Number to String
+const count = 100;
+const countStr = String(count);
+console.log(countStr); // "100"
+
+// Boolean conversion
+console.log(Boolean(1)); // true
+console.log(Boolean(0)); // false
+console.log(Boolean("")); // false
+console.log(Boolean("hello")); // true
+```
+
+## Type Checking
+
+You can check the type of a value using the `typeof` operator:
+
+```javascript
+console.log(typeof "hello"); // "string"
+console.log(typeof 42); // "number"
+console.log(typeof true); // "boolean"
+console.log(typeof undefined); // "undefined"
+console.log(typeof null); // "object" (this is a known quirk in JavaScript)
+console.log(typeof []); // "object"
+console.log(typeof {}); // "object"
+console.log(typeof function() {}); // "function"
+```
+
+## Key Takeaways
+
+- Understanding data types is fundamental to programming
+- Choose the appropriate data type for your data to ensure efficient operations
+- Be aware of type conversion rules to avoid unexpected behavior
+- Use type checking when needed to ensure your code works with the expected data types
+
+In the next lesson, we'll explore [next topic] and how it builds on your understanding of data types.

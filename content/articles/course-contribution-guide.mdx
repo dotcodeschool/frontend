@@ -1,8 +1,8 @@
 ---
 slug: course-contribution-guide
 title: Course Contribution Guide
-description: A comprehensive guide for authors on how to contribute to existing courses or create their own courses.
-tags: ["Guide", "Documentation", "Writing", "Style Guide"]
+description: A comprehensive guide for authors on how to contribute to existing courses or create their own courses using the MDX-based course system.
+tags: ["Guide", "Documentation", "Writing", "Course Creation"]
 category: "Author Resources"
 author: Dot Code School Team
 date: "2025-05-03"
@@ -10,20 +10,28 @@ date: "2025-05-03"
 
 # Course Contribution Guide
 
-This guide provides detailed instructions for authors who want to contribute to existing courses or create their own courses on Dot Code School. By following this guide, you'll ensure your content adheres to our standardized format, making it easier for learners to navigate and for our platform to render correctly.
+This guide provides detailed instructions for authors who want to contribute to existing courses or create their own courses on Dot Code School using our MDX-based course system.
 
 ## Table of Contents
 
-1. [Course Structure Overview](#course-structure-overview)
-2. [Creating a New Course](#creating-a-new-course)
-3. [Adding Sections and Lessons](#adding-sections-and-lessons)
-4. [Lesson Content Format](#lesson-content-format)
+1. [Introduction](#introduction)
+2. [Course Structure](#course-structure)
+3. [Creating a New Course](#creating-a-new-course)
+4. [Adding Sections and Lessons](#adding-sections-and-lessons)
 5. [Working with Code Files](#working-with-code-files)
 6. [Creating a Pull Request](#creating-a-pull-request)
-7. [File Naming and Structure Conventions](#file-naming-and-structure-conventions)
-8. [Best Practices](#best-practices)
+7. [Best Practices](#best-practices)
 
-## Course Structure Overview
+## Introduction
+
+Dot Code School now supports courses created using MDX (Markdown with JSX) files stored directly in the repository. This approach offers several advantages:
+
+- **Version Control**: All course content is stored in Git, making it easy to track changes and collaborate
+- **Local Development**: Authors can preview their courses locally before submitting
+- **Simplified Workflow**: No need to use a separate CMS or content platform
+- **Flexibility**: Easy to include code examples, interactive elements, and custom components
+
+## Course Structure
 
 Our courses follow a hierarchical structure:
 
@@ -32,14 +40,14 @@ content/courses/course-slug/
 ├── course-slug.mdx           # Course metadata and description
 └── sections/                 # Container for all course sections
     └── section-slug/         # A section of the course
-        ├── section-slug.mdx  # Optional section metadata
+        ├── section-slug.mdx  # Section metadata
         └── lessons/          # Container for all lessons in this section
             ├── lesson-1-slug/    # First lesson directory
-            │   ├── lesson-name.mdx  # Lesson content
+            │   ├── lesson-1-slug.mdx  # Lesson content
             │   └── files/        # Optional code files for the lesson
             │       └── source/   # OR template/ and solution/ pair
             └── lesson-2-slug/    # Second lesson directory
-                ├── lesson-name.mdx  # Lesson content
+                ├── lesson-2-slug.mdx  # Lesson content
                 └── files/        # Optional code files
                     ├── template/ # Files with TODOs for learners
                     └── solution/ # Completed files for reference
@@ -49,25 +57,17 @@ content/courses/course-slug/
 
 To create a new course:
 
-### Option 1: Using the Helper Script
-
-1. Navigate to the `content/courses/course-template` directory in your terminal
-2. Run the helper script with your desired course slug:
-   ```bash
-   ./create-course.sh your-course-slug
-   ```
-3. The script will create a new course directory with the proper structure
-4. Follow the instructions provided by the script to customize your course
-
-### Option 2: Manual Setup
+### Option 1: Using the Template Directory
 
 1. Copy the `content/courses/course-template` directory to create a new course with the recommended structure
-2. Rename the directory to your course slug (e.g., `rust-state-machine`)
-3. Rename `course-template.mdx` to match your course slug (e.g., `rust-state-machine.mdx`)
+2. Rename the directory to your course slug (e.g., `javascript-basics`)
+3. Rename `course-template.mdx` to match your course slug (e.g., `javascript-basics.mdx`)
 4. Edit the course metadata and content in the renamed file
 5. Customize the sections and lessons to fit your course content
 
-Alternatively, you can create the structure manually:
+### Option 2: Manual Setup
+
+If you prefer to start from scratch:
 
 1. Create a new directory under `content/courses/` with your course slug
 2. Create a course metadata file named after your course slug
@@ -75,19 +75,36 @@ Alternatively, you can create the structure manually:
 
 ### Course Metadata File
 
-The course metadata file (e.g., `course-slug.mdx`) should include frontmatter with the following fields:
+The course metadata file (e.g., `javascript-basics.mdx`) should include frontmatter with the following fields:
 
 ```mdx
 ---
-slug: rust-state-machine
-title: Rust State Machine
+slug: javascript-basics
+title: JavaScript Basics
 author: Your Name
 description: A concise description of your course.
 level: Beginner | Intermediate | Advanced
 language: Programming language(s) used
 github_url: https://github.com/your-username/your-repo
-tags: ["rust", "state machine", "programming"]
+tags: ["javascript", "web development", "programming"]
 ---
+
+# JavaScript Basics
+
+This course will teach you the fundamentals of JavaScript programming...
+
+## What You'll Learn
+
+- Variables and data types
+- Functions and scope
+- Objects and arrays
+- DOM manipulation
+- Asynchronous programming
+
+## Prerequisites
+
+- Basic understanding of HTML and CSS
+- Familiarity with programming concepts
 ```
 
 ## Adding Sections and Lessons
@@ -95,11 +112,12 @@ tags: ["rust", "state machine", "programming"]
 ### Creating a Section
 
 1. Create a directory for your section under `sections/` with a descriptive slug (e.g., `getting-started`)
-2. Create a `lessons` directory within your section to contain individual lessons
+2. Create a section metadata file (e.g., `getting-started.mdx`) in your section directory
+3. Create a `lessons` directory within your section to contain individual lessons
 
-### Section Metadata (Optional)
+### Section Metadata
 
-You can optionally include a section metadata file (e.g., `section-slug.mdx`) in your section directory with the following frontmatter:
+Your section metadata file (e.g., `getting-started.mdx`) should include frontmatter with the following fields:
 
 ```mdx
 ---
@@ -108,14 +126,14 @@ title: Getting Started
 order: 1  # Determines the order of sections within the course
 description: A brief description of what this section covers
 ---
-```
 
-This metadata helps organize your course sections and provides additional information to learners.
+This section introduces the basic concepts of JavaScript and helps you set up your development environment.
+```
 
 ### Creating a Lesson
 
-1. Create a directory for your lesson under `lessons/` with a descriptive slug (e.g., `initialize-project`)
-2. Create an MDX file for your lesson content (e.g., `initialize-project.mdx`)
+1. Create a directory for your lesson under `lessons/` with a descriptive slug (e.g., `variables`)
+2. Create an MDX file for your lesson content (e.g., `variables.mdx`)
 3. Optionally, create a `files` directory if your lesson includes code examples
 
 ### Lesson Metadata
@@ -124,41 +142,19 @@ Each lesson MDX file should include frontmatter with at least:
 
 ```mdx
 ---
-slug: initialize-your-rust-project
-title: Initialize your Rust Project
-order: 1  # Optional: Determines the order of lessons within a section
+slug: variables
+title: Working with Variables
+order: 1  # Determines the order of lessons within a section
 ---
-```
 
-You can also include additional metadata fields if needed for your specific lesson.
+# Working with Variables
 
-## Lesson Content Format
-
-Lessons are written in MDX (Markdown with JSX) format. Here are some guidelines:
-
-1. Start with a level-1 heading (`#`) that matches your lesson title
-2. Use level-2 headings (`##`) for major sections within your lesson
-3. Use level-3 headings (`###`) for subsections
-4. Include code blocks with language specifiers for syntax highlighting:
-
-```mdx
-```rust
-fn main() {
-    println!("Hello, world!");
-}
-```
-```
-
-5. Use numbered lists for step-by-step instructions
-6. Link to files in your lesson's `files` directory using relative paths:
-
-```mdx
-See the [main.rs](files/source/src/main.rs) file for the complete code.
+In this lesson, you'll learn about variables in JavaScript...
 ```
 
 ## Working with Code Files
 
-Each lesson can have an optional `files` directory that must follow one of these patterns. It's important to understand the purpose of each pattern to choose the right one for your lesson:
+Each lesson can have an optional `files` directory that must follow one of these patterns:
 
 ### Source Directory
 
@@ -167,17 +163,15 @@ Use a `source` directory when you want to show the final state of files after an
 ```
 files/
 └── source/
-    ├── src/
-    │   └── main.rs
-    ├── Cargo.toml
-    └── Cargo.lock
+    ├── index.html
+    ├── styles.css
+    └── script.js
 ```
 
 The `source` directory is ideal for:
-- Initial setup steps (e.g., project initialization)
+- Initial setup steps
 - Demonstrating concepts without requiring implementation
 - Providing reference code that learners can examine
-- Steps where the focus is on understanding rather than coding
 
 ### Template and Solution Directories
 
@@ -186,41 +180,39 @@ Use `template` and `solution` directories when you want learners to implement so
 ```
 files/
 ├── template/
-│   ├── src/
-│   │   └── main.rs  # Contains TODOs and instructions
-│   └── Cargo.toml
+│   ├── index.html
+│   ├── styles.css
+│   └── script.js  # Contains TODOs and instructions
 └── solution/
-    ├── src/
-    │   └── main.rs  # Contains the completed implementation
-    └── Cargo.toml
+    ├── index.html
+    ├── styles.css
+    └── script.js  # Contains the completed implementation
 ```
 
 The `template`/`solution` pair is ideal for:
 - Hands-on coding exercises where learners implement features
 - Teaching specific programming patterns or techniques
 - Guiding learners through a step-by-step implementation
-- Providing both guidance (template) and a reference implementation (solution)
-
-**Important**: When using template/solution pairs:
-- Ensure the solution correctly implements all TODOs from the template
-- Keep the file structure identical between template and solution
-- Make sure the solution code compiles and runs correctly
-- Include enough comments in the solution to explain the implementation
 
 #### Template Files
 
 Template files should include clear TODO comments that guide the learner on what to implement:
 
-```rust
-/* TODO: create a new public struct named `Pallet`. */
+```javascript
+// TODO: Declare a variable named 'greeting' using the 'const' keyword
+// TODO: Assign the string "Hello, world!" to the greeting variable
+// TODO: Use console.log to output the greeting to the console
 ```
 
 #### Solution Files
 
 Solution files should contain the complete, working implementation:
 
-```rust
-pub struct Pallet {}
+```javascript
+// Declare a variable named 'greeting' using the 'const' keyword
+const greeting = "Hello, world!";
+// Use console.log to output the greeting to the console
+console.log(greeting);
 ```
 
 ## Creating a Pull Request
@@ -239,28 +231,10 @@ Before submitting your PR, ensure:
 
 - [ ] Your course follows the directory structure outlined in this guide
 - [ ] Your course metadata file includes all required fields
-- [ ] All lesson files include proper frontmatter
+- [ ] All section and lesson files include proper frontmatter
 - [ ] Code examples in template/solution pairs match correctly
 - [ ] All links to files use relative paths and are correct
 - [ ] Your content is free of spelling and grammatical errors
-
-## File Naming and Structure Conventions
-
-Consistent naming and structure are crucial for maintainability and user experience:
-
-### Directory and File Naming
-
-- Use kebab-case (lowercase with hyphens) for all directory and file names
-- Make names descriptive but concise
-- Avoid special characters other than hyphens
-- Use the same naming pattern throughout your course
-
-### File Structure Consistency
-
-- Maintain consistent depth across similar sections
-- Keep related files together in the same directory
-- Follow the established pattern for lesson files and code examples
-- Ensure all required files are present in each directory
 
 ## Best Practices
 
