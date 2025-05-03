@@ -196,6 +196,7 @@ const LessonPage = async ({ params }: LessonPageProps) => {
     // Prepare lesson data for the view component
     const lessonData = {
       title: lesson.title,
+      author: mdxCourse.author,
       content: bundledContent,
       sourceFiles,
       templateFiles,

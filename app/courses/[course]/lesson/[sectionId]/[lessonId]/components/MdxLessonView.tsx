@@ -1,6 +1,13 @@
 "use client";
 
-import { Box, Flex, Link, Text, useDisclosure, IconButton } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Link,
+  Text,
+  useDisclosure,
+  IconButton,
+} from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 import React from "react";
 import { IoArrowBack, IoMenu } from "react-icons/io5";
@@ -19,6 +26,7 @@ import { EditorComponents } from "../../../../(pages)/section/[section]/lesson/[
 
 type LessonData = {
   title: string;
+  author: string;
   content: string;
   sourceFiles: TypeFile[] | null;
   templateFiles: TypeFile[] | null;
@@ -49,6 +57,7 @@ type MdxLessonViewProps = {
 const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
   const {
     title,
+    author,
     content,
     sourceFiles,
     templateFiles,
@@ -81,7 +90,13 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
       </Box>
 
       {/* Mobile menu button */}
-      <Box position="absolute" right={4} top={4} zIndex={10} display={{ base: 'block', md: 'none' }}>
+      <Box
+        position="absolute"
+        right={4}
+        top={4}
+        zIndex={10}
+        display={{ base: "block", md: "none" }}
+      >
         <IconButton
           aria-label="Open navigation"
           icon={<IoMenu />}
@@ -104,7 +119,7 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
         transform={isOpen ? "translateX(0)" : "translateX(-100%)"}
         transition="transform 0.3s ease"
         boxShadow={isOpen ? "lg" : "none"}
-        display={{ base: 'block', md: 'none' }}
+        display={{ base: "block", md: "none" }}
       >
         <Box pt={8} px={4}>
           <Text fontSize="xl" fontWeight="bold" mb={4}>
@@ -130,12 +145,12 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
           bg="blackAlpha.600"
           zIndex={15}
           onClick={onClose}
-          display={{ base: 'block', md: 'none' }}
+          display={{ base: "block", md: "none" }}
         />
       )}
 
       {/* Desktop sidebar - always visible */}
-      <Flex h="full" display={{ base: 'none', md: 'flex' }}>
+      <Flex h="full" display={{ base: "none", md: "flex" }}>
         <Box w="250px" borderRight="1px" borderColor="gray.200">
           <SidebarNavigation
             courseSlug={courseSlug}
@@ -198,9 +213,9 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
               p={6}
               pl={12} // Extra padding for the back button
             >
-              <Box 
-                pt={8} 
-                maxW="4xl" 
+              <Box
+                pt={8}
+                maxW="4xl"
                 mx="auto" // Center the content horizontally
                 px={[4, 6, 8]} // Responsive padding on the sides
               >

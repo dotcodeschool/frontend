@@ -124,7 +124,9 @@ export const getMdxCourseDetails = async (slug: string) => {
   const courseDetails = {
     title: data.title || slug,
     description: data.description || '',
-    author: data.author || 'Unknown',
+    author: data.author_url 
+      ? { name: data.author || 'Unknown', url: data.author_url }
+      : data.author || 'Unknown',
     level: data.level || 'Beginner',
     language: data.language || 'Unknown',
     format: 'mdxCourse',

@@ -16,17 +16,21 @@ const CourseHeader = ({
     <Heading as="h1" fontWeight="800" my={4} size="xl">
       {title}
     </Heading>
-    {author?.name && author.url ? (
+    {author ? (
       <Text>
         Written by{" "}
-        <a
-          href={author.url}
-          rel="noopener noreferrer"
-          style={{ color: "#68D391" }}
-          target="_blank"
-        >
-          {author.name}
-        </a>
+        {typeof author === 'string' ? (
+          author
+        ) : author.name && author.url ? (
+          <a
+            href={author.url}
+            rel="noopener noreferrer"
+            style={{ color: "#68D391" }}
+            target="_blank"
+          >
+            {author.name}
+          </a>
+        ) : author.name}
       </Text>
     ) : null}
     <Text mt={6}>{description}</Text>

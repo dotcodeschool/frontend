@@ -8,6 +8,8 @@ type QueryResult<T extends QueryKey> = NonNullable<Query[T]>;
 
 type CourseOverview = Required<
   Pick<CourseModule, "slug" | "title" | "level" | "language" | "description">
->;
+> & {
+  author?: string;
+};
 
 export type { CourseOverview, ExtractedData, QueryKey, QueryResult };

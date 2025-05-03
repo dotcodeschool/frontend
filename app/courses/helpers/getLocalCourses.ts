@@ -55,6 +55,7 @@ export const getLocalCourses = async (): Promise<CourseOverview[]> => {
       description: data.description || '',
       level: data.level || 'Beginner',
       language: data.language || 'Unknown',
+      author: data.author || 'Unknown',
     };
     
     courses.push(course);
