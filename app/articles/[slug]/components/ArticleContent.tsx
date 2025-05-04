@@ -27,8 +27,9 @@ import {
   ArrowBackIcon,
   CheckIcon,
   LinkIcon,
+  EditIcon,
 } from "@chakra-ui/icons";
-import { FaTwitter, FaFacebook, FaLinkedin } from "react-icons/fa";
+import { FaTwitter, FaFacebook, FaLinkedin, FaGithub } from "react-icons/fa";
 import { MDXBundlerRenderer } from "@/components/mdx-bundler-renderer";
 
 interface ArticleData {
@@ -53,6 +54,11 @@ interface ArticleContentProps {
   relatedArticles: RelatedArticle[];
 }
 
+// GitHub repository information
+const GITHUB_REPO = "frontend";
+const GITHUB_OWNER = "dotcodeschool";
+const GITHUB_BRANCH = "articles";
+
 export default function ArticleContent({
   article,
   formattedDate,
@@ -62,6 +68,13 @@ export default function ArticleContent({
   const { onCopy, hasCopied } = useClipboard(
     typeof window !== "undefined" ? window.location.href : "",
   );
+
+  // Generate GitHub edit URL for the article
+  const getGitHubEditUrl = () => {
+    // Assuming articles are stored in content/articles directory with the slug as filename
+    const filePath = `content/articles/${article.slug}.mdx`;
+    return `https://github.com/${GITHUB_OWNER}/${GITHUB_REPO}/edit/${GITHUB_BRANCH}/${filePath}`;
+  };
 
   const handleShare = (platform: string) => {
     if (typeof window === "undefined") return;
@@ -168,49 +181,68 @@ export default function ArticleContent({
         <MDXBundlerRenderer code={article.code} />
       </Box>
 
-      <Divider my={10} />
-
-      {/* Share buttons */}
-      <Flex mt={6} align="center">
-        <Text mr={3} fontWeight="medium">
-          Share:
-        </Text>
-        <HStack spacing={2}>
-          <Tooltip label="Share on Twitter">
-            <IconButton
-              aria-label="Share on Twitter"
-              icon={<FaTwitter />}
-              size="sm"
-              onClick={() => handleShare("twitter")}
-            />
-          </Tooltip>
-          <Tooltip label="Share on Facebook">
-            <IconButton
-              aria-label="Share on Facebook"
-              icon={<FaFacebook />}
-              size="sm"
-              onClick={() => handleShare("facebook")}
-            />
-          </Tooltip>
-          <Tooltip label="Share on LinkedIn">
-            <IconButton
-              aria-label="Share on LinkedIn"
-              icon={<FaLinkedin />}
-              size="sm"
-              onClick={() => handleShare("linkedin")}
-            />
-          </Tooltip>
-          <Tooltip label={hasCopied ? "Copied!" : "Copy link"}>
-            <IconButton
-              aria-label="Copy link"
-              icon={hasCopied ? <CheckIcon /> : <LinkIcon />}
-              size="sm"
-              onClick={handleCopyLink}
-            />
-          </Tooltip>
-        </HStack>
+      {/* Share and Edit buttons */}
+      <Flex align="center" justify="space-between" flexWrap="wrap-reverse">
+        <Flex mt={8} align="center">
+          <Text mr={3} fontWeight="medium">
+            Share:
+          </Text>
+          <HStack spacing={2}>
+            <Tooltip label="Share on Twitter">
+              <IconButton
+                aria-label="Share on Twitter"
+                icon={<FaTwitter />}
+                size="sm"
+                onClick={() => handleShare("twitter")}
+              />
+            </Tooltip>
+            <Tooltip label="Share on Facebook">
+              <IconButton
+                aria-label="Share on Facebook"
+                icon={<FaFacebook />}
+                size="sm"
+                onClick={() => handleShare("facebook")}
+              />
+            </Tooltip>
+            <Tooltip label="Share on LinkedIn">
+              <IconButton
+                aria-label="Share on LinkedIn"
+                icon={<FaLinkedin />}
+                size="sm"
+                onClick={() => handleShare("linkedin")}
+              />
+            </Tooltip>
+            <Tooltip label={hasCopied ? "Copied!" : "Copy link"}>
+              <IconButton
+                aria-label="Copy link"
+                icon={hasCopied ? <CheckIcon /> : <LinkIcon />}
+                size="sm"
+                onClick={handleCopyLink}
+              />
+            </Tooltip>
+          </HStack>
+        </Flex>
+        
+        <Tooltip label="Suggest edits on GitHub">
+          <Button
+            as="a"
+            mt={8}
+            href={getGitHubEditUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            leftIcon={<FaGithub />}
+            rightIcon={<EditIcon />}
+            size="sm"
+            colorScheme="gray"
+            variant="outline"
+          >
+            Edit on GitHub
+          </Button>
+        </Tooltip>
       </Flex>
 
+      <Divider my={10} />
+      
       {/* Related Articles */}
       {relatedArticles.length > 0 && (
         <Box mt={10}>
