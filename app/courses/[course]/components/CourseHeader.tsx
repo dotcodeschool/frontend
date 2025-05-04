@@ -8,10 +8,13 @@ const CourseHeader = ({
   description,
   level,
   language,
+  format = "contentful", // Default to contentful format
 }: Pick<
   CourseDetails,
   "title" | "author" | "description" | "level" | "language"
->) => (
+> & {
+  format?: string; // Add format prop to determine if it's an MDX or Contentful course
+}) => (
   <>
     <Heading as="h1" fontWeight="800" my={4} size="xl">
       {title}
@@ -36,13 +39,17 @@ const CourseHeader = ({
       </Text>
     ) : null}
     <Text mt={6}>{description}</Text>
-    <HStack mt={4}>
-      {[level, language].map((tag, key) => (
-        <Tag colorScheme="green" key={key} size="md" variant="subtle">
-          {tag}
-        </Tag>
-      ))}
-    </HStack>
+    
+    {/* Only show tags for Contentful courses */}
+    {format !== "mdxCourse" && (
+      <HStack mt={4}>
+        {[level, language].map((tag, key) => (
+          <Tag colorScheme="green" key={key} size="md" variant="subtle">
+            {tag}
+          </Tag>
+        ))}
+      </HStack>
+    )}
   </>
 );
 

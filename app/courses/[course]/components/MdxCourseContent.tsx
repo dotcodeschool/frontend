@@ -46,6 +46,7 @@ const MdxCourseContent = async ({ slug }: { slug: string }) => {
         author={mdxCourse.author}
         level={mdxCourse.level}
         language={mdxCourse.language}
+        format="mdxCourse"
       />
 
       {/* Start button */}
