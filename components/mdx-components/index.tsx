@@ -30,8 +30,16 @@ import { TypeMDXComponents } from "@/lib/types";
 
 import { PreComponent } from "./pre-component";
 import { PreComponentProps } from "./types";
+import Quiz from "./quiz/Quiz";
+import TrueFalseQuiz from "./quiz/TrueFalseQuiz";
+import FillInTheBlankQuiz from "./quiz/FillInTheBlankQuiz";
+import QuizGroup from "./quiz/QuizGroup";
 
 const MDXComponents: TypeMDXComponents = {
+  Quiz,
+  TrueFalseQuiz,
+  FillInTheBlankQuiz,
+  QuizGroup,
   h1: (props: HeadingProps) => <Heading as="h1" mt={12} size="xl" {...props} />,
   h2: (props: HeadingProps) => <Heading as="h2" mt={12} size="lg" {...props} />,
   h3: (props: HeadingProps) => <Heading as="h3" mt={12} size="md" {...props} />,

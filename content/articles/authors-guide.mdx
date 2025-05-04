@@ -212,6 +212,201 @@ When quoting or referencing others' work, always provide proper attribution:
 >
 > — Polkadot Whitepaper
 
+## Interactive Quizzes
+
+DotCodeSchool now supports interactive quizzes in your MDX content using the `<Quiz />` component. This allows you to create self-checking, multiple-choice questions that provide immediate feedback to learners.
+
+**See demo:** [Interactive Quizzes in Lessons](/articles/quiz-demo)
+
+### Basic Quiz Example
+
+Here's how to create a simple multiple-choice quiz:
+
+```jsx
+<Quiz
+  question="What is React?"
+  type="multipleChoice"
+  options={[
+    {
+      label: "A JavaScript library for building user interfaces",
+      correct: true,
+    },
+    { label: "A programming language", correct: false },
+    { label: "A database management system", correct: false },
+    { label: "A server-side framework", correct: false },
+  ]}
+  explanation="React is a JavaScript library developed by Facebook for building user interfaces, particularly single-page applications."
+/>
+```
+
+This renders as:
+
+<Quiz
+  question="What is React?"
+  type="multipleChoice"
+  options={[
+    {
+      label: "A JavaScript library for building user interfaces",
+      correct: true,
+    },
+    { label: "A programming language", correct: false },
+    { label: "A database management system", correct: false },
+    { label: "A server-side framework", correct: false },
+  ]}
+  explanation="React is a JavaScript library developed by Facebook for building user interfaces, particularly single-page applications."
+/>
+
+
+### Quiz with JSX in Explanation
+
+You can use JSX elements in the explanation by passing a React element instead of a string:
+
+```jsx
+<Quiz
+  question="What is the command to initialize a new git repository?"
+  type="multipleChoice"
+  options={[
+    { label: "git init", correct: true },
+    { label: "git start", correct: false },
+    { label: "init git", correct: false },
+    { label: "git new", correct: false },
+  ]}
+  explanation={
+    <>
+      <p>
+        The correct command is <code>git init</code>, which initializes a new
+        git repository.
+      </p>
+      <p>
+        This creates a new .git directory in your project that will track all
+        changes.
+      </p>
+    </>
+  }
+/>
+```
+
+### Multiple Choice Quizzes
+
+The most common type of quiz is multiple choice. Here's how to create one:
+
+```jsx
+<Quiz
+  question="What is React?"
+  type="multipleChoice"
+  options={[
+    {
+      label: "A JavaScript library for building user interfaces",
+      correct: true,
+    },
+    { label: "A programming language", correct: false },
+    { label: "A database management system", correct: false },
+    { label: "A server-side framework", correct: false },
+  ]}
+  explanation="React is a JavaScript library developed by Facebook for building user interfaces, particularly single-page applications."
+/>
+```
+
+### True/False Quizzes
+
+For simple binary questions, you can use the TrueFalseQuiz component:
+
+```jsx
+<TrueFalseQuiz
+  question="React is a JavaScript library developed by Facebook."
+  correct={true}
+  explanation="React is indeed a JavaScript library that was developed by Facebook (now Meta) for building user interfaces."
+/>
+```
+
+### Fill in the Blank Quizzes
+
+For questions where users need to type an answer, use the FillInTheBlankQuiz component:
+
+```jsx
+<FillInTheBlankQuiz
+  question="What function is used to add an event listener to a DOM element in JavaScript?"
+  answers={["addEventListener", "element.addEventListener"]} // Multiple acceptable answers
+  caseSensitive={false} // Optional: default is false
+  explanation="The addEventListener method is used to attach an event handler to a specified element."
+  placeholder="Type your answer here" // Optional
+/>
+```
+
+### Quiz Groups
+
+You can group related quizzes together to calculate a total score:
+
+```jsx
+<QuizGroup
+  title="JavaScript Fundamentals"
+  description="Test your knowledge of JavaScript basics"
+>
+  <Quiz
+    question="Which of the following is a primitive data type in JavaScript?"
+    type="multipleChoice"
+    options={[
+      { label: "Array", correct: false },
+      { label: "Object", correct: false },
+      { label: "String", correct: true },
+      { label: "Function", correct: false },
+    ]}
+    explanation="String is a primitive data type in JavaScript."
+  />
+
+  <TrueFalseQuiz
+    question="JavaScript is a statically typed language."
+    correct={false}
+    explanation="JavaScript is a dynamically typed language."
+  />
+
+  <FillInTheBlankQuiz
+    question="What method is used to add an item to the end of an array in JavaScript?"
+    answers={["push", "array.push"]}
+    explanation="The push() method adds elements to the end of an array."
+  />
+</QuizGroup>
+```
+
+### Component Props
+
+#### Quiz Props
+
+- `question` (required): The question text
+- `type` (required): Currently supports "multipleChoice"
+- `options` (required): An array of option objects with `label` and `correct` properties
+- `explanation` (required): Text or JSX explaining the correct answer
+
+#### TrueFalseQuiz Props
+
+- `question` (required): The question text
+- `correct` (required): Boolean indicating whether the correct answer is true or false
+- `explanation` (required): Text or JSX explaining the correct answer
+
+#### FillInTheBlankQuiz Props
+
+- `question` (required): The question text
+- `answers` (required): Array of strings representing acceptable answers
+- `caseSensitive` (optional): Boolean indicating whether answers are case-sensitive (default: false)
+- `explanation` (required): Text or JSX explaining the correct answer
+- `placeholder` (optional): Placeholder text for the input field
+
+#### QuizGroup Props
+
+- `title` (optional): Title for the quiz group
+- `description` (optional): Description text for the quiz group
+- `children` (required): Quiz components to include in the group
+
+### How It Works
+
+- Users can interact with quizzes by selecting options, choosing true/false, or typing answers
+- The component shows whether the answer was correct or incorrect
+- The explanation is displayed after submission
+- The correct answer is highlighted
+- The user's response is stored in localStorage to prevent multiple submissions
+- Quiz groups calculate a total score and show progress
+- All components are fully responsive and support dark mode
+
 ## Article Metadata
 
 When creating an article, you need to include metadata in the frontmatter section at the top of your MDX file. This metadata helps with article organization, search, and display.
