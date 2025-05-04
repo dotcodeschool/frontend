@@ -222,7 +222,7 @@ export default function ArticleContent({
             </Tooltip>
           </HStack>
         </Flex>
-        
+
         <Tooltip label="Suggest edits on GitHub">
           <Button
             as="a"
@@ -242,7 +242,7 @@ export default function ArticleContent({
       </Flex>
 
       <Divider my={10} />
-      
+
       {/* Related Articles */}
       {relatedArticles.length > 0 && (
         <Box mt={10}>

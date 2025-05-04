@@ -19,12 +19,7 @@ import {
 import dynamic from "next/dynamic";
 import React from "react";
 import { IoMenu, IoPencil } from "react-icons/io5";
-import {
-  FaTwitter,
-  FaFacebook,
-  FaLinkedin,
-  FaShareAlt,
-} from "react-icons/fa";
+import { FaTwitter, FaFacebook, FaLinkedin, FaShareAlt } from "react-icons/fa";
 import { usePathname } from "next/navigation";
 
 import { TypeFile } from "@/lib/types";
