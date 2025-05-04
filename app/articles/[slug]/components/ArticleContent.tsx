@@ -209,16 +209,6 @@ export default function ArticleContent({
                 <Text>{getReadingTime()}</Text>
               </Flex>
             </Flex>
-            {article.last_updated && (
-              <Text fontSize="sm" color="gray.500" mt={1}>
-                Last updated:{" "}
-                {new Date(article.last_updated).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </Text>
-            )}
           </Box>
         </HStack>
 
@@ -229,6 +219,17 @@ export default function ArticleContent({
       <Box className="article-content">
         <MDXBundlerRenderer code={article.code} />
       </Box>
+
+      {article.last_updated && (
+        <Text fontSize="sm" color="gray.500" mt={1}>
+          Last updated:{" "}
+          {new Date(article.last_updated).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </Text>
+      )}
 
       {/* Share and Edit buttons */}
       <Flex align="center" justify="space-between" flexWrap="wrap-reverse">

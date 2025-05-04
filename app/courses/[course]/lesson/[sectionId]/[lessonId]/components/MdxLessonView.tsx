@@ -207,8 +207,12 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
         <Text as="h1" fontSize="xl" fontWeight="bold" mb={4}>
           {title}
         </Text>
+        <Box className="mdx-content">
+          <MDXBundlerRenderer code={content} />
+        </Box>
+
         {last_updated && (
-          <Text fontSize="sm" color="gray.500" mt={1} mb={4}>
+          <Text fontSize="sm" color="gray.500" mt={8} mb={4}>
             Last updated:{" "}
             {new Date(last_updated).toLocaleDateString("en-US", {
               year: "numeric",
@@ -217,10 +221,6 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
             })}
           </Text>
         )}
-        <Box className="mdx-content">
-          <MDXBundlerRenderer code={content} />
-        </Box>
-
         {/* Edit and Share buttons for mobile */}
         <HStack mt={6} mb={6} spacing={4} justifyContent="flex-end">
           <Tooltip label="Edit this page on GitHub">
@@ -330,8 +330,12 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
                   <Text as="h1" fontSize="2xl" fontWeight="bold" mb={4}>
                     {title}
                   </Text>
+                  <Box className="mdx-content">
+                    <MDXBundlerRenderer code={content} />
+                  </Box>
+
                   {last_updated && (
-                    <Text fontSize="sm" color="gray.500" mt={1} mb={4}>
+                    <Text fontSize="sm" color="gray.500" mt={8} mb={4}>
                       Last updated:{" "}
                       {new Date(last_updated).toLocaleDateString("en-US", {
                         year: "numeric",
@@ -340,9 +344,6 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
                       })}
                     </Text>
                   )}
-                  <Box className="mdx-content">
-                    <MDXBundlerRenderer code={content} />
-                  </Box>
 
                   {/* Edit and Share buttons for desktop with files */}
                   <HStack mt={8} spacing={4} justifyContent="flex-end">
@@ -427,8 +428,12 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
                 <Text as="h1" fontSize="2xl" fontWeight="bold" mb={4}>
                   {title}
                 </Text>
+                <Box className="mdx-content">
+                  <MDXBundlerRenderer code={content} />
+                </Box>
+
                 {last_updated && (
-                  <Text fontSize="sm" color="gray.500" mt={1} mb={4}>
+                  <Text fontSize="sm" color="gray.500" mt={8} mb={4}>
                     Last updated:{" "}
                     {new Date(last_updated).toLocaleDateString("en-US", {
                       year: "numeric",
@@ -437,9 +442,6 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
                     })}
                   </Text>
                 )}
-                <Box className="mdx-content">
-                  <MDXBundlerRenderer code={content} />
-                </Box>
 
                 {/* Edit and Share buttons for mobile */}
                 <HStack mt={8} spacing={4} justifyContent="flex-end">
