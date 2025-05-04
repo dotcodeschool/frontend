@@ -47,15 +47,13 @@ export const Quiz: React.FC<QuizProps> = ({
   const [hasAttempted, setHasAttempted] = useState(false);
   const [quizId, setQuizId] = useState<string>("");
   
-  // Try to use QuizGroup context if available
-  let quizGroupContext;
-  try {
-    // This will throw an error if not used within a QuizGroup
-    quizGroupContext = useQuizGroup();
-  } catch (error) {
-    // Not within a QuizGroup, continue without that functionality
-    quizGroupContext = undefined;
-  }
+  // Get QuizGroup context if available
+  const quizGroupContext = React.useContext(
+    React.createContext<{
+      registerQuiz: (id: string) => void;
+      updateScore: (id: string, isCorrect: boolean) => void;
+    } | null>(null)
+  );
 
   // Colors for theming
   const borderColor = useColorModeValue("gray.200", "gray.700");
@@ -209,7 +207,7 @@ export const Quiz: React.FC<QuizProps> = ({
                 }
               >
                 <Flex align="center">
-                  <Text>{option.label}</Text>
+                  <Text>{option.label.replace(/'/g, "&apos;")}</Text>
                   {isSubmitted && option.correct && (
                     <CheckCircleIcon ml={2} color="green.500" />
                   )}
@@ -272,7 +270,7 @@ export const Quiz: React.FC<QuizProps> = ({
           fontStyle="italic"
           textAlign="right"
         >
-          You've already answered this question
+          You&apos;ve already answered this question
         </Text>
       )}
     </Box>
