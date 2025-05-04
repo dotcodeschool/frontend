@@ -1,6 +1,6 @@
 import "@/styles/resizer.css";
 
-import { Box, Flex } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { Suspense } from "react";
 import { bundleMdxContent } from "@/lib/mdx-bundle";
 

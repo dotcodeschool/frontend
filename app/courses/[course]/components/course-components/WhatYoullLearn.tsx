@@ -7,7 +7,6 @@ import {
   List,
   ListIcon,
   ListItem,
-  SimpleGrid,
   Text,
 } from "@chakra-ui/react";
 import { FaCheck } from "react-icons/fa";
