@@ -29,7 +29,13 @@ import {
   LinkIcon,
   EditIcon,
 } from "@chakra-ui/icons";
-import { FaTwitter, FaFacebook, FaLinkedin, FaGithub } from "react-icons/fa";
+import {
+  FaTwitter,
+  FaFacebook,
+  FaLinkedin,
+  FaGithub,
+  FaClock,
+} from "react-icons/fa";
 import { MDXBundlerRenderer } from "@/components/mdx-bundler-renderer";
 
 interface ArticleData {
@@ -40,6 +46,8 @@ interface ArticleData {
   author: string;
   date: string;
   code: string;
+  estimatedTime?: number; // Optional estimated reading time in minutes
+  rawContent: string; // Raw MDX content for reading time calculation
 }
 
 interface RelatedArticle {
@@ -59,6 +67,9 @@ const GITHUB_REPO = "frontend";
 const GITHUB_OWNER = "dotcodeschool";
 const GITHUB_BRANCH = "articles";
 
+// Average reading speed in words per minute
+const AVERAGE_READING_SPEED = 225;
+
 export default function ArticleContent({
   article,
   formattedDate,
@@ -68,6 +79,28 @@ export default function ArticleContent({
   const { onCopy, hasCopied } = useClipboard(
     typeof window !== "undefined" ? window.location.href : "",
   );
+
+  // Calculate estimated reading time if not provided
+  const getReadingTime = (): string => {
+    // If author provided an estimated time, use that
+    if (article.estimatedTime) {
+      return `${article.estimatedTime} min read`;
+    }
+
+    // Otherwise, calculate based on content length using the raw MDX content
+    // Extract text content from raw MDX (simplified approach)
+    const text = article.rawContent
+      .replace(/```[\s\S]*?```/g, "") // Remove code blocks
+      .replace(/import[\s\S]*?from.*;/g, "") // Remove import statements
+      .replace(/<[^>]*>/g, "") // Remove HTML tags
+      .replace(/\[.*?\]\(.*?\)/g, "") // Remove markdown links
+      .replace(/[^\w\s]/g, ""); // Remove punctuation
+
+    const words = text.trim().split(/\s+/).length;
+    const minutes = Math.max(1, Math.ceil(words / AVERAGE_READING_SPEED));
+
+    return `${minutes} min read`;
+  };
 
   // Generate GitHub edit URL for the article
   const getGitHubEditUrl = () => {
@@ -167,9 +200,14 @@ export default function ArticleContent({
           />
           <Box>
             <Text fontWeight="bold">{article.author}</Text>
-            <Text fontSize="sm" color="gray.500">
-              {formattedDate}
-            </Text>
+            <Flex fontSize="sm" color="gray.500" alignItems="center">
+              <Text>{formattedDate}</Text>
+              <Text mx={2}>•</Text>
+              <Flex alignItems="center">
+                <FaClock size="0.8em" style={{ marginRight: "0.3em" }} />
+                <Text>{getReadingTime()}</Text>
+              </Flex>
+            </Flex>
           </Box>
         </HStack>
 
