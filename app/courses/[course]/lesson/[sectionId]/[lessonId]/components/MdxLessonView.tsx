@@ -1,9 +1,26 @@
 "use client";
 
-import { Box, Flex, Text, useDisclosure, IconButton } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Text,
+  useDisclosure,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  useToast,
+  Link,
+  HStack,
+  Tooltip,
+  Divider,
+} from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 import React from "react";
-import { IoMenu } from "react-icons/io5";
+import { IoMenu, IoPencil } from "react-icons/io5";
+import { FaTwitter, FaFacebook, FaLinkedin, FaShareAlt } from "react-icons/fa";
+import { usePathname } from "next/navigation";
 
 import { TypeFile } from "@/lib/types";
 import { MDXBundlerRenderer } from "@/components/mdx-bundler-renderer";
@@ -16,6 +33,7 @@ const SplitPane = dynamic(() => import("react-split-pane"), { ssr: false });
 
 // Import components from the Contentful course implementation
 import { EditorComponents } from "../../../../(pages)/section/[section]/lesson/[lesson]/components/EditorComponents";
+import { LinkIcon } from "@chakra-ui/icons";
 
 type LessonData = {
   title: string;
@@ -64,6 +82,41 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
   // For mobile sidebar
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  // For share functionality
+  const pathname = usePathname();
+  const toast = useToast();
+  const fullUrl =
+    typeof window !== "undefined" ? `${window.location.origin}${pathname}` : "";
+
+  // GitHub edit URL - using the format that automatically handles forking for users without write access
+  const githubEditUrl = `https://github.com/dotcodeschool/frontend/edit/feature/articles/content/courses/${courseSlug}/sections/${currentSectionId}/lessons/${currentLessonId}/${currentLessonId}.mdx`;
+
+  // Share handlers
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(fullUrl);
+    toast({
+      title: "Link copied",
+      status: "success",
+      duration: 2000,
+      isClosable: true,
+    });
+  };
+
+  const handleShareTwitter = () => {
+    const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(fullUrl)}&text=${encodeURIComponent(`Check out "${title}" on @dotcodeschool`)}`;
+    window.open(twitterUrl, "_blank");
+  };
+
+  const handleShareFacebook = () => {
+    const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(fullUrl)}`;
+    window.open(facebookUrl, "_blank");
+  };
+
+  const handleShareLinkedIn = () => {
+    const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(fullUrl)}`;
+    window.open(linkedInUrl, "_blank");
+  };
+
   // Determine if we have files to display
   const hasFiles = sourceFiles || templateFiles;
 
@@ -111,7 +164,15 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
         display={{ base: "block", md: "none" }}
       >
         <Box>
-          <Text fontSize="xl" fontWeight="bold" pb={4} pt={8} px={4} borderRight="1px solid" borderColor="whiteAlpha.200">
+          <Text
+            fontSize="xl"
+            fontWeight="bold"
+            pb={4}
+            pt={8}
+            px={4}
+            borderRight="1px solid"
+            borderColor="whiteAlpha.200"
+          >
             Course Navigation
           </Text>
           <SidebarNavigation
@@ -147,6 +208,58 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
         <Box className="mdx-content">
           <MDXBundlerRenderer code={content} />
         </Box>
+
+        {/* Edit and Share buttons for mobile */}
+        <HStack mt={6} mb={6} spacing={4} justifyContent="flex-end">
+          <Tooltip label="Edit this page on GitHub">
+            <Link href={githubEditUrl} isExternal>
+              <IconButton
+                aria-label="Edit this page"
+                icon={<IoPencil />}
+                size="sm"
+                colorScheme="gray"
+                variant="outline"
+              />
+            </Link>
+          </Tooltip>
+
+          <Menu>
+            <Tooltip label="Share this page">
+              <MenuButton
+                as={IconButton}
+                aria-label="Share this page"
+                icon={<FaShareAlt />}
+                size="sm"
+                colorScheme="gray"
+                variant="outline"
+              />
+            </Tooltip>
+            <MenuList>
+              <MenuItem
+                icon={<FaTwitter color="#1DA1F2" />}
+                onClick={handleShareTwitter}
+              >
+                Twitter
+              </MenuItem>
+              <MenuItem
+                icon={<FaFacebook color="#4267B2" />}
+                onClick={handleShareFacebook}
+              >
+                Facebook
+              </MenuItem>
+              <MenuItem
+                icon={<FaLinkedin color="#0077B5" />}
+                onClick={handleShareLinkedIn}
+              >
+                LinkedIn
+              </MenuItem>
+              <Divider />
+              <MenuItem icon={<LinkIcon />} onClick={handleCopyLink}>
+                Copy link
+              </MenuItem>
+            </MenuList>
+          </Menu>
+        </HStack>
 
         {/* Mobile editor (if files exist) */}
         {hasFiles && (
@@ -208,6 +321,58 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
                   <Box className="mdx-content">
                     <MDXBundlerRenderer code={content} />
                   </Box>
+
+                  {/* Edit and Share buttons for desktop with files */}
+                  <HStack mt={8} spacing={4} justifyContent="flex-end">
+                    <Tooltip label="Edit this page on GitHub">
+                      <Link href={githubEditUrl} isExternal>
+                        <IconButton
+                          aria-label="Edit this page"
+                          icon={<IoPencil />}
+                          size="sm"
+                          colorScheme="gray"
+                          variant="outline"
+                        />
+                      </Link>
+                    </Tooltip>
+
+                    <Menu>
+                      <Tooltip label="Share this page">
+                        <MenuButton
+                          as={IconButton}
+                          aria-label="Share this page"
+                          icon={<FaShareAlt />}
+                          size="sm"
+                          colorScheme="gray"
+                          variant="outline"
+                        />
+                      </Tooltip>
+                      <MenuList>
+                        <MenuItem
+                          icon={<FaTwitter color="#1DA1F2" />}
+                          onClick={handleShareTwitter}
+                        >
+                          Twitter
+                        </MenuItem>
+                        <MenuItem
+                          icon={<FaFacebook color="#4267B2" />}
+                          onClick={handleShareFacebook}
+                        >
+                          Facebook
+                        </MenuItem>
+                        <MenuItem
+                          icon={<FaLinkedin color="#0077B5" />}
+                          onClick={handleShareLinkedIn}
+                        >
+                          LinkedIn
+                        </MenuItem>
+                        <Divider />
+                        <MenuItem icon={<LinkIcon />} onClick={handleCopyLink}>
+                          Copy link
+                        </MenuItem>
+                      </MenuList>
+                    </Menu>
+                  </HStack>
                 </Box>
               </Box>
 
@@ -224,13 +389,13 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
             </Box>
           ) : (
             // If no files, show the MDX content centered with sufficient margins
-              <Box
-                h="calc(100vh - 110px)"
-                overflowY="auto"
-                p={6}
-                pl={12} // Extra padding for the back button
-                pb={20} // Extra padding for the navigation bar
-              >
+            <Box
+              h="calc(100vh - 110px)"
+              overflowY="auto"
+              p={6}
+              pl={12} // Extra padding for the back button
+              pb={20} // Extra padding for the navigation bar
+            >
               <Box
                 pt={8}
                 maxW="4xl"
@@ -243,6 +408,58 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
                 <Box className="mdx-content">
                   <MDXBundlerRenderer code={content} />
                 </Box>
+
+                {/* Edit and Share buttons for mobile */}
+                <HStack mt={8} spacing={4} justifyContent="flex-end">
+                  <Tooltip label="Edit this page on GitHub">
+                    <Link href={githubEditUrl} isExternal>
+                      <IconButton
+                        aria-label="Edit this page"
+                        icon={<IoPencil />}
+                        size="sm"
+                        colorScheme="gray"
+                        variant="outline"
+                      />
+                    </Link>
+                  </Tooltip>
+
+                  <Menu>
+                    <Tooltip label="Share this page">
+                      <MenuButton
+                        as={IconButton}
+                        aria-label="Share this page"
+                        icon={<FaShareAlt />}
+                        size="sm"
+                        colorScheme="gray"
+                        variant="outline"
+                      />
+                    </Tooltip>
+                    <MenuList>
+                      <MenuItem
+                        icon={<FaTwitter color="#1DA1F2" />}
+                        onClick={handleShareTwitter}
+                      >
+                        Twitter
+                      </MenuItem>
+                      <MenuItem
+                        icon={<FaFacebook color="#4267B2" />}
+                        onClick={handleShareFacebook}
+                      >
+                        Facebook
+                      </MenuItem>
+                      <MenuItem
+                        icon={<FaLinkedin color="#0077B5" />}
+                        onClick={handleShareLinkedIn}
+                      >
+                        LinkedIn
+                      </MenuItem>
+                      <Divider />
+                      <MenuItem icon={<LinkIcon />} onClick={handleCopyLink}>
+                        Copy link
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
+                </HStack>
               </Box>
             </Box>
           )}

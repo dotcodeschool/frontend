@@ -32,13 +32,21 @@ const getCourseDetails = async (
           sectionsCollection: {
             items: mdxCourse.sections.map((section) => ({
               _id: section.id,
-              sys: { id: section.id, environmentId: "master", spaceId: "local" },
+              sys: {
+                id: section.id,
+                environmentId: "master",
+                spaceId: "local",
+              },
               contentfulMetadata: { tags: [] },
               title: section.title,
               lessonsCollection: {
                 items: section.lessons.map((lesson) => ({
                   _id: lesson.id,
-                  sys: { id: lesson.id, environmentId: "master", spaceId: "local" },
+                  sys: {
+                    id: lesson.id,
+                    environmentId: "master",
+                    spaceId: "local",
+                  },
                   contentfulMetadata: { tags: [] },
                   title: lesson.title,
                   slug: lesson.slug,

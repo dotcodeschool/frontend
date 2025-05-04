@@ -39,7 +39,7 @@ const CourseHeader = ({
       </Text>
     ) : null}
     <Text mt={6}>{description}</Text>
-    
+
     {/* Only show tags for Contentful courses */}
     {format !== "mdxCourse" && (
       <HStack mt={4}>

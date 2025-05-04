@@ -18,14 +18,20 @@ import {
   List,
   ListItem,
 } from "@chakra-ui/react";
-import { FaInfoCircle, FaPuzzlePiece, FaClipboardList, FaClock, FaBookOpen } from "react-icons/fa";
+import {
+  FaInfoCircle,
+  FaPuzzlePiece,
+  FaClipboardList,
+  FaClock,
+  FaBookOpen,
+} from "react-icons/fa";
 
 // Component to display course stats
 export const CourseStats = ({
   prerequisites,
   sections,
   level,
-  estimatedTime
+  estimatedTime,
 }: {
   prerequisites: string[];
   sections: Array<{ lessons: any[] }>;
@@ -46,7 +52,7 @@ export const CourseStats = ({
   // Check if there are prerequisites
   const hasPrerequisites = prerequisites && prerequisites.length > 0;
   const prerequisiteCount = hasPrerequisites ? prerequisites.length : 0;
-  
+
   // Use provided estimated time if available, otherwise calculate it
   // (rough estimate: 15 minutes per lesson)
   const estimatedHours = estimatedTime || Math.ceil((totalLessons * 15) / 60);
@@ -75,7 +81,7 @@ export const CourseStats = ({
               </Heading>
             </Box>
           </Flex>
-          
+
           {/* Estimated Time */}
           <Flex align="center">
             <Icon as={FaClock} boxSize={8} mr={4} />
@@ -84,11 +90,11 @@ export const CourseStats = ({
                 Time to Complete
               </Heading>
               <Heading as="h2" size="md" mt={1}>
-                {estimatedHours} hour{estimatedHours === 1 ? '' : 's'}
+                {estimatedHours} hour{estimatedHours === 1 ? "" : "s"}
               </Heading>
             </Box>
           </Flex>
-          
+
           {/* Course Content */}
           <Flex align="center">
             <Icon as={FaBookOpen} boxSize={8} mr={4} />
@@ -97,7 +103,8 @@ export const CourseStats = ({
                 Course Content
               </Heading>
               <Heading as="h2" size="md" mt={1}>
-                {sections.length} {sections.length === 1 ? 'section' : 'sections'}
+                {sections.length}{" "}
+                {sections.length === 1 ? "section" : "sections"}
               </Heading>
             </Box>
           </Flex>
