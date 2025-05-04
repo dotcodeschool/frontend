@@ -57,7 +57,6 @@ type MdxLessonViewProps = {
 const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
   const {
     title,
-    author,
     content,
     sourceFiles,
     templateFiles,
@@ -151,7 +150,7 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
 
       {/* Desktop sidebar - always visible */}
       <Flex h="full" display={{ base: "none", md: "flex" }}>
-        <Box w="250px" borderRight="1px" borderColor="gray.200">
+        <Box w="250px">
           <SidebarNavigation
             courseSlug={courseSlug}
             sections={sections}

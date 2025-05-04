@@ -46,7 +46,7 @@ export const SidebarNavigation = ({
 }: SidebarNavigationProps) => {
   const activeBg = useColorModeValue("gray.100", "gray.700");
   const hoverBg = useColorModeValue("gray.50", "gray.600");
-  const borderColor = useColorModeValue("gray.200", "gray.600");
+  const borderColor = "whiteAlpha.200";
 
   return (
     <Box

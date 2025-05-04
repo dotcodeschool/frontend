@@ -1,6 +1,6 @@
 import "@/styles/resizer.css";
 
-import { Box, Link } from "@chakra-ui/react";
+import { Box, Divider, Link } from "@chakra-ui/react";
 import { notFound } from "next/navigation";
 import React, { Suspense } from "react";
 import { IoArrowBack } from "react-icons/io5";
@@ -218,7 +218,10 @@ const LessonPage = async ({ params }: LessonPageProps) => {
         overflow={{ base: "auto", md: "hidden" }}
         position="relative"
       >
-        <Navbar cta={false} />
+        <Box mx={4}>
+          <Navbar cta={false} />
+        </Box>
+        <Divider />
         <Suspense fallback={<LessonSkeleton />}>
           <MdxLessonView lessonData={lessonData} />
         </Suspense>

@@ -17,6 +17,8 @@ const LessonNavigation = ({ prev, next }: LessonNavigationProps) => {
     <Flex
       bg="gray.800"
       bottom={0}
+      borderTop={"1px solid"}
+      borderColor="whiteAlpha.200"
       h="60px"
       justify="space-between"
       left={0}
