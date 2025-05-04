@@ -79,7 +79,7 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
   const showHints = !!templateFiles && !!solutionFiles; // Show hints if we have template and solution files
 
   return (
-    <Box h="calc(100vh - 80px)" overflow="hidden" position="relative">
+    <Box h="calc(100vh - 60px)" overflow="hidden" position="relative">
 
       {/* Mobile menu button */}
       <Box
@@ -165,7 +165,7 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
             >
               {/* Left side - MDX content */}
               <Box
-                h="calc(100vh - 140px)"
+                h="calc(100vh - 110px)"
                 overflowY="auto"
                 p={6}
                 pl={12} // Extra padding for the back button
@@ -202,7 +202,7 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
           ) : (
             // If no files, show the MDX content centered with sufficient margins
             <Box
-              h="calc(100vh - 140px)"
+              h="calc(100vh - 110px)"
               overflowY="auto"
               p={6}
               pl={12} // Extra padding for the back button

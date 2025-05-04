@@ -53,7 +53,7 @@ export const SidebarNavigation = ({
   return (
     <Box
       as="nav"
-      h="calc(100vh - 140px)"
+      h="calc(100vh - 110px)"
       w="100%"
       borderRight="1px"
       borderColor={borderColor}

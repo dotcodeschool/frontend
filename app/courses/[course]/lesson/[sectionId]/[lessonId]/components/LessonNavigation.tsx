@@ -19,13 +19,13 @@ const LessonNavigation = ({ prev, next }: LessonNavigationProps) => {
       bottom={0}
       borderTop={"1px solid"}
       borderColor="whiteAlpha.200"
-      h="60px"
+      h="70px"
       justify="space-between"
       left={0}
       p={4}
       position="absolute"
       right={0}
-      zIndex={10}
+      zIndex={999}
     >
       {prev ? (
         <Link alignItems="center" display="flex" href={prev.link}>
