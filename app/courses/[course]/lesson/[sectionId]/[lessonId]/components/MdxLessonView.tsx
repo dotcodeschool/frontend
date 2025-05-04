@@ -3,14 +3,13 @@
 import {
   Box,
   Flex,
-  Link,
   Text,
   useDisclosure,
   IconButton,
 } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 import React from "react";
-import { IoArrowBack, IoMenu } from "react-icons/io5";
+import { IoMenu } from "react-icons/io5";
 
 import { TypeFile } from "@/lib/types";
 import { MDXBundlerRenderer } from "@/components/mdx-bundler-renderer";
