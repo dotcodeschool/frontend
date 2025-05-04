@@ -42,7 +42,14 @@ const CourseContent = async ({ slug }: { slug: string }) => {
 
   return (
     <Box maxW="4xl" mx="auto">
-      <CourseHeader {...courseDetails} />
+      <CourseHeader 
+        title={courseDetails.title}
+        author={courseDetails.author}
+        description={courseDetails.description}
+        level={courseDetails.level}
+        language={courseDetails.language}
+        format={format || undefined} // Convert null to undefined
+      />
       <ButtonPrimary as="a" href={startCourseUrl} mt={8} px={12} size="lg">
         Start
       </ButtonPrimary>

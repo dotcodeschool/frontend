@@ -82,7 +82,9 @@ export const getLocalCourseDetails = async (
       const { data: lessonData } = matter(lessonFileContents);
 
       lessons.push({
-        sys: { id: lessonSlug },
+        _id: lessonSlug,
+        sys: { id: lessonSlug, environmentId: "master", spaceId: "local" },
+        contentfulMetadata: { tags: [] },
         title: lessonData.title || lessonSlug,
         slug: lessonData.slug || lessonSlug,
         order: lessonData.order || 0,
@@ -106,6 +108,8 @@ export const getLocalCourseDetails = async (
       lessonsCollection: {
         items: lessons,
         total: lessons.length,
+        limit: lessons.length,
+        skip: 0,
       },
     });
   }
@@ -125,6 +129,9 @@ export const getLocalCourseDetails = async (
     githubUrl: data.github_url || "",
     sectionsCollection: {
       items: sections,
+      total: sections.length,
+      limit: sections.length,
+      skip: 0,
     },
   };
 

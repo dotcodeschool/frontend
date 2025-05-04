@@ -9,9 +9,14 @@ import { TypeFile } from "@/lib/types";
 // Dynamically import SplitPane to avoid SSR issues
 const SplitPane = dynamic(() => import("react-split-pane"), { ssr: false });
 
-// Dynamically import the EditorTabs component
+// Dynamically import the EditorTabs component and EditorProvider
 const EditorTabs = dynamic(
-  () => import("../../../components/EditorTabs").then((mod) => mod.EditorTabs),
+  () => import("../(pages)/section/[section]/lesson/[lesson]/components/EditorTabs").then((mod) => mod.EditorTabs),
+  { ssr: false },
+);
+
+const EditorProvider = dynamic(
+  () => import("../(pages)/section/[section]/lesson/[lesson]/components/EditorProvider").then((mod) => mod.EditorProvider),
   { ssr: false },
 );
 
@@ -56,11 +61,9 @@ export const EditorComponents = ({
   if (!mdxContent) {
     return (
       <Flex height="calc(100vh - 140px)" w="full">
-        <EditorTabs
-          editorContent={editorContent}
-          solution={solution}
-          {...editorProps}
-        />
+        <EditorProvider initialContent={editorContent} solution={solution}>
+          <EditorTabs {...editorProps} />
+        </EditorProvider>
       </Flex>
     );
   }
@@ -96,11 +99,9 @@ export const EditorComponents = ({
 
       {/* Right side - Editor */}
       <Flex height="calc(100vh - 140px)" key={2} w="full">
-        <EditorTabs
-          editorContent={editorContent}
-          solution={solution}
-          {...editorProps}
-        />
+        <EditorProvider initialContent={editorContent} solution={solution}>
+          <EditorTabs {...editorProps} />
+        </EditorProvider>
       </Flex>
     </Box>
   );

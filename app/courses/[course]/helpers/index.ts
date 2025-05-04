@@ -31,17 +31,26 @@ const getCourseDetails = async (
           githubUrl: mdxCourse.githubUrl,
           sectionsCollection: {
             items: mdxCourse.sections.map((section) => ({
-              sys: { id: section.id },
+              _id: section.id,
+              sys: { id: section.id, environmentId: "master", spaceId: "local" },
+              contentfulMetadata: { tags: [] },
               title: section.title,
               lessonsCollection: {
                 items: section.lessons.map((lesson) => ({
-                  sys: { id: lesson.id },
+                  _id: lesson.id,
+                  sys: { id: lesson.id, environmentId: "master", spaceId: "local" },
+                  contentfulMetadata: { tags: [] },
                   title: lesson.title,
                   slug: lesson.slug,
                 })),
                 total: section.lessons.length,
+                limit: section.lessons.length,
+                skip: 0,
               },
             })),
+            total: mdxCourse.sections.length,
+            limit: mdxCourse.sections.length,
+            skip: 0,
           },
         };
       }
