@@ -196,6 +196,7 @@ const LessonPage = async ({ params }: LessonPageProps) => {
       title: lesson.title,
       author: mdxCourse.author,
       content: bundledContent,
+      last_updated: lesson.last_updated, // Add last_updated from lesson metadata
       sourceFiles,
       templateFiles,
       solutionFiles,

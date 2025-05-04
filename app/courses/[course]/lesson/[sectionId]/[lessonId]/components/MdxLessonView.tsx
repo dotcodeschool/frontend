@@ -39,6 +39,7 @@ type LessonData = {
   title: string;
   author: string;
   content: string;
+  last_updated?: string; // Optional last updated date
   sourceFiles: TypeFile[] | null;
   templateFiles: TypeFile[] | null;
   solutionFiles: TypeFile[] | null;
@@ -69,6 +70,7 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
   const {
     title,
     content,
+    last_updated,
     sourceFiles,
     templateFiles,
     solutionFiles,
@@ -205,6 +207,16 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
         <Text as="h1" fontSize="xl" fontWeight="bold" mb={4}>
           {title}
         </Text>
+        {last_updated && (
+          <Text fontSize="sm" color="gray.500" mt={1} mb={4}>
+            Last updated:{" "}
+            {new Date(last_updated).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </Text>
+        )}
         <Box className="mdx-content">
           <MDXBundlerRenderer code={content} />
         </Box>
@@ -318,6 +330,16 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
                   <Text as="h1" fontSize="2xl" fontWeight="bold" mb={4}>
                     {title}
                   </Text>
+                  {last_updated && (
+                    <Text fontSize="sm" color="gray.500" mt={1} mb={4}>
+                      Last updated:{" "}
+                      {new Date(last_updated).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </Text>
+                  )}
                   <Box className="mdx-content">
                     <MDXBundlerRenderer code={content} />
                   </Box>
@@ -405,6 +427,16 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
                 <Text as="h1" fontSize="2xl" fontWeight="bold" mb={4}>
                   {title}
                 </Text>
+                {last_updated && (
+                  <Text fontSize="sm" color="gray.500" mt={1} mb={4}>
+                    Last updated:{" "}
+                    {new Date(last_updated).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </Text>
+                )}
                 <Box className="mdx-content">
                   <MDXBundlerRenderer code={content} />
                 </Box>

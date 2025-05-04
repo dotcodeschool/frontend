@@ -49,7 +49,9 @@ type CourseDetails = Pick<
   | "sectionsCollection"
   | "slug"
   | "githubUrl"
->;
+> & {
+  last_updated?: string; // Optional last updated date
+};
 
 type CourseQuery =
   | typeof QUERY_COURSE_OVERVIEW_FIELDS

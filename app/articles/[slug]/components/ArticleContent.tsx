@@ -45,6 +45,7 @@ interface ArticleData {
   tags: string[];
   author: string;
   date: string;
+  last_updated?: string; // Optional last updated date
   code: string;
   estimatedTime?: number; // Optional estimated reading time in minutes
   rawContent: string; // Raw MDX content for reading time calculation
@@ -208,6 +209,16 @@ export default function ArticleContent({
                 <Text>{getReadingTime()}</Text>
               </Flex>
             </Flex>
+            {article.last_updated && (
+              <Text fontSize="sm" color="gray.500" mt={1}>
+                Last updated:{" "}
+                {new Date(article.last_updated).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </Text>
+            )}
           </Box>
         </HStack>
 

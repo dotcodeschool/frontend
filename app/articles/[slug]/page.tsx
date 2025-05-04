@@ -29,6 +29,7 @@ const getArticleBySlug = cache(async (slug: string) => {
         category: data.category || "General",
         author: data.author || "Anonymous",
         date: data.date || new Date().toISOString(),
+        last_updated: data.last_updated, // Extract last_updated from frontmatter
         estimatedTime: data.estimatedTime, // Extract estimatedTime from frontmatter
         code: result.code,
         rawContent: content, // Pass the raw MDX content for reading time calculation
@@ -45,6 +46,7 @@ const getArticleBySlug = cache(async (slug: string) => {
         category: data.category || "General",
         author: data.author || "Anonymous",
         date: data.date || new Date().toISOString(),
+        last_updated: data.last_updated, // Extract last_updated from frontmatter
         estimatedTime: data.estimatedTime, // Extract estimatedTime from frontmatter
         rawContent: content, // Pass the raw MDX content for reading time calculation
         code: `

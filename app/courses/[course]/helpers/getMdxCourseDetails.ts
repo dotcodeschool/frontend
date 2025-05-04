@@ -105,6 +105,7 @@ export const getMdxCourseDetails = async (slug: string) => {
         slug: lessonData.slug || lessonSlug,
         order: lessonData.order || 0,
         content: lessonContent,
+        last_updated: lessonData.last_updated || null, // Add last_updated from lesson metadata
         hasFiles,
         fileType,
       });
@@ -141,6 +142,7 @@ export const getMdxCourseDetails = async (slug: string) => {
     prerequisites: data.prerequisites || [],
     whatYoullLearn: data.what_youll_learn || [],
     estimated_time: data.estimated_time || null, // Add estimated time from metadata
+    last_updated: data.last_updated || null, // Add last updated date from metadata
     content,
     sections,
   };
