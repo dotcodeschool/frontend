@@ -42,7 +42,7 @@ const CourseContent = async ({ slug }: { slug: string }) => {
 
   return (
     <Box maxW="4xl" mx="auto">
-      <CourseHeader 
+      <CourseHeader
         title={courseDetails.title}
         author={courseDetails.author}
         description={courseDetails.description}

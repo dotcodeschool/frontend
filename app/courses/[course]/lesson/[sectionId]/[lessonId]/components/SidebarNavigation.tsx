@@ -52,7 +52,7 @@ export const SidebarNavigation = ({
 }: SidebarNavigationProps) => {
   // Determine if we're in mobile view based on parent container
   const isMobile = useColorModeValue(false, true); // Dark mode is used for mobile sidebar
-  
+
   // Colors based on mobile/desktop view
   const activeBg = isMobile ? "gray.600" : "whiteAlpha.200";
   const hoverBg = "gray.600";
@@ -61,16 +61,16 @@ export const SidebarNavigation = ({
   const iconColor = isMobile ? "green.300" : "green.500";
 
   return (
-      <Box
-        as="nav"
-        h={{ base: "calc(100vh - 60px)", md: "calc(100vh - 110px)" }}
-        w="100%"
-        borderRight="1px"
-        borderColor={borderColor}
-        display="flex"
-        flexDirection="column"
-        color={textColor}
-      >
+    <Box
+      as="nav"
+      h={{ base: "calc(100vh - 60px)", md: "calc(100vh - 110px)" }}
+      w="100%"
+      borderRight="1px"
+      borderColor={borderColor}
+      display="flex"
+      flexDirection="column"
+      color={textColor}
+    >
       {/* Back to course link */}
       {courseLink && (
         <Flex px={4} py={3} borderBottom="1px" borderColor={borderColor}>
@@ -81,7 +81,10 @@ export const SidebarNavigation = ({
             fontSize="md"
             display="flex"
             alignItems="center"
-            _hover={{ textDecoration: "none", color: isMobile ? "green.300" : "green.600" }}
+            _hover={{
+              textDecoration: "none",
+              color: isMobile ? "green.300" : "green.600",
+            }}
           >
             <Icon as={IoArrowBack} mr={2} />
             <Text>Back to Course</Text>
@@ -148,7 +151,11 @@ export const SidebarNavigation = ({
                                   : IoEllipseOutline
                               }
                               color={
-                                lesson.completed ? iconColor : isMobile ? "gray.300" : "gray.400"
+                                lesson.completed
+                                  ? iconColor
+                                  : isMobile
+                                    ? "gray.300"
+                                    : "gray.400"
                               }
                             />
                             <Text>{lesson.title}</Text>

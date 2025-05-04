@@ -11,12 +11,18 @@ const SplitPane = dynamic(() => import("react-split-pane"), { ssr: false });
 
 // Dynamically import the EditorTabs component and EditorProvider
 const EditorTabs = dynamic(
-  () => import("../(pages)/section/[section]/lesson/[lesson]/components/EditorTabs").then((mod) => mod.EditorTabs),
+  () =>
+    import(
+      "../(pages)/section/[section]/lesson/[lesson]/components/EditorTabs"
+    ).then((mod) => mod.EditorTabs),
   { ssr: false },
 );
 
 const EditorProvider = dynamic(
-  () => import("../(pages)/section/[section]/lesson/[lesson]/components/EditorProvider").then((mod) => mod.EditorProvider),
+  () =>
+    import(
+      "../(pages)/section/[section]/lesson/[lesson]/components/EditorProvider"
+    ).then((mod) => mod.EditorProvider),
   { ssr: false },
 );
 
