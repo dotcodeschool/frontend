@@ -18,7 +18,8 @@ Below is an example of a minimal course structure for a JavaScript basics course
 
 ```
 content/courses/javascript-basics/
-├── javascript-basics.mdx
+├── javascript-basics.mdx       # Course metadata and description
+├── README.md                   # Instructions for course authors/contributors
 └── sections/
     ├── getting-started/
     │   ├── getting-started.mdx  # Optional section metadata
@@ -43,6 +44,8 @@ content/courses/javascript-basics/
                 └── data-types.mdx
 ```
 
+Each course includes a README.md file that provides instructions for authors and contributors. This file explains how to use the template, the structure of the course, and best practices for creating content.
+
 ## Example Files Content
 
 ### Course Metadata File (javascript-basics.mdx)
@@ -52,11 +55,24 @@ content/courses/javascript-basics/
 slug: javascript-basics
 title: JavaScript Basics
 author: Jane Doe
+author_url: https://github.com/janedoe
 description: Learn the fundamentals of JavaScript programming.
 level: Beginner
 language: JavaScript
 github_url: https://github.com/janedoe/javascript-basics
 tags: ["javascript", "web development", "programming"]
+prerequisites: [
+  "Basic understanding of HTML and CSS",
+  "Familiarity with programming concepts"
+]
+what_youll_learn: [
+  "Variables and data types",
+  "Functions and scope",
+  "Objects and arrays",
+  "DOM manipulation",
+  "Asynchronous programming"
+]
+estimated_time: 5 # Estimated time to complete in hours
 ---
 
 This course introduces the fundamentals of JavaScript programming. You'll learn about variables, data types, functions, and more.
@@ -160,6 +176,15 @@ To use this template for your own course:
    ```
 3. The script will create a new course directory with the proper structure
 4. Follow the instructions provided by the script to customize your course
+
+The helper script (`create-course.sh`) automates the following tasks:
+- Creates a new directory with your course slug
+- Copies all template files and directories to the new location
+- Renames the course metadata file to match your course slug
+- Removes the script itself from the new course directory
+- Provides clear next steps for customizing your course
+
+This is the recommended approach for creating new courses as it ensures all necessary files and directories are properly set up.
 
 ### Option 2: Manual Setup
 
