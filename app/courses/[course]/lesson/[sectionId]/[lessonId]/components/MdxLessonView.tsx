@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Box,
-  Flex,
-  Text,
-  useDisclosure,
-  IconButton,
-} from "@chakra-ui/react";
+import { Box, Flex, Text, useDisclosure, IconButton } from "@chakra-ui/react";
 import dynamic from "next/dynamic";
 import React from "react";
 import { IoMenu } from "react-icons/io5";
@@ -80,7 +74,6 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
 
   return (
     <Box h="calc(100vh - 60px)" overflow="hidden" position="relative">
-
       {/* Mobile menu button */}
       <Box
         position="absolute"

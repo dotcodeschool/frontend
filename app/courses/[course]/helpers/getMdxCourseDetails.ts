@@ -138,6 +138,8 @@ export const getMdxCourseDetails = async (slug: string) => {
     format: "mdxCourse",
     slug: data.slug || slug,
     githubUrl: data.github_url || "",
+    prerequisites: data.prerequisites || [],
+    whatYoullLearn: data.what_youll_learn || [],
     content,
     sections,
   };
