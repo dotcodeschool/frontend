@@ -66,6 +66,37 @@ Choose the appropriate pattern based on the goals of each lesson.
 
 Feel free to add more sections and lessons as needed for your course. You can also customize the structure to better fit your specific content, but try to maintain the general organization pattern for consistency across courses.
 
+## Metadata Fields
+
+### Course Metadata
+
+The course metadata file (e.g., `course-template.mdx`) includes several important fields:
+
+- `slug`: Unique identifier for the course (should match directory name)
+- `title`: Display title for the course
+- `author`: Your name or organization
+- `author_url`: Link to your GitHub profile or website
+- `description`: A concise description of the course content
+- `level`: Difficulty level (Beginner, Intermediate, or Advanced)
+- `language`: Programming language(s) used in the course
+- `github_url`: Repository URL (if applicable)
+- `tags`: Array of relevant keywords
+- `prerequisites`: Array of required knowledge or skills
+- `what_youll_learn`: Array of key concepts or skills covered
+- `estimated_time`: Approximate hours to complete the course
+- `last_updated`: Date when the course was last updated (format: "YYYY-MM-DD")
+
+### Lesson Metadata
+
+Each lesson should include the following metadata:
+
+- `slug`: Unique identifier for the lesson
+- `title`: Display title for the lesson
+- `order`: Numeric order within the section
+- `last_updated`: Date when the lesson was last updated (format: "YYYY-MM-DD")
+
+The `last_updated` field is important for both courses and lessons as it helps users know when the content was last revised, which is particularly valuable for technical content that may need regular updates.
+
 ## For More Information
 
 Refer to the [Course Contribution Guide](../../articles/course-contribution-guide) for detailed instructions on creating and formatting your course content.
