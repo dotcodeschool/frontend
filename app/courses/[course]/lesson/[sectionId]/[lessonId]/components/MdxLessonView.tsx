@@ -81,12 +81,6 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
 
   return (
     <Box h="calc(100vh - 80px)" overflow="hidden" position="relative">
-      {/* Back to course link */}
-      <Box position="absolute" left={4} top={4} zIndex={10}>
-        <Link color="green.500" fontSize="2xl" href={navigation.courseLink}>
-          <IoArrowBack />
-        </Link>
-      </Box>
 
       {/* Mobile menu button */}
       <Box
@@ -129,6 +123,7 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
             sections={sections}
             currentSectionId={currentSectionId}
             currentLessonId={currentLessonId}
+            courseLink={navigation.courseLink}
           />
         </Box>
       </Box>
@@ -156,6 +151,7 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
             sections={sections}
             currentSectionId={currentSectionId}
             currentLessonId={currentLessonId}
+            courseLink={navigation.courseLink}
           />
         </Box>
         <Box flex="1" overflow="hidden">

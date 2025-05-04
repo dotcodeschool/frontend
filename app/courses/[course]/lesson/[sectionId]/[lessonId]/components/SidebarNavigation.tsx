@@ -13,9 +13,10 @@ import {
   HStack,
   Icon,
   useColorModeValue,
+  Flex,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { IoCheckmarkCircle, IoEllipseOutline } from "react-icons/io5";
+import { IoCheckmarkCircle, IoEllipseOutline, IoArrowBack } from "react-icons/io5";
 import React from "react";
 
 type Lesson = {
@@ -35,6 +36,7 @@ type SidebarNavigationProps = {
   sections: Section[];
   currentSectionId: string;
   currentLessonId: string;
+  courseLink?: string; // Link to go back to course page
 };
 
 export const SidebarNavigation = ({
@@ -42,6 +44,7 @@ export const SidebarNavigation = ({
   sections,
   currentSectionId,
   currentLessonId,
+  courseLink,
 }: SidebarNavigationProps) => {
   const activeBg = useColorModeValue("gray.100", "gray.700");
   const hoverBg = useColorModeValue("gray.50", "gray.600");
@@ -51,23 +54,46 @@ export const SidebarNavigation = ({
     <Box
       as="nav"
       h="calc(100vh - 140px)"
-      overflowY="auto"
       w="100%"
       borderRight="1px"
       borderColor={borderColor}
-      sx={{
-        "::-webkit-scrollbar": {
-          width: "2px",
-        },
-        ":hover::-webkit-scrollbar-thumb": {
-          background: "whiteAlpha.300",
-        },
-      }}
+      display="flex"
+      flexDirection="column"
     >
-      <Accordion
-        allowMultiple
-        defaultIndex={sections.findIndex((s) => s.id === currentSectionId)}
+      {/* Back to course link */}
+      {courseLink && (
+        <Flex px={4} py={3} borderBottom="1px" borderColor={borderColor}>
+          <Link 
+            as={NextLink}
+            href={courseLink}
+            color="green.500" 
+            fontSize="md"
+            display="flex"
+            alignItems="center"
+            _hover={{ textDecoration: "none", color: "green.600" }}
+          >
+            <Icon as={IoArrowBack} mr={2} />
+            <Text>Back to Course</Text>
+          </Link>
+        </Flex>
+      )}
+      
+      <Box
+        overflowY="auto"
+        flex="1"
+        sx={{
+          "::-webkit-scrollbar": {
+            width: "2px",
+          },
+          ":hover::-webkit-scrollbar-thumb": {
+            background: "whiteAlpha.300",
+          },
+        }}
       >
+        <Accordion
+          allowMultiple
+          defaultIndex={sections.findIndex((s) => s.id === currentSectionId)}
+        >
         {sections.map((section) => (
           <AccordionItem key={section.id} border="none">
             <AccordionButton
@@ -122,7 +148,8 @@ export const SidebarNavigation = ({
             </AccordionPanel>
           </AccordionItem>
         ))}
-      </Accordion>
+        </Accordion>
+      </Box>
     </Box>
   );
 };
