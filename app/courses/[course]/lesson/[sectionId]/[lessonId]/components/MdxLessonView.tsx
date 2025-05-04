@@ -23,7 +23,6 @@ import {
   FaTwitter,
   FaFacebook,
   FaLinkedin,
-  FaLink,
   FaShareAlt,
 } from "react-icons/fa";
 import { usePathname } from "next/navigation";
@@ -39,6 +38,7 @@ const SplitPane = dynamic(() => import("react-split-pane"), { ssr: false });
 
 // Import components from the Contentful course implementation
 import { EditorComponents } from "../../../../(pages)/section/[section]/lesson/[lesson]/components/EditorComponents";
+import { LinkIcon } from "@chakra-ui/icons";
 
 type LessonData = {
   title: string;
@@ -259,7 +259,7 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
                 LinkedIn
               </MenuItem>
               <Divider />
-              <MenuItem icon={<FaLink />} onClick={handleCopyLink}>
+              <MenuItem icon={<LinkIcon />} onClick={handleCopyLink}>
                 Copy link
               </MenuItem>
             </MenuList>
@@ -372,7 +372,7 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
                           LinkedIn
                         </MenuItem>
                         <Divider />
-                        <MenuItem icon={<FaLink />} onClick={handleCopyLink}>
+                        <MenuItem icon={<LinkIcon />} onClick={handleCopyLink}>
                           Copy link
                         </MenuItem>
                       </MenuList>
@@ -459,7 +459,7 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
                         LinkedIn
                       </MenuItem>
                       <Divider />
-                      <MenuItem icon={<FaLink />} onClick={handleCopyLink}>
+                      <MenuItem icon={<LinkIcon />} onClick={handleCopyLink}>
                         Copy link
                       </MenuItem>
                     </MenuList>
