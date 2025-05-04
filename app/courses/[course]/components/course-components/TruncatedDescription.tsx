@@ -24,7 +24,7 @@ export const TruncatedDescription = ({
           About This Course
         </Heading>
         <Box className="mdx-content" style={{ 
-          maxHeight: isExpanded ? 'none' : '200px', 
+          maxHeight: isExpanded ? 'none' : '500px', 
           overflow: isExpanded ? 'visible' : 'hidden',
           position: 'relative'
         }}>

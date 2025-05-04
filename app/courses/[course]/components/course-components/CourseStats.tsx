@@ -24,11 +24,13 @@ import { FaInfoCircle, FaPuzzlePiece, FaClipboardList, FaClock, FaBookOpen } fro
 export const CourseStats = ({
   prerequisites,
   sections,
-  level
+  level,
+  estimatedTime
 }: {
   prerequisites: string[];
   sections: Array<{ lessons: any[] }>;
   level: string;
+  estimatedTime?: number; // Optional estimated time from course metadata
 }) => {
   // Calculate total lessons
   const totalLessons = sections.reduce(
@@ -44,8 +46,10 @@ export const CourseStats = ({
   // Check if there are prerequisites
   const hasPrerequisites = prerequisites && prerequisites.length > 0;
   const prerequisiteCount = hasPrerequisites ? prerequisites.length : 0;
-  // Estimate time to complete (rough estimate: 15 minutes per lesson)
-  const estimatedHours = Math.ceil((totalLessons * 15) / 60);
+  
+  // Use provided estimated time if available, otherwise calculate it
+  // (rough estimate: 15 minutes per lesson)
+  const estimatedHours = estimatedTime || Math.ceil((totalLessons * 15) / 60);
 
   return (
     <Card

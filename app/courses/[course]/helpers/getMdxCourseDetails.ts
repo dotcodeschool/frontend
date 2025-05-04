@@ -140,6 +140,7 @@ export const getMdxCourseDetails = async (slug: string) => {
     githubUrl: data.github_url || "",
     prerequisites: data.prerequisites || [],
     whatYoullLearn: data.what_youll_learn || [],
+    estimated_time: data.estimated_time || null, // Add estimated time from metadata
     content,
     sections,
   };

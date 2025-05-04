@@ -65,14 +65,11 @@ const MdxCourseContent = async ({ slug }: { slug: string }) => {
         sections={mdxCourse.sections}
         level={mdxCourse.level}
         prerequisites={mdxCourse.prerequisites}
+        estimatedTime={mdxCourse.estimated_time}
       />
 
       {/* Truncated description and What You'll Learn side by side */}
-      <Grid
-        templateColumns={{ base: "1fr", md: "1fr" }}
-        gap={6}
-        my={12}
-      >
+      <Grid templateColumns={{ base: "1fr", md: "2fr 1fr" }} gap={6} my={12}>
         <GridItem>
           {/* Truncated description (client component) */}
           <TruncatedDescription
@@ -82,15 +79,14 @@ const MdxCourseContent = async ({ slug }: { slug: string }) => {
         </GridItem>
         <GridItem>
           <WhatYoullLearn whatYoullLearn={mdxCourse.whatYoullLearn} />
-      {/* Prerequisites section below What You'll Learn */}
-      {mdxCourse.prerequisites && mdxCourse.prerequisites.length > 0 && (
-        <Box mb={6}>
-          <Prerequisites prerequisites={mdxCourse.prerequisites} />
-        </Box>
-      )}
+          {/* Prerequisites section below What You'll Learn */}
+          {mdxCourse.prerequisites && mdxCourse.prerequisites.length > 0 && (
+            <Box mb={6}>
+              <Prerequisites prerequisites={mdxCourse.prerequisites} />
+            </Box>
+          )}
         </GridItem>
       </Grid>
-
 
       <Divider my={8} />
 
