@@ -50,31 +50,38 @@ export const SidebarNavigation = ({
   currentLessonId,
   courseLink,
 }: SidebarNavigationProps) => {
-  const activeBg = useColorModeValue("gray.100", "gray.700");
-  const hoverBg = useColorModeValue("gray.50", "gray.600");
-  const borderColor = "whiteAlpha.200";
+  // Determine if we're in mobile view based on parent container
+  const isMobile = useColorModeValue(false, true); // Dark mode is used for mobile sidebar
+  
+  // Colors based on mobile/desktop view
+  const activeBg = isMobile ? "gray.600" : useColorModeValue("gray.100", "gray.700");
+  const hoverBg = isMobile ? "gray.600" : useColorModeValue("gray.50", "gray.600");
+  const borderColor = isMobile ? "gray.600" : "whiteAlpha.200";
+  const textColor = isMobile ? "white" : "inherit";
+  const iconColor = isMobile ? "green.300" : "green.500";
 
   return (
-    <Box
-      as="nav"
-      h="calc(100vh - 110px)"
-      w="100%"
-      borderRight="1px"
-      borderColor={borderColor}
-      display="flex"
-      flexDirection="column"
-    >
+      <Box
+        as="nav"
+        h={{ base: "calc(100vh - 60px)", md: "calc(100vh - 110px)" }}
+        w="100%"
+        borderRight="1px"
+        borderColor={borderColor}
+        display="flex"
+        flexDirection="column"
+        color={textColor}
+      >
       {/* Back to course link */}
       {courseLink && (
         <Flex px={4} py={3} borderBottom="1px" borderColor={borderColor}>
           <Link
             as={NextLink}
             href={courseLink}
-            color="green.500"
+            color={iconColor}
             fontSize="md"
             display="flex"
             alignItems="center"
-            _hover={{ textDecoration: "none", color: "green.600" }}
+            _hover={{ textDecoration: "none", color: isMobile ? "green.300" : "green.600" }}
           >
             <Icon as={IoArrowBack} mr={2} />
             <Text>Back to Course</Text>
@@ -141,7 +148,7 @@ export const SidebarNavigation = ({
                                   : IoEllipseOutline
                               }
                               color={
-                                lesson.completed ? "green.500" : "gray.400"
+                                lesson.completed ? iconColor : isMobile ? "gray.300" : "gray.400"
                               }
                             />
                             <Text>{lesson.title}</Text>

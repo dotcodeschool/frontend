@@ -212,9 +212,10 @@ const LessonPage = async ({ params }: LessonPageProps) => {
 
     return (
       <Box
-        h="100vh"
-        overflow={{ base: "auto", md: "hidden" }}
+        minH="100vh"
+        overflow="auto"
         position="relative"
+        pb={{ base: "70px", md: 0 }} // Add padding at the bottom for the fixed navigation bar
       >
         <Box mx={4}>
           <Navbar cta={false} />

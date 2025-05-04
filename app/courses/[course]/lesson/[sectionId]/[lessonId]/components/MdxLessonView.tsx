@@ -73,7 +73,11 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
   const showHints = !!templateFiles && !!solutionFiles; // Show hints if we have template and solution files
 
   return (
-    <Box h="calc(100vh - 60px)" overflow="hidden" position="relative">
+    <Box
+      minH={{ base: "auto", md: "calc(100vh - 60px)" }}
+      overflow={{ base: "visible", md: "hidden" }}
+      position="relative"
+    >
       {/* Mobile menu button */}
       <Box
         position="absolute"
@@ -99,15 +103,15 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
         h="100vh"
         w="80%"
         maxW="300px"
-        bg="white"
+        bg="gray.700"
         zIndex={20}
         transform={isOpen ? "translateX(0)" : "translateX(-100%)"}
         transition="transform 0.3s ease"
         boxShadow={isOpen ? "lg" : "none"}
         display={{ base: "block", md: "none" }}
       >
-        <Box pt={8} px={4}>
-          <Text fontSize="xl" fontWeight="bold" mb={4}>
+        <Box>
+          <Text fontSize="xl" fontWeight="bold" pb={4} pt={8} px={4} borderRight="1px solid" borderColor="gray.600">
             Course Navigation
           </Text>
           <SidebarNavigation
@@ -135,7 +139,33 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
         />
       )}
 
-      {/* Desktop sidebar - always visible */}
+      {/* Mobile content view */}
+      <Box display={{ base: "block", md: "none" }} pt={12} px={4} pb={20}>
+        <Text as="h1" fontSize="xl" fontWeight="bold" mb={4}>
+          {title}
+        </Text>
+        <Box className="mdx-content">
+          <MDXBundlerRenderer code={content} />
+        </Box>
+
+        {/* Mobile editor (if files exist) */}
+        {hasFiles && (
+          <Box mt={6} border="1px" borderColor="gray.200" borderRadius="md">
+            <EditorComponents
+              editorContent={editorFiles}
+              mdxContent={null}
+              readOnly={isReadOnly}
+              showHints={showHints}
+              solution={solutionFiles || []}
+            />
+          </Box>
+        )}
+
+        {/* Navigation buttons for mobile */}
+        <LessonNavigation next={navigation.next} prev={navigation.prev} />
+      </Box>
+
+      {/* Desktop sidebar and content - always visible on desktop */}
       <Flex h="full" display={{ base: "none", md: "flex" }}>
         <Box w="250px">
           <SidebarNavigation
@@ -194,12 +224,13 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
             </Box>
           ) : (
             // If no files, show the MDX content centered with sufficient margins
-            <Box
-              h="calc(100vh - 110px)"
-              overflowY="auto"
-              p={6}
-              pl={12} // Extra padding for the back button
-            >
+              <Box
+                h="calc(100vh - 110px)"
+                overflowY="auto"
+                p={6}
+                pl={12} // Extra padding for the back button
+                pb={20} // Extra padding for the navigation bar
+              >
               <Box
                 pt={8}
                 maxW="4xl"
