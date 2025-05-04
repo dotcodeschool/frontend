@@ -54,9 +54,9 @@ export const SidebarNavigation = ({
   const isMobile = useColorModeValue(false, true); // Dark mode is used for mobile sidebar
   
   // Colors based on mobile/desktop view
-  const activeBg = isMobile ? "gray.600" : useColorModeValue("gray.100", "gray.700");
-  const hoverBg = isMobile ? "gray.600" : useColorModeValue("gray.50", "gray.600");
-  const borderColor = isMobile ? "gray.600" : "whiteAlpha.200";
+  const activeBg = isMobile ? "gray.600" : "whiteAlpha.200";
+  const hoverBg = "gray.600";
+  const borderColor = "whiteAlpha.200";
   const textColor = isMobile ? "white" : "inherit";
   const iconColor = isMobile ? "green.300" : "green.500";
 

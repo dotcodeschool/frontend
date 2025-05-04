@@ -111,7 +111,7 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
         display={{ base: "block", md: "none" }}
       >
         <Box>
-          <Text fontSize="xl" fontWeight="bold" pb={4} pt={8} px={4} borderRight="1px solid" borderColor="gray.600">
+          <Text fontSize="xl" fontWeight="bold" pb={4} pt={8} px={4} borderRight="1px solid" borderColor="whiteAlpha.200">
             Course Navigation
           </Text>
           <SidebarNavigation
