@@ -40,13 +40,13 @@ export const FillInTheBlankQuiz: React.FC<FillInTheBlankQuizProps> = ({
   const [isCorrect, setIsCorrect] = useState(false);
   const [hasAttempted, setHasAttempted] = useState(false);
   const [quizId, setQuizId] = useState<string>("");
-  
+
   // Get QuizGroup context if available
   const quizGroupContext = React.useContext(
     React.createContext<{
       registerQuiz: (id: string) => void;
       updateScore: (id: string, isCorrect: boolean) => void;
-    } | null>(null)
+    } | null>(null),
   );
 
   // Colors for theming
@@ -58,11 +58,11 @@ export const FillInTheBlankQuiz: React.FC<FillInTheBlankQuizProps> = ({
   // Generate a unique ID for this quiz based on the question and answers
   useEffect(() => {
     // Create a format that can be used with the existing hash function
-    const options = answers.map(answer => ({
+    const options = answers.map((answer) => ({
       label: answer,
-      correct: true
+      correct: true,
     }));
-    
+
     const id = generateQuizId(question, options);
     setQuizId(id);
 
@@ -73,15 +73,15 @@ export const FillInTheBlankQuiz: React.FC<FillInTheBlankQuizProps> = ({
 
     // Check if this quiz has been attempted before
     const attemptedQuizzes = JSON.parse(
-      localStorage.getItem("attemptedQuizzes") || "{}"
+      localStorage.getItem("attemptedQuizzes") || "{}",
     );
-    
+
     if (attemptedQuizzes[id]) {
       setHasAttempted(true);
       setUserAnswer(attemptedQuizzes[id].userAnswer);
       setIsSubmitted(true);
       setIsCorrect(attemptedQuizzes[id].isCorrect);
-      
+
       // Update QuizGroup score if available
       if (quizGroupContext) {
         quizGroupContext.updateScore(id, attemptedQuizzes[id].isCorrect);
@@ -99,8 +99,8 @@ export const FillInTheBlankQuiz: React.FC<FillInTheBlankQuizProps> = ({
     if (!caseSensitive) {
       input = input.toLowerCase();
     }
-    
-    return answers.some(answer => {
+
+    return answers.some((answer) => {
       const correctAnswer = caseSensitive ? answer : answer.toLowerCase();
       return input === correctAnswer;
     });
@@ -110,23 +110,23 @@ export const FillInTheBlankQuiz: React.FC<FillInTheBlankQuizProps> = ({
     if (!userAnswer || isSubmitted) return;
 
     const isAnswerCorrect = checkAnswer(userAnswer);
-    
+
     setIsCorrect(isAnswerCorrect);
     setIsSubmitted(true);
-    
+
     // Save to localStorage
     const attemptedQuizzes = JSON.parse(
-      localStorage.getItem("attemptedQuizzes") || "{}"
+      localStorage.getItem("attemptedQuizzes") || "{}",
     );
-    
+
     attemptedQuizzes[quizId] = {
       userAnswer,
       isCorrect: isAnswerCorrect,
       timestamp: new Date().toISOString(),
     };
-    
+
     localStorage.setItem("attemptedQuizzes", JSON.stringify(attemptedQuizzes));
-    
+
     // Update QuizGroup score if available
     if (quizGroupContext) {
       quizGroupContext.updateScore(quizId, isAnswerCorrect);
@@ -160,11 +160,7 @@ export const FillInTheBlankQuiz: React.FC<FillInTheBlankQuizProps> = ({
           bg={inputBgColor}
           isDisabled={isSubmitted}
           borderColor={
-            isSubmitted
-              ? isCorrect
-                ? "green.500"
-                : "red.500"
-              : "gray.300"
+            isSubmitted ? (isCorrect ? "green.500" : "red.500") : "gray.300"
           }
           _hover={{
             borderColor: isSubmitted
@@ -205,9 +201,7 @@ export const FillInTheBlankQuiz: React.FC<FillInTheBlankQuizProps> = ({
             </Flex>
             <AlertDescription mt={2}>
               {!isCorrect && (
-                <Text mb={2}>
-                  Acceptable answers: {answers.join(", ")}
-                </Text>
+                <Text mb={2}>Acceptable answers: {answers.join(", ")}</Text>
               )}
               {typeof explanation === "string" ? (
                 <Text>{explanation}</Text>

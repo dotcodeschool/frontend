@@ -25,7 +25,7 @@ The most common type of quiz is multiple choice. Here's an example:
     { label: "git init", correct: true },
     { label: "git start", correct: false },
     { label: "init git", correct: false },
-    { label: "git new", correct: false }
+    { label: "git new", correct: false },
   ]}
   explanation="The correct command is `git init`, which initializes a new git repository in the current directory. This creates a .git folder that contains all the necessary repository files."
 />
@@ -37,7 +37,7 @@ The most common type of quiz is multiple choice. Here's an example:
     { label: "React", correct: false },
     { label: "Angular", correct: false },
     { label: "Vue", correct: false },
-    { label: "Java", correct: true }
+    { label: "Java", correct: true },
   ]}
   explanation="Java is a programming language, not a JavaScript framework or library. React, Angular, and Vue are all JavaScript frameworks/libraries used for building web applications."
 />
@@ -80,7 +80,10 @@ For questions where users need to type an answer, use the FillInTheBlankQuiz com
 
 You can group related quizzes together to calculate a total score using the QuizGroup component:
 
-<QuizGroup title="JavaScript Fundamentals Quiz" description="Test your knowledge of JavaScript basics">
+<QuizGroup
+  title="JavaScript Fundamentals Quiz"
+  description="Test your knowledge of JavaScript basics"
+>
   <Quiz
     question="Which of the following is a primitive data type in JavaScript?"
     type="multipleChoice"
@@ -88,17 +91,17 @@ You can group related quizzes together to calculate a total score using the Quiz
       { label: "Array", correct: false },
       { label: "Object", correct: false },
       { label: "String", correct: true },
-      { label: "Function", correct: false }
+      { label: "Function", correct: false },
     ]}
     explanation="String is a primitive data type in JavaScript. The primitive data types are: string, number, boolean, null, undefined, symbol, and bigint."
   />
-  
+
   <TrueFalseQuiz
     question="JavaScript is a statically typed language."
     correct={false}
     explanation="JavaScript is a dynamically typed language, which means variable types are determined at runtime, not at compile time."
   />
-  
+
   <FillInTheBlankQuiz
     question="What method is used to add an item to the end of an array in JavaScript?"
     answers={["push", "array.push"]}
@@ -117,13 +120,21 @@ You can use JSX elements in the explanation to provide more detailed feedback:
     { label: "JavaScript XML", correct: true },
     { label: "JavaScript Extension", correct: false },
     { label: "JavaScript Syntax", correct: false },
-    { label: "Java Syntax Extension", correct: false }
+    { label: "Java Syntax Extension", correct: false },
   ]}
   explanation={
     <>
-      <p>JSX stands for JavaScript XML. It is a syntax extension for JavaScript recommended by React for describing what the UI should look like.</p>
-      <p>JSX produces React "elements" that can be rendered to the DOM. It looks like HTML but comes with the full power of JavaScript.</p>
-      <pre><code>{`const element = <h1>Hello, world!</h1>;`}</code></pre>
+      <p>
+        JSX stands for JavaScript XML. It is a syntax extension for JavaScript
+        recommended by React for describing what the UI should look like.
+      </p>
+      <p>
+        JSX produces React "elements" that can be rendered to the DOM. It looks
+        like HTML but comes with the full power of JavaScript.
+      </p>
+      <pre>
+        <code>{`const element = <h1>Hello, world!</h1>;`}</code>
+      </pre>
     </>
   }
 />

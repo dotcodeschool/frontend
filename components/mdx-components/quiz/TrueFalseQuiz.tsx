@@ -35,13 +35,13 @@ export const TrueFalseQuiz: React.FC<TrueFalseQuizProps> = ({
   const [isCorrect, setIsCorrect] = useState(false);
   const [hasAttempted, setHasAttempted] = useState(false);
   const [quizId, setQuizId] = useState<string>("");
-  
+
   // Get QuizGroup context if available
   const quizGroupContext = React.useContext(
     React.createContext<{
       registerQuiz: (id: string) => void;
       updateScore: (id: string, isCorrect: boolean) => void;
-    } | null>(null)
+    } | null>(null),
   );
 
   // Colors for theming
@@ -67,15 +67,15 @@ export const TrueFalseQuiz: React.FC<TrueFalseQuizProps> = ({
 
     // Check if this quiz has been attempted before
     const attemptedQuizzes = JSON.parse(
-      localStorage.getItem("attemptedQuizzes") || "{}"
+      localStorage.getItem("attemptedQuizzes") || "{}",
     );
-    
+
     if (attemptedQuizzes[id]) {
       setHasAttempted(true);
       setSelectedOption(attemptedQuizzes[id].selectedOption);
       setIsSubmitted(true);
       setIsCorrect(attemptedQuizzes[id].isCorrect);
-      
+
       // Update QuizGroup score if available
       if (quizGroupContext) {
         quizGroupContext.updateScore(id, attemptedQuizzes[id].isCorrect);
@@ -93,23 +93,23 @@ export const TrueFalseQuiz: React.FC<TrueFalseQuizProps> = ({
     if (selectedOption === null || isSubmitted) return;
 
     const isAnswerCorrect = selectedOption === correct;
-    
+
     setIsCorrect(isAnswerCorrect);
     setIsSubmitted(true);
-    
+
     // Save to localStorage
     const attemptedQuizzes = JSON.parse(
-      localStorage.getItem("attemptedQuizzes") || "{}"
+      localStorage.getItem("attemptedQuizzes") || "{}",
     );
-    
+
     attemptedQuizzes[quizId] = {
       selectedOption,
       isCorrect: isAnswerCorrect,
       timestamp: new Date().toISOString(),
     };
-    
+
     localStorage.setItem("attemptedQuizzes", JSON.stringify(attemptedQuizzes));
-    
+
     // Update QuizGroup score if available
     if (quizGroupContext) {
       quizGroupContext.updateScore(quizId, isAnswerCorrect);
@@ -143,11 +143,11 @@ export const TrueFalseQuiz: React.FC<TrueFalseQuizProps> = ({
                   ? "green"
                   : "red"
                 : correct
-                ? "green"
-                : "gray"
+                  ? "green"
+                  : "gray"
               : selectedOption === true
-              ? "blue"
-              : "gray"
+                ? "blue"
+                : "gray"
           }
           variant={selectedOption === true ? "solid" : "outline"}
           onClick={() => handleOptionChange(true)}
@@ -170,11 +170,11 @@ export const TrueFalseQuiz: React.FC<TrueFalseQuizProps> = ({
                   ? "green"
                   : "red"
                 : !correct
-                ? "green"
-                : "gray"
+                  ? "green"
+                  : "gray"
               : selectedOption === false
-              ? "blue"
-              : "gray"
+                ? "blue"
+                : "gray"
           }
           variant={selectedOption === false ? "solid" : "outline"}
           onClick={() => handleOptionChange(false)}

@@ -24,7 +24,7 @@ type QuizGroupContextType = {
 };
 
 const QuizGroupContext = createContext<QuizGroupContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const useQuizGroup = () => {
@@ -80,10 +80,10 @@ export const QuizGroup: React.FC<QuizGroupProps> = ({
   // Calculate total score and completion status
   useEffect(() => {
     setTotalQuizzes(quizIds.length);
-    
+
     const completed = Object.keys(scores).length;
     setCompletedQuizzes(completed);
-    
+
     const correct = Object.values(scores).filter(Boolean).length;
     setTotalScore(correct);
   }, [quizIds, scores]);
@@ -104,13 +104,13 @@ export const QuizGroup: React.FC<QuizGroupProps> = ({
             {title}
           </Heading>
         )}
-        
+
         {description && (
           <Text mb={4} color={textColor}>
             {description}
           </Text>
         )}
-        
+
         <Box mb={6}>
           <Flex justify="space-between" mb={2}>
             <Text fontWeight="medium">
@@ -120,7 +120,7 @@ export const QuizGroup: React.FC<QuizGroupProps> = ({
               Score: {totalScore}/{totalQuizzes}
             </Text>
           </Flex>
-          
+
           <Progress
             value={(completedQuizzes / totalQuizzes) * 100}
             colorScheme={progressColorScheme}
@@ -128,53 +128,50 @@ export const QuizGroup: React.FC<QuizGroupProps> = ({
             borderRadius="md"
           />
         </Box>
-        
+
         <Divider mb={6} />
-        
+
         <Box>{children}</Box>
-        
+
         {/* Final score card */}
         {/* Get the color value at the component level, not inside a callback */}
         {/* This fixes the React hooks rule violation */}
         {completedQuizzes === totalQuizzes && totalQuizzes > 0 && (
-          <Box 
-            mt={6} 
-            p={4} 
-            bg={finalScoreBg} 
-            borderRadius="md"
-          >
-                <StatGroup>
-                  <Stat>
-                    <StatLabel>Final Score</StatLabel>
-                    <StatNumber>{totalScore}/{totalQuizzes}</StatNumber>
-                    <StatHelpText>
-                      <StatArrow type="increase" />
-                      {Math.round((totalScore / totalQuizzes) * 100)}%
-                    </StatHelpText>
-                  </Stat>
-                  
-                  <Stat>
-                    <StatLabel>Performance</StatLabel>
-                    <StatNumber>
-                      {totalScore === totalQuizzes
-                        ? "Perfect!"
-                        : totalScore >= totalQuizzes * 0.8
-                        ? "Excellent!"
-                        : totalScore >= totalQuizzes * 0.6
+          <Box mt={6} p={4} bg={finalScoreBg} borderRadius="md">
+            <StatGroup>
+              <Stat>
+                <StatLabel>Final Score</StatLabel>
+                <StatNumber>
+                  {totalScore}/{totalQuizzes}
+                </StatNumber>
+                <StatHelpText>
+                  <StatArrow type="increase" />
+                  {Math.round((totalScore / totalQuizzes) * 100)}%
+                </StatHelpText>
+              </Stat>
+
+              <Stat>
+                <StatLabel>Performance</StatLabel>
+                <StatNumber>
+                  {totalScore === totalQuizzes
+                    ? "Perfect!"
+                    : totalScore >= totalQuizzes * 0.8
+                      ? "Excellent!"
+                      : totalScore >= totalQuizzes * 0.6
                         ? "Good"
                         : "Needs Review"}
-                    </StatNumber>
-                    <StatHelpText>
-                      {totalScore === totalQuizzes
-                        ? "You got everything right!"
-                        : totalScore >= totalQuizzes * 0.8
-                        ? "Great job!"
-                        : totalScore >= totalQuizzes * 0.6
+                </StatNumber>
+                <StatHelpText>
+                  {totalScore === totalQuizzes
+                    ? "You got everything right!"
+                    : totalScore >= totalQuizzes * 0.8
+                      ? "Great job!"
+                      : totalScore >= totalQuizzes * 0.6
                         ? "Keep it up!"
                         : "Try reviewing the material again"}
-                    </StatHelpText>
-                  </Stat>
-                </StatGroup>
+                </StatHelpText>
+              </Stat>
+            </StatGroup>
           </Box>
         )}
       </Box>

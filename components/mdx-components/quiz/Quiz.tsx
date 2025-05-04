@@ -46,13 +46,13 @@ export const Quiz: React.FC<QuizProps> = ({
   const [shuffledOptions, setShuffledOptions] = useState<QuizOption[]>([]);
   const [hasAttempted, setHasAttempted] = useState(false);
   const [quizId, setQuizId] = useState<string>("");
-  
+
   // Get QuizGroup context if available
   const quizGroupContext = React.useContext(
     React.createContext<{
       registerQuiz: (id: string) => void;
       updateScore: (id: string, isCorrect: boolean) => void;
-    } | null>(null)
+    } | null>(null),
   );
 
   // Colors for theming
@@ -75,15 +75,15 @@ export const Quiz: React.FC<QuizProps> = ({
 
     // Check if this quiz has been attempted before
     const attemptedQuizzes = JSON.parse(
-      localStorage.getItem("attemptedQuizzes") || "{}"
+      localStorage.getItem("attemptedQuizzes") || "{}",
     );
-    
+
     if (attemptedQuizzes[id]) {
       setHasAttempted(true);
       setSelectedOption(attemptedQuizzes[id].selectedOption);
       setIsSubmitted(true);
       setIsCorrect(attemptedQuizzes[id].isCorrect);
-      
+
       // Update QuizGroup score if available
       if (quizGroupContext) {
         quizGroupContext.updateScore(id, attemptedQuizzes[id].isCorrect);
@@ -107,23 +107,23 @@ export const Quiz: React.FC<QuizProps> = ({
 
     const selectedIdx = parseInt(selectedOption, 10);
     const isAnswerCorrect = shuffledOptions[selectedIdx].correct;
-    
+
     setIsCorrect(isAnswerCorrect);
     setIsSubmitted(true);
-    
+
     // Save to localStorage
     const attemptedQuizzes = JSON.parse(
-      localStorage.getItem("attemptedQuizzes") || "{}"
+      localStorage.getItem("attemptedQuizzes") || "{}",
     );
-    
+
     attemptedQuizzes[quizId] = {
       selectedOption,
       isCorrect: isAnswerCorrect,
       timestamp: new Date().toISOString(),
     };
-    
+
     localStorage.setItem("attemptedQuizzes", JSON.stringify(attemptedQuizzes));
-    
+
     // Update QuizGroup score if available
     if (quizGroupContext) {
       quizGroupContext.updateScore(quizId, isAnswerCorrect);
@@ -168,8 +168,8 @@ export const Quiz: React.FC<QuizProps> = ({
                       ? "green.500"
                       : "red.500"
                     : option.correct
-                    ? "green.500"
-                    : borderColor
+                      ? "green.500"
+                      : borderColor
                   : borderColor
               }
               bg={
@@ -179,8 +179,8 @@ export const Quiz: React.FC<QuizProps> = ({
                       ? correctBgColor
                       : incorrectBgColor
                     : option.correct
-                    ? correctBgColor
-                    : bgColor
+                      ? correctBgColor
+                      : bgColor
                   : bgColor
               }
               _hover={
@@ -201,8 +201,8 @@ export const Quiz: React.FC<QuizProps> = ({
                     ? option.correct
                       ? "green"
                       : selectedOption === index.toString()
-                      ? "red"
-                      : "gray"
+                        ? "red"
+                        : "gray"
                     : "blue"
                 }
               >
