@@ -6,6 +6,7 @@ category: "Author Resources"
 author: "DotCodeSchool Team"
 date: "2025-05-02"
 featured: true
+# estimatedTime: 12 # Optional: Estimated reading time in minutes
 ---
 
 Welcome to the DotCodeSchool content authoring guide! This template demonstrates all the formatting options available to you when writing articles for our platform. Use this as a reference when creating your own educational content.
@@ -211,6 +212,39 @@ When quoting or referencing others' work, always provide proper attribution:
 >
 > — Polkadot Whitepaper
 
+## Article Metadata
+
+When creating an article, you need to include metadata in the frontmatter section at the top of your MDX file. This metadata helps with article organization, search, and display.
+
+```yaml
+---
+title: "Your Article Title"
+description: "A concise description of your article"
+tags: ["Tag1", "Tag2", "Tag3"]
+category: "Category Name"
+author: "Your Name"
+date: "2025-05-15"
+featured: false
+estimatedTime: 10 # Optional: Estimated reading time in minutes
+---
+```
+
+### Required Metadata Fields
+
+- **title**: The title of your article
+- **description**: A brief summary (1-2 sentences)
+- **tags**: An array of relevant keywords
+- **category**: The primary category for your article
+- **author**: Your name or username
+- **date**: Publication date in YYYY-MM-DD format
+
+### Optional Metadata Fields
+
+- **featured**: Set to `true` if this is a featured article
+- **estimatedTime**: The estimated time to read the article in minutes
+
+If you don't provide an `estimatedTime`, the platform will automatically calculate one based on the article length and an average reading speed of 225 words per minute. However, if your article contains complex concepts that might take longer to understand, consider providing your own estimate.
+
 ## Best Practices for Authors
 
 1. **Start with an overview**: Briefly explain what the article covers and why it matters.
@@ -221,6 +255,7 @@ When quoting or referencing others' work, always provide proper attribution:
 6. **Provide context**: Explain why something works, not just how it works.
 7. **Include resources**: Link to additional documentation or tools when relevant.
 8. **Review thoroughly**: Check for technical accuracy and clarity before submitting.
+9. **Provide reading time**: For complex articles, consider providing your own estimated reading time rather than relying on the automatic calculation.
 
 ## Submitting Your Content
 

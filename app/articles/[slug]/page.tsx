@@ -28,7 +28,9 @@ const getArticleBySlug = cache(async (slug: string) => {
         category: data.category || "General",
         author: data.author || "Anonymous",
         date: data.date || new Date().toISOString(),
+        estimatedTime: data.estimatedTime, // Extract estimatedTime from frontmatter
         code: result.code,
+        rawContent: content, // Pass the raw MDX content for reading time calculation
       };
     } catch (error) {
       const bundleError = error as Error;
@@ -42,6 +44,8 @@ const getArticleBySlug = cache(async (slug: string) => {
         category: data.category || "General",
         author: data.author || "Anonymous",
         date: data.date || new Date().toISOString(),
+        estimatedTime: data.estimatedTime, // Extract estimatedTime from frontmatter
+        rawContent: content, // Pass the raw MDX content for reading time calculation
         code: `
               export default function ErrorComponent() {
                 return React.createElement(
