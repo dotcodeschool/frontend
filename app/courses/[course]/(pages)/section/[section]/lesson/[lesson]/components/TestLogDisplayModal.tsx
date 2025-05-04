@@ -12,6 +12,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { IoTerminal } from "react-icons/io5";
+import { useEffect, useState } from "react";
 
 import { LogTabs } from "./LogTabs";
 import { TestStatus } from "./TestStatus";
@@ -28,7 +29,41 @@ type TestLogDisplayModalProps = {
 
 const TestLogDisplayModal = ({ logstreamId }: TestLogDisplayModalProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const didTestPass = true;
+  const [didTestPass, setDidTestPass] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const repoName = logstreamId ? logstreamId.split('/').pop() : '';
+
+  useEffect(() => {
+    if (!isOpen || !repoName) return;
+
+    const fetchTestStatus = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`/api/test-status?repoName=${repoName}`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch test status');
+        }
+        
+        const data = await response.json();
+        
+        // Set default to false
+        if (data.status) {
+          setDidTestPass(data.status.passed);
+        } else {
+          setDidTestPass(false);
+        }
+      } catch (error) {
+        console.error('Error fetching test status:', error);
+        setDidTestPass(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    void fetchTestStatus();
+  }, [isOpen, repoName]);
 
   return (
     <>
@@ -51,7 +86,7 @@ const TestLogDisplayModal = ({ logstreamId }: TestLogDisplayModalProps) => {
               spacing={2}
               {...modalBodyProps}
             >
-              <TestStatus didTestPass={didTestPass} />
+              <TestStatus didTestPass={didTestPass} isLoading={isLoading} />
               <Button onClick={onClose} size="xs">
                 Hide logs
               </Button>
