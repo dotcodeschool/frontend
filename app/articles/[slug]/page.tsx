@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { Container } from "@chakra-ui/react";
 import ArticleContent from "./components/ArticleContent";
+import { Navbar } from "@/components";
 
 // Use React cache to avoid redundant processing
 const getArticleBySlug = cache(async (slug: string) => {
@@ -141,13 +142,16 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
   });
 
   return (
-    <Container maxW="container.md" py={8}>
-      {/* Pass all necessary data to a client component */}
-      <ArticleContent
-        article={article}
-        formattedDate={formattedDate}
-        relatedArticles={relatedArticles}
-      />
+    <Container maxW="container.xl">
+      <Navbar />
+      <Container maxW="container.md" py={8}>
+        {/* Pass all necessary data to a client component */}
+        <ArticleContent
+          article={article}
+          formattedDate={formattedDate}
+          relatedArticles={relatedArticles}
+        />
+      </Container>
     </Container>
   );
 }
