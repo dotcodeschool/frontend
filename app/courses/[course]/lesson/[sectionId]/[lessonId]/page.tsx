@@ -1,12 +1,10 @@
 import "@/styles/resizer.css";
 
-import { Box, Divider, Link } from "@chakra-ui/react";
+import { Box, Divider } from "@chakra-ui/react";
 import { notFound } from "next/navigation";
 import React, { Suspense } from "react";
-import { IoArrowBack } from "react-icons/io5";
 import fs from "fs";
 import path from "path";
-import matter from "gray-matter";
 
 import { Navbar } from "@/components";
 import { bundleMdxContent } from "@/lib/mdx-bundle";

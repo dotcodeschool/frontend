@@ -9,7 +9,6 @@ import {
   Text,
   SimpleGrid,
   Flex,
-  Divider,
   // Button,
 } from "@chakra-ui/react";
 

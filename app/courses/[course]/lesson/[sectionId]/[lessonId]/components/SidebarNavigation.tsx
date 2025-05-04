@@ -12,7 +12,6 @@ import {
   VStack,
   HStack,
   Icon,
-  Divider,
   useColorModeValue,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
