@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useQuizGroup } from "./QuizGroup";
+import React, { useState, useEffect, useContext } from "react";
+import { QuizGroupContext } from "./QuizGroup";
 import {
   Box,
   Text,
@@ -37,12 +37,7 @@ export const TrueFalseQuiz: React.FC<TrueFalseQuizProps> = ({
   const [quizId, setQuizId] = useState<string>("");
 
   // Get QuizGroup context if available
-  const quizGroupContext = React.useContext(
-    React.createContext<{
-      registerQuiz: (id: string) => void;
-      updateScore: (id: string, isCorrect: boolean) => void;
-    } | null>(null),
-  );
+  const quizGroupContext = useContext(QuizGroupContext);
 
   // Colors for theming
   const borderColor = useColorModeValue("gray.200", "gray.700");
@@ -218,7 +213,7 @@ export const TrueFalseQuiz: React.FC<TrueFalseQuizProps> = ({
                 {isCorrect ? "Correct!" : "Not quite right"}
               </AlertTitle>
             </Flex>
-            <AlertDescription mt={2}>
+            <AlertDescription mt={2} maxWidth="100%" overflowX="auto">
               {typeof explanation === "string" ? (
                 <Text>{explanation}</Text>
               ) : (

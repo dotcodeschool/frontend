@@ -23,8 +23,9 @@ type QuizGroupContextType = {
   updateScore: (id: string, isCorrect: boolean) => void;
 };
 
-const QuizGroupContext = createContext<QuizGroupContextType | undefined>(
-  undefined,
+// Export the context so it can be imported by other components
+export const QuizGroupContext = createContext<QuizGroupContextType | null>(
+  null,
 );
 
 export const useQuizGroup = () => {
