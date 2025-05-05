@@ -5,6 +5,10 @@ import GitHub from "next-auth/providers/github";
 export const authConfig = {
   providers: [],
   debug: true,
+  pages: {
+    error: "/api/auth/error", // Custom error page
+    signIn: "/login", // Custom sign in page
+  },
   callbacks: {
     authorized: ({ auth, request: { nextUrl } }) => {
       const isLoggedIn = Boolean(auth?.user);

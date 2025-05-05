@@ -1,8 +1,6 @@
 // app/courses/[course]/(pages)/setup/page.tsx
 import { Box, Text } from "@chakra-ui/react";
-import { ObjectId } from "mongodb";
-import { notFound } from "next/navigation";
-import { ErrorBoundary } from "react-error-boundary";
+import { redirect } from "next/navigation";
 
 import { auth } from "@/auth";
 import { Navbar } from "@/components";
@@ -12,7 +10,6 @@ import {
   getUserByEmail,
 } from "@/lib/api";
 import { questions as questionsData } from "@/lib/db/data";
-import { handleSignIn } from "@/lib/middleware/actions";
 import { RepositorySetup } from "@/lib/types";
 
 import { StepsComponent } from "./components/StepsComponent";
@@ -24,16 +21,13 @@ const authenticateUserAndGetId = async (course: string) => {
 
   // If no session or no user email, redirect to sign in
   if (!session?.user?.email) {
-    await handleSignIn({
-      redirectTo: `/courses/${course}/setup`,
-    });
-    return null;
+    return { needsAuth: true, userId: null };
   }
 
   // If we have a user ID in the session, use it directly
   if (session.user.id) {
     console.log("[setup] Using session user ID:", session.user.id);
-    return session.user.id;
+    return { needsAuth: false, userId: session.user.id };
   }
 
   try {
@@ -42,14 +36,11 @@ const authenticateUserAndGetId = async (course: string) => {
     // Not if we got a DB error
     if (user === null) {
       console.log("[setup] User not found by email, redirecting to sign in");
-      await handleSignIn({
-        redirectTo: `/courses/${course}/setup`,
-      });
-      return null;
+      return { needsAuth: true, userId: null };
     }
 
     console.log("[setup] User found by email:", user._id.toString());
-    return user._id.toString(); // Convert to string
+    return { needsAuth: false, userId: user._id.toString() }; // Convert to string
   } catch (error) {
     // Log the error but don't redirect on DB errors
     console.error("[setup] Database error:", error);
@@ -60,10 +51,10 @@ const authenticateUserAndGetId = async (course: string) => {
         "[setup] Falling back to session user ID after DB error:",
         session.user.id,
       );
-      return session.user.id;
+      return { needsAuth: false, userId: session.user.id };
     }
 
-    return null;
+    return { needsAuth: true, userId: null };
   }
 };
 
@@ -71,7 +62,14 @@ const SetupPage = async ({ params }: { params: { course: string } }) => {
   const { course } = params;
   console.log("[setup] Course param:", course);
 
-  const userId = await authenticateUserAndGetId(course);
+  const { needsAuth, userId } = await authenticateUserAndGetId(course);
+
+  // If authentication is needed, redirect to login page
+  if (needsAuth) {
+    // Redirect to login page with a return URL
+    redirect(`/login?returnUrl=/courses/${course}/setup`);
+  }
+
   if (!userId) {
     console.log("[setup] No userId found");
     return <Text>loading...</Text>;
@@ -82,31 +80,7 @@ const SetupPage = async ({ params }: { params: { course: string } }) => {
   if (!courseData) {
     console.log("[setup] Course not found in database");
 
-    // Fallback for specific known courses when they're not in the database
-    // if (course === "rust-state-machine") {
-    //   console.log("[setup] Using fallback data for rust-state-machine course");
-    //   // Create a minimal course object with required fields
-    //   return (
-    //     <Box maxW="6xl" mx="auto" px={[4, 12]}>
-    //       <Navbar cta={false} />
-    //       <Text fontSize="xl" mt={8} mb={4}>
-    //         Setting up your Rust State Machine course...
-    //       </Text>
-    //       <Text>
-    //         We are experiencing some technical difficulties with this course.
-    //         Please try again later or contact support if the issue persists.
-    //       </Text>
-    //       <Text mt={4}>
-    //         You can also try accessing the course content directly at{" "}
-    //         <a href={`/courses/${course}/section/1/lesson/1`} style={{ color: "blue", textDecoration: "underline" }}>
-    //           this link
-    //         </a>.
-    //       </Text>
-    //     </Box>
-    //   );
-    // }
-
-    // Default error for other courses
+    // Default error for courses not found
     return (
       <div
         style={{
@@ -156,20 +130,18 @@ const SetupPage = async ({ params }: { params: { course: string } }) => {
   };
 
   return (
-    <ErrorBoundary fallback={<div>Something went wrong</div>}>
-      <Box maxW="6xl" mx="auto" px={[4, 12]}>
-        <Navbar cta={false} />
-        <StepsComponent
-          courseId={courseData._id.toString()}
-          courseSlug={course}
-          initialRepo={serializedRepo}
-          questions={questionsData}
-          repositorySetup={repositorySetup}
-          startingLessonUrl={`/courses/${course}/section/1/lesson/1`}
-          userId={userId}
-        />
-      </Box>
-    </ErrorBoundary>
+    <Box maxW="6xl" mx="auto" px={[4, 12]}>
+      <Navbar cta={false} />
+      <StepsComponent
+        courseId={courseData._id.toString()}
+        courseSlug={course}
+        initialRepo={serializedRepo}
+        questions={questionsData}
+        repositorySetup={repositorySetup}
+        startingLessonUrl={`/courses/${course}/section/1/lesson/1`}
+        userId={userId}
+      />
+    </Box>
   );
 };
 

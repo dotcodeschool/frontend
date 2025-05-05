@@ -1,27 +1,22 @@
 "use client";
 
 import {
-  Box,
   Button,
-  Flex,
+  Container,
   Heading,
   Text,
   VStack,
-  useToast,
   Card,
-  CardBody,
   CardHeader,
+  CardBody,
   Divider,
   Image,
-  Container,
 } from "@chakra-ui/react";
-import { signIn, useSession } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { FaGithub } from "react-icons/fa";
-import { useState, useEffect } from "react";
-import { Navbar } from "@/components";
+import { signIn } from "next-auth/react";
 
-// Error message mapping
 const getErrorMessage = (error: string | null) => {
   switch (error) {
     case "OAuthSignin":
@@ -45,49 +40,23 @@ const getErrorMessage = (error: string | null) => {
     case "OAuthCallbackError":
       return "The sign in process was cancelled or encountered an error.";
     default:
-      return error ? `Authentication error: ${error}` : null;
+      return "An unexpected error occurred during authentication.";
   }
 };
 
-// Use Record<string, never> instead of {} for empty object type
-type Props = Record<string, never>;
-
-const Login = (props: Props) => {
-  const { data: session } = useSession();
-  const router = useRouter();
+export default function AuthError() {
   const searchParams = useSearchParams();
-  const returnUrl = searchParams.get("returnUrl") || "/";
   const error = searchParams.get("error");
-  const errorMessage = getErrorMessage(error);
-  const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    if (session?.user) {
-      router.push(returnUrl);
-    }
-  }, [session, router, returnUrl]);
+  const errorMessage = getErrorMessage(error);
 
-  if (session?.user) {
-    return null;
-  }
-
-  const handleSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const handleSignIn = async () => {
     setIsLoading(true);
-
     try {
-      await signIn("github", { callbackUrl: returnUrl });
+      await signIn("github", { callbackUrl: "/" });
     } catch (error) {
-      console.error(error);
-      toast({
-        title: "Authentication failed",
-        description:
-          "There was an error signing in with GitHub. Please try again.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
+      console.error("Sign in error:", error);
       setIsLoading(false);
     }
   };
@@ -99,7 +68,6 @@ const Login = (props: Props) => {
       color="white"
       p={4}
       maxW="container.xl"
-      alignContent="center"
     >
       <Card
         w="full"
@@ -167,6 +135,4 @@ const Login = (props: Props) => {
       </Card>
     </Container>
   );
-};
-
-export default Login;
+}

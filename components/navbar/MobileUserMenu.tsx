@@ -1,4 +1,12 @@
-import { HStack, SkeletonCircle, SkeletonText, VStack } from "@chakra-ui/react";
+"use client";
+
+import {
+  HStack,
+  SkeletonCircle,
+  SkeletonText,
+  VStack,
+  Divider,
+} from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 
 import { getUserInfo, isUserInfoError } from "@/lib/helpers";
@@ -6,26 +14,34 @@ import { getUserInfo, isUserInfoError } from "@/lib/helpers";
 import { ButtonLogin, ButtonLogout } from "./authentication";
 import { UserDetails } from "./UserDetails";
 
-// TODO: Add a loading state
 const MobileUserMenu = () => {
   const { data: session, status } = useSession();
 
   if (status === "loading") {
     return (
-      <HStack>
-        <SkeletonCircle size="10" />
+      <VStack align="start" spacing={4} w="full">
+        <HStack spacing={3} w="full">
+          <SkeletonCircle size="12" />
+          <VStack align="start" spacing={2} flex={1}>
+            <SkeletonText noOfLines={1} w="120px" />
+            <SkeletonText noOfLines={1} w="180px" />
+          </VStack>
+        </HStack>
+        <Divider />
         <SkeletonText noOfLines={1} w="100px" />
-      </HStack>
+      </VStack>
     );
   }
 
   const user = getUserInfo(session);
 
   if (isUserInfoError(user)) {
-    const errorMessage = user.message;
-    console.error(errorMessage);
-
-    return <ButtonLogin />;
+    // No need to log the error message to console as it's expected for unauthenticated users
+    return (
+      <VStack align="start" spacing={4} w="full">
+        <ButtonLogin w="full" />
+      </VStack>
+    );
   }
 
   const { email, image, name } = user;
@@ -38,7 +54,8 @@ const MobileUserMenu = () => {
       w="full"
     >
       <UserDetails email={email} image={image} name={name} />
-      <ButtonLogout />
+      <Divider />
+      <ButtonLogout w="full" />
     </VStack>
   );
 };
