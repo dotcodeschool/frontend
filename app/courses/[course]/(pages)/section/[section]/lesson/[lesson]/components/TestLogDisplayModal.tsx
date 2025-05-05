@@ -32,7 +32,7 @@ const TestLogDisplayModal = ({ logstreamId }: TestLogDisplayModalProps) => {
   const [didTestPass, setDidTestPass] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const repoName = logstreamId ? logstreamId.split('/').pop() : '';
+  const repoName = logstreamId ? logstreamId.split("/").pop() : "";
 
   useEffect(() => {
     if (!isOpen || !repoName) return;
@@ -41,13 +41,13 @@ const TestLogDisplayModal = ({ logstreamId }: TestLogDisplayModalProps) => {
       try {
         setIsLoading(true);
         const response = await fetch(`/api/test-status?repoName=${repoName}`);
-        
+
         if (!response.ok) {
-          throw new Error('Failed to fetch test status');
+          throw new Error("Failed to fetch test status");
         }
-        
+
         const data = await response.json();
-        
+
         // Set default to false
         if (data.status) {
           setDidTestPass(data.status.passed);
@@ -55,13 +55,13 @@ const TestLogDisplayModal = ({ logstreamId }: TestLogDisplayModalProps) => {
           setDidTestPass(false);
         }
       } catch (error) {
-        console.error('Error fetching test status:', error);
+        console.error("Error fetching test status:", error);
         setDidTestPass(false);
       } finally {
         setIsLoading(false);
       }
     };
-    
+
     void fetchTestStatus();
   }, [isOpen, repoName]);
 

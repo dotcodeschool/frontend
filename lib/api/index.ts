@@ -15,7 +15,7 @@ const db = async () => {
 
 const getUser = async (userId: ObjectId) => {
   const database = await db();
-  const users = database.collection<User>("user");
+  const users = database.collection<User>("users");
 
   return users.findOne({ _id: userId });
 };
@@ -23,7 +23,7 @@ const getUser = async (userId: ObjectId) => {
 const getUserByEmail = async (email: string) => {
   const database = await db();
   // console.log("[getUserByEmail] db", database.databaseName);
-  const users = database.collection<User>("user");
+  const users = database.collection<User>("users");
   // console.log("[getUserByEmail] users", users);
   const user = users.findOne({ email });
 
@@ -134,26 +134,26 @@ const repositoryStream = async () => {
 const getTestLogsForRepo = async (
   repoName: string,
   sectionName?: string,
-  lessonName?: string
+  lessonName?: string,
 ) => {
   try {
     const database = await db();
     const testLogs = database.collection("testLogs");
-    
+
     // Build query object using repoName
     const query: Record<string, any> = { repo_name: repoName };
-    
+
     // Added filters
     if (sectionName) query.section_name = sectionName;
     if (lessonName) query.lesson_name = lessonName;
-    
+
     // Used test log in this combination (used timestamp in descending order)
     const result = await testLogs
       .find(query)
       .sort({ timestamp: -1 })
       .limit(1)
       .toArray();
-    
+
     return result.length > 0 ? result[0] : null;
   } catch (error) {
     console.error("[getTestLogsForRepo] Error:", error);

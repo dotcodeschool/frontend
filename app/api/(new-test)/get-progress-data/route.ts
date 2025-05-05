@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
 
     // Get user document and project only the progress field
     const user = await db
-      .collection("user")
+      .collection("users")
       .findOne({ email: session.user.email }, { projection: { progress: 1 } });
 
     if (!user) {

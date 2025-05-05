@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
               console.log(`Setting ${path} = ${value}`);
 
               // Update the specific path
-              await db.collection("user").updateOne(
+              await db.collection("users").updateOne(
                 { email: user.email },
                 { $set: { [path]: value } },
                 { upsert: true }, // Create if doesn't exist
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
 
         // Get the updated user document to verify
         const updatedUser = await db
-          .collection("user")
+          .collection("users")
           .findOne({ email: user.email }, { projection: { progress: 1 } });
 
         console.log("Updated user progress:", updatedUser?.progress);

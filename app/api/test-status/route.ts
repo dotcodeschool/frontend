@@ -10,13 +10,13 @@ export async function GET(request: NextRequest) {
   if (!repoName) {
     return NextResponse.json(
       { error: "Repository name is required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   try {
     const testLog = await getTestLogsForRepo(repoName, sectionName, lessonName);
-    
+
     // Return just the passed status if testLog exists, otherwise null
     const status = testLog ? { passed: testLog.passed } : null;
     return NextResponse.json({ status });
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     console.error("Error fetching test logs:", error);
     return NextResponse.json(
       { error: "Failed to fetch test status" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

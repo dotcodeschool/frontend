@@ -1,11 +1,11 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
 import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 
 import { authConfig } from "./auth.config";
+import { prisma } from "./lib/db/prisma";
 
-const prisma = new PrismaClient();
+// Ensure Prisma Client is properly initialized before using it with the adapter
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
   adapter: PrismaAdapter(prisma),
