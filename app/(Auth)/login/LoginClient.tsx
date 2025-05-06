@@ -11,6 +11,7 @@ import {
   CardHeader,
   Divider,
   Image,
+  Link,
 } from "@chakra-ui/react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -144,7 +145,23 @@ const LoginClient = () => {
           </Button>
 
           <Text fontSize="sm" color="gray.400" textAlign="center">
-            By signing in, you agree to our Terms of Service and Privacy Policy.
+            By signing in, you agree to our{" "}
+            <Link
+              href="/legal/terms-of-service"
+              color="blue.400"
+              _hover={{ textDecoration: "underline" }}
+            >
+              Terms of Service
+            </Link>{" "}
+            and{" "}
+            <Link
+              href="/legal/privacy-policy"
+              color="blue.400"
+              _hover={{ textDecoration: "underline" }}
+            >
+              Privacy Policy
+            </Link>
+            .
           </Text>
         </VStack>
       </CardBody>
