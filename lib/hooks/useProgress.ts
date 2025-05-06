@@ -140,7 +140,7 @@ export const useProgress = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [session?.user, isLoading, progress]);
+  }, [session?.user, isLoading, progress, processPendingUpdates]);
 
   // Save progress to server
   const updateServerProgress = async (updatedProgress: TypeProgressData) => {
