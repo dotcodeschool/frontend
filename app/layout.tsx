@@ -1,14 +1,13 @@
 import { ColorModeScript } from "@chakra-ui/react";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-
-import { Providers } from "@/app/providers";
+import { ClientLayout } from "@/app/components";
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => (
   <html lang="en">
     <body suppressHydrationWarning>
       <ColorModeScript initialColorMode="dark" />
-      <Providers>{children}</Providers>
-      <SpeedInsights />
+      <ClientLayout>
+        {children}
+      </ClientLayout>
     </body>
   </html>
 );
