@@ -115,9 +115,9 @@ const getStartCourseUrl = async (
   const setupUrl = `/courses/${slug}/setup`;
   const repoSetupUrl = `${setupUrl}?step=repo_test`;
   const lessonsUrl = `/courses/${slug}/lesson/1/chapter/1`;
-  const isNotOnMachineCourse = format !== "onMachineCourse";
+  const isInBrowserCourse = format === "inBrowserCourse";
 
-  if (isNotOnMachineCourse) {
+  if (isInBrowserCourse) {
     return lessonsUrl;
   }
 
@@ -143,9 +143,9 @@ const checkAvailableFormats = async (
   currentFormat: string | null;
 }> => {
   // Determine if this is an in-browser or on-machine course based on the slug
-  const isOnMachine = slug.startsWith("on-machine-");
-  const baseSlug = isOnMachine ? slug.replace("on-machine-", "") : slug;
-  const alternateSlug = isOnMachine ? baseSlug : `on-machine-${baseSlug}`;
+  const isInBrowser = slug.startsWith("in-browser-");
+  const baseSlug = isInBrowser ? slug.replace("in-browser-", "") : slug;
+  const alternateSlug = isInBrowser ? baseSlug : `in-browser-${baseSlug}`;
 
   // Check if the alternate format exists
   const alternateExists = await getCourseDetails(
@@ -154,9 +154,9 @@ const checkAvailableFormats = async (
   );
 
   return {
-    hasInBrowser: isOnMachine ? !!alternateExists : true,
-    hasOnMachine: isOnMachine ? true : !!alternateExists,
-    currentFormat: isOnMachine ? "onMachineCourse" : "inBrowserCourse",
+    hasInBrowser: isInBrowser ? true : !!alternateExists,
+    hasOnMachine: isInBrowser ? !!alternateExists : true,
+    currentFormat: isInBrowser ? "inBrowserCourse" : "onMachineCourse",
   };
 };
 

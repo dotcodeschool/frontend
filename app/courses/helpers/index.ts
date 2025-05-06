@@ -48,37 +48,37 @@ const getCourseCatalog = async (): Promise<Array<ExtendedCourseOverview>> => {
     contentfulCourses.forEach((course) => {
       if (!course.slug) return;
 
-      const isOnMachine = course.slug.startsWith("on-machine-");
-      const baseName = isOnMachine
-        ? course.slug.replace("on-machine-", "")
+      const isInBrowser = course.slug.startsWith("in-browser-");
+      const baseName = isInBrowser
+        ? course.slug.replace("in-browser-", "")
         : course.slug;
 
       if (courseMap.has(baseName)) {
         // Course already exists in the map, update formats information
         const existingCourse = courseMap.get(baseName)!;
 
-        if (isOnMachine) {
-          existingCourse.formats = {
-            hasInBrowser: existingCourse.formats?.hasInBrowser || false,
-            hasOnMachine: true,
-            inBrowserSlug: existingCourse.formats?.inBrowserSlug,
-            onMachineSlug: course.slug,
-          };
-        } else {
+        if (isInBrowser) {
           existingCourse.formats = {
             hasInBrowser: true,
             hasOnMachine: existingCourse.formats?.hasOnMachine || false,
             inBrowserSlug: course.slug,
             onMachineSlug: existingCourse.formats?.onMachineSlug,
           };
+        } else {
+          existingCourse.formats = {
+            hasInBrowser: existingCourse.formats?.hasInBrowser || false,
+            hasOnMachine: true,
+            inBrowserSlug: existingCourse.formats?.inBrowserSlug,
+            onMachineSlug: course.slug,
+          };
         }
       } else {
         // Add new course to the map
         const formats = {
-          hasInBrowser: !isOnMachine,
-          hasOnMachine: isOnMachine,
-          inBrowserSlug: !isOnMachine ? course.slug : undefined,
-          onMachineSlug: isOnMachine ? course.slug : undefined,
+          hasInBrowser: isInBrowser,
+          hasOnMachine: !isInBrowser,
+          inBrowserSlug: isInBrowser ? course.slug : undefined,
+          onMachineSlug: !isInBrowser ? course.slug : undefined,
         };
 
         courseMap.set(baseName, { ...course, formats });
@@ -100,9 +100,9 @@ const getCourseCatalog = async (): Promise<Array<ExtendedCourseOverview>> => {
           courseMap.set(course.slug, {
             ...course,
             formats: {
-              hasInBrowser: true,
-              hasOnMachine: false,
-              inBrowserSlug: course.slug,
+              hasInBrowser: false,
+              hasOnMachine: true,
+              onMachineSlug: course.slug,
             },
           });
         }

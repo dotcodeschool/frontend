@@ -5,9 +5,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => (
   <html lang="en">
     <body suppressHydrationWarning>
       <ColorModeScript initialColorMode="dark" />
-      <ClientLayout>
-        {children}
-      </ClientLayout>
+      <ClientLayout>{children}</ClientLayout>
     </body>
   </html>
 );

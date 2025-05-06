@@ -29,7 +29,7 @@ const FormatToggle = ({
   title,
 }: FormatToggleProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const isOnMachine = currentFormat === "onMachineCourse";
+  const isInBrowser = currentFormat === "inBrowserCourse";
 
   console.log(
     "FormatToggle - hasInBrowser:",
@@ -43,26 +43,26 @@ const FormatToggle = ({
   );
 
   // Calculate the target slugs for navigation
-  const baseSlug = isOnMachine ? slug.replace("on-machine-", "") : slug;
-  const onMachineSlug = `on-machine-${baseSlug}`;
+  const baseSlug = isInBrowser ? slug.replace("in-browser-", "") : slug;
+  const inBrowserSlug = `in-browser-${baseSlug}`;
   const courseTitle = title || "this course";
 
   // Check if the alternate format exists
   const alternateExists =
-    (isOnMachine && hasInBrowser) || (!isOnMachine && hasOnMachine);
+    (isInBrowser && hasOnMachine) || (!isInBrowser && hasInBrowser);
 
   console.log(
     "FormatToggle - alternateExists:",
     alternateExists,
-    "isOnMachine:",
-    isOnMachine,
+    "isInBrowser:",
+    isInBrowser,
   );
 
   return (
     <Box mb={4} mt={2}>
       <HStack>
         {/* Show the appropriate tag based on the current format */}
-        {isOnMachine ? (
+        {!isInBrowser ? (
           <Tag colorScheme="gray" size="md">
             <Text mr={2}>Beta</Text>
             <Tooltip
@@ -95,7 +95,7 @@ const FormatToggle = ({
             onClick={onOpen}
             leftIcon={<PiArrowsLeftRight />}
           >
-            Switch to {isOnMachine ? "In-Browser" : "On-Machine"} Format
+            Switch to {isInBrowser ? "On-Machine" : "In-Browser"} Format
           </Button>
         )}
       </HStack>
@@ -104,8 +104,8 @@ const FormatToggle = ({
         isOpen={isOpen}
         onClose={onClose}
         courseTitle={courseTitle}
-        inBrowserSlug={baseSlug}
-        onMachineSlug={onMachineSlug}
+        inBrowserSlug={isInBrowser ? slug : inBrowserSlug}
+        onMachineSlug={!isInBrowser ? slug : baseSlug}
       />
     </Box>
   );

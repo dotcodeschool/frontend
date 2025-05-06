@@ -70,7 +70,7 @@ const CourseContent = async ({ slug }: { slug: string }) => {
           return (
             <ModuleItem
               index={index}
-              isOnMachineCourse={format === "onMachineCourse"}
+              isOnMachineCourse={format !== "inBrowserCourse"}
               key={index}
               module={module}
               slug={slug}

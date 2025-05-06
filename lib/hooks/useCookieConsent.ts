@@ -17,7 +17,8 @@ const defaultPreferences: CookiePreferences = {
 };
 
 export const useCookieConsent = () => {
-  const [cookiePreferences, setCookiePreferences] = useState<CookiePreferences>(defaultPreferences);
+  const [cookiePreferences, setCookiePreferences] =
+    useState<CookiePreferences>(defaultPreferences);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -26,7 +27,7 @@ export const useCookieConsent = () => {
 
     try {
       const savedPreferences = localStorage.getItem(COOKIE_CONSENT_KEY);
-      
+
       if (savedPreferences) {
         const parsedPreferences = JSON.parse(savedPreferences);
         setCookiePreferences(parsedPreferences);
@@ -38,7 +39,9 @@ export const useCookieConsent = () => {
     }
   }, []);
 
-  const updateCookiePreferences = (newPreferences: Partial<CookiePreferences>) => {
+  const updateCookiePreferences = (
+    newPreferences: Partial<CookiePreferences>,
+  ) => {
     const updatedPreferences = {
       ...cookiePreferences,
       ...newPreferences,
@@ -46,9 +49,12 @@ export const useCookieConsent = () => {
     };
 
     setCookiePreferences(updatedPreferences);
-    
+
     if (typeof window !== "undefined") {
-      localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(updatedPreferences));
+      localStorage.setItem(
+        COOKIE_CONSENT_KEY,
+        JSON.stringify(updatedPreferences),
+      );
     }
 
     return updatedPreferences;

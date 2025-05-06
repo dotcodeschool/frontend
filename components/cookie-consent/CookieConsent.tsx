@@ -18,17 +18,22 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { FaCookieBite } from "react-icons/fa";
-import { useCookieConsent, CookiePreferences, COOKIE_CONSENT_KEY } from "@/lib/hooks/useCookieConsent";
+import {
+  useCookieConsent,
+  CookiePreferences,
+  COOKIE_CONSENT_KEY,
+} from "@/lib/hooks/useCookieConsent";
 
 export const CookieConsent = () => {
-  const { cookiePreferences, updateCookiePreferences, isLoaded } = useCookieConsent();
+  const { cookiePreferences, updateCookiePreferences, isLoaded } =
+    useCookieConsent();
   const [showBanner, setShowBanner] = useState(false);
   const { isOpen, onToggle } = useDisclosure();
-  
+
   const bgColor = useColorModeValue("gray.800", "gray.800");
   const textColor = useColorModeValue("white", "white");
   const borderColor = useColorModeValue("gray.700", "gray.700");
-  
+
   // Check if user has already set cookie preferences
   useEffect(() => {
     // Only show the banner if preferences haven't been set yet
@@ -37,7 +42,7 @@ export const CookieConsent = () => {
       setShowBanner(true);
     }
   }, [isLoaded]);
-  
+
   const handleAcceptAll = () => {
     updateCookiePreferences({
       essential: true,
@@ -45,11 +50,11 @@ export const CookieConsent = () => {
       analytics: true,
     });
     setShowBanner(false);
-    
+
     // The ConditionalAnalytics component will automatically
     // load analytics based on the updated preferences
   };
-  
+
   const handleRejectNonEssential = () => {
     updateCookiePreferences({
       essential: true,
@@ -57,25 +62,25 @@ export const CookieConsent = () => {
       analytics: false,
     });
     setShowBanner(false);
-    
+
     // The ConditionalAnalytics component will automatically
     // respect these preferences
   };
-  
+
   const handleSavePreferences = () => {
     updateCookiePreferences(cookiePreferences);
     setShowBanner(false);
   };
-  
+
   const handlePreferenceChange = (type: keyof CookiePreferences) => {
     if (type === "essential") return; // Essential cookies cannot be toggled
-    
+
     updateCookiePreferences({
       ...cookiePreferences,
       [type]: !cookiePreferences[type],
     });
   };
-  
+
   if (!showBanner) return null;
 
   return (

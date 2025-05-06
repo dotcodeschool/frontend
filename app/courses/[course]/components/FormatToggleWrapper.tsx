@@ -25,9 +25,9 @@ const FormatToggleWrapper = ({
     const checkFormats = async () => {
       try {
         // Determine if this is an in-browser or on-machine course based on the slug
-        const isOnMachine = slug.startsWith("on-machine-");
-        const baseSlug = isOnMachine ? slug.replace("on-machine-", "") : slug;
-        const alternateSlug = isOnMachine ? baseSlug : `on-machine-${baseSlug}`;
+        const isInBrowser = slug.startsWith("in-browser-");
+        const baseSlug = isInBrowser ? slug.replace("in-browser-", "") : slug;
+        const alternateSlug = isInBrowser ? baseSlug : `in-browser-${baseSlug}`;
 
         // Get all courses to check if the alternate format exists
         const response = await fetch("/api/courses");
@@ -57,19 +57,19 @@ const FormatToggleWrapper = ({
         );
 
         setFormatData({
-          hasInBrowser: isOnMachine ? alternateExists : true,
-          hasOnMachine: isOnMachine ? true : alternateExists,
-          currentFormat: isOnMachine ? "onMachineCourse" : "inBrowserCourse",
+          hasInBrowser: isInBrowser ? true : alternateExists,
+          hasOnMachine: isInBrowser ? alternateExists : true,
+          currentFormat: isInBrowser ? "inBrowserCourse" : "onMachineCourse",
         });
       } catch (error) {
         console.error("Error checking course formats:", error);
         // Fallback to using the API endpoint to check if the alternate format exists
         try {
-          const isOnMachine = slug.startsWith("on-machine-");
-          const baseSlug = isOnMachine ? slug.replace("on-machine-", "") : slug;
-          const alternateSlug = isOnMachine
+          const isInBrowser = slug.startsWith("in-browser-");
+          const baseSlug = isInBrowser ? slug.replace("in-browser-", "") : slug;
+          const alternateSlug = isInBrowser
             ? baseSlug
-            : `on-machine-${baseSlug}`;
+            : `in-browser-${baseSlug}`;
 
           // Check if the alternate format exists by making a fetch request
           const response = await fetch(
@@ -78,9 +78,9 @@ const FormatToggleWrapper = ({
           const { exists } = await response.json();
 
           setFormatData({
-            hasInBrowser: isOnMachine ? exists : true,
-            hasOnMachine: isOnMachine ? true : exists,
-            currentFormat: isOnMachine ? "onMachineCourse" : "inBrowserCourse",
+            hasInBrowser: isInBrowser ? true : exists,
+            hasOnMachine: isInBrowser ? exists : true,
+            currentFormat: isInBrowser ? "inBrowserCourse" : "onMachineCourse",
           });
         } catch (fallbackError) {
           console.error("Error in fallback check:", fallbackError);
