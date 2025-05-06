@@ -54,7 +54,15 @@ const getCourseCatalog = async (): Promise<Array<CourseOverview>> => {
       allCourses.map((c) => c.slug),
     );
 
-    return allCourses;
+    // Filter out the sample course from the displayed courses
+    // but keep it accessible via direct URL
+    const filteredCourses = allCourses.filter(course => course.slug !== 'sample-course');
+    console.log(
+      "Filtered courses (sample course hidden):",
+      filteredCourses.map((c) => c.slug),
+    );
+
+    return filteredCourses;
   } catch (error) {
     console.error("Error fetching course catalog:", error);
 

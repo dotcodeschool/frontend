@@ -17,7 +17,7 @@ const fetchGraphQL = async <T extends QueryKey>(
   variables?: Record<string, unknown>,
 ): Promise<Pick<Query, T>> => {
   const response = await fetch(
-    `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}/environments/development`,
+    `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}/environments/${process.env.CONTENTFUL_ENVIRONMENT}`,
     {
       method: "POST",
       headers: {
