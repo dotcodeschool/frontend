@@ -49,6 +49,7 @@ const CourseContent = async ({ slug }: { slug: string }) => {
         level={courseDetails.level}
         language={courseDetails.language}
         format={format || undefined} // Convert null to undefined
+        slug={slug}
       />
       <ButtonPrimary as="a" href={startCourseUrl} mt={8} px={12} size="lg">
         Start

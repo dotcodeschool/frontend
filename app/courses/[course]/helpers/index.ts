@@ -5,7 +5,11 @@ import path from "path";
 import { getUserRepo } from "@/lib/api";
 import { getContentfulData } from "@/lib/api/contentful";
 
-import { QUERY_LESSONS_COLLECTION_ID_AND_TOTAL } from "../../../../queries";
+import {
+  QUERY_LESSONS_COLLECTION_ID_AND_TOTAL,
+  QUERY_COURSE_INFORMATION,
+  QUERY_COURSE_OVERVIEW_METADATA_FIELDS,
+} from "../../../../queries";
 import { CourseDetails, CourseQuery, LessonIdAndTotalData } from "../types";
 import { getMdxCourseDetails } from "./getMdxCourseDetails";
 
@@ -126,8 +130,39 @@ const getStartCourseUrl = async (
   return lessonsUrl;
 };
 
+/**
+ * Checks if both in-browser and on-machine formats are available for a course
+ * @param slug The course slug
+ * @returns An object containing information about available formats
+ */
+const checkAvailableFormats = async (
+  slug: string,
+): Promise<{
+  hasInBrowser: boolean;
+  hasOnMachine: boolean;
+  currentFormat: string | null;
+}> => {
+  // Determine if this is an in-browser or on-machine course based on the slug
+  const isOnMachine = slug.startsWith("on-machine-");
+  const baseSlug = isOnMachine ? slug.replace("on-machine-", "") : slug;
+  const alternateSlug = isOnMachine ? baseSlug : `on-machine-${baseSlug}`;
+
+  // Check if the alternate format exists
+  const alternateExists = await getCourseDetails(
+    alternateSlug,
+    QUERY_COURSE_OVERVIEW_METADATA_FIELDS,
+  );
+
+  return {
+    hasInBrowser: isOnMachine ? !!alternateExists : true,
+    hasOnMachine: isOnMachine ? true : !!alternateExists,
+    currentFormat: isOnMachine ? "onMachineCourse" : "inBrowserCourse",
+  };
+};
+
 export {
   getCourseDetails,
+  checkAvailableFormats,
   getLessonCollectionIdAndTotal,
   getLessonCollectionTotal,
   getStartCourseUrl,

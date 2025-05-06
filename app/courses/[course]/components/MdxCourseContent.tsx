@@ -48,6 +48,7 @@ const MdxCourseContent = async ({ slug }: { slug: string }) => {
         language={mdxCourse.language}
         last_updated={mdxCourse.last_updated}
         format="mdxCourse"
+        slug={slug}
       />
 
       {/* Start button */}

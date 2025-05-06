@@ -6,6 +6,7 @@ const QUERY_COURSE_CATALOG = `query {
       description
       level
       language
+      format
     }
   }
 }`;

@@ -1,6 +1,7 @@
-import { Heading, HStack, Tag, Text, Box, Flex } from "@chakra-ui/react";
+import { Heading, HStack, Tag, Text } from "@chakra-ui/react";
 
 import { CourseDetails } from "../types";
+import { FormatToggleWrapper } from "./FormatToggleWrapper";
 
 const CourseHeader = ({
   title,
@@ -10,14 +11,20 @@ const CourseHeader = ({
   language,
   last_updated,
   format = "contentful", // Default to contentful format
+  slug,
 }: Pick<
   CourseDetails,
   "title" | "author" | "description" | "level" | "language"
 > & {
   format?: string; // Add format prop to determine if it's an MDX or Contentful course
   last_updated?: string; // Add last_updated prop
+  slug?: string; // Add slug prop for the FormatToggle component
 }) => (
   <>
+    {/* Format toggle */}
+    {format !== "mdxCourse" && slug && (
+      <FormatToggleWrapper slug={slug} format={format} title={title || ""} />
+    )}
     <Heading as="h1" fontWeight="800" my={4} size="xl">
       {title}
     </Heading>
