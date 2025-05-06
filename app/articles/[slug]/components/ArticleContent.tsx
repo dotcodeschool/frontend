@@ -66,7 +66,7 @@ interface ArticleContentProps {
 // GitHub repository information
 const GITHUB_REPO = "frontend";
 const GITHUB_OWNER = "dotcodeschool";
-const GITHUB_BRANCH = "articles";
+const GITHUB_BRANCH = "master";
 
 // Average reading speed in words per minute
 const AVERAGE_READING_SPEED = 225;

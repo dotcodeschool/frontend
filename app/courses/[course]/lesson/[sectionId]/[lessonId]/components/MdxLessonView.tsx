@@ -91,7 +91,7 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
     typeof window !== "undefined" ? `${window.location.origin}${pathname}` : "";
 
   // GitHub edit URL - using the format that automatically handles forking for users without write access
-  const githubEditUrl = `https://github.com/dotcodeschool/frontend/edit/feature/articles/content/courses/${courseSlug}/sections/${currentSectionId}/lessons/${currentLessonId}/${currentLessonId}.mdx`;
+  const githubEditUrl = `https://github.com/dotcodeschool/frontend/edit/master/content/courses/${courseSlug}/sections/${currentSectionId}/lessons/${currentLessonId}/${currentLessonId}.mdx`;
 
   // Share handlers
   const handleCopyLink = () => {
