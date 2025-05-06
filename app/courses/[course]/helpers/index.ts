@@ -117,17 +117,28 @@ const getStartCourseUrl = async (
   const lessonsUrl = `/courses/${slug}/lesson/1/chapter/1`;
   const isInBrowserCourse = format === "inBrowserCourse";
 
+  // For in-browser courses, go directly to lessons
   if (isInBrowserCourse) {
     return lessonsUrl;
   }
 
-  const repo = await getUserRepo(slug, sessionContext);
+  // For on-machine courses, check if repo is set up
+  try {
+    const repo = await getUserRepo(slug, sessionContext);
+    console.log("getUserRepo result:", repo);
 
-  if (!repo?.test_ok) {
+    // If repo exists and is set up properly, go to lessons
+    if (repo && repo.test_ok) {
+      return lessonsUrl;
+    }
+
+    // Otherwise, go to repo setup
+    return repoSetupUrl;
+  } catch (error) {
+    console.error("Error checking user repo:", error);
+    // If there's an error, default to repo setup
     return repoSetupUrl;
   }
-
-  return lessonsUrl;
 };
 
 /**
