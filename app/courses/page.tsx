@@ -53,7 +53,10 @@ const CoursesPage = async () => {
 
   return (
     <Box maxW="8xl" mx="auto" px={[4, 12]}>
-      <Navbar cta={false} />
+      <Navbar
+        cta={false}
+        navLinks={[{ label: "Articles", href: "/articles" }]}
+      />
       <Box maxW="4xl" mx="auto">
         <Link color="green.500" fontSize="5xl" href="/">
           <IoArrowBack />

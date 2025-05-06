@@ -32,12 +32,14 @@ export default async function DisclaimerPage() {
 
   return (
     <>
-      <Navbar
-        navLinks={[
-          { label: "Courses", href: "/courses" },
-          { label: "Articles", href: "/articles" },
-        ]}
-      />
+      <Container px={4} maxW="container.xl">
+        <Navbar
+          navLinks={[
+            { label: "Courses", href: "/courses" },
+            { label: "Articles", href: "/articles" },
+          ]}
+        />
+      </Container>
       <Container maxW="container.md" py={8} px={4}>
         <MDXBundlerRenderer code={code} />
       </Container>
