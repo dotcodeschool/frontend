@@ -1,0 +1,10 @@
+node_modules
+.next
+out
+public
+lib/types/schema.ts
+next-env.d.ts
+next.config.mjs
+*.config.js
+*.config.mjs
+src/lambda/test.js

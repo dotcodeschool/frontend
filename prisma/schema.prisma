@@ -1,0 +1,174 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+type CoursesAuthor {
+  name String
+  url  String
+}
+
+type RepositoriesRelationships {
+  course RepositoriesRelationshipsCourse
+  user   RepositoriesRelationshipsUser
+}
+
+type RepositoriesRelationshipsCourse {
+  id   String @db.ObjectId
+  type String
+}
+
+type RepositoriesRelationshipsUser {
+  id   String @db.ObjectId
+  type String
+}
+
+type UserProgressProgress {
+  lessons   UserProgressProgressLessons[]
+  sectionId String
+}
+
+type UserProgressProgressLessons {
+  lessonId String
+  status   String
+}
+
+type UserProgressRelationships {
+  course UserProgressRelationshipsCourse
+  user   UserProgressRelationshipsUser
+}
+
+type UserProgressRelationshipsCourse {
+  id   String @db.ObjectId
+  type String
+}
+
+type UserProgressRelationshipsUser {
+  id   String @db.ObjectId
+  type String
+}
+
+type UsersPreferences {
+  notifications UsersPreferencesNotifications
+}
+
+type UsersPreferencesNotifications {
+  milestoneAlerts Boolean
+  newCourseAlerts Boolean
+}
+
+type UsersProgress {
+  build_your_own_dex UsersProgressBuildYourOwnDex @map("build-your-own-dex")
+}
+
+type UsersProgressBuildYourOwnDex {
+  section1 UsersProgressBuildYourOwnDexSection1 @map("1")
+}
+
+type UsersProgressBuildYourOwnDexSection1 {
+  lesson1 Boolean @map("1")
+  lesson2 Boolean @map("2")
+  lesson3 Boolean @map("3")
+}
+
+type UsersRelationships {
+  repositories UsersRelationshipsRepositories
+}
+
+type UsersRelationshipsRepositories {
+  data UsersRelationshipsRepositoriesData[]
+}
+
+type UsersRelationshipsRepositoriesData {
+  id   String @db.ObjectId
+  type String
+}
+
+model courses {
+  id                           String        @id @default(auto()) @map("_id") @db.ObjectId
+  author                       CoursesAuthor
+  contentfulDevelopmentEntryId String
+  contentfulEntryId            String
+  name                         String
+  slug                         String
+  testerUrl                    String
+  title                        String
+  version                      String
+
+  @@index([slug], map: "slug_1")
+}
+
+model repositories {
+  id                          String                    @id @default(auto()) @map("_id") @db.ObjectId
+  expected_practice_frequency String
+  is_reminder_enabled         Boolean
+  relationships               RepositoriesRelationships
+  repo_name                   String
+  repo_template               String
+  test_ok                     Boolean
+  tester_url                  String
+
+  @@index([repo_name], map: "repo_name_1")
+  @@index([relationships.course.id, relationships.user.id], map: "relationships.course.id_1_relationships.user.id_1")
+}
+
+model submissions {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  commit_sha    String
+  created_at    String
+  logstream_id  String
+  logstream_url String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  relationships Json?
+  repo_name     String
+
+  @@index([repo_name, created_at(sort: Desc)], map: "repo_name_1_created_at_-1")
+  @@index([logstream_id], map: "logstream_id_1")
+}
+
+model userProgress {
+  id            String                    @id @default(auto()) @map("_id") @db.ObjectId
+  progress      UserProgressProgress[]
+  relationships UserProgressRelationships
+}
+
+model User {
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  name           String?
+  hashedPassword String?
+  email          String?   @unique
+  emailVerified  DateTime?
+  image          String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  Account        Account[]
+  progress       Json?
+
+  @@map("users")
+}
+
+model Account {
+  id                String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String    @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  token_type        String?
+  refresh_token     String?   @db.String
+  access_token      String?   @db.String
+  id_token          String?   @db.String
+  scope             String?
+  session_state     String?
+  expires_at        Int?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}

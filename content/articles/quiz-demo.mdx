@@ -1,0 +1,161 @@
+---
+title: "Interactive Quizzes in Lessons"
+description: "Learn how to use interactive quizzes in your lessons"
+author: "DotCodeSchool Team"
+category: "Author Resources"
+tags: ["Demo", "Guide"]
+date: "2025-05-03"
+last_updated: "2025-05-04"
+---
+
+# Interactive Quizzes in Lessons
+
+This article demonstrates how to use interactive quizzes to enhance the learning experience. Quizzes help reinforce concepts and provide immediate feedback to learners.
+
+## What are Interactive Quizzes?
+
+Interactive quizzes are self-checking questions that allow learners to test their understanding of the material. They provide immediate feedback and explanations to help learners understand why an answer is correct or incorrect.
+
+## Multiple Choice Quizzes
+
+The most common type of quiz is multiple choice. Here's an example:
+
+<Quiz
+  question="What is the command to initialize a new git repository?"
+  type="multipleChoice"
+  options={[
+    { label: "git init", correct: true },
+    { label: "git start", correct: false },
+    { label: "init git", correct: false },
+    { label: "git new", correct: false },
+  ]}
+  explanation="The correct command is `git init`, which initializes a new git repository in the current directory. This creates a .git folder that contains all the necessary repository files."
+/>
+
+<Quiz
+  question="Which of the following is NOT a JavaScript framework or library?"
+  type="multipleChoice"
+  options={[
+    { label: "React", correct: false },
+    { label: "Angular", correct: false },
+    { label: "Vue", correct: false },
+    { label: "Java", correct: true },
+  ]}
+  explanation="Java is a programming language, not a JavaScript framework or library. React, Angular, and Vue are all JavaScript frameworks/libraries used for building web applications."
+/>
+
+## True/False Quizzes
+
+For simple binary questions, you can use the TrueFalseQuiz component:
+
+<TrueFalseQuiz
+  question="React is a JavaScript library developed by Facebook."
+  correct={true}
+  explanation="React is indeed a JavaScript library that was developed by Facebook (now Meta) for building user interfaces."
+/>
+
+<TrueFalseQuiz
+  question="TypeScript is a replacement for JavaScript that cannot be used in web browsers."
+  correct={false}
+  explanation="TypeScript is a superset of JavaScript that adds static typing, but it compiles down to JavaScript and can be used anywhere JavaScript can be used, including web browsers."
+/>
+
+## Fill in the Blank Quizzes
+
+For questions where users need to type an answer, use the FillInTheBlankQuiz component:
+
+<FillInTheBlankQuiz
+  question="What function is used to add an event listener to a DOM element in JavaScript?"
+  answers={["addEventListener", "element.addEventListener"]}
+  explanation="The addEventListener method is used to attach an event handler to a specified element."
+  placeholder="Type your answer here"
+/>
+
+<FillInTheBlankQuiz
+  question="What CSS property is used to change the text color?"
+  answers={["color"]}
+  caseSensitive={false}
+  explanation="The 'color' property is used to set the color of text in CSS."
+/>
+
+## Quiz Groups
+
+You can group related quizzes together to calculate a total score using the QuizGroup component:
+
+<QuizGroup
+  title="JavaScript Fundamentals Quiz"
+  description="Test your knowledge of JavaScript basics"
+>
+  <Quiz
+    question="Which of the following is a primitive data type in JavaScript?"
+    type="multipleChoice"
+    options={[
+      { label: "Array", correct: false },
+      { label: "Object", correct: false },
+      { label: "String", correct: true },
+      { label: "Function", correct: false },
+    ]}
+    explanation="String is a primitive data type in JavaScript. The primitive data types are: string, number, boolean, null, undefined, symbol, and bigint."
+  />
+
+<TrueFalseQuiz
+  question="JavaScript is a statically typed language."
+  correct={false}
+  explanation="JavaScript is a dynamically typed language, which means variable types are determined at runtime, not at compile time."
+/>
+
+  <FillInTheBlankQuiz
+    question="What method is used to add an item to the end of an array in JavaScript?"
+    answers={["push", "array.push"]}
+    explanation="The push() method adds one or more elements to the end of an array and returns the new length of the array."
+  />
+</QuizGroup>
+
+## Using JSX in Explanations
+
+You can use JSX elements in the explanation to provide more detailed feedback:
+
+<Quiz
+  question="What does JSX stand for?"
+  type="multipleChoice"
+  options={[
+    { label: "JavaScript XML", correct: true },
+    { label: "JavaScript Extension", correct: false },
+    { label: "JavaScript Syntax", correct: false },
+    { label: "Java Syntax Extension", correct: false },
+  ]}
+  explanation={
+    <>
+      <p>
+        JSX stands for JavaScript XML. It is a syntax extension for JavaScript
+        recommended by React for describing what the UI should look like.
+      </p>
+      <p>
+        JSX produces React "elements" that can be rendered to the DOM. It looks
+        like HTML but comes with the full power of JavaScript.
+      </p>
+      <pre>
+        <code>{`const element = <h1>Hello, world!</h1>;`}</code>
+      </pre>
+    </>
+  }
+/>
+
+## Benefits of Using Quizzes in Lessons
+
+1. **Immediate feedback**: Learners know right away if they understand the concept
+2. **Reinforcement**: Quizzes help reinforce key concepts through active recall
+3. **Engagement**: Interactive elements keep learners engaged with the material
+4. **Self-assessment**: Learners can gauge their understanding before moving on
+
+## Implementation Details
+
+The Quiz components are implemented with the following features:
+
+- Multiple quiz types (multiple choice, true/false, fill in the blank)
+- Quiz groups for related questions with a total score
+- Responsive, mobile-friendly design
+- Dark mode support
+- Animated feedback
+- LocalStorage persistence to prevent multiple submissions
+- Accessibility considerations

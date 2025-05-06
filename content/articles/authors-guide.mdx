@@ -1,0 +1,464 @@
+---
+title: "Author's Guide: Creating Articles for DotCodeSchool"
+description: "Everything you need to know about writing educational content for the Polkadot community"
+tags: ["Guide", "Documentation", "Writing", "Style Guide"]
+category: "Author Resources"
+author: "DotCodeSchool Team"
+date: "2025-05-02"
+last_updated: "2025-05-04"
+featured: true
+# estimatedTime: 12 # Optional: Estimated reading time in minutes
+---
+
+Welcome to the DotCodeSchool content authoring guide! This template demonstrates all the formatting options available to you when writing articles for our platform. Use this as a reference when creating your own educational content.
+
+## Basic Text Formatting
+
+DotCodeSchool supports standard Markdown syntax for basic text formatting:
+
+- **Bold text** is created with `**double asterisks**`
+- _Italic text_ is created with `*single asterisks*`
+- **_Bold and italic_** is created with `***triple asterisks***`
+- [Hyperlinks](https://polkadot.network) use `[link text](https://url.com)` syntax
+
+## Heading Structure
+
+Use headings to organize your content in a hierarchical structure. We support six levels of headings:
+
+# Heading 1 (Article Title)
+
+## Heading 2 (Main Sections)
+
+### Heading 3 (Sub-sections)
+
+#### Heading 4 (Sub-sub-sections)
+
+##### Heading 5 (Small sections)
+
+###### Heading 6 (Minor points)
+
+Good heading structure improves readability and makes your content more accessible. It also generates the table of contents automatically.
+
+## Lists
+
+### Unordered Lists
+
+Create bullet points with asterisks, plus signs, or hyphens:
+
+- Item one
+- Item two
+  - Nested item (indent with two spaces)
+  - Another nested item
+- Item three
+
+### Ordered Lists
+
+Create numbered lists with numbers followed by periods:
+
+1. First step
+2. Second step
+3. Third step
+   1. Sub-step A (indent with three spaces)
+   2. Sub-step B
+
+## Code Examples
+
+### Inline Code
+
+Use backticks to format `inline code` or technical terms within paragraphs.
+
+### Code Blocks
+
+For multi-line code samples, use triple backticks with a language identifier:
+
+```rust
+#[pallet::weight(10_000)]
+pub fn create_item(
+    origin: OriginFor<T>,
+    item_id: u32,
+    item_name: Vec<u8>,
+) -> DispatchResult {
+    let sender = ensure_signed(origin)?;
+
+    // Ensure the item doesn't already exist
+    ensure!(!ItemExists::<T>::contains_key(item_id), Error::<T>::ItemAlreadyExists);
+
+    // Create a new item
+    let bounded_name: BoundedVec<_, _> = item_name.try_into()
+        .map_err(|_| Error::<T>::NameTooLong)?;
+
+    // Store the item
+    Items::<T>::insert(item_id, (bounded_name, sender.clone()));
+
+    // Emit an event
+    Self::deposit_event(Event::ItemCreated(item_id, sender));
+
+    Ok(())
+}
+```
+
+You can also specify a file name for your code blocks:
+
+```typescript filename="app.ts"
+function calculateTotalSupply(api: ApiPromise): Promise<BigNumber> {
+  return api.query.balances.totalIssuance().then((issuance) => {
+    return new BigNumber(issuance.toString());
+  });
+}
+```
+
+The following languages are supported for syntax highlighting:
+
+- rust
+- typescript/javascript
+- go
+- cpp/c++
+- python
+- solidity
+- json
+- toml
+- yaml
+- sql
+- shell/bash
+
+## Blockquotes
+
+Use the `>` character at the beginning of lines to create blockquotes:
+
+> Substrate provides a flexible framework for blockchain development.
+>
+> — Gavin Wood
+
+## Links
+
+[External links](https://polkadot.network) open in a new tab by default.
+
+For internal links to other articles, use relative paths:
+
+[Introduction to Substrate](/articles/intro-to-substrate)
+
+## Images
+
+Include images with the syntax: `[alt text](image-url)`
+
+![Polkadot Logo](https://public.bnbstatic.com/static/academy/uploads/a7cd5a58229d4ba8a3c4baf072a5dd86.png)
+
+Add alternative text within the square brackets for accessibility.
+
+## Callouts and Notes
+
+For important points, use blockquotes with formatting:
+
+> **Tip:** This offers helpful advice for better results.
+
+For additional information, use callouts:
+
+<InfoBox>
+  **Note:** This is an important note that readers should pay attention to.
+</InfoBox>
+
+<Warning>This highlights a potential problem or risk.</Warning>
+
+<Error>This indicates an error or failure.</Error>
+
+<Success>This indicates a successful outcome or achievement.</Success>
+
+## Advanced Examples
+
+### CLI Command Example
+
+When showing command line instructions, use code blocks with the `bash` or `shell` language:
+
+```bash
+# Install the Substrate node template
+git clone https://github.com/substrate-developer-hub/substrate-node-template
+cd substrate-node-template
+cargo build --release
+```
+
+### Terminal Output Example
+
+Show expected output with a code block:
+
+```
+2023-11-15 10:23:45 🔨 Initializing Genesis block/state (state: 0x5843…1f64, header-hash: 0x6ada…0d38)
+2023-11-15 10:23:45 👴 Loading GRANDPA authority set from genesis on what appears to be first startup.
+2023-11-15 10:23:45 ⏱  Loaded block-time = 6s from block 0x6ada72d82c8a4546aefa34a9486a6f0db71cae88460974690d1efa741f70d38 (0 aka 0x6ada…0d38)
+2023-11-15 10:23:45 Starting consensus session on top of parent 0x6ada72d82c8a4546aefa34a9486a6f0db71cae88460974690d1efa741f70d38
+```
+
+### API Examples
+
+When showing API usage, provide context and explanation:
+
+```typescript
+// Connect to a Substrate node
+const api = await ApiPromise.create({ provider: wsProvider });
+
+// Make a query to get the current validators
+const validators = await api.query.session.validators();
+console.log(`Current validators: ${validators.join(", ")}`);
+
+// Subscribe to new blocks
+const unsubscribe = await api.rpc.chain.subscribeNewHeads((header) => {
+  console.log(`New block #${header.number} has hash ${header.hash}`);
+});
+```
+
+## Proper Attribution
+
+When quoting or referencing others' work, always provide proper attribution:
+
+> "The Polkadot network uses a sophisticated governance mechanism that allows it to evolve gracefully over time at the ultimate behest of its assembled stakeholders."
+>
+> — Polkadot Whitepaper
+
+## Interactive Quizzes
+
+DotCodeSchool now supports interactive quizzes in your MDX content using the `<Quiz />` component. This allows you to create self-checking, multiple-choice questions that provide immediate feedback to learners.
+
+**See demo:** [Interactive Quizzes in Lessons](/articles/quiz-demo)
+
+### Basic Quiz Example
+
+Here's how to create a simple multiple-choice quiz:
+
+```jsx
+<Quiz
+  question="What is React?"
+  type="multipleChoice"
+  options={[
+    {
+      label: "A JavaScript library for building user interfaces",
+      correct: true,
+    },
+    { label: "A programming language", correct: false },
+    { label: "A database management system", correct: false },
+    { label: "A server-side framework", correct: false },
+  ]}
+  explanation="React is a JavaScript library developed by Facebook for building user interfaces, particularly single-page applications."
+/>
+```
+
+This renders as:
+
+<Quiz
+  question="What is React?"
+  type="multipleChoice"
+  options={[
+    {
+      label: "A JavaScript library for building user interfaces",
+      correct: true,
+    },
+    { label: "A programming language", correct: false },
+    { label: "A database management system", correct: false },
+    { label: "A server-side framework", correct: false },
+  ]}
+  explanation="React is a JavaScript library developed by Facebook for building user interfaces, particularly single-page applications."
+/>
+
+### Quiz with JSX in Explanation
+
+You can use JSX elements in the explanation by passing a React element instead of a string:
+
+```jsx
+<Quiz
+  question="What is the command to initialize a new git repository?"
+  type="multipleChoice"
+  options={[
+    { label: "git init", correct: true },
+    { label: "git start", correct: false },
+    { label: "init git", correct: false },
+    { label: "git new", correct: false },
+  ]}
+  explanation={
+    <>
+      <p>
+        The correct command is <code>git init</code>, which initializes a new
+        git repository.
+      </p>
+      <p>
+        This creates a new .git directory in your project that will track all
+        changes.
+      </p>
+    </>
+  }
+/>
+```
+
+### Multiple Choice Quizzes
+
+The most common type of quiz is multiple choice. Here's how to create one:
+
+```jsx
+<Quiz
+  question="What is React?"
+  type="multipleChoice"
+  options={[
+    {
+      label: "A JavaScript library for building user interfaces",
+      correct: true,
+    },
+    { label: "A programming language", correct: false },
+    { label: "A database management system", correct: false },
+    { label: "A server-side framework", correct: false },
+  ]}
+  explanation="React is a JavaScript library developed by Facebook for building user interfaces, particularly single-page applications."
+/>
+```
+
+### True/False Quizzes
+
+For simple binary questions, you can use the TrueFalseQuiz component:
+
+```jsx
+<TrueFalseQuiz
+  question="React is a JavaScript library developed by Facebook."
+  correct={true}
+  explanation="React is indeed a JavaScript library that was developed by Facebook (now Meta) for building user interfaces."
+/>
+```
+
+### Fill in the Blank Quizzes
+
+For questions where users need to type an answer, use the FillInTheBlankQuiz component:
+
+```jsx
+<FillInTheBlankQuiz
+  question="What function is used to add an event listener to a DOM element in JavaScript?"
+  answers={["addEventListener", "element.addEventListener"]} // Multiple acceptable answers
+  caseSensitive={false} // Optional: default is false
+  explanation="The addEventListener method is used to attach an event handler to a specified element."
+  placeholder="Type your answer here" // Optional
+/>
+```
+
+### Quiz Groups
+
+You can group related quizzes together to calculate a total score:
+
+```jsx
+<QuizGroup
+  title="JavaScript Fundamentals"
+  description="Test your knowledge of JavaScript basics"
+>
+  <Quiz
+    question="Which of the following is a primitive data type in JavaScript?"
+    type="multipleChoice"
+    options={[
+      { label: "Array", correct: false },
+      { label: "Object", correct: false },
+      { label: "String", correct: true },
+      { label: "Function", correct: false },
+    ]}
+    explanation="String is a primitive data type in JavaScript."
+  />
+
+  <TrueFalseQuiz
+    question="JavaScript is a statically typed language."
+    correct={false}
+    explanation="JavaScript is a dynamically typed language."
+  />
+
+  <FillInTheBlankQuiz
+    question="What method is used to add an item to the end of an array in JavaScript?"
+    answers={["push", "array.push"]}
+    explanation="The push() method adds elements to the end of an array."
+  />
+</QuizGroup>
+```
+
+### Component Props
+
+#### Quiz Props
+
+- `question` (required): The question text
+- `type` (required): Currently supports "multipleChoice"
+- `options` (required): An array of option objects with `label` and `correct` properties
+- `explanation` (required): Text or JSX explaining the correct answer
+
+#### TrueFalseQuiz Props
+
+- `question` (required): The question text
+- `correct` (required): Boolean indicating whether the correct answer is true or false
+- `explanation` (required): Text or JSX explaining the correct answer
+
+#### FillInTheBlankQuiz Props
+
+- `question` (required): The question text
+- `answers` (required): Array of strings representing acceptable answers
+- `caseSensitive` (optional): Boolean indicating whether answers are case-sensitive (default: false)
+- `explanation` (required): Text or JSX explaining the correct answer
+- `placeholder` (optional): Placeholder text for the input field
+
+#### QuizGroup Props
+
+- `title` (optional): Title for the quiz group
+- `description` (optional): Description text for the quiz group
+- `children` (required): Quiz components to include in the group
+
+### How It Works
+
+- Users can interact with quizzes by selecting options, choosing true/false, or typing answers
+- The component shows whether the answer was correct or incorrect
+- The explanation is displayed after submission
+- The correct answer is highlighted
+- The user's response is stored in localStorage to prevent multiple submissions
+- Quiz groups calculate a total score and show progress
+- All components are fully responsive and support dark mode
+
+## Article Metadata
+
+When creating an article, you need to include metadata in the frontmatter section at the top of your MDX file. This metadata helps with article organization, search, and display.
+
+```yaml
+---
+title: "Your Article Title"
+description: "A concise description of your article"
+tags: ["Tag1", "Tag2", "Tag3"]
+category: "Category Name"
+author: "Your Name"
+date: "2025-05-15"
+featured: false
+estimatedTime: 10 # Optional: Estimated reading time in minutes
+---
+```
+
+### Required Metadata Fields
+
+- **title**: The title of your article
+- **description**: A brief summary (1-2 sentences)
+- **tags**: An array of relevant keywords
+- **category**: The primary category for your article
+- **author**: Your name or username
+- **date**: Publication date in YYYY-MM-DD format
+- **last_updated**: Date when the article was last updated (format: "YYYY-MM-DD")
+
+### Optional Metadata Fields
+
+- **featured**: Set to `true` if this is a featured article
+- **estimatedTime**: The estimated time to read the article in minutes
+
+If you don't provide an `estimatedTime`, the platform will automatically calculate one based on the article length and an average reading speed of 225 words per minute. However, if your article contains complex concepts that might take longer to understand, consider providing your own estimate.
+
+## Best Practices for Authors
+
+1. **Start with an overview**: Briefly explain what the article covers and why it matters.
+2. **Be concise**: Keep sentences clear and straight to the point.
+3. **Use examples**: Illustrate concepts with practical examples.
+4. **Break up text**: Use headings, lists, and code blocks to avoid large text walls.
+5. **Target your audience**: Consider the technical background of your readers.
+6. **Provide context**: Explain why something works, not just how it works.
+7. **Include resources**: Link to additional documentation or tools when relevant.
+8. **Review thoroughly**: Check for technical accuracy and clarity before submitting.
+9. **Provide reading time**: For complex articles, consider providing your own estimated reading time rather than relying on the automatic calculation.
+
+## Submitting Your Content
+
+After preparing your MDX file with proper formatting and frontmatter, submit it via pull request to our content repository. Our editorial team will review it for technical accuracy, clarity, and style before publication.
+
+## Need Help?
+
+If you encounter any issues or have questions about content creation, reach out to the DotCodeSchool team at [batman@dotcodeschool.com](mailto:batman@dotcodeschool.com).
+
+Happy writing!

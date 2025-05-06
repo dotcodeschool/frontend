@@ -1,0 +1,274 @@
+---
+slug: course-contribution-guide
+title: Course Contribution Guide
+description: A comprehensive guide for authors on how to contribute to existing courses or create their own courses using the MDX-based course system.
+tags: ["Guide", "Documentation", "Writing", "Course Creation"]
+category: "Author Resources"
+author: Dot Code School Team
+date: "2025-05-03"
+last_updated: "2025-05-04"
+---
+
+# Course Contribution Guide
+
+This guide provides detailed instructions for authors who want to contribute to existing courses or create their own courses on Dot Code School using our MDX-based course system.
+
+## Table of Contents
+
+1. [Introduction](#introduction)
+2. [Course Structure](#course-structure)
+3. [Creating a New Course](#creating-a-new-course)
+4. [Adding Sections and Lessons](#adding-sections-and-lessons)
+5. [Working with Code Files](#working-with-code-files)
+6. [Creating a Pull Request](#creating-a-pull-request)
+7. [Best Practices](#best-practices)
+
+## Introduction
+
+Dot Code School now supports courses created using MDX (Markdown with JSX) files stored directly in the repository. This approach offers several advantages:
+
+- **Version Control**: All course content is stored in Git, making it easy to track changes and collaborate
+- **Local Development**: Authors can preview their courses locally before submitting
+- **Simplified Workflow**: No need to use a separate CMS or content platform
+- **Flexibility**: Easy to include code examples, interactive elements, and custom components
+
+## Course Structure
+
+Our courses follow a hierarchical structure:
+
+```
+content/courses/course-slug/
+├── course-slug.mdx           # Course metadata and description
+└── sections/                 # Container for all course sections
+    └── section-slug/         # A section of the course
+        ├── section-slug.mdx  # Section metadata
+        └── lessons/          # Container for all lessons in this section
+            ├── lesson-1-slug/    # First lesson directory
+            │   ├── lesson-1-slug.mdx  # Lesson content
+            │   └── files/        # Optional code files for the lesson
+            │       └── source/   # OR template/ and solution/ pair
+            └── lesson-2-slug/    # Second lesson directory
+                ├── lesson-2-slug.mdx  # Lesson content
+                └── files/        # Optional code files
+                    ├── template/ # Files with TODOs for learners
+                    └── solution/ # Completed files for reference
+```
+
+## Creating a New Course
+
+To create a new course:
+
+### Option 1: Using the Template Directory
+
+1. Copy the `content/courses/course-template` directory to create a new course with the recommended structure
+2. Rename the directory to your course slug (e.g., `javascript-basics`)
+3. Rename `course-template.mdx` to match your course slug (e.g., `javascript-basics.mdx`)
+4. Edit the course metadata and content in the renamed file
+5. Customize the sections and lessons to fit your course content
+
+### Option 2: Manual Setup
+
+If you prefer to start from scratch:
+
+1. Create a new directory under `content/courses/` with your course slug
+2. Create a course metadata file named after your course slug
+3. Create a `sections` directory to contain your course sections
+
+### Course Metadata File
+
+The course metadata file (e.g., `javascript-basics.mdx`) should include frontmatter with the following fields:
+
+```mdx
+---
+slug: javascript-basics
+title: JavaScript Basics
+author: Your Name
+author_url: https://github.com/your-username
+description: A concise description of your course.
+level: Beginner | Intermediate | Advanced
+language: Programming language(s) used
+github_url: https://github.com/your-username/your-repo
+tags: ["javascript", "web development", "programming"]
+prerequisites:
+  [
+    "Basic understanding of HTML and CSS",
+    "Familiarity with programming concepts",
+  ]
+what_youll_learn:
+  [
+    "Variables and data types",
+    "Functions and scope",
+    "Objects and arrays",
+    "DOM manipulation",
+    "Asynchronous programming",
+  ]
+estimated_time: 5 # Estimated time to complete in hours
+last_updated: "2025-05-04" # Date when the course was last updated
+---
+
+# JavaScript Basics
+
+This course will teach you the fundamentals of JavaScript programming...
+```
+
+The frontmatter includes these required fields:
+
+- `slug`: Unique identifier for the course (should match directory name)
+- `title`: Display title for the course
+- `author`: Your name or organization
+- `author_url`: Link to your GitHub profile or website
+- `description`: A concise description of the course content
+- `level`: Difficulty level (Beginner, Intermediate, or Advanced)
+- `language`: Programming language(s) used in the course
+- `github_url`: Repository URL (if applicable)
+- `tags`: Array of relevant keywords
+- `prerequisites`: Array of required knowledge or skills
+- `what_youll_learn`: Array of key concepts or skills covered
+- `estimated_time`: Approximate hours to complete the course
+
+## Adding Sections and Lessons
+
+### Creating a Section
+
+1. Create a directory for your section under `sections/` with a descriptive slug (e.g., `getting-started`)
+2. Create a section metadata file (e.g., `getting-started.mdx`) in your section directory
+3. Create a `lessons` directory within your section to contain individual lessons
+
+### Section Metadata
+
+Your section metadata file (e.g., `getting-started.mdx`) should include frontmatter with the following fields:
+
+```mdx
+---
+slug: getting-started
+title: Getting Started
+order: 1 # Determines the order of sections within the course
+description: A brief description of what this section covers
+---
+
+This section introduces the basic concepts of JavaScript and helps you set up your development environment.
+```
+
+### Creating a Lesson
+
+1. Create a directory for your lesson under `lessons/` with a descriptive slug (e.g., `variables`)
+2. Create an MDX file for your lesson content (e.g., `variables.mdx`)
+3. Optionally, create a `files` directory if your lesson includes code examples
+
+### Lesson Metadata
+
+Each lesson MDX file should include frontmatter with at least:
+
+```mdx
+---
+slug: variables
+title: Working with Variables
+order: 1 # Determines the order of lessons within a section
+last_updated: "2025-05-04" # Date when the lesson was last updated
+---
+
+# Working with Variables
+
+In this lesson, you'll learn about variables in JavaScript...
+```
+
+## Working with Code Files
+
+Each lesson can have an optional `files` directory that must follow one of these patterns:
+
+### Source Directory
+
+Use a `source` directory when you want to show the final state of files after an action is taken, without requiring the learner to implement anything themselves:
+
+```
+files/
+└── source/
+    ├── index.html
+    ├── styles.css
+    └── script.js
+```
+
+The `source` directory is ideal for:
+
+- Initial setup steps
+- Demonstrating concepts without requiring implementation
+- Providing reference code that learners can examine
+
+### Template and Solution Directories
+
+Use `template` and `solution` directories when you want learners to implement something themselves:
+
+```
+files/
+├── template/
+│   ├── index.html
+│   ├── styles.css
+│   └── script.js  # Contains TODOs and instructions
+└── solution/
+    ├── index.html
+    ├── styles.css
+    └── script.js  # Contains the completed implementation
+```
+
+The `template`/`solution` pair is ideal for:
+
+- Hands-on coding exercises where learners implement features
+- Teaching specific programming patterns or techniques
+- Guiding learners through a step-by-step implementation
+
+#### Template Files
+
+Template files should include clear TODO comments that guide the learner on what to implement:
+
+```javascript
+// TODO: Declare a variable named 'greeting' using the 'const' keyword
+// TODO: Assign the string "Hello, world!" to the greeting variable
+// TODO: Use console.log to output the greeting to the console
+```
+
+#### Solution Files
+
+Solution files should contain the complete, working implementation:
+
+```javascript
+// Declare a variable named 'greeting' using the 'const' keyword
+const greeting = "Hello, world!";
+// Use console.log to output the greeting to the console
+console.log(greeting);
+```
+
+## Creating a Pull Request
+
+When you're ready to contribute your course or changes:
+
+1. Fork the repository
+2. Create a new branch for your changes
+3. Commit your changes with descriptive commit messages
+4. Push your branch to your fork
+5. Create a pull request to the main repository
+
+### Pull Request Checklist
+
+Before submitting your PR, ensure:
+
+- [ ] Your course follows the directory structure outlined in this guide
+- [ ] Your course metadata file includes all required fields
+- [ ] All section and lesson files include proper frontmatter
+- [ ] Code examples in template/solution pairs match correctly
+- [ ] All links to files use relative paths and are correct
+- [ ] Your content is free of spelling and grammatical errors
+
+## Best Practices
+
+1. **Progressive Complexity**: Structure your course to gradually increase in complexity
+2. **Clear Instructions**: Provide clear, step-by-step instructions for each task
+3. **Explain Why**: Don't just show what to do, explain why it's done that way
+4. **Complete Examples**: Ensure your code examples are complete and functional
+5. **Consistent Style**: Maintain a consistent writing style throughout your course
+6. **Target Audience**: Clearly indicate the prerequisite knowledge for your course
+7. **Test Your Code**: Verify that all code examples work as expected
+8. **Review Your Content**: Have someone else review your course before submitting
+
+By following this guide, you'll create courses that are consistent with our platform's standards and provide an excellent learning experience for our users.
+
+Happy teaching!

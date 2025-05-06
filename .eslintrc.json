@@ -1,15 +1,68 @@
 {
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
   "parser": "@typescript-eslint/parser",
-  "extends": ["next", "next/core-web-vitals"],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "project": "./tsconfig.json",
+    "sourceType": "module"
+  },
+  "ignorePatterns": ["content/**"],
+  "plugins": ["@typescript-eslint", "react"],
+  "overrides": [
+    {
+      "files": ["lib/db/mongodb.ts"],
+      "rules": {
+        "no-var": "off"
+      }
     }
-  },
-  "globals": {
-    "React": "readonly"
-  },
+  ],
   "rules": {
-    "no-unused-vars": "warn"
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ],
+    "@typescript-eslint/no-non-null-assertion": "warn",
+    "@typescript-eslint/no-empty-interface": "warn",
+    "@typescript-eslint/ban-ts-comment": [
+      "warn",
+      {
+        "ts-expect-error": "allow-with-description",
+        "ts-ignore": true,
+        "ts-nocheck": true,
+        "minimumDescriptionLength": 3
+      }
+    ],
+    "prefer-const": "warn",
+    "@typescript-eslint/consistent-type-assertions": "off",
+    "@typescript-eslint/prefer-nullish-coalescing": "off",
+    "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/no-unnecessary-condition": "off",
+    "no-console": [
+      "warn",
+      {
+        "allow": ["warn", "error", "info", "dir", "table"]
+      }
+    ],
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "import/no-default-export": "off",
+    "require-await": "off",
+    "max-len": "off",
+    "complexity": "off",
+    "max-lines-per-function": "off",
+    "max-depth": "off"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }
