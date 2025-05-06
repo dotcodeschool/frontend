@@ -2,7 +2,7 @@ import { Session } from "next-auth";
 import fs from "fs";
 import path from "path";
 
-import { getUserRepo } from "@/lib/api";
+import { getUserRepo, getCourseFromDb } from "@/lib/api";
 import { getContentfulData } from "@/lib/api/contentful";
 
 import {
@@ -115,27 +115,51 @@ const getStartCourseUrl = async (
   const setupUrl = `/courses/${slug}/setup`;
   const repoSetupUrl = `${setupUrl}?step=repo_test`;
   const lessonsUrl = `/courses/${slug}/lesson/1/chapter/1`;
+  
+  console.log("[getStartCourseUrl] format:", format, "slug:", slug, "sessionContext:", !!sessionContext);
+  
+  // Check if this is an in-browser course
   const isInBrowserCourse = format === "inBrowserCourse";
+  console.log("[getStartCourseUrl] isInBrowserCourse:", isInBrowserCourse);
 
   // For in-browser courses, go directly to lessons
   if (isInBrowserCourse) {
+    console.log("[getStartCourseUrl] In-browser course, redirecting to lessons");
     return lessonsUrl;
   }
 
   // For on-machine courses, check if repo is set up
   try {
+    console.log("[getStartCourseUrl] On-machine course, checking repo");
+    
+    // Check if user is logged in
+    if (!sessionContext || !sessionContext.user) {
+      console.log("[getStartCourseUrl] No session context or user, redirecting to repo setup");
+      return repoSetupUrl;
+    }
+    
+    // Check if the course exists in the database
+    const course = await getCourseFromDb(slug);
+    if (!course) {
+      console.error("[getStartCourseUrl] Course not found in database:", slug);
+      console.log("[getStartCourseUrl] Redirecting to repo setup as fallback");
+      return repoSetupUrl;
+    }
+    
     const repo = await getUserRepo(slug, sessionContext);
-    console.log("getUserRepo result:", repo);
+    console.log("[getStartCourseUrl] getUserRepo result:", repo);
 
     // If repo exists and is set up properly, go to lessons
-    if (repo && repo.test_ok) {
+    if (repo && repo.test_ok === true) {
+      console.log("[getStartCourseUrl] Repo exists and is set up, redirecting to lessons");
       return lessonsUrl;
     }
 
     // Otherwise, go to repo setup
+    console.log("[getStartCourseUrl] Repo doesn't exist or isn't set up, redirecting to repo setup");
     return repoSetupUrl;
   } catch (error) {
-    console.error("Error checking user repo:", error);
+    console.error("[getStartCourseUrl] Error checking user repo:", error);
     // If there's an error, default to repo setup
     return repoSetupUrl;
   }
