@@ -117,9 +117,17 @@ export const SidebarNavigation = ({
                   px={4}
                   _hover={{ bg: hoverBg }}
                   fontWeight="medium"
-                  bg={isSectionActive && !currentLessonId ? activeBg : "transparent"}
+                  bg={
+                    isSectionActive && !currentLessonId
+                      ? activeBg
+                      : "transparent"
+                  }
                   borderLeft="4px solid"
-                  borderColor={isSectionActive && !currentLessonId ? "green.500" : "transparent"}
+                  borderColor={
+                    isSectionActive && !currentLessonId
+                      ? "green.500"
+                      : "transparent"
+                  }
                 >
                   <Link
                     as={NextLink}

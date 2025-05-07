@@ -53,42 +53,47 @@ const SectionPage = async ({ params }: SectionPageProps) => {
     const currentSectionIndex = mdxCourse.sections.findIndex(
       (s) => s.id === sectionId,
     );
-    
+
     // Get the previous section (if any)
     const prevSection = mdxCourse.sections[currentSectionIndex - 1];
-    
+
     // Get the next section (if any)
     const nextSection = mdxCourse.sections[currentSectionIndex + 1];
-    
+
     // Get the first lesson of the current section (if any)
-    const firstLessonOfCurrentSection = section.lessons.length > 0 ? section.lessons[0] : null;
-    
+    const firstLessonOfCurrentSection =
+      section.lessons.length > 0 ? section.lessons[0] : null;
+
     // Get the last lesson of the previous section (if any)
-    const lastLessonOfPrevSection = prevSection && prevSection.lessons.length > 0 
-      ? prevSection.lessons[prevSection.lessons.length - 1] 
-      : null;
-    
+    const lastLessonOfPrevSection =
+      prevSection && prevSection.lessons.length > 0
+        ? prevSection.lessons[prevSection.lessons.length - 1]
+        : null;
+
     // Get the first lesson of the next section (if any)
-    const firstLessonOfNextSection = nextSection && nextSection.lessons.length > 0
-      ? nextSection.lessons[0]
-      : null;
-    
+    const firstLessonOfNextSection =
+      nextSection && nextSection.lessons.length > 0
+        ? nextSection.lessons[0]
+        : null;
+
     // Prepare navigation links
     // Previous link: Last lesson of previous section or null
     const prevLink = lastLessonOfPrevSection
       ? `/courses/${course}/lesson/${prevSection.id}/${lastLessonOfPrevSection.id}`
       : null;
-    
+
     // Next link: First lesson of current section, or first lesson of next section, or course overview
     const nextLink = firstLessonOfCurrentSection
       ? `/courses/${course}/lesson/${sectionId}/${firstLessonOfCurrentSection.id}`
       : firstLessonOfNextSection
         ? `/courses/${course}/lesson/${nextSection.id}/${firstLessonOfNextSection.id}`
         : `/courses/${course}`;
-    
-    const prevTitle = lastLessonOfPrevSection ? lastLessonOfPrevSection.title : null;
-    const nextTitle = firstLessonOfCurrentSection 
-      ? firstLessonOfCurrentSection.title 
+
+    const prevTitle = lastLessonOfPrevSection
+      ? lastLessonOfPrevSection.title
+      : null;
+    const nextTitle = firstLessonOfCurrentSection
+      ? firstLessonOfCurrentSection.title
       : firstLessonOfNextSection
         ? firstLessonOfNextSection.title
         : "Finish Course";
