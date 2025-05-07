@@ -86,7 +86,10 @@ dotcodeschool test
                   </Box>
                 )}
               </Box>
-              <TestLogDisplayModal logstreamId={logstreamId ?? ""} />
+              <TestLogDisplayModal
+                logstreamId={logstreamId ?? ""}
+                repoName={repoName ?? ""}
+              />
             </AccordionPanel>
           </>
         )}
