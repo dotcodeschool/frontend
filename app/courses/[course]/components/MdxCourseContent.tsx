@@ -54,7 +54,7 @@ const MdxCourseContent = async ({ slug }: { slug: string }) => {
       {/* Start button */}
       <ButtonPrimary
         as="a"
-        href={`/courses/${slug}/lesson/${mdxCourse.sections[0]?.id}/${mdxCourse.sections[0]?.lessons[0]?.id}`}
+        href={`/courses/${slug}/lesson/${mdxCourse.sections[0]?.id}`}
         my={8}
         px={12}
         size="lg"
