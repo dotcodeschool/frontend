@@ -115,7 +115,7 @@ interface PolkadotClient {
    */
   submit: (
     transaction: HexString,
-    at?: HexString
+    at?: HexString,
   ) => Promise<TxFinalizedPayload>;
   /**
    * Broadcast a transaction and returns an Observable. The observable will
@@ -130,7 +130,7 @@ interface PolkadotClient {
    */
   submitAndWatch: (
     transaction: HexString,
-    at?: HexString
+    at?: HexString,
   ) => Observable<TxBroadcastEvent>;
 
   /**
@@ -163,7 +163,7 @@ interface PolkadotClient {
    */
   _request: <Reply = any, Params extends Array<any> = any[]>(
     method: string,
-    params: Params
+    params: Params,
   ) => Promise<Reply>;
 }
 ```

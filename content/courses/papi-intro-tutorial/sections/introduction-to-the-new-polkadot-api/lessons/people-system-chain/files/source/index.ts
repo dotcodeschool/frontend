@@ -20,13 +20,13 @@ async function printChainInfo(client: PolkadotClient) {
   const chain = await client.getChainSpecData();
   const finalizedBlock = await client.getFinalizedBlock();
   console.log(
-    `Connected to ${chain.name} at block ${finalizedBlock.number}.\n`
+    `Connected to ${chain.name} at block ${finalizedBlock.number}.\n`,
   );
 }
 
 async function getBalance(
   polkadotClient: PolkadotClient,
-  address: SS58String
+  address: SS58String,
 ): Promise<BigInt> {
   const dotApi = polkadotClient.getTypedApi(dot);
   const accountInfo = await dotApi.query.System.Account.getValue(address);
