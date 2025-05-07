@@ -72,8 +72,12 @@ const MdxCourseContent = async ({ slug }: { slug: string }) => {
       />
 
       {/* Truncated description and What You'll Learn side by side */}
-      <Grid templateColumns={{ base: "1fr", md: "2fr 1fr" }} gap={6} my={12}>
-        <GridItem>
+      <Grid
+        templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
+        gap={6}
+        my={12}
+      >
+        <GridItem colSpan={2}>
           {/* Truncated description (client component) */}
           <TruncatedDescription
             content={mdxCourse.content}
