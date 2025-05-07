@@ -12,6 +12,7 @@ import { bundleMdxContent } from "@/lib/mdx-bundle";
 import { getMdxCourseDetails } from "../../../helpers/getMdxCourseDetails";
 import dynamic from "next/dynamic";
 import { getLanguageFromFileName } from "./utils/getLanguageFromFileName";
+import { getFilesRecursively } from "./utils/getFilesRecursively";
 
 // Dynamically import components to avoid SSR issues
 const MdxLessonView = dynamic(() =>
@@ -75,59 +76,56 @@ const LessonPage = async ({ params }: LessonPageProps) => {
         lesson.fileType === "source" &&
         fs.existsSync(path.join(filesDir, "source"))
       ) {
-        sourceFiles = fs
-          .readdirSync(path.join(filesDir, "source"))
-          .filter((file) => !file.startsWith("."))
-          .filter((file) => {
-            // Check if it's a file, not a directory
-            const filePath = path.join(filesDir, "source", file);
-            return fs.statSync(filePath).isFile();
-          })
-          .map((file) => ({
-            fileName: file,
-            path: `/content/courses/${course}/sections/${sectionId}/lessons/${lessonId}/files/source/${file}`,
-            code: fs.readFileSync(path.join(filesDir, "source", file), "utf8"),
-            language: getLanguageFromFileName(file),
-          }));
+        const sourceDir = path.join(filesDir, "source");
+        const sourceFilePaths = getFilesRecursively(sourceDir, sourceDir);
+        
+        sourceFiles = sourceFilePaths.map((filePath) => {
+          const fullPath = path.join(sourceDir, filePath);
+          // Use the relative path for display, but keep directory structure
+          const displayPath = filePath.replace(/\\/g, '/'); // Normalize path separators for display
+          
+          return {
+            fileName: displayPath, // Use relative path including subdirectories
+            path: `/content/courses/${course}/sections/${sectionId}/lessons/${lessonId}/files/source/${displayPath}`,
+            code: fs.readFileSync(fullPath, "utf8"),
+            language: getLanguageFromFileName(path.basename(filePath)),
+          };
+        });
       } else if (lesson.fileType === "template-solution") {
         if (fs.existsSync(path.join(filesDir, "template"))) {
-          templateFiles = fs
-            .readdirSync(path.join(filesDir, "template"))
-            .filter((file) => !file.startsWith("."))
-            .filter((file) => {
-              // Check if it's a file, not a directory
-              const filePath = path.join(filesDir, "template", file);
-              return fs.statSync(filePath).isFile();
-            })
-            .map((file) => ({
-              fileName: file,
-              path: `/content/courses/${course}/sections/${sectionId}/lessons/${lessonId}/files/template/${file}`,
-              code: fs.readFileSync(
-                path.join(filesDir, "template", file),
-                "utf8",
-              ),
-              language: getLanguageFromFileName(file),
-            }));
+          const templateDir = path.join(filesDir, "template");
+          const templateFilePaths = getFilesRecursively(templateDir, templateDir);
+          
+          templateFiles = templateFilePaths.map((filePath) => {
+            const fullPath = path.join(templateDir, filePath);
+            // Use the relative path for display, but keep directory structure
+            const displayPath = filePath.replace(/\\/g, '/'); // Normalize path separators for display
+            
+            return {
+              fileName: displayPath, // Use relative path including subdirectories
+              path: `/content/courses/${course}/sections/${sectionId}/lessons/${lessonId}/files/template/${displayPath}`,
+              code: fs.readFileSync(fullPath, "utf8"),
+              language: getLanguageFromFileName(path.basename(filePath)),
+            };
+          });
         }
 
         if (fs.existsSync(path.join(filesDir, "solution"))) {
-          solutionFiles = fs
-            .readdirSync(path.join(filesDir, "solution"))
-            .filter((file) => !file.startsWith("."))
-            .filter((file) => {
-              // Check if it's a file, not a directory
-              const filePath = path.join(filesDir, "solution", file);
-              return fs.statSync(filePath).isFile();
-            })
-            .map((file) => ({
-              fileName: file,
-              path: `/content/courses/${course}/sections/${sectionId}/lessons/${lessonId}/files/solution/${file}`,
-              code: fs.readFileSync(
-                path.join(filesDir, "solution", file),
-                "utf8",
-              ),
-              language: getLanguageFromFileName(file),
-            }));
+          const solutionDir = path.join(filesDir, "solution");
+          const solutionFilePaths = getFilesRecursively(solutionDir, solutionDir);
+          
+          solutionFiles = solutionFilePaths.map((filePath) => {
+            const fullPath = path.join(solutionDir, filePath);
+            // Use the relative path for display, but keep directory structure
+            const displayPath = filePath.replace(/\\/g, '/'); // Normalize path separators for display
+            
+            return {
+              fileName: displayPath, // Use relative path including subdirectories
+              path: `/content/courses/${course}/sections/${sectionId}/lessons/${lessonId}/files/solution/${displayPath}`,
+              code: fs.readFileSync(fullPath, "utf8"),
+              language: getLanguageFromFileName(path.basename(filePath)),
+            };
+          });
         }
       }
     }

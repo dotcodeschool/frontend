@@ -33,7 +33,7 @@ const CoursesPage = async () => {
   const slugOrder = [
     "sample-course", // Our local MDX course
     "rust-state-machine",
-    "in-browser-substrate-kitties",
+    "substrate-kitties",
     "intro-to-papi",
   ];
 
