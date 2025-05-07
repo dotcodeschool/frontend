@@ -22,7 +22,13 @@
     "strict": true,
     "target": "es5"
   },
-  "exclude": ["node_modules", "content/**/*.ts", "content/**/*.tsx", "content/**/*.js", "content/**/*.jsx"],
+  "exclude": [
+    "node_modules",
+    "content/**/*.ts",
+    "content/**/*.tsx",
+    "content/**/*.js",
+    "content/**/*.jsx"
+  ],
   "include": [
     "next-env.d.ts",
     "**/*.ts",
