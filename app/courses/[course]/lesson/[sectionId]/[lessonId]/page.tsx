@@ -78,6 +78,11 @@ const LessonPage = async ({ params }: LessonPageProps) => {
         sourceFiles = fs
           .readdirSync(path.join(filesDir, "source"))
           .filter((file) => !file.startsWith("."))
+          .filter((file) => {
+            // Check if it's a file, not a directory
+            const filePath = path.join(filesDir, "source", file);
+            return fs.statSync(filePath).isFile();
+          })
           .map((file) => ({
             fileName: file,
             path: `/content/courses/${course}/sections/${sectionId}/lessons/${lessonId}/files/source/${file}`,
@@ -89,6 +94,11 @@ const LessonPage = async ({ params }: LessonPageProps) => {
           templateFiles = fs
             .readdirSync(path.join(filesDir, "template"))
             .filter((file) => !file.startsWith("."))
+            .filter((file) => {
+              // Check if it's a file, not a directory
+              const filePath = path.join(filesDir, "template", file);
+              return fs.statSync(filePath).isFile();
+            })
             .map((file) => ({
               fileName: file,
               path: `/content/courses/${course}/sections/${sectionId}/lessons/${lessonId}/files/template/${file}`,
@@ -104,6 +114,11 @@ const LessonPage = async ({ params }: LessonPageProps) => {
           solutionFiles = fs
             .readdirSync(path.join(filesDir, "solution"))
             .filter((file) => !file.startsWith("."))
+            .filter((file) => {
+              // Check if it's a file, not a directory
+              const filePath = path.join(filesDir, "solution", file);
+              return fs.statSync(filePath).isFile();
+            })
             .map((file) => ({
               fileName: file,
               path: `/content/courses/${course}/sections/${sectionId}/lessons/${lessonId}/files/solution/${file}`,
