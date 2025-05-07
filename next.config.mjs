@@ -18,6 +18,30 @@ const nextConfig = {
       },
     ];
   },
+  webpack: (config, { isServer }) => {
+    // Exclude JS/TS files in the content directory from being processed by webpack
+    config.module.rules.forEach((rule) => {
+      if (
+        rule.test &&
+        rule.test.test &&
+        (rule.test.test(".js") ||
+          rule.test.test(".ts") ||
+          rule.test.test(".tsx") ||
+          rule.test.test(".jsx"))
+      ) {
+        if (!rule.exclude) {
+          rule.exclude = [];
+        } else if (!Array.isArray(rule.exclude)) {
+          rule.exclude = [rule.exclude];
+        }
+
+        // Add content directory to exclude
+        rule.exclude.push(/content/);
+      }
+    });
+
+    return config;
+  },
 };
 
 const withMDX = createMDX({
