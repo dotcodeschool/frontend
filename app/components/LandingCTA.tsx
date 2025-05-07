@@ -35,8 +35,7 @@ const LandingCTA = () => (
       as={Link}
       colorScheme="gray"
       fontSize="xl"
-      href="https://forms.gle/2o4hBauCJ6Fkf9Zz7"
-      isExternal
+      href="/articles"
       p={8}
       variant="solid"
       w={{
@@ -44,7 +43,7 @@ const LandingCTA = () => (
         md: "auto",
       }}
     >
-      Become a Teacher
+      Explore Articles
     </Button>
   </ButtonGroup>
 );
