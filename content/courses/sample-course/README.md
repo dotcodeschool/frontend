@@ -1,4 +1,4 @@
-# Course Template
+# PAPI is AWESOME!
 
 This directory contains a template structure for creating new courses on Dot Code School. You can use this as a starting point for your own courses.
 
