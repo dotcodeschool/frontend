@@ -171,29 +171,30 @@ const LessonPage = async ({ params }: LessonPageProps) => {
     }
 
     // Prepare navigation links
-    const prevLink = prevLesson
-      ? `/courses/${course}/lesson/${sectionId}/${prevLesson.id}`
-      : prevSectionLastLesson && prevSection
-        ? `/courses/${course}/lesson/${prevSection.id}/${prevSectionLastLesson.id}`
-        : null;
+    // If this is the first lesson of the section, previous should go to the previous section
+    // If this is the last lesson of the section, next should go to the next section
+    const isFirstLesson = currentLessonIndex === 0;
+    const isLastLesson = currentLessonIndex === section.lessons.length - 1;
 
-    const nextLink = nextLesson
-      ? `/courses/${course}/lesson/${sectionId}/${nextLesson.id}`
-      : nextSectionFirstLesson && nextSection
-        ? `/courses/${course}/lesson/${nextSection.id}/${nextSectionFirstLesson.id}`
-        : `/courses/${course}`;
+    const prevLink = isFirstLesson
+      ? `/courses/${course}/lesson/${sectionId}`
+      : `/courses/${course}/lesson/${sectionId}/${prevLesson.id}`;
 
-    const prevTitle = prevLesson
-      ? prevLesson.title
-      : prevSectionLastLesson
-        ? prevSectionLastLesson.title
-        : null;
+    const nextLink = isLastLesson
+      ? nextSection
+        ? `/courses/${course}/lesson/${nextSection.id}`
+        : `/courses/${course}`
+      : `/courses/${course}/lesson/${sectionId}/${nextLesson.id}`;
 
-    const nextTitle = nextLesson
-      ? nextLesson.title
-      : nextSectionFirstLesson
-        ? nextSectionFirstLesson.title
-        : "Finish Course";
+    const prevTitle = isFirstLesson
+      ? section.title // Use current section title when going back to section page
+      : prevLesson.title;
+
+    const nextTitle = isLastLesson
+      ? nextSection
+        ? nextSection.title
+        : "Finish Course"
+      : nextLesson.title;
 
     // Bundle the MDX content
     let bundledContent = "";

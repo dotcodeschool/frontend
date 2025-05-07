@@ -108,66 +108,79 @@ export const SidebarNavigation = ({
           allowMultiple
           defaultIndex={sections.findIndex((s) => s.id === currentSectionId)}
         >
-          {sections.map((section) => (
-            <AccordionItem key={section.id} border="none">
-              <AccordionButton
-                py={3}
-                px={4}
-                _hover={{ bg: hoverBg }}
-                fontWeight="medium"
-              >
-                <Box flex="1" textAlign="left">
-                  {section.title}
-                </Box>
-                <AccordionIcon />
-              </AccordionButton>
-              <AccordionPanel pb={4} px={0}>
-                <VStack align="stretch" spacing={1}>
-                  {section.lessons.map((lesson) => {
-                    const isActive =
-                      section.id === currentSectionId &&
-                      lesson.id === currentLessonId;
-                    return (
-                      <Box
-                        key={lesson.id}
-                        bg={isActive ? activeBg : "transparent"}
-                        _hover={{ bg: hoverBg }}
-                        borderLeft="4px solid"
-                        borderColor={isActive ? "green.500" : "transparent"}
-                      >
-                        <Link
-                          as={NextLink}
-                          href={`/courses/${courseSlug}/lesson/${section.id}/${lesson.id}`}
-                          display="block"
-                          py={2}
-                          px={6}
-                          fontSize="sm"
+          {sections.map((section) => {
+            const isSectionActive = section.id === currentSectionId;
+            return (
+              <AccordionItem key={section.id} border="none">
+                <AccordionButton
+                  py={3}
+                  px={4}
+                  _hover={{ bg: hoverBg }}
+                  fontWeight="medium"
+                  bg={isSectionActive && !currentLessonId ? activeBg : "transparent"}
+                  borderLeft="4px solid"
+                  borderColor={isSectionActive && !currentLessonId ? "green.500" : "transparent"}
+                >
+                  <Link
+                    as={NextLink}
+                    href={`/courses/${courseSlug}/lesson/${section.id}`}
+                    flex="1"
+                    textAlign="left"
+                    _hover={{ textDecoration: "none" }}
+                    onClick={(e) => e.stopPropagation()} // Prevent accordion from toggling when clicking the link
+                  >
+                    {section.title}
+                  </Link>
+                  {section.lessons.length > 0 && <AccordionIcon />}
+                </AccordionButton>
+                <AccordionPanel pb={4} px={0}>
+                  <VStack align="stretch" spacing={1}>
+                    {section.lessons.map((lesson) => {
+                      const isActive =
+                        section.id === currentSectionId &&
+                        lesson.id === currentLessonId;
+                      return (
+                        <Box
+                          key={lesson.id}
+                          bg={isActive ? activeBg : "transparent"}
+                          _hover={{ bg: hoverBg }}
+                          borderLeft="4px solid"
+                          borderColor={isActive ? "green.500" : "transparent"}
                         >
-                          <HStack spacing={2}>
-                            <Icon
-                              as={
-                                lesson.completed
-                                  ? IoCheckmarkCircle
-                                  : IoEllipseOutline
-                              }
-                              color={
-                                lesson.completed
-                                  ? iconColor
-                                  : isMobile
-                                    ? "gray.300"
-                                    : "gray.400"
-                              }
-                            />
-                            <Text>{lesson.title}</Text>
-                          </HStack>
-                        </Link>
-                      </Box>
-                    );
-                  })}
-                </VStack>
-              </AccordionPanel>
-            </AccordionItem>
-          ))}
+                          <Link
+                            as={NextLink}
+                            href={`/courses/${courseSlug}/lesson/${section.id}/${lesson.id}`}
+                            display="block"
+                            py={2}
+                            px={6}
+                            fontSize="sm"
+                          >
+                            <HStack spacing={2}>
+                              <Icon
+                                as={
+                                  lesson.completed
+                                    ? IoCheckmarkCircle
+                                    : IoEllipseOutline
+                                }
+                                color={
+                                  lesson.completed
+                                    ? iconColor
+                                    : isMobile
+                                      ? "gray.300"
+                                      : "gray.400"
+                                }
+                              />
+                              <Text>{lesson.title}</Text>
+                            </HStack>
+                          </Link>
+                        </Box>
+                      );
+                    })}
+                  </VStack>
+                </AccordionPanel>
+              </AccordionItem>
+            );
+          })}
         </Accordion>
       </Box>
     </Box>
