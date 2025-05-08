@@ -28,6 +28,8 @@ export const getLanguageFromFileName = (fileName: string): string => {
       return "python";
     case "rs":
       return "rust";
+    case "toml":
+      return "rust"; // Format TOML files as Rust
     case "go":
       return "go";
     case "java":
