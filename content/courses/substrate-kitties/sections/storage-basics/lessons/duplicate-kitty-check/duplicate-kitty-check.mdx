@@ -22,7 +22,7 @@ Well, there are two reasons:
 1. Just like `StorageValue`, you can set a `StorageMap` with `QueryKind = ValueQuery`, thus we would no longer return an `Option` for you to check, and we would "hide" the fact that the map is empty at that key. So this API is the only way to check if the value ACTUALLY exists or not.
 2. The `contains_key` API is strictly more efficient than the `get` API. The `get` API returns the value, which means we need to go into the database, read the bits, serialize it to a Rust type, pass that back to the Pallet, and assign it to the variable.
 
-   On the other hand, `contains_key` can simply check if the value exists in the database, and only return back the boolean result. No need to serialize all the bytes, store the variable, or any of that.
+	On the other hand, `contains_key` can simply check if the value exists in the database, and only return back the boolean result. No need to serialize all the bytes, store the variable, or any of that.
 
 This same trick applies to `StorageValue` too. Rather than calling `get`, you can call `exists`, which provides the same api as `contains_key`.
 

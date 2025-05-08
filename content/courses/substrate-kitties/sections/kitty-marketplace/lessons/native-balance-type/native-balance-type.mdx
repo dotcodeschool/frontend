@@ -39,33 +39,33 @@ pub type BalanceOf<T> =
 This is kind of a crazy line of code, so let's break it down:
 
 - At the very end, there is a `Balance` type. This is what we want to access and alias.
-  ```rust
-  Balance
-  ```
+	```rust
+	Balance
+	```
 - This `Balance` type is part of the `Inspect` trait.
-  ```rust
-  Inspect::Balance
-  ```
+	```rust
+	Inspect::Balance
+	```
 - The `Inspect` trait is generic over `AccountId`, so we need to include that.
-  ```rust
-  Inspect<AccountId>::Balance
-  ```
+	```rust
+	Inspect<AccountId>::Balance
+	```
 - The `AccountId` type comes from `T`, through `frame_system::Config`, where the type is defined.
-  ```rust
-  Inspect<<T as frame_system::Config>::AccountId>::Balance
-  ```
+	```rust
+	Inspect<<T as frame_system::Config>::AccountId>::Balance
+	```
 - The `Inspect` is accessible through the `NativeBalance` associated type.
-  ```rust
-  <NativeBalance as Inspect<<T as frame_system::Config>::AccountId>>::Balance
-  ```
+	```rust
+	<NativeBalance as Inspect<<T as frame_system::Config>::AccountId>>::Balance
+	```
 - The `NativeBalance` type also comes from `T`, but though our pallet's own `Config`.
-  ```rust
-  <<T as Config>::NativeBalance as Inspect<<T as frame_system::Config>::AccountId>>::Balance
-  ```
+	```rust
+	<<T as Config>::NativeBalance as Inspect<<T as frame_system::Config>::AccountId>>::Balance
+	```
 - Finally, we assign this to a new alias `BalanceOf` which is generic over `<T>`.
-  ```rust
-  pub type BalanceOf<T> = <<T as Config>::NativeBalance as Inspect<<T as frame_system::Config>::AccountId>>::Balance
-  ```
+	```rust
+	pub type BalanceOf<T> = <<T as Config>::NativeBalance as Inspect<<T as frame_system::Config>::AccountId>>::Balance
+	```
 
 Phew! Did you get all that? If not, don't worry too much. You can review these Rust concepts after you complete the tutorial, but there is nothing here which is specific to the `polkadot-sdk`.
 
