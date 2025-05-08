@@ -8,3 +8,5 @@ next.config.mjs
 *.config.js
 *.config.mjs
 src/lambda/test.js
+content/**/*
+!content/**/*.mdx

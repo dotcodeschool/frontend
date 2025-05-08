@@ -1,5 +1,7 @@
 dist
 node_modules
 package.json
+content/**/*
+!content/**/*.mdx
 
 # Ignore all files
