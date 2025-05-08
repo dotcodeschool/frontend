@@ -6,11 +6,11 @@ import * as diffLib from "diff";
 // Files to ignore
 const IGNORED_FILES = [
   "Cargo.lock",
-  // Hidden files
   ".gitignore",
   ".DS_Store",
   "target",
   "node_modules",
+  "bun.lockb",
 ];
 
 /**
@@ -57,7 +57,6 @@ export const getFilesRecursively = (dir: string, baseDir: string): string[] => {
       const subDirFiles = getFilesRecursively(fullPath, baseDir);
       files.push(...subDirFiles);
     } else if (entry.isFile()) {
-
       // Add file path relative to the baseDir
       const relativePath = path.relative(baseDir, fullPath);
       files.push(relativePath);
