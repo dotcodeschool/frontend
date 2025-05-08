@@ -34,7 +34,7 @@ const CoursesPage = async () => {
     "sample-course", // Our local MDX course
     "rust-state-machine",
     "substrate-kitties",
-    "intro-to-papi",
+    "papi-intro-tutorial",
   ];
 
   // Sort courses according to the slugOrder array
