@@ -12,7 +12,7 @@ import { bundleMdxContent } from "@/lib/mdx-bundle";
 import { getMdxCourseDetails } from "../../../helpers/getMdxCourseDetails";
 import dynamic from "next/dynamic";
 import { getLanguageFromFileName } from "./utils/getLanguageFromFileName";
-import { getFilesRecursively } from "./utils/getFilesRecursively";
+import { getChangedFiles } from "./utils/getChangedFiles";
 
 // Dynamically import components to avoid SSR issues
 const MdxLessonView = dynamic(() =>
@@ -55,79 +55,25 @@ const LessonPage = async ({ params }: LessonPageProps) => {
       return notFound();
     }
 
-    // Get lesson files if they exist
+    // Get lesson files if they exist - only show files that have changed
     let sourceFiles = null;
     let templateFiles = null;
     let solutionFiles = null;
+    let shouldShowEditor = false;
 
     if (lesson.hasFiles) {
-      const filesDir = path.join(
-        process.cwd(),
-        "content/courses",
+      // Get files that have changed compared to the previous lesson
+      const fileData = await getChangedFiles(
         course,
-        "sections",
         sectionId,
-        "lessons",
         lessonId,
-        "files",
+        section.lessons
       );
-
-      if (
-        lesson.fileType === "source" &&
-        fs.existsSync(path.join(filesDir, "source"))
-      ) {
-        const sourceDir = path.join(filesDir, "source");
-        const sourceFilePaths = getFilesRecursively(sourceDir, sourceDir);
-        
-        sourceFiles = sourceFilePaths.map((filePath) => {
-          const fullPath = path.join(sourceDir, filePath);
-          // Use the relative path for display, but keep directory structure
-          const displayPath = filePath.replace(/\\/g, '/'); // Normalize path separators for display
-          
-          return {
-            fileName: displayPath, // Use relative path including subdirectories
-            path: `/content/courses/${course}/sections/${sectionId}/lessons/${lessonId}/files/source/${displayPath}`,
-            code: fs.readFileSync(fullPath, "utf8"),
-            language: getLanguageFromFileName(path.basename(filePath)),
-          };
-        });
-      } else if (lesson.fileType === "template-solution") {
-        if (fs.existsSync(path.join(filesDir, "template"))) {
-          const templateDir = path.join(filesDir, "template");
-          const templateFilePaths = getFilesRecursively(templateDir, templateDir);
-          
-          templateFiles = templateFilePaths.map((filePath) => {
-            const fullPath = path.join(templateDir, filePath);
-            // Use the relative path for display, but keep directory structure
-            const displayPath = filePath.replace(/\\/g, '/'); // Normalize path separators for display
-            
-            return {
-              fileName: displayPath, // Use relative path including subdirectories
-              path: `/content/courses/${course}/sections/${sectionId}/lessons/${lessonId}/files/template/${displayPath}`,
-              code: fs.readFileSync(fullPath, "utf8"),
-              language: getLanguageFromFileName(path.basename(filePath)),
-            };
-          });
-        }
-
-        if (fs.existsSync(path.join(filesDir, "solution"))) {
-          const solutionDir = path.join(filesDir, "solution");
-          const solutionFilePaths = getFilesRecursively(solutionDir, solutionDir);
-          
-          solutionFiles = solutionFilePaths.map((filePath) => {
-            const fullPath = path.join(solutionDir, filePath);
-            // Use the relative path for display, but keep directory structure
-            const displayPath = filePath.replace(/\\/g, '/'); // Normalize path separators for display
-            
-            return {
-              fileName: displayPath, // Use relative path including subdirectories
-              path: `/content/courses/${course}/sections/${sectionId}/lessons/${lessonId}/files/solution/${displayPath}`,
-              code: fs.readFileSync(fullPath, "utf8"),
-              language: getLanguageFromFileName(path.basename(filePath)),
-            };
-          });
-        }
-      }
+      
+      sourceFiles = fileData.sourceFiles;
+      templateFiles = fileData.templateFiles;
+      solutionFiles = fileData.solutionFiles;
+      shouldShowEditor = fileData.shouldShowEditor;
     }
 
     // Find next and previous lessons
@@ -214,6 +160,7 @@ const LessonPage = async ({ params }: LessonPageProps) => {
       sourceFiles,
       templateFiles,
       solutionFiles,
+      shouldShowEditor, // Add flag to control whether to show the editor
       navigation: {
         prev: prevLink ? { link: prevLink, title: prevTitle } : null,
         next: { link: nextLink, title: nextTitle },
@@ -224,6 +171,8 @@ const LessonPage = async ({ params }: LessonPageProps) => {
       currentLessonId: lessonId,
       sections: mdxCourse.sections,
     };
+
+    console.log("/lesson/[sectionId]/[lessonId] files: ", sourceFiles, templateFiles, solutionFiles)
 
     return (
       <Box

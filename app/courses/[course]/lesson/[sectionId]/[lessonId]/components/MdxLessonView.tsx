@@ -43,6 +43,7 @@ type LessonData = {
   sourceFiles: TypeFile[] | null;
   templateFiles: TypeFile[] | null;
   solutionFiles: TypeFile[] | null;
+  shouldShowEditor?: boolean; // Flag to control whether to show the editor
   navigation: {
     prev: { link: string; title: string } | null;
     next: { link: string; title: string };
@@ -74,6 +75,7 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
     sourceFiles,
     templateFiles,
     solutionFiles,
+    shouldShowEditor = true, // Default to true for backward compatibility
     navigation,
     courseSlug,
     currentSectionId,
@@ -119,8 +121,8 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
     window.open(linkedInUrl, "_blank");
   };
 
-  // Determine if we have files to display
-  const hasFiles = sourceFiles || templateFiles;
+  // Determine if we have files to display and should show the editor
+  const hasFiles = shouldShowEditor && (sourceFiles || templateFiles);
 
   // Determine which files to display in the editor
   const editorFiles = sourceFiles || templateFiles || [];

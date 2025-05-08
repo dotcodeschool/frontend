@@ -170,6 +170,9 @@ importers:
       "@types/aws-lambda":
         specifier: ^8.10.148
         version: 8.10.148
+      "@types/diff":
+        specifier: ^7.0.2
+        version: 7.0.2
       "@types/mdx":
         specifier: ^2.0.13
         version: 2.0.13
@@ -206,6 +209,9 @@ importers:
       cz-conventional-changelog:
         specifier: ^3.3.0
         version: 3.3.0(@types/node@20.17.24)(typescript@5.8.2)
+      diff:
+        specifier: ^7.0.0
+        version: 7.0.0
       dotenv:
         specifier: ^16.4.5
         version: 16.4.7
@@ -2386,6 +2392,12 @@ packages:
         integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==,
       }
 
+  "@types/diff@7.0.2":
+    resolution:
+      {
+        integrity: sha512-JSWRMozjFKsGlEjiiKajUjIJVKuKdE3oVy2DNtK+fUo8q82nhFZ2CPQwicAIkXrofahDXrWJ7mjelvZphMS98Q==,
+      }
+
   "@types/estree-jsx@1.0.5":
     resolution:
       {
@@ -3987,6 +3999,13 @@ packages:
       {
         integrity: sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==,
       }
+
+  diff@7.0.0:
+    resolution:
+      {
+        integrity: sha512-PJWHUb1RFevKCwaFA9RlG5tCd+FO5iRh9A8HEtkmBH2Li03iJriB6m6JIN4rGz3K3JLawI7/veA1xzRKP6ISBw==,
+      }
+    engines: { node: ">=0.3.1" }
 
   dir-glob@3.0.1:
     resolution:
@@ -11278,6 +11297,8 @@ snapshots:
     dependencies:
       "@types/ms": 2.1.0
 
+  "@types/diff@7.0.2": {}
+
   "@types/estree-jsx@1.0.5":
     dependencies:
       "@types/estree": 1.0.6
@@ -12277,6 +12298,8 @@ snapshots:
   devlop@1.1.0:
     dependencies:
       dequal: 2.0.3
+
+  diff@7.0.0: {}
 
   dir-glob@3.0.1:
     dependencies:
