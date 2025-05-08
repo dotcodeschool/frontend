@@ -4,7 +4,11 @@ type TypeFile = {
   language: string;
   path?: string;
   hasChanges?: boolean;
-  diffToHighlight?: Array<{ value: string; added?: boolean; removed?: boolean }>;
+  diffToHighlight?: Array<{
+    value: string;
+    added?: boolean;
+    removed?: boolean;
+  }>;
 };
 
 type TyleFiles = {

@@ -64,21 +64,26 @@ export async function getChangedFiles(
 
   // Check if this is the first lesson of the course
   // We'll assume it's the first lesson of the course if it's the first lesson of a section called "introduction"
-  const isFirstLessonOfCourse = !prevLessonId && sectionId.toLowerCase() === "introduction";
-  
-  console.log(`Lesson ${lessonId} in section ${sectionId} - isFirstLessonOfCourse: ${isFirstLessonOfCourse}`);
+  const isFirstLessonOfCourse =
+    !prevLessonId && sectionId.toLowerCase() === "introduction";
+
+  console.log(
+    `Lesson ${lessonId} in section ${sectionId} - isFirstLessonOfCourse: ${isFirstLessonOfCourse}`,
+  );
 
   // If it's the first lesson of the course, return all files
   if (isFirstLessonOfCourse) {
     console.log(`First lesson of the course, returning all files`);
     return await loadAllLessonFiles(course, sectionId, lessonId);
   }
-  
+
   // If there's no previous lesson in this section but it's not the first lesson of the course,
   // we should still compare with files from the previous section, but we don't have that information.
   // For now, we'll mark all files as changed since this is likely a transition between sections.
   if (!prevLessonId) {
-    console.log(`First lesson of section ${sectionId} but not the first lesson of the course, marking all files as changed`);
+    console.log(
+      `First lesson of section ${sectionId} but not the first lesson of the course, marking all files as changed`,
+    );
     return await loadAllLessonFilesAsChanged(course, sectionId, lessonId);
   }
 
@@ -106,16 +111,22 @@ export async function getChangedFiles(
   const prevHasTemplate = fs.existsSync(path.join(prevLessonPath, "template"));
   const prevHasSolution = fs.existsSync(path.join(prevLessonPath, "solution"));
 
-  console.log(`Current lesson has: ${currentHasSource ? 'source' : ''} ${currentHasTemplate ? 'template' : ''} ${currentHasSolution ? 'solution' : ''}`);
-  console.log(`Previous lesson has: ${prevHasSource ? 'source' : ''} ${prevHasTemplate ? 'template' : ''} ${prevHasSolution ? 'solution' : ''}`);
+  console.log(
+    `Current lesson has: ${currentHasSource ? "source" : ""} ${currentHasTemplate ? "template" : ""} ${currentHasSolution ? "solution" : ""}`,
+  );
+  console.log(
+    `Previous lesson has: ${prevHasSource ? "source" : ""} ${prevHasTemplate ? "template" : ""} ${prevHasSolution ? "solution" : ""}`,
+  );
 
   // Handle source files in current lesson
   if (currentHasSource) {
     shouldShowEditor = true;
-    
+
     // Case 1: Previous lesson has source files - direct comparison
     if (prevHasSource) {
-      console.log(`Comparing source files between ${prevLessonId} and ${lessonId}`);
+      console.log(
+        `Comparing source files between ${prevLessonId} and ${lessonId}`,
+      );
       sourceFiles = compareFiles(
         prevLessonPath,
         currentLessonPath,
@@ -126,7 +137,7 @@ export async function getChangedFiles(
         prevLessonId,
         lessonId,
       );
-    } 
+    }
     // Case 2: Previous lesson has solution files - compare with those
     else if (prevHasSolution) {
       console.log(`Comparing previous solution with current source files`);
@@ -157,7 +168,9 @@ export async function getChangedFiles(
     }
     // Case 4: Previous lesson has no files - mark all as changed
     else {
-      console.log(`Previous lesson has no files, marking all source files as changed`);
+      console.log(
+        `Previous lesson has no files, marking all source files as changed`,
+      );
       sourceFiles = loadFilesFromDir(
         path.join(currentLessonPath, "source"),
         "source",
@@ -173,7 +186,7 @@ export async function getChangedFiles(
   // Handle template files in current lesson
   if (currentHasTemplate) {
     shouldShowEditor = true;
-    
+
     // Case 1: Previous lesson has solution files - ideal comparison
     if (prevHasSolution) {
       console.log(`Comparing previous solution with current template files`);
@@ -218,7 +231,9 @@ export async function getChangedFiles(
     }
     // Case 4: Previous lesson has no files - mark all as changed
     else {
-      console.log(`Previous lesson has no files, marking all template files as changed`);
+      console.log(
+        `Previous lesson has no files, marking all template files as changed`,
+      );
       templateFiles = loadFilesFromDir(
         path.join(currentLessonPath, "template"),
         "template",
@@ -492,7 +507,10 @@ async function loadAllLessonFilesAsChanged(
       lessonId,
     );
     // Mark all as changed
-    templateFiles = templateFiles.map((file) => ({ ...file, hasChanges: true }));
+    templateFiles = templateFiles.map((file) => ({
+      ...file,
+      hasChanges: true,
+    }));
     shouldShowEditor = true;
   }
 

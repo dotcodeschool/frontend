@@ -67,9 +67,9 @@ const LessonPage = async ({ params }: LessonPageProps) => {
         course,
         sectionId,
         lessonId,
-        section.lessons
+        section.lessons,
       );
-      
+
       sourceFiles = fileData.sourceFiles;
       templateFiles = fileData.templateFiles;
       solutionFiles = fileData.solutionFiles;
@@ -172,7 +172,12 @@ const LessonPage = async ({ params }: LessonPageProps) => {
       sections: mdxCourse.sections,
     };
 
-    console.log("/lesson/[sectionId]/[lessonId] files: ", sourceFiles, templateFiles, solutionFiles)
+    console.log(
+      "/lesson/[sectionId]/[lessonId] files: ",
+      sourceFiles,
+      templateFiles,
+      solutionFiles,
+    );
 
     return (
       <Box

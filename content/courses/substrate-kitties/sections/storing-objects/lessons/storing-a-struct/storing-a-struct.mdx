@@ -72,9 +72,9 @@ Well, SCALE is:
 
 - Simple to define.
 - Not Rust-specific (but happens to work great in Rust).
-	- Easy to derive codec logic: `#[derive(Encode, Decode)]`
-	- Viable and useful for APIs like: `MaxEncodedLen` and `TypeInfo`
-	- It does not use Rust `std`, and thus can compile to Wasm `no_std`.
+  - Easy to derive codec logic: `#[derive(Encode, Decode)]`
+  - Viable and useful for APIs like: `MaxEncodedLen` and `TypeInfo`
+  - It does not use Rust `std`, and thus can compile to Wasm `no_std`.
 - Consensus critical / bijective; one value will always encode to one blob and that blob will only decode to that value.
 - Supports a copy-free decode for basic types on LE (Little-Endian) architectures (like Wasm).
 - It is about as thin and lightweight as can be.
@@ -134,4 +134,13 @@ Finally, update the logic in `mint` to create and insert this object into storag
 
 To get a primer on Parity SCALE Codec, check out this video from the Polkadot Blockchain Academy:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/6N6BopyYKq4?si=y7L9rmAoWbD803LW" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe
+  width="560"
+  height="315"
+  src="https://www.youtube.com/embed/6N6BopyYKq4?si=y7L9rmAoWbD803LW"
+  title="YouTube video player"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  referrerpolicy="strict-origin-when-cross-origin"
+  allowfullscreen
+></iframe>
