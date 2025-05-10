@@ -32,6 +32,7 @@ export const getLocalCourses = async (): Promise<CourseOverview[]> => {
       (dirent) =>
         dirent.isDirectory() &&
         !dirent.name.startsWith(".") &&
+        !dirent.name.startsWith("_") && // Skip directories starting with underscore
         dirent.name !== "course-template", // Skip the template directory
     )
     .map((dirent) => dirent.name);

@@ -1,0 +1,212 @@
+---
+title: "Your Article Title"
+description: "A brief description of your article (1-2 sentences)"
+tags: ["Tag1", "Tag2", "Tag3"]
+category: "Category Name"
+author: "Your Name"
+date: "YYYY-MM-DD"
+last_updated: "YYYY-MM-DD"
+featured: false
+# estimatedTime: 10 # Optional: Estimated reading time in minutes
+# Prefix with underscore (_) to exclude from UI rendering
+---
+
+# Your Article Title
+
+## Introduction
+
+Start with a brief introduction that explains what the article covers and why it matters. This should expand on your description and provide context for the reader.
+
+## Main Section 1
+
+Begin with your first main topic. Break complex concepts into smaller, digestible chunks.
+
+### Sub-section 1.1
+
+Provide more detailed information or examples related to the main section.
+
+```javascript
+// Example code block
+function exampleFunction() {
+  console.log("This is an example code snippet");
+  return "Use code blocks to illustrate concepts";
+}
+```
+
+### Sub-section 1.2
+
+Continue with related information, building on previous concepts.
+
+## Main Section 2
+
+Move on to your next major topic.
+
+- Use bullet points for lists of related items
+- They help break up text and make it more scannable
+- Keep bullet points concise and parallel in structure
+
+## Interactive Elements
+
+### Quiz Example
+
+You can add interactive quizzes to test the reader's understanding:
+
+<Quiz
+  question="What is React?"
+  type="multipleChoice"
+  options={[
+    {
+      label: "A JavaScript library for building user interfaces",
+      correct: true,
+    },
+    { label: "A programming language", correct: false },
+    { label: "A database management system", correct: false },
+    { label: "A server-side framework", correct: false },
+  ]}
+  explanation="React is a JavaScript library developed by Facebook for building user interfaces, particularly single-page applications."
+/>
+
+### True/False Quiz Example
+
+<TrueFalseQuiz
+  question="JavaScript is a statically typed language."
+  correct={false}
+  explanation="JavaScript is a dynamically typed language, meaning variable types are determined at runtime rather than compile time."
+/>
+
+### Fill in the Blank Quiz Example
+
+<FillInTheBlankQuiz
+  question="What function is used to add an event listener to a DOM element in JavaScript?"
+  answers={["addEventListener", "element.addEventListener"]}
+  explanation="The addEventListener method is used to attach an event handler to a specified element."
+  placeholder="Type your answer here"
+/>
+
+### Button Examples
+
+You can include buttons in your articles with different styles and behaviors:
+
+#### Button Variants
+
+<Button variant="primary">Primary Button</Button>
+
+<Button variant="secondary">Secondary Button</Button>
+
+<Button variant="outline">Outline Button</Button>
+
+<Button variant="ghost">Ghost Button</Button>
+
+#### Link Buttons
+
+Buttons can also function as links:
+
+<Button href="https://dotcodeschool.com" variant="primary" target="_blank">
+  Visit Dot Code School
+</Button>
+
+<Button href="/articles" variant="secondary">
+  Browse Articles
+</Button>
+
+#### Button Sizes
+
+<Button variant="primary" size="sm">Small Button</Button>
+
+<Button variant="primary" size="md">Medium Button</Button>
+
+<Button variant="primary" size="lg">Large Button</Button>
+
+## Practical Example
+
+Provide a practical, real-world example that demonstrates the concepts discussed in the article.
+
+```rust
+// A more complex code example
+#[pallet::weight(10_000)]
+pub fn create_item(
+    origin: OriginFor<T>,
+    item_id: u32,
+    item_name: Vec<u8>,
+) -> DispatchResult {
+    let sender = ensure_signed(origin)?;
+    
+    // Add comments to explain what the code does
+    ensure!(!ItemExists::<T>::contains_key(item_id), Error::<T>::ItemAlreadyExists);
+    
+    let bounded_name: BoundedVec<_, _> = item_name.try_into()
+        .map_err(|_| Error::<T>::NameTooLong)?;
+        
+    Items::<T>::insert(item_id, (bounded_name, sender.clone()));
+    
+    Self::deposit_event(Event::ItemCreated(item_id, sender));
+    
+    Ok(())
+}
+```
+
+## Common Pitfalls
+
+Highlight common mistakes or misconceptions related to your topic:
+
+<Warning>Be careful when implementing X because it can lead to Y problem.</Warning>
+
+<InfoBox>
+  **Note:** This is an important detail that readers should pay attention to.
+</InfoBox>
+
+<Error>This indicates an error or failure condition that readers should avoid.</Error>
+
+<Success>This highlights a successful approach or best practice.</Success>
+
+## Quiz Group Example
+
+You can group related quizzes together:
+
+<QuizGroup
+  title="JavaScript Fundamentals"
+  description="Test your knowledge of JavaScript basics"
+>
+  <Quiz
+    question="Which of the following is a primitive data type in JavaScript?"
+    type="multipleChoice"
+    options={[
+      { label: "Array", correct: false },
+      { label: "Object", correct: false },
+      { label: "String", correct: true },
+      { label: "Function", correct: false },
+    ]}
+    explanation="String is a primitive data type in JavaScript."
+  />
+
+  <TrueFalseQuiz
+    question="JavaScript is a statically typed language."
+    correct={false}
+    explanation="JavaScript is a dynamically typed language."
+  />
+
+  <FillInTheBlankQuiz
+    question="What method is used to add an item to the end of an array in JavaScript?"
+    answers={["push", "array.push"]}
+    explanation="The push() method adds elements to the end of an array."
+  />
+</QuizGroup>
+
+## Summary
+
+Conclude with a summary of the key points covered in the article. Reinforce the main takeaways and their significance.
+
+## Next Steps
+
+Suggest resources or actions for readers who want to learn more:
+
+1. First recommended next step
+2. Second recommended next step
+3. Related articles or documentation to explore
+
+## References
+
+If you've cited sources or want to provide additional reading materials:
+
+- [Reference 1](https://example.com)
+- [Reference 2](https://example.com)

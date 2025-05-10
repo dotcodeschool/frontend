@@ -213,9 +213,71 @@ When quoting or referencing others' work, always provide proper attribution:
 >
 > — Polkadot Whitepaper
 
-## Interactive Quizzes
+## Interactive Elements
 
-DotCodeSchool now supports interactive quizzes in your MDX content using the `<Quiz />` component. This allows you to create self-checking, multiple-choice questions that provide immediate feedback to learners.
+### Buttons
+
+DotCodeSchool supports adding interactive buttons to your articles using the `<Button />` component. You can use buttons to link to other resources or to highlight important actions.
+
+#### Button Variants
+
+```jsx
+<Button variant="primary">Primary Button</Button>
+<Button variant="secondary">Secondary Button</Button>
+<Button variant="outline">Outline Button</Button>
+<Button variant="ghost">Ghost Button</Button>
+```
+
+This renders as:
+
+<Button variant="primary">Primary Button</Button>
+<Button variant="secondary">Secondary Button</Button>
+<Button variant="outline">Outline Button</Button>
+<Button variant="ghost">Ghost Button</Button>
+
+#### Link Buttons
+
+Buttons can function as links by adding the `href` attribute:
+
+```jsx
+<Button href="https://dotcodeschool.com" variant="primary" target="_blank">
+  External Link
+</Button>
+
+<Button href="/articles" variant="secondary">
+  Internal Link
+</Button>
+```
+
+This renders as:
+
+<Button href="https://dotcodeschool.com" variant="primary" target="_blank">
+  External Link
+</Button>
+
+<Button href="/articles" variant="secondary">
+  Internal Link
+</Button>
+
+#### Button Sizes
+
+You can control the size of buttons with the `size` attribute:
+
+```jsx
+<Button variant="primary" size="sm">Small Button</Button>
+<Button variant="primary" size="md">Medium Button</Button>
+<Button variant="primary" size="lg">Large Button</Button>
+```
+
+This renders as:
+
+<Button variant="primary" size="sm">Small Button</Button>
+<Button variant="primary" size="md">Medium Button</Button>
+<Button variant="primary" size="lg">Large Button</Button>
+
+### Interactive Quizzes
+
+DotCodeSchool also supports interactive quizzes in your MDX content using the `<Quiz />` component. This allows you to create self-checking, multiple-choice questions that provide immediate feedback to learners.
 
 **See demo:** [Interactive Quizzes in Lessons](/articles/quiz-demo)
 
@@ -455,7 +517,7 @@ If you don't provide an `estimatedTime`, the platform will automatically calcula
 
 ## Submitting Your Content
 
-After preparing your MDX file with proper formatting and frontmatter, submit it via pull request to our content repository. Our editorial team will review it for technical accuracy, clarity, and style before publication.
+After preparing your MDX file with proper formatting and frontmatter, submit it via pull request to our [content repository on GitHub](https://github.com/dotcodeschool/frontend/tree/main/content/articles). You can directly fork the repository and add your article to the `content/articles` directory. Our editorial team will review it for technical accuracy, clarity, and style before publication.
 
 ## Need Help?
 

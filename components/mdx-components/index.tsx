@@ -34,8 +34,10 @@ import Quiz from "./quiz/Quiz";
 import TrueFalseQuiz from "./quiz/TrueFalseQuiz";
 import FillInTheBlankQuiz from "./quiz/FillInTheBlankQuiz";
 import QuizGroup from "./quiz/QuizGroup";
+import Button from "./button/Button";
 
 const MDXComponents: TypeMDXComponents = {
+  Button,
   Quiz,
   TrueFalseQuiz,
   FillInTheBlankQuiz,

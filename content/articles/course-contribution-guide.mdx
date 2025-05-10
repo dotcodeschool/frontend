@@ -239,20 +239,47 @@ console.log(greeting);
 
 ## Creating a Pull Request
 
-When you're ready to contribute your course or changes:
+When you're ready to contribute your course or changes, follow these steps to submit your work:
 
-1. Fork the repository
-2. Create a new branch for your changes
-3. Commit your changes with descriptive commit messages
-4. Push your branch to your fork
-5. Create a pull request to the main repository
+1. **Fork the repository**: Go to [https://github.com/dotcodeschool/frontend](https://github.com/dotcodeschool/frontend) and click the "Fork" button in the top-right corner to create your own copy of the repository.
+
+2. **Clone your fork**: Clone your forked repository to your local machine:
+   ```bash
+   git clone https://github.com/YOUR-USERNAME/frontend.git
+   cd frontend
+   ```
+
+3. **Create a new branch**: Create a branch for your changes with a descriptive name:
+   ```bash
+   git checkout -b add-course-YOUR-COURSE-NAME
+   ```
+
+4. **Add your course**: Place your course files in the `content/courses/` directory following the structure outlined in the [Course Structure](#course-structure) section above.
+
+5. **Commit your changes**: Make commits with clear, descriptive messages:
+   ```bash
+   git add content/courses/your-course-name
+   git commit -m "Add new course: Your Course Name"
+   ```
+
+6. **Push to your fork**: Upload your changes to your GitHub fork:
+   ```bash
+   git push origin add-course-YOUR-COURSE-NAME
+   ```
+
+7. **Create a pull request**: Go to [https://github.com/dotcodeschool/frontend/pulls](https://github.com/dotcodeschool/frontend/pulls) and click the "New pull request" button. Select your fork and branch, then click "Create pull request".
+
+8. **Fill out the PR template**: Provide a clear description of your course and any relevant information for reviewers.
+
+For more detailed instructions on contributing to the repository, please refer to the [README.md in the content directory](https://github.com/dotcodeschool/frontend/blob/main/content/README.md).
 
 ### Pull Request Checklist
 
 Before submitting your PR, ensure:
 
-- [ ] Your course follows the directory structure outlined in this guide
-- [ ] Your course metadata file includes all required fields
+- [ ] Your course is placed in the correct location (`content/courses/your-course-name/`)
+- [ ] Your course follows the directory structure outlined in the [Course Structure](#course-structure) section
+- [ ] Your course metadata file includes all required fields listed in the [Course Metadata File](#course-metadata-file) section
 - [ ] All section and lesson files include proper frontmatter
 - [ ] Code examples in template/solution pairs match correctly
 - [ ] All links to files use relative paths and are correct

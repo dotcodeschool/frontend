@@ -68,9 +68,37 @@ For comprehensive information on contributing to Dot Code School, please refer t
 
 ## Submission Process
 
-1. Fork the repository
-2. Create your content following the guidelines in our detailed guides
-3. Submit a pull request with a clear description of your contribution
-4. Respond to any feedback from reviewers
+1. **Fork the repository**: Go to [https://github.com/dotcodeschool/frontend](https://github.com/dotcodeschool/frontend) and click the "Fork" button in the top-right corner.
+
+2. **Clone your fork**: Clone your forked repository to your local machine:
+   ```bash
+   git clone https://github.com/YOUR-USERNAME/frontend.git
+   cd frontend
+   ```
+
+3. **Create a new branch**: Create a branch for your changes with a descriptive name:
+   ```bash
+   git checkout -b add-content-YOUR-CONTENT-NAME
+   ```
+
+4. **Create your content**: Follow the guidelines in our detailed guides to create your article or course.
+
+5. **Commit your changes**: Make commits with clear, descriptive messages.
+
+6. **Push to your fork**: Upload your changes to your GitHub fork:
+   ```bash
+   git push origin add-content-YOUR-CONTENT-NAME
+   ```
+
+7. **Create a pull request**: Go to [https://github.com/dotcodeschool/frontend/pulls](https://github.com/dotcodeschool/frontend/pulls) and click the "New pull request" button.
+
+8. **Use the appropriate PR template**: We provide specialized templates for different types of contributions:
+   - For articles: [Use the article template](https://github.com/dotcodeschool/frontend/compare/main...main?template=article.md)
+   - For courses: [Use the course template](https://github.com/dotcodeschool/frontend/compare/main...main?template=course.md)
+   - For other changes: The default template will be used automatically
+
+9. **Fill out the PR template**: Provide a clear description of your contribution and complete the checklist.
+
+10. **Respond to feedback**: Our reviewers may suggest changes to improve your content. Please respond to their feedback and make any necessary updates.
 
 Thank you for contributing to Dot Code School!

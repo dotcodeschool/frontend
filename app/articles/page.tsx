@@ -202,7 +202,7 @@ async function getArticles(): Promise<ArticleWithSlug[]> {
   const fileNames = fs.readdirSync(articlesDirectory);
 
   const articles = fileNames
-    .filter((fileName) => fileName.endsWith(".mdx"))
+    .filter((fileName) => fileName.endsWith(".mdx") && !fileName.startsWith("_"))
     .map((fileName) => {
       // Remove .mdx extension to get slug
       const slug = fileName.replace(/\.mdx$/, "");
