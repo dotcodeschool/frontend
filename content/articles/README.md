@@ -47,7 +47,7 @@ To contribute an article, follow these detailed steps:
 7. **Create a pull request**: Go to [https://github.com/dotcodeschool/frontend/pulls](https://github.com/dotcodeschool/frontend/pulls) and click the "New pull request" button. Select your fork and branch, then click "Create pull request".
 
 8. **Use the article PR template**: We provide a specialized template for article contributions:
-   - [Use the article template](https://github.com/dotcodeschool/frontend/compare/main...main?template=article.md)
+   - [Use the article template](https://github.com/dotcodeschool/frontend/compare/master...master?template=article.md)
    - Or add `?template=article.md` to the PR URL
 
 9. **Fill out the PR template**: Provide a clear description of your article and complete the checklist.

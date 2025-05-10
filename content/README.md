@@ -93,8 +93,8 @@ For comprehensive information on contributing to Dot Code School, please refer t
 7. **Create a pull request**: Go to [https://github.com/dotcodeschool/frontend/pulls](https://github.com/dotcodeschool/frontend/pulls) and click the "New pull request" button.
 
 8. **Use the appropriate PR template**: We provide specialized templates for different types of contributions:
-   - For articles: [Use the article template](https://github.com/dotcodeschool/frontend/compare/main...main?template=article.md)
-   - For courses: [Use the course template](https://github.com/dotcodeschool/frontend/compare/main...main?template=course.md)
+   - For articles: [Use the article template](https://github.com/dotcodeschool/frontend/compare/master...master?template=article.md)
+   - For courses: [Use the course template](https://github.com/dotcodeschool/frontend/compare/master...master?template=course.md)
    - For other changes: The default template will be used automatically
 
 9. **Fill out the PR template**: Provide a clear description of your contribution and complete the checklist.

@@ -12,11 +12,11 @@ This directory contains specialized pull request templates for different types o
 - **Article Template**: Used when contributing a new article or updating an existing article
 
   - Path: `/.github/PULL_REQUEST_TEMPLATE/article.md`
-  - [Use this template](https://github.com/dotcodeschool/frontend/compare/main...main?template=article.md)
+  - [Use this template](https://github.com/dotcodeschool/frontend/compare/master...master?template=article.md)
 
 - **Course Template**: Used when contributing a new course or updating an existing course
   - Path: `/.github/PULL_REQUEST_TEMPLATE/course.md`
-  - [Use this template](https://github.com/dotcodeschool/frontend/compare/main...main?template=course.md)
+  - [Use this template](https://github.com/dotcodeschool/frontend/compare/master...master?template=course.md)
 
 ## How to Use a Specific Template
 

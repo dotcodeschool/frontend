@@ -49,7 +49,7 @@ To contribute a course, follow these detailed steps:
 7. **Create a pull request**: Go to [https://github.com/dotcodeschool/frontend/pulls](https://github.com/dotcodeschool/frontend/pulls) and click the "New pull request" button. Select your fork and branch, then click "Create pull request".
 
 8. **Use the course PR template**: We provide a specialized template for course contributions:
-   - [Use the course template](https://github.com/dotcodeschool/frontend/compare/main...main?template=course.md)
+   - [Use the course template](https://github.com/dotcodeschool/frontend/compare/master...master?template=course.md)
    - Or add `?template=course.md` to the PR URL
 
 9. **Fill out the PR template**: Provide a clear description of your course and complete the checklist.
