@@ -60,27 +60,25 @@ Elastic Scaling makes Polkadot more resilient, adaptive, and efficient—traits 
 
 ## Test Your Understanding
 
-<Quiz>
-  <Question>
-    What is the primary benefit of Polkadot's elastic scaling?
-    <Answer correct>Dynamic resource allocation based on demand</Answer>
-    <Answer>Fixed resource allocation for all parachains</Answer>
-    <Answer>Manual scaling by developers</Answer>
-    <Answer>Increased transaction fees during high traffic</Answer>
-  </Question>
-  <Question>
-    How does Polkadot's approach differ from AWS EC2 Auto Scaling?
-    <Answer correct>It allocates blockchain processing units (cores) instead of virtual machines</Answer>
-    <Answer>It uses the same mechanism as EC2 Auto Scaling</Answer>
-    <Answer>It requires manual intervention for scaling</Answer>
-    <Answer>It is limited to web applications only</Answer>
-  </Question>
-</Quiz>
+<Quiz
+  question="What is the primary benefit of Polkadot's elastic scaling?"
+  type="multipleChoice"
+  options={[
+    { label: "Dynamic resource allocation based on demand", correct: true },
+    { label: "Fixed resource allocation for all parachains", correct: false },
+    { label: "Manual scaling by developers", correct: false },
+    { label: "Increased transaction fees during high traffic", correct: false },
+  ]}
+  explanation="The correct answer is 'Dynamic resource allocation based on demand', as Polkadot's elastic scaling adjusts resources based on traffic load."
+/>
 
 ## Learn More
+**Curious about building scalable blockchain applications?**
 
-<Button href="https://wiki.polkadot.network/docs/build-parachains" variant="primary">
-  Learn the fundamentals of Blockchain Development
+Start by mastering the fundamentals with our Rust State Machine course, inspired by the Polkadot SDK. Or, explore how Polkadot’s Elastic Scaling boosts throughput and reduces latency for parachains.
+
+<Button href="https://dotcodeschool.com/courses/in-browser-rust-state-machine" variant="primary">
+  View Course
 </Button>
 
 <Button href="https://forum.polkadot.network/t/elastic-scaling/7185" variant="secondary">

@@ -31,10 +31,7 @@ export const bundleMdxContent = async (mdxSource: string) => {
     const result = await bundleMDX({
       source: mdxSource,
       mdxOptions: (options) => {
-        options.remarkPlugins = [
-          ...(options.remarkPlugins || []),
-          remarkGfm,
-        ];
+        options.remarkPlugins = [...(options.remarkPlugins || []), remarkGfm];
         options.rehypePlugins = [
           ...(options.rehypePlugins || []),
           rehypeMdxCodeProps,
