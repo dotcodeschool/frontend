@@ -2,6 +2,7 @@ import path from "path";
 
 import { bundleMDX } from "mdx-bundler";
 import rehypeMdxCodeProps from "rehype-mdx-code-props";
+import remarkGfm from "remark-gfm";
 
 // Polyfill for resolving ESBuild binary on different platforms
 if (process.platform === "win32") {
@@ -30,6 +31,10 @@ export const bundleMdxContent = async (mdxSource: string) => {
     const result = await bundleMDX({
       source: mdxSource,
       mdxOptions: (options) => {
+        options.remarkPlugins = [
+          ...(options.remarkPlugins || []),
+          remarkGfm,
+        ];
         options.rehypePlugins = [
           ...(options.rehypePlugins || []),
           rehypeMdxCodeProps,
