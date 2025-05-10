@@ -5,10 +5,12 @@ This directory contains specialized pull request templates for different types o
 ## Available Templates
 
 - **Default Template**: Used for general contributions, bug fixes, and feature additions
+
   - Path: `/.github/PULL_REQUEST_TEMPLATE.md`
   - Used automatically when creating a new PR
 
 - **Article Template**: Used when contributing a new article or updating an existing article
+
   - Path: `/.github/PULL_REQUEST_TEMPLATE/article.md`
   - [Use this template](https://github.com/dotcodeschool/frontend/compare/main...main?template=article.md)
 
@@ -21,6 +23,7 @@ This directory contains specialized pull request templates for different types o
 When creating a pull request, you can specify which template to use by adding `?template=TEMPLATE_NAME.md` to the URL.
 
 For example:
+
 - To use the article template: `https://github.com/dotcodeschool/frontend/compare/main...your-branch?template=article.md`
 - To use the course template: `https://github.com/dotcodeschool/frontend/compare/main...your-branch?template=course.md`
 

@@ -15,17 +15,17 @@
 
 <!-- List the key concepts or skills that learners will gain from this course -->
 
-- 
-- 
-- 
+-
+-
+-
 
 ## Prerequisites
 
 <!-- List any knowledge or skills that learners should have before taking this course -->
 
-- 
-- 
-- 
+-
+-
+-
 
 ## Checklist
 
