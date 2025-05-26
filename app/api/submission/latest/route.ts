@@ -22,7 +22,7 @@ export const GET = async (request: NextRequest) => {
     }
 
     await client.connect();
-    const db = client.db("dcs-test");
+    const db = client.db(process.env.DB_NAME || "dcs-test");
 
     // Find the latest submission for the given repo_name
     const latestSubmission = await db.collection("submissions").findOne(
