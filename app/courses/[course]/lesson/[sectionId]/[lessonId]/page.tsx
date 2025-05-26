@@ -170,6 +170,9 @@ const LessonPage = async ({ params }: LessonPageProps) => {
       currentSectionId: sectionId,
       currentLessonId: lessonId,
       sections: mdxCourse.sections,
+      githubUrl: mdxCourse.githubUrl,
+      isGitorial: mdxCourse.isGitorial,
+      commitHash: lesson.commit_hash,
     };
 
     console.log(

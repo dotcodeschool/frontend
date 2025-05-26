@@ -167,6 +167,7 @@ export const getMdxCourseDetails = async (slug: string) => {
         last_updated: lessonData.last_updated || null, // Add last_updated from lesson metadata
         hasFiles,
         fileType,
+        commit_hash: lessonData.commit_hash,
       });
     }
 
@@ -187,6 +188,7 @@ export const getMdxCourseDetails = async (slug: string) => {
   sections.sort((a, b) => a.order - b.order);
 
   // Create the course details object
+  //TODO: consistent naming camelCase
   const courseDetails = {
     title: data.title || slug,
     description: data.description || "",
@@ -198,6 +200,7 @@ export const getMdxCourseDetails = async (slug: string) => {
     format: "mdxCourse",
     slug: data.slug || slug,
     githubUrl: data.github_url || "",
+    isGitorial: data.is_gitorial || false,
     prerequisites: data.prerequisites || [],
     whatYoullLearn: data.what_youll_learn || [],
     estimated_time: data.estimated_time || null, // Add estimated time from metadata
