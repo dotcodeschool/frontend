@@ -49,6 +49,9 @@ type LessonData = {
     next: { link: string; title: string };
     courseLink: string;
   };
+  githubUrl?: string;
+  commitHash?: string;
+  isGitorial?: boolean;
   courseSlug: string;
   currentSectionId: string;
   currentLessonId: string;
@@ -81,6 +84,9 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
     currentSectionId,
     currentLessonId,
     sections,
+    githubUrl,
+    commitHash,
+    isGitorial,
   } = lessonData;
 
   // For mobile sidebar
@@ -128,6 +134,11 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
   const editorFiles = sourceFiles || templateFiles || [];
   const isReadOnly = !!sourceFiles; // Read-only if we're showing source files
   const showHints = !!templateFiles && !!solutionFiles; // Show hints if we have template and solution files
+
+  const gitorialUrl = React.useMemo(
+    () => (isGitorial ? githubUrl : undefined),
+    [isGitorial, githubUrl],
+  );
 
   return (
     <Box
@@ -409,6 +420,8 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
                   readOnly={isReadOnly}
                   showHints={showHints}
                   solution={solutionFiles || []}
+                  gitorialUrl={gitorialUrl}
+                  commitHash={commitHash}
                 />
               </Flex>
             </Box>

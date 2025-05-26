@@ -48,6 +48,7 @@ export const getLocalCourses = async (): Promise<CourseOverview[]> => {
 
     // Skip if the MDX file doesn't exist
     if (!fs.existsSync(mdxFilePath)) {
+      console.warn(`MDX file does not exist for course: ${courseSlug}`);
       continue;
     }
 

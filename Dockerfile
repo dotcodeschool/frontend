@@ -5,11 +5,11 @@ FROM node:alpine
 COPY . /dcs-frontend
 WORKDIR /dcs-frontend
 
-# Install Yarn if it's not installed
+# Install pnpm if it's not installed
 RUN if ! command -v pnpm &> /dev/null; then npm install --global pnpm; fi
 
 # Install dependencies
-RUN pnpm
+RUN pnpm install
 
 # Build the app
 RUN pnpm build

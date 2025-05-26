@@ -17,6 +17,8 @@ type EditorTabListProps = TabListProps & {
   toggleDiff: () => void;
   handleTabClick: () => void;
   isUserInteraction: React.MutableRefObject<boolean>;
+  gitorialUrl?: string;
+  commitHash?: string;
 };
 
 export const EditorTabList = ({
@@ -29,6 +31,8 @@ export const EditorTabList = ({
   toggleDiff,
   handleTabClick,
   isUserInteraction,
+  gitorialUrl,
+  commitHash,
   ...props
 }: EditorTabListProps) => (
   <TabList>
@@ -60,6 +64,8 @@ export const EditorTabList = ({
     </Flex>
     {showActions ? (
       <EditorTabListActions
+        gitorialUrl={gitorialUrl}
+        commitHash={commitHash}
         editorContent={editorContent}
         handleFullscreenToggle={handleFullscreenToggle}
         isOpen={isOpen}

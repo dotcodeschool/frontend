@@ -19,12 +19,16 @@ export const EditorComponents = ({
   solution,
   editorContent,
   mdxContent,
+  gitorialUrl,
+  commitHash,
 }: {
   showHints: boolean;
   readOnly?: boolean;
   solution: TypeFile[];
   editorContent: TypeFile[];
   mdxContent?: React.ReactNode;
+  gitorialUrl?: string;
+  commitHash?: string;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -48,6 +52,8 @@ export const EditorComponents = ({
     editorContent,
     isOpen,
     handleFullscreenToggle,
+    gitorialUrl,
+    commitHash,
   };
 
   return (

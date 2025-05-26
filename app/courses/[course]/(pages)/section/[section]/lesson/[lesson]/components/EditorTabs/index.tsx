@@ -12,6 +12,8 @@ export type EditorTabsProps = {
   showActions?: boolean;
   readOnly: boolean;
   isOpen: boolean;
+  gitorialUrl?: string;
+  commitHash?: string;
   handleFullscreenToggle: (e: React.MouseEvent) => void;
 };
 
@@ -20,6 +22,8 @@ export const EditorTabsComponent = ({
   readOnly,
   isOpen,
   showActions = true,
+  gitorialUrl,
+  commitHash,
   handleFullscreenToggle,
 }: EditorTabsProps) => {
   const {
@@ -45,6 +49,8 @@ export const EditorTabsComponent = ({
         isOpen={isOpen}
         showActions={showActions}
         showDiff={showDiff}
+        gitorialUrl={gitorialUrl}
+        commitHash={commitHash}
         {...editorProps}
       />
       <EditorTabPanels
