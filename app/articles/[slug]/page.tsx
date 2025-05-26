@@ -98,7 +98,9 @@ async function getRelatedArticles(
   const articles = fileNames
     .filter(
       (fileName) =>
-        fileName.endsWith(".mdx") && fileName !== `${currentSlug}.mdx`,
+        fileName.endsWith(".mdx") &&
+        fileName !== `${currentSlug}.mdx` &&
+        !fileName.startsWith("_"),
     )
     .map((fileName) => {
       const slug = fileName.replace(/\.mdx$/, "");
