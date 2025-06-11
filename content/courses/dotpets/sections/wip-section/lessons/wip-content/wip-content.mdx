@@ -1,0 +1,1439 @@
+---
+slug: wip-content
+title: WIP — DotPets — Web3 Frontend Fundamentals
+order: 1
+description: WIP — DotPets — Web3 Frontend Fundamentals
+---
+
+*How to build frontend interfaces for blockchains and smart contracts?*
+
+> TODO: Redirect to blog post for "Why Web3?"
+
+See:
+- https://0xtherealbatman.com/why-web3/
+- https://0xtherealbatman.com/nothing-owned/
+
+# What is a blockchain anyway?
+
+> TODO: Add blog post for "What is a blockchain?" and move this content to the blog post.
+
+---
+*In this section we'll develop a mental model of a blockchain to work with.
+
+*This will be helpful while designing UI flows, debugging transaction issues, and choosing the right level of abstraction for your users.*
+
+*If you already have a high level understanding of blockchains or just want to use the APIs directly, feel free to skip ahead.*
+
+---
+
+Put simply, a **blockchain is just a data structure**.
+
+If you're familiar with linked-lists, it's a special kind of **append-only linked list** that is tamper-evident, meaning you can add new entries, but cannot rewrite historical data without invalidating future records.
+
+> **NOTE:** If you don't know about linked lists, for now you can think of it as *a list of items* (called *nodes*) where **each item holds some data and points to the next one**. *(See the image below)*
+> 
+> If you want to dive deeper or need a refresher on what is a linked list, see https://www.youtube.com/watch?v=F8AbOfQwl1c
+
+![linked-list.png](/static/images/content/courses/dotpets/linked-list.png)
+
+With that image in mind, each item in a blockchain is referred to as a "block".
+
+Each **block** contains:
+
+- **Data** (e.g. transactions)
+- A **timestamp**
+- A pointer to the **previous block** (a [**cryptographic hash**](https://www.investopedia.com/news/cryptographic-hash-functions/) of that block)
+  
+![PlantUML Diagram](https://uml.planttext.com/plantuml/png/SoWkIImgAStDuSf9JIjHACbNACfCpoXHICaiIaqkoSpFumA2_AGi84V1AIS_EJlUGA6QIq51EoMn9154PoGMPu3eWgBKCWyWMy5M8Qyq9uUh5asR8Nvj6EgDI5HlJ5WzpFqskhfmHrafm5N0X13IHfZIHaZIniZI3gbvAS1W1000)
+
+*This is what a blockchain data structure looks like.*
+
+To understand how a blockchain forms and why it’s tamper-evident, let's walk through it one block at a time — and then see what happens when someone tries to change the past.
+
+**Step 1: Genesis**
+_The blockchain starts with a single block: the genesis block, which has no previous hash._
+
+![genesis.png](/static/images/content/courses/dotpets/genesis.png)
+
+**Step 2: Adding a block**
+_A new block is added that references the hash of the genesis block — forming the first link in the chain._
+
+![block1.png](/static/images/content/courses/dotpets/block1.png)
+
+**Step 3: A chain is formed**
+_More blocks are added, each pointing to the hash of the block before it — creating a growing, tamper-resistant chain._
+
+![blockchain.png](/static/images/content/courses/dotpets/blockchain.png)
+
+
+**Now, what happens if a bad actor tries to tamper with the chain to rewrite history?**
+
+_If data in a previous block is modified, its hash changes — breaking all links that come after it and invalidating the chain._
+
+![tampering.png](/static/images/content/courses/dotpets/tampering.png)
+
+> **IMPORTANT:** Note that this is different from our usual linked list in the following ways:
+ > 
+> 1. In a regular linked list, nodes just point to the next one by memory reference.
+> 2. In a blockchain, blocks point backward — **each block contains the hash of the previous one**.
+> 3. If someone tries to change any block's data, its hash changes, which **breaks the link** — and every block after it becomes invalid.
+
+
+This chain of blocks creates a **tamper-evident history**.
+
+**Notice that we use the term tamper-evident, not tamper-resistant.**
+
+It is important to note a blockchain data structure by itself is merely *tamper-evident*, meaning you'll know when data has been tampered with, but that don't stop someone from rebuilding the whole chain to make the tampered block valid.
+
+So this by itself is not enough to offer strong guarantees of resilience or censorship- and tamper-resistance, which are all properties we want and expect from a blockchain.
+
+We solve for this by creating a **blockchain network.**
+
+## What is a blockchain network?
+
+A **blockchain network** is a group of computers that work together to agree on and maintain a shared, tamper-resistant history of data using the blockchain data structure.
+
+So, when we say that data on a blockchain is *tamper-resistant* what we're really talking about isn't just the blockchain data structure, but rather a **blockchain network**.
+
+**But how do these computers agree upon which blocks are valid and which ones are invalid?**
+
+These machines need a way to come to a *consensus*.
+
+That's where **consensus algorithms** come in.
+
+You may have heard of terms like *proof-of-work* or *proof-of-stake*, these are examples of **consensus algorithms**, which define the rules by which the network reaches agreement on what the next valid block should be.
+
+- In **proof-of-work** (like in Bitcoin), nodes solve complex puzzles to earn the right to add a new block — making it expensive to cheat.
+- In **proof-of-stake** (used by Polkadot and others), nodes that hold more of the network’s token are selected to validate blocks — and can lose their stake if they act dishonestly.
+
+> **🔍 Side note:**
+> 
+> There are also variations of proof-of-stake, like **DPoS (Delegated Proof of Stake)** and **NPoS (Nominated Proof of Stake)**.
+> 
+> Polkadot uses **NPoS**, where token holders nominate *validators* (node operators that validate/invalidate blocks) they trust, creating a more decentralized and flexible form of stake-based consensus.
+
+We can have entire courses just talking about consensus, but that's outside the scope of this article.
+
+For the purpose of this article, you can assume that a consensus algorithm is just the way all the computers in the network **agree on what the next block should be**.
+
+It helps make sure that everyone sees the same version of the blockchain, and that **no one can cheat by secretly adding or changing data**.
+
+If you wish to dive deeper, here are some resource recommendations:
+
+- [What Are Consensus Mechanisms in Blockchain and Cryptocurrency? | Investopedia](https://www.investopedia.com/terms/c/consensus-mechanism-cryptocurrency.asp)
+- [What Is Nominated Proof of Stake (NPoS)? | Ledger](https://www.ledger.com/academy/topics/blockchain/what-is-nominated-proof-of-stake-npos#:~:text=With%20NPoS%2C%20both%20nominators%20and,receive%20punishment%20for%20bad%20behavior.)
+- [Nominated Proof-of-Stake | Research at Web3 Foundation](https://research.web3.foundation/Polkadot/protocols/NPoS)
+
+---
+
+
+
+# Overview
+### What Are We Building?
+In this first part of the **DotPets** series, we’re going to build the foundation of a simple on-chain Tamagotchi-style pet game on **Polkadot’s Asset Hub** blockchain network.
+
+You won’t need to know anything about smart contracts or runtimes to follow along. Our focus is to get you up and running with **your first web3 frontend project** while learning how to interact with real on-chain assets using tools that Web3 frontend developers use every day.
+
+### What you'll learn
+- Connect a Polkadot wallet (like [Talisman](https://talisman.xyz), [Nova](https://novawallet.io/) or [Subwallet](https://www.subwallet.app/)) to your frontend
+- Read on-chain data like balances and NFTs using Polkadot’s chain state
+- Mint a unique NFT on Asset Hub to represent your pet
+- View your minted NFT on-chain using Subscan or any blockchain explorer
+---
+
+# Section 1: Initialization
+### Step 1: Setting up our development environment
+- Install node https://nodejs.org/en/download
+- Install `pnpm` (for details see: https://pnpm.io/installation)
+	- `npm install -g pnpm@latest-10`
+### Step 2: Initializing our project
+We'll use Next.js with shadcn as our component library.
+
+1. Initialize the project using the following command in your terminal:
+```bash
+pnpm dlx shadcn@latest init --template next --base-color neutral
+```
+
+2. When prompted for the project name, write `dotpets`
+```bash
+$ pnpm dlx shadcn@latest init --template next --base-color neutral
+? What is your project named? › dotpets
+```
+
+If everything works as expected you should see the following output in your terminal.
+
+```bash
+$ pnpm dlx shadcn@latest init --template next --base-color neutral
+✔ What is your project named? … dotpets
+✔ Creating a new Next.js project.
+✔ Writing components.json.
+✔ Checking registry.
+✔ Updating CSS variables in app/globals.css
+✔ Installing dependencies.
+✔ Created 1 file:
+  - lib/utils.ts
+
+Success! Project initialization completed.
+You may now add components.
+```
+
+This should create a new directory `dotpets` with the boilerplate project files.
+
+3. Change working directory:
+```bash
+cd dotpets
+```
+
+4. Start your development server:
+```bash
+pnpm dev                   
+
+> dotpets@0.1.0 dev /Users/batman/Documents/Work/forks/Dot_Code_School/courses/dotpets
+> next dev --turbopack
+
+   ▲ Next.js 15.3.2 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.1.102:3000
+
+ ✓ Starting...
+ ✓ Ready in 720ms
+```
+
+When you visit http://localhost:3000 on your browser, you should see a page like this:
+
+![[Create Next App.jpeg]]
+
+In the next step, we'll configure prettier to keep our code clean and consistent.
+
+### Step 3: Configure Prettier
+To keep our code clean, consistent and easy to read, we'll use the [prettier code formatter](https://prettier.io/) in this project. Let's walk through the setup process.
+
+1. Install the relevant prettier plugins to your project using the following command:
+```bash
+pnpm add -D prettier prettier-plugin-tailwindcss @trivago/prettier-plugin-sort-imports
+```
+
+2. Create a `.prettierrc` file with the following configuration:
+
+```json filename=".prettierrc"
+{
+  "semi": true,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "es5",
+  "printWidth": 100,
+  "bracketSpacing": true,
+  "arrowParens": "always",
+  "endOfLine": "lf",
+  "plugins": ["@trivago/prettier-plugin-sort-imports", "prettier-plugin-tailwindcss"],
+  "importOrder": [
+    "^react",
+    "^next",
+    "^@/components/(.*)$",
+    "^@/lib/(.*)$",
+    "^@/providers/(.*)$",
+    "^@/styles/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
+}
+```
+
+3. Add a `.prettierignore` file:
+
+```plaintext filename=".prettierignore"
+.next
+node_modules
+public
+pnpm-lock.yaml
+```
+
+4. Add these scripts to your `package.json` file:
+
+```json
+{
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  }
+}
+```
+
+Now, you can run `pnpm format` to format all files or `pnpm format:check` to check for formatting issues.
+
+---
+# Section 2: Setting up PAPI
+### Step 4: Installing the Polkadot-API
+Now, we need a way to:
+- Connect to the blockchain
+- Read data (like account balances)
+- Send transactions (like transferring tokens)
+- Handle user interactions with their wallet
+
+For this we'll use [`papi`](https://papi.how/) (Polkadot-API) — a Typescript API to interact with Polkadot chains.
+
+It is like a pre-built toolkit that handles all of this for you. Instead of writing all the complex blockchain communication code yourself, you can use papi to:
+- Connect to Polkadot networks easily
+- Handle wallet connections
+- Format data correctly
+- Manage transactions
+- Deal with all the blockchain-specific stuff
+
+It's similar to how you might use `axios` for HTTP requests or `react-query` for data fetching - it's a tool that makes your life easier by handling the complex parts for you.
+
+
+1. Install the polkadot-api (PAPI):
+```bash
+pnpm i polkadot-api
+```
+
+If everything is successful:
+
+```bash
+batman → courses → pnpm i polkadot-api    
+Packages: +182
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 225, reused 114, downloaded 68, added 182, done
+node_modules/.pnpm/esbuild@0.25.5/node_modules/esbuild: Running postinstall script, done in 421ms
+
+dependencies:
++ polkadot-api 1.12.1
+
+Done in 16.4s
+```
+
+### Step 5: Adding the chain spec
+In frontend development with Polkadot, a chain specification is like a configuration file that tells your frontend app:
+
+1. Which blockchain network to connect to (Polkadot, Kusama, etc.)
+2. How to format and display data (token decimals, symbols)
+3. What features are available on that chain
+
+Think of it like a settings file that helps your frontend app "speak the right language" to the blockchain it's connecting to. Without it, your app wouldn't know how to properly interact with the specific blockchain network you're targeting.
+
+For example, if you're building a wallet app, the chain spec helps you know:
+
+- How many decimal places to show for token amounts
+- What the native token symbol is (DOT, KSM, etc.)
+- What features are available to users
+
+It's essentially the "translation guide" between your frontend and the blockchain.
+
+We can use the PAPI CLI (Command Line Interface) to download the chain spec ahead of time. This is used to generate all the necessary type descriptors, so you don’t have to manually figure out the structure of every interaction.
+
+It ensures that your app is in sync with the specific network you're developing for, especially if that chain undergoes runtime upgrades or type changes​.
+
+Using this chain spec, PAPI can automatically request the metadata from the chain you're connected to during runtime and generates codecs (serialization and deserialization tools) to communicate with the chain.
+
+To add a chain spec to our project, we can use the `papi add` command. If you run it with the `--help` flag you'll see something like this: 
+```bash
+$ pnpm exec papi add --help
+
+Usage: polkadot-api add [options] <key>
+
+Add a new chain spec to the list
+
+Arguments:
+  key                         Key identifier for the chain spec
+
+Options:
+  --config <filename>         Source for the config file
+  -f, --file <filename>       Source from metadata encoded file
+  -w, --wsUrl <URL>           Source from websocket URL
+  -c, --chainSpec <filename>  Source from chain spec file
+  -n, --name <name>           Source from a well-known chain (choices: "ksmcc3", "paseo",
+                              "polkadot", "polkadot_collectives", "rococo_v2_2", "westend2", [...]")
+  --wasm <filename>           Source from runtime wasm file
+  --no-persist                Do not persist the metadata as a file
+  --skip-codegen              Skip running codegen after adding
+  -h, --help                  display help for command
+```
+
+The `key` is the name we give to the chain (it can be any valid JS variable name).
+
+> **IMPORTANT:** Since `papi` uses the `key` as the name for importing the binary metadata in a Typescript file, it is important that we don't use special characters like `-` in the identifier as this will cause the build to fail. It is recommended to follow the **[camelCase](https://developer.mozilla.org/en-US/docs/Glossary/Camel_case)** standard for naming the key identifier.
+
+We'll be using the `westend` testnet to develop and test our app. We can change this to work on a production network like `polkadot` later.
+
+Now, let's download the latest metadata from the `westend2` testnet chain using the following command:
+
+```bash
+# `papi add` is the command
+# `wnd` is the name we're giving to this chain (can be any JS variable name)
+# `-n westend2` specifies to download the metadata from the well-known chain westend2
+
+pnpm exec papi add wnd -n westend2
+```
+
+This will download the latest metadata for the chain and store it in the `.papi` directory. This folder contains:
+
+1. A **configuration file** called `polkadot-api.json`, which holds the setup information for the chain.
+2. **A metadata file** named `${key}.scale`, which contains the chain's specific metadata.
+
+This structure ensures that all the necessary metadata for interacting with the chain is preloaded, organized and ready to use during development.
+
+If successful, you should see an output similar to:
+
+```bash
+pnpm exec papi add wnd -n westend2          
+✔ Metadata saved as .papi/metadata/wnd.scale
+Saved new spec "wnd"
+Reading metadata
+Generating descriptors
+CLI Building entry: .papi/descriptors/src/index.ts
+CLI Using tsconfig: tsconfig.json
+CLI tsup v8.5.0
+CLI Target: es2022
+CJS Build start
+ESM Build start
+ESM .papi/descriptors/dist/descriptors-ZCOXUYQ6.mjs   30.85 KB
+ESM .papi/descriptors/dist/index.mjs                  9.00 KB
+ESM .papi/descriptors/dist/metadataTypes-7662PAAD.mjs 109.12 KB
+ESM .papi/descriptors/dist/wnd_metadata-QGFZYVJE.mjs  611.97 KB
+ESM ⚡️ Build success in 47ms
+CJS .papi/descriptors/dist/index.js 768.67 KB
+CJS ⚡️ Build success in 47ms
+Compilation started
+Compilation successful
+pnpm install
+Progress: resolved 1, reused 0, downloadedProgress: resolved 17, reused 17, downloadProgress: resolved 18, reused 18, download
+
+╭────────────────────────────────────────╮│                                        ││   Update available! 9.7.0 → 10.11.0.   ││   Changelog: https://github.com/pnpm   ││      /pnpm/releases/tag/v10.11.0       ││   Run "pnpm add -g pnpm" to update.    ││                                        ││      Follow @pnpmjs for updates:       ││         https://x.com/pnpmjs           ││                                        │╰────────────────────────────────────────╯
+
+Progress: resolved 18, reused 18, downloadProgress: resolved 127, reused 108, downloProgress: resolved 517, reused 455, downloProgress: resolved 582, reused 477, downloProgress: resolved 583, reused 477, downloPackages: +1
++
+Progress: resolved 583, reused 477, downloProgress: resolved 590, reused 485, downloaded 0, added 1, done
+
+> dotpets@0.1.0 postinstall /Users/batman/Documents/Work/forks/Dot_Code_School/courses/dotpets
+> papi
+
+
+dependencies:
++ @polkadot-api/descriptors 0.1.0-autogenerated.2794767288648241745
+
+Done in 3.1s
+```
+
+> **Sidenote:** Polkadot API comes with a handy bundle of chainspecs for both `well-known-chains` and `system-chains` to make your life easier. You can find the full list [here](https://github.com/polkadot-api/polkadot-api/tree/main/packages/known-chains).
+
+Since `.papi` files are auto-generated, they should be treated as build artifacts, so formatting them with Prettier is unnecessary and could potentially cause issues with the generated code's structure.
+
+So, before moving to the next step, let's update the `.prettierignore` file to include `.papi`. 
+
+Your updated file should look something like this:
+
+```plaintext filename=".prettierignore"
+.next
+.papi
+node_modules
+public
+pnpm-lock.yaml
+```
+
+### Step 6: Types generation with PAPI
+Now, to utilize the benefits of typescript, we need to generate the relevant types for the chain we're working with using the metadata we just downloaded. Thankfully, `papi` makes it simple for us.
+
+This is similar to how you might use `prisma generate` to get types for your database, or how you'd need to generate types from an OpenAPI spec. The types help you write correct code and catch errors before they happen.
+
+To generate the types we need to run the following command in our terminal:
+
+```bash
+pnpm exec papi
+```
+
+Now, given that there maybe runtime upgrades to the chain, or we might decide to work with other chains in the future, the metadata and types may change. This means we would need to update the types every time a change like that occurs.
+
+As you can imagine, it can get tedious to do this manually and we might forget to run the script after pulling new changes, leading to type mismatches between our code and the actual chain features, which could cause runtime errors that TypeScript wouldn't catch.
+
+So, to automate the types generation process, we'll add `papi` to the `postinstall` script in our `package.json` file like so:
+
+```json
+{
+	/* ... */
+	"scripts": {
+		/* ... */
+		"postinstall": "papi"
+	}
+}
+```
+
+This script will automatically run after installation.
+
+Once you're done, your `package.json` should look something like this:
+
+```json
+{
+  "name": "dotpets",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "postinstall": "papi"
+  },
+  "dependencies": {
+    "@polkadot-api/descriptors": "file:.papi/descriptors",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.511.0",
+    "next": "15.3.3",
+    "polkadot-api": "^1.12.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.3.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.3",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "tailwindcss": "^4",
+    "tw-animate-css": "^1.3.2",
+    "typescript": "^5"
+  }
+}
+```
+
+
+# Section 3: Authentication in Web3
+### Step 7: Creating a Wallet Provider
+Now that our environment is ready, the first thing we want to do is authenticate the user.
+
+We’ll use this to:
+
+- Fetch their balance
+- Track pet ownership
+
+But unlike Web2, Web3 authentication doesn’t require servers or centralized backends.
+
+There’s no need to store passwords, create user accounts, or manage sessions.
+
+Instead, we connect directly to the user’s wallet, and use [cryptographic signatures](https://youtu.be/s22eJ1eVLTU?si=O4cGjkwKFZAn8WVZ) to prove their identity. All of this happens client-side and there's no need for collection of any personal data.
+
+This approach stays true to Web3 values like:
+
+- Privacy: no emails or user data collected
+- Authenticity: identity is verified by signing messages with their wallet
+- Sovereignty: users are in control, not a platform
+
+We’ll be using PAPI (Polkadot API) to connect to the wallet. PAPI exposes the following functions from the `polkadot-api/pjs-signer` path that we can use for this:
+
+- `connectInjectedExtension`: Returns the list of installed wallet extensions typed as `Array<string>`.
+- `connectInjectedExtension`: Connects to a web3 wallet extension using its `name` as a parameter and returns a `promise` that resolves to an `InjectedExtension` interface for interacting with the extension. Its function signature looks like this:
+  
+  ```ts
+  (name: string, dappName?: string) => Promise<InjectedExtension>
+```
+
+The `InjectedExtension` interface exposes some handy fields and methods like the extension's name and user accounts. We'll be using these soon.
+
+1. Let's start by creating `lib/wallet.ts` file with the following utility functions:
+
+```typescript filename="lib/wallet.ts"
+'use client';
+
+import { connectInjectedExtension, getInjectedExtensions } from 'polkadot-api/pjs-signer';
+
+// Get the list of installed wallet extensions
+export const getWalletExtensions = () => {
+  const extensions = getInjectedExtensions();
+  return extensions;
+};
+
+// Connect to the specified wallet extension
+export const connectWallet = async (extension: string) => {
+  return await connectInjectedExtension(extension);
+};
+```
+
+> Note that since the authentication happens client-side, we mark the `wallet.ts` as a client file using the `"use client"` directive.
+
+Separating wallet utilities into a file like this is useful if we need to add custom logic or error handling in the future. Doing this:
+- Keeps wallet-related functions in one place
+- Makes it easier for us to modify and reuse these functions
+
+2. Now, we need a way to access the wallet state in our app.
+   
+   Instead of passing wallet data through props (which gets messy), we'll create a `WalletProvider` using the [React Context API](https://react.dev/learn/passing-data-deeply-with-context) to make the wallet state available everywhere in our app.
+   
+   To do this, add the following code to the `providers/WalletProvider.tsx` file:
+
+```tsx filename="providers/WalletProvider.tsx"
+'use client';
+
+import { InjectedExtension, InjectedPolkadotAccount } from 'polkadot-api/pjs-signer';
+
+import { createContext, useContext, useState } from 'react';
+
+import { connectWallet } from '@/lib/wallet';
+
+// Context for the wallet provider to store the wallet extension, connect function, and accounts
+const WalletContext = createContext<{
+  extension: InjectedExtension | null;
+  accounts: InjectedPolkadotAccount[];
+  connect: (extension: string) => Promise<void>;
+  disconnect: () => void;
+}>({
+  extension: null,
+  accounts: [],
+  connect: async () => {},
+  disconnect: () => {},
+});
+
+// Provider for the wallet context
+export function WalletProvider({ children }: { children: React.ReactNode }) {
+  const [extension, setExtension] = useState<InjectedExtension | null>(null);
+  const [accounts, setAccounts] = useState<InjectedPolkadotAccount[]>([]);
+
+  const connect = async (extension: string) => {
+    const connected = await connectWallet(extension);
+    setExtension(connected);
+    setAccounts(connected.getAccounts());
+  };
+
+  const disconnect = () => {
+    extension?.disconnect();
+    setExtension(null);
+    setAccounts([]);
+  };
+
+  return (
+    <WalletContext.Provider value={{ extension, connect, accounts, disconnect }}>
+      {children}
+    </WalletContext.Provider>
+  );
+}
+
+// Hook to use the wallet context
+export const useWallet = () => useContext(WalletContext);
+
+```
+
+This `WalletProvider` file creates a React context to share wallet state across the app.
+
+It manages two pieces of state:
+- `extension`: The connected wallet
+- `accounts`: The accounts by the user for our app to use
+
+It Provides two functions:
+`connect`: Connects to a wallet and updates state
+`disconnect`: Disconnects and clears state
+
+It makes all this available for us to use across our project through the `useWallet` hook.
+
+### Step 8: Using the Wallet Provider
+Now, let's use the wallet provider we made in the last step to expose the wallet state and accounts to our web app.
+
+1. Let's import the `WalletProvider` component in our `app/layout.tsx` file like so:
+```tsx
+import { WalletProvider } from '@/providers/WalletProvider';
+```
+
+2. Wrap the content inside the `WalletProvider`:
+```tsx
+<WalletProvider>{children}</WalletProvider>
+```
+
+3. While we're on this file, let's also update the `metadata` to describe our app:
+
+```tsx
+export const metadata: Metadata = {
+  title: 'DotPets',
+  description:
+    'A tamagotchi-style on-chain pet game built using Polkadot Asset Hub and Polkadot-API.',
+};
+```
+
+Once you're done, your file should look something like:
+
+```tsx filename="app/layout.tsx"
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+
+import { WalletProvider } from '@/providers/WalletProvider';
+
+import './globals.css';
+
+const geistSans = Geist({
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
+});
+
+const geistMono = Geist_Mono({
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
+});
+
+export const metadata: Metadata = {
+  title: 'DotPets',
+  description:
+    'A tamagotchi-style on-chain pet game built using Polkadot Asset Hub and Polkadot-API.',
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <WalletProvider>{children}</WalletProvider>
+      </body>
+    </html>
+  );
+}
+
+```
+
+Now, components in our app can easily access the wallet state and accounts.
+
+### Step 9: Connecting a wallet
+In this step, we want to use the `useWallet` hook to connect to the user's wallet and fetch their accounts.
+#### Prerequisites:
+Make sure you have installed a web3 wallet that supports Polkadot in your browser.
+
+If you don't have one yet, I'd recommend installing the [Talisman Wallet](https://talisman.xyz/) browser extension.
+
+**Wallet Installation Instructions:**
+- Follow the installation instructions on their website and click on the add account button.
+- When prompted to **Select account type**, select *New Polkadot Account* — make sure you save your seed phrase somewhere safe if you intend to use it for actual transactions later.
+  
+  If you lose access to your seed phrase, you will lose access to whatever is owned by your wallet account forever.
+  
+  So either don't put anything of value on it, or keep it safe and ensure you have proper backups.
+  
+  Useful resources:
+  - [What are the best practices for storing crypto?](https://chat.openai.com/?q=What+are+the+best+practices+for+storing+crypto%3F)
+  - [How to securely backup my seed phrase?](https://chat.openai.com/?q=How+to+securely+backup+my+seed+phrase%3F).
+
+#### Starting template
+Once you have your wallet setup with at least one Polkadot account, run the following command to download the relevant ui components for this step using `shadcn`
+```sh
+pnpm dlx shadcn@latest add alert button card
+```
+
+Next, open the `app/page.tsx` and replace the boilerplate code with this template:
+
+```tsx filename="app/page.tsx"
+'use client';
+
+import { AlertCircle } from 'lucide-react';
+
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
+export default function Home() {
+  // TODO: Get the `extension` state and `connect`, `disconnect` wallet functions from `useWallet` hook
+
+  // TODO: Add state variables for:
+  // - `availableExtensions` (string[])
+  // - `accounts` (InjectedPolkadotAccount[])
+  // - `error` (string | null)
+
+  // TODO: Add `useEffect` to get available wallet extensions when component mounts
+  // Hint: Use `getWalletExtensions()` from `lib/wallet`
+
+  // TODO: Add `useEffect` to subscribe to account changes when wallet is connected
+  // Hint: Use the `subscribe` method from the `InjectedExtension` interface
+
+  return (
+    <div className="container mx-auto max-w-2xl p-4">
+      <Card>
+        <CardHeader>
+          <CardTitle>Wallet Connection</CardTitle>
+          <CardDescription>Connect your wallet to interact with the application</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* TODO: Add conditional rendering to show error message if error exists */}
+          {false && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                {/* TODO: Display the error message here */}
+                Error message
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {/* TODO: Add conditional rendering to show different UI based on whether a wallet is connected */}
+          {false ? (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-medium">Connected Wallet</h3>
+                  <p className="text-muted-foreground text-sm">
+                    {/* TODO: Display the connected wallet name */}
+                    Wallet Name
+                  </p>
+                </div>
+                {/* TODO: Call the `disconnect` function when clicked */}
+                <Button variant="destructive" onClick={() => {}}>
+                  Disconnect
+                </Button>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="font-medium">Connected Accounts</h3>
+                <div className="space-y-2">
+                  {/* TODO: Map through the `accounts` array to display each account address */}
+                  <div className="bg-muted rounded-md p-2">Account address will appear here</div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <h3 className="font-medium">Available Wallets</h3>
+              <div className="grid gap-2">
+                {/* TODOs:
+                - Map through `availableExtensions` to create connect buttons for each wallet
+                - Call the `connect` function when a wallet button is clicked
+                - Handle any errors during the connection process */}
+                <Button onClick={() => {}}>Connect Wallet</Button>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+```
+
+The template has several `TODOs` for you to complete. Try doing this on your own and once you're done compare it against our solution.
+#### Solution
+
+```tsx
+'use client';
+
+import { AlertCircle } from 'lucide-react';
+import { InjectedPolkadotAccount } from 'polkadot-api/pjs-signer';
+
+import { useEffect, useState } from 'react';
+
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
+import { getWalletExtensions } from '@/lib/wallet';
+
+import { useWallet } from '@/providers/WalletProvider';
+
+export default function Home() {
+  // Utility functions to connect, disconnect, and get the state of the wallet
+  const { extension, connect, disconnect } = useWallet();
+
+  // List of wallet extensions installed in the user's browser
+  const [availableExtensions, setAvailableExtensions] = useState<string[]>([]);
+  // List of accounts authorized to connect to the application by the wallet
+  const [accounts, setAccounts] = useState<InjectedPolkadotAccount[]>([]);
+  // Error message to display to the user
+  const [error, setError] = useState<string | null>(null);
+
+  // Get the list of wallet extensions installed in the user's browser
+  useEffect(() => {
+    const extensions = getWalletExtensions();
+    setAvailableExtensions(extensions);
+  }, []);
+
+  // Subscribe to account changes when wallet is connected
+  useEffect(() => {
+    if (extension) {
+      const unsubscribe = extension.subscribe((accounts) => {
+        setAccounts(accounts);
+      });
+      return () => unsubscribe();
+    }
+  }, [extension]);
+
+  return (
+    <div className="container mx-auto max-w-2xl p-4">
+      <Card>
+        <CardHeader>
+          <CardTitle>Wallet Connection</CardTitle>
+          <CardDescription>Connect your wallet to interact with the application</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {error && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          {extension ? (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-medium">Connected Wallet</h3>
+                  <p className="text-muted-foreground text-sm">{extension.name}</p>
+                </div>
+                <Button variant="destructive" onClick={() => disconnect()}>
+                  Disconnect
+                </Button>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="font-medium">Connected Accounts</h3>
+                <div className="space-y-2">
+                  {accounts.map((account) => (
+                    <div className="bg-muted rounded-md p-2" key={account.address}>
+                      {account.address}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <h3 className="font-medium">Available Wallets</h3>
+              <div className="grid gap-2">
+                {availableExtensions.map((extension) => (
+                  <Button
+                    key={extension}
+                    onClick={() =>
+                      connect(extension)
+                        .then(() => setError(null))
+                        .catch((error) => setError(error.message))
+                    }
+                  >
+                    Connect {extension}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+```
+
+
+
+# Section 4: On-chain data and interaction
+### Step 10: Fetching user balance by querying the blockchain
+Now that the user is authenticated, let’s query the blockchain to fetch their DOT balance using PAPI. We can use this later to ensure they have enough to mint a pet NFT and enable interactions that cost tokens (feeding, evolving, etc.).
+
+To fetch the user’s balance from the blockchain, we first need a client to talk to it.
+
+1. Create a new file at lib/clients.ts and paste the following starting template. Follow the TODO comments to complete it yourself:
+```ts filename="lib/clients.ts"
+// This file sets up a typed connection to the Westend testnet using Smoldot and Polkadot-API.
+
+// TODO: Import the `wnd` chain descriptor from `@polkadot-api/descriptors`
+
+// TODO: Import `createClient` from `polkadot-api`
+
+// TODO: Import `chainSpec` for Westend2 from `polkadot-api/chains/westend2`
+
+// TODO: Import `getSmProvider` from `polkadot-api/sm-provider`
+
+// TODO: Import `start` from `polkadot-api/smoldot`
+
+// TODO: Start smoldot and add the Westend chain using `smoldot.addChain({ chainSpec })`
+
+// TODO: Create a client using `createClient(getSmProvider(wndChain))`
+
+// TODO: Get the typed API using `client.getTypedApi(wnd)`
+
+// TODO: Export both the client and the typed API
+```
+
+Once done, your file should look something like this:
+
+```ts filename="lib/clients.ts"
+import { wnd } from '@polkadot-api/descriptors';
+import { createClient } from 'polkadot-api';
+import { chainSpec as wndChainSpec } from 'polkadot-api/chains/westend2';
+import { getSmProvider } from 'polkadot-api/sm-provider';
+import { start } from 'polkadot-api/smoldot';
+
+// Start smoldot and setup its chains
+const smoldot = start();
+const wndChain = smoldot.addChain({ chainSpec: wndChainSpec });
+
+// Create the clients and their typedApis
+console.info('Initializing clients...');
+const wndClient = createClient(getSmProvider(wndChain));
+const wndApi = wndClient.getTypedApi(wnd);
+
+console.info('Clients initialized');
+
+export { wndClient, wndApi };
+
+```
+
+2. Now that we have a client connected to the chain, let’s build a custom React hook to fetch the user’s token balance and stay updated in real time.
+   
+   This hook should:
+	•	Use the typed API from `wndApi`
+	•	Subscribe to balance changes using `System.Account.watchValue(address)`
+	•	Format the balance based on the chain’s token decimals
+	•	Return the formatted balance, token info, loading state, and any errors
+
+Create a new file at `lib/hooks/useBalance.ts` and paste the following starter template. Similar to the last file, follow the TODO comments to complete the logic — you can uncomment and fill in the lines as you go.
+
+```tsx filename="lib/hooks/useBalance.ts"
+// A custom React hook to fetch and subscribe to the user's token balance.
+
+import { useEffect, useState } from 'react';
+
+// TODO: Import the `wndApi` from '@/lib/clients'
+// import { wndApi } from '@/lib/clients';
+
+// TODO: Import the chainSpec JSON string from 'polkadot-api/chains/westend2'
+// import { chainSpec as wndChainSpec } from 'polkadot-api/chains/westend2';
+
+interface TokenInfo {
+  symbol: string;
+  decimals: number;
+}
+
+interface UseBalanceResult {
+  balance: string;
+  error: string | null;
+  tokenInfo: TokenInfo | null;
+  isLoading: boolean;
+}
+
+interface UseBalanceOptions {
+  decimalPlaces?: number;
+}
+
+export function useBalance(address: string, options: UseBalanceOptions = {}): UseBalanceResult {
+  const { decimalPlaces = 4 } = options;
+  const [balance, setBalance] = useState<string>('Loading...');
+  const [error, setError] = useState<string | null>(null);
+  const [tokenInfo, setTokenInfo] = useState<TokenInfo | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let subscription: { unsubscribe: () => void } | null = null;
+
+    const setupSubscription = async () => {
+      try {
+        setIsLoading(true);
+
+        // TODO: Parse the chain spec and extract tokenDecimals and tokenSymbol
+        // const wndChainSpecJSON = JSON.parse(wndChainSpec);
+        // const decimals = ...
+        // const symbol = ...
+        // setTokenInfo({ symbol, decimals });
+
+        // TODO: Subscribe to System.Account for this address
+        // const observable = ...
+        // subscription = observable.subscribe({
+        //   next: (data) => {
+        //     // Format and set the balance here
+        //   },
+        //   error: (err) => {
+        //     // Set error state here
+        //   },
+        // });
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch balance');
+        setBalance('Error');
+        setIsLoading(false);
+      }
+    };
+
+    setupSubscription();
+
+    return () => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    };
+  }, [address, decimalPlaces]);
+
+  return { balance, error, tokenInfo, isLoading };
+}
+```
+
+Once completed, your file should look like this:
+
+```tsx filename="lib/hooks/useBalance.ts"
+import { chainSpec as wndChainSpec } from 'polkadot-api/chains/westend2';
+
+import { useEffect, useState } from 'react';
+
+import { wndApi } from '@/lib/clients';
+
+interface TokenInfo {
+  symbol: string;
+  decimals: number;
+}
+
+interface UseBalanceResult {
+  balance: string;
+  error: string | null;
+  tokenInfo: TokenInfo | null;
+  isLoading: boolean;
+}
+
+interface UseBalanceOptions {
+  decimalPlaces?: number;
+}
+
+export function useBalance(address: string, options: UseBalanceOptions = {}): UseBalanceResult {
+  const { decimalPlaces = 4 } = options;
+  const [balance, setBalance] = useState<string>('Loading...');
+  const [error, setError] = useState<string | null>(null);
+  const [tokenInfo, setTokenInfo] = useState<TokenInfo | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let subscription: { unsubscribe: () => void } | null = null;
+
+    const setupSubscription = async () => {
+      try {
+        setIsLoading(true);
+        // Get chain properties
+        const wndChainSpecJSON = JSON.parse(wndChainSpec);
+        const wndChainProps = wndChainSpecJSON.properties;
+
+        const decimals = Number(wndChainProps.tokenDecimals);
+        const symbol = wndChainProps.tokenSymbol;
+        setTokenInfo({ symbol, decimals });
+
+        // Subscribe to balance changes
+        const observable = wndApi.query.System.Account.watchValue(address);
+        subscription = observable.subscribe({
+          next: (data) => {
+            const balanceInPlanck = data.data.free;
+            const balanceInToken = Number(balanceInPlanck) / Math.pow(10, decimals);
+            setBalance(balanceInToken.toFixed(decimalPlaces));
+            setIsLoading(false);
+          },
+          error: (err) => {
+            setError(err instanceof Error ? err.message : 'Failed to fetch balance');
+            setBalance('Error');
+            setIsLoading(false);
+          },
+        });
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch balance');
+        setBalance('Error');
+        setIsLoading(false);
+      }
+    };
+
+    setupSubscription();
+
+    return () => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    };
+  }, [address, decimalPlaces]);
+
+  return { balance, error, tokenInfo, isLoading };
+}
+
+```
+
+3. To give users visual feedback while their balance is loading, we’ll use the skeleton component from shadcn/ui.
+   
+   Run the following command in your terminal to add it:
+
+```sh
+pnpm dlx shadcn@latest add skeleton
+```
+
+4. We’ll now create a reusable `BalanceDisplay` component that shows the balance for a given address.
+   
+   Create a new file at `components/BalanceDisplay.tsx` and use the following template as a starting point. It includes TODOs to help guide your implementation.
+
+```tsx filename="components/BalanceDisplay.tsx"
+'use client';
+
+// TODO: Import the useBalance hook from your custom hook
+// import { useBalance } from '@/lib/hooks/useBalance';
+
+// TODO: Import the Skeleton component from shadcn/ui
+// import { Skeleton } from './ui/skeleton';
+
+interface BalanceDisplayProps {
+  address: string;
+  className?: string;
+  showAddress?: boolean;
+  decimalPlaces?: number;
+}
+
+export function BalanceDisplay({
+  address,
+  className = '',
+  showAddress = true,
+  decimalPlaces = 4,
+}: BalanceDisplayProps) {
+  // TODO: Call the useBalance hook with the given address and decimalPlaces
+  // const { balance, error, tokenInfo, isLoading } = useBalance(address, { decimalPlaces });
+
+  // TODO: Handle error state
+  // if (error) {
+  //   return <div className="text-red-500">Error: {error}</div>;
+  // }
+
+  return (
+    <div className={`rounded-lg p-4 ${className}`}>
+      <h3 className="mb-2 text-lg font-semibold">Account Balance</h3>
+
+      {/* TODO: Show skeleton while loading, else show the formatted balance */}
+      {/* {isLoading ? (
+        <Skeleton className="h-[32px] w-[200px] rounded-md" />
+      ) : (
+        <p className="text-2xl font-bold">
+          {balance} {tokenInfo?.symbol}
+        </p>
+      )} */}
+
+      {/* Optional: Show address if showAddress is true */}
+      {/* {showAddress && <p className="mt-1 text-sm text-gray-500">Address: {address}</p>} */}
+    </div>
+  );
+}
+```
+
+Once done, you should have something similar to the following:
+
+```tsx filename="components/BalanceDisplay.tsx"
+'use client';
+
+import { useBalance } from '@/lib/hooks/useBalance';
+
+import { Skeleton } from './ui/skeleton';
+
+interface BalanceDisplayProps {
+  address: string;
+  className?: string;
+  showAddress?: boolean;
+  decimalPlaces?: number;
+}
+
+export function BalanceDisplay({
+  address,
+  className = '',
+  showAddress = true,
+  decimalPlaces = 4,
+}: BalanceDisplayProps) {
+  const { balance, error, tokenInfo, isLoading } = useBalance(address, { decimalPlaces });
+
+  if (error) {
+    return <div className="text-red-500">Error: {error}</div>;
+  }
+
+  return (
+    <div className={`rounded-lg p-4 ${className}`}>
+      <h3 className="mb-2 text-lg font-semibold">Account Balance</h3>
+      {isLoading ? (
+        <Skeleton className="h-[32px] w-[200px] rounded-md" />
+      ) : (
+        <p className="text-2xl font-bold">
+          {balance} {tokenInfo?.symbol}
+        </p>
+      )}
+      {showAddress && <p className="mt-1 text-sm text-gray-500">Address: {address}</p>}
+    </div>
+  );
+}
+
+```
+
+5. Now that you’ve created a reusable `BalanceDisplay` component, let’s show each connected account’s balance on the home page.
+   
+   First import the `BalanceDisplay` component in your `app/page.tsx` file like so:
+```tsx
+import { BalanceDisplay } from '@/components/BalanceDisplay';
+```
+
+Under each account’s address, render the balance by adding the `BalanceDisplay` component and passing in the account’s address:
+
+```tsx
+// Inside the map block for accounts
+<div key={account.address} className="space-y-2">
+  <div className="bg-muted rounded-md p-2">{account.address}</div>
+  
+  {/* TODO: Display the balance for this address */}
+</div>
+```
+
+After completion, you should have your `app/page.tsx` file looking like:
+
+```tsx filename="app/page.tsx"
+'use client';
+
+import { AlertCircle } from 'lucide-react';
+import { InjectedPolkadotAccount } from 'polkadot-api/pjs-signer';
+
+import { useEffect, useState } from 'react';
+
+import { BalanceDisplay } from '@/components/BalanceDisplay';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
+import { getWalletExtensions } from '@/lib/wallet';
+
+import { useWallet } from '@/providers/WalletProvider';
+
+export default function Home() {
+  // Utility functions to connect, disconnect, and get the state of the wallet
+  const { extension, connect, disconnect } = useWallet();
+
+  // List of wallet extensions installed in the user's browser
+  const [availableExtensions, setAvailableExtensions] = useState<string[]>([]);
+  // List of accounts authorized to connect to the application by the wallet
+  const [accounts, setAccounts] = useState<InjectedPolkadotAccount[]>([]);
+  // Error message to display to the user
+  const [error, setError] = useState<string | null>(null);
+
+  // Get the list of wallet extensions installed in the user's browser
+  useEffect(() => {
+    const extensions = getWalletExtensions();
+    setAvailableExtensions(extensions);
+  }, []);
+
+  // Subscribe to account changes when wallet is connected
+  useEffect(() => {
+    if (extension) {
+      const unsubscribe = extension.subscribe((accounts) => {
+        setAccounts(accounts);
+      });
+      return () => unsubscribe();
+    }
+  }, [extension]);
+
+  return (
+    <div className="container mx-auto max-w-2xl p-4">
+      <Card>
+        <CardHeader>
+          <CardTitle>Wallet Connection</CardTitle>
+          <CardDescription>Connect your wallet to interact with the application</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {error && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          {extension ? (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-medium">Connected Wallet</h3>
+                  <p className="text-muted-foreground text-sm">{extension.name}</p>
+                </div>
+                <Button variant="destructive" onClick={() => disconnect()}>
+                  Disconnect
+                </Button>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="font-medium">Connected Accounts</h3>
+                <div className="space-y-2">
+                  {accounts.map((account) => (
+                    <div key={account.address} className="space-y-2">
+                      <div className="bg-muted rounded-md p-2">{account.address}</div>
+                      <BalanceDisplay address={account.address} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <h3 className="font-medium">Available Wallets</h3>
+              <div className="grid gap-2">
+                {availableExtensions.map((extension) => (
+                  <Button
+                    key={extension}
+                    onClick={() =>
+                      connect(extension)
+                        .then(() => setError(null))
+                        .catch((error) => setError(error.message))
+                    }
+                  >
+                    Connect {extension}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+```
+
+Once this is done, you should see the account’s live on-chain balance load automatically after wallet connection.
+
+<img src="Screenshot 2025-06-09 at 9.26.37 AM.png" height="325px" width="auto" />
+
+
+### Step 11: Creating an NFT collection
+
+### Getting test tokens
+Once you've installed a wallet and created an account, you'll need some testnet tokens interact with Westend.
+
+Use the [Westend Faucet](https://faucet.polkadot.io/westend) to request WND (Westend’s native token). These are essential for paying transaction fees during development.
+
+> ⚠️ If you’re planning to go live on Polkadot mainnet later, you’ll need to acquire real DOT tokens via Talisman or a cryptocurrency exchange. But for now, WND is all you need for testing.
+
+### Creating Your Collection
+With tokens ready, let’s deploy your first NFT collection:
+
+create collection `uniques.create(collection, admin)`
+- collection: u32 (CollectionId)
+- admin: MultiAddress (AccountIdLookupOf)
+
+Set the metadata for your collection. `uniques.setCollectionMetadata(collection, data, isFrozen)`
+- collection: u32 (CollectionId)
+- data: Bytes
+	- upload to ipfs using https://wiki.polkadot.network/learn/learn-nft-pallets/#using-apillon
+- isFrozen: bool
+
+### What is IPFS?
+
+**IPFS (InterPlanetary File System)** is a decentralized protocol for storing and accessing files using **content-based addressing**.
+
+Instead of accessing files by **where** they are (like a URL), IPFS accesses files by **what they are** (their cryptographic hash).
+
+Example:
+```
+ipfs://QmX... → This is a hash of the file content.
+```
+
+### How IPFS Actually Works
+- Files are immutable (changing the content = new CID)
+- Anyone can fetch a file from anyone else, peer-to-peer
+- Fast, redundant, and censorship-resistant in theory
+
+> **⚠️ But, IPFS does not guarantee persistence**
+
+When you upload to IPFS (via Apillon, web3.storage, Pinata, etc.), you’re pinning it to your node or the service’s infrastructure.
+
+If nobody pins the file and the uploader deletes it (or stops hosting), it can disappear from the network.
+
+So, you can remove the data whenever you want, unless someone else is also pinning it.
+
+This is a problem for NFTs because: An NFT that points to `ipfs://Qm123...` is useless if that CID becomes unreachable.
