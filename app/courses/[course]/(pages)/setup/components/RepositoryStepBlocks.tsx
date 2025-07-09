@@ -1,4 +1,4 @@
-import { HStack, Spinner, Text, VStack } from "@chakra-ui/react";
+import { Button, HStack, Spinner, Text, VStack } from "@chakra-ui/react";
 import React from "react";
 import { HiOutlineCheckCircle } from "react-icons/hi";
 
@@ -46,8 +46,25 @@ const RepositorySteps = ({
           </>
         ) : (
           <>
-            <Spinner mr={2} size="sm" speed="0.8s" />
-            <Text>Listening for a git push...</Text>
+            <HStack align="start">
+              <Spinner mt={1} size="sm" speed="0.8s" />
+              <VStack align="start" spacing={1}>
+                <Text>Listening for a git push...</Text>
+
+                <Text color="gray.400" fontSize="sm">
+                  Pushed a commit but don&apos;t see it reflecting?<br />Try{" "}
+                  <Button
+                    onClick={() => window.location.reload()}
+                    variant="link"
+                    size="sm"
+                    display="inline"
+                  >
+                    refreshing the page
+                  </Button>
+                  .
+                </Text>
+              </VStack>
+            </HStack>
           </>
         )}
       </HStack>
