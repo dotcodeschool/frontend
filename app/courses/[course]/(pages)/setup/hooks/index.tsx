@@ -83,33 +83,35 @@ cd dotcodeschool-${courseSlug}
     repositorySetup,
   ]);
 
-  // Effect for real-time repository updates
+  // Effect for polling repository updates
   useEffect(() => {
     if (!repoId) return;
 
-    const eventSource = new EventSource("/api/repository-updates");
+    let timeoutId: NodeJS.Timeout;
 
-    eventSource.onmessage = (event) => {
+    const pollRepository = async () => {
       try {
-        const data = JSON.parse(event.data);
-        // Check if the update is for our repository
-        if (data.documentKey?._id === repoId) {
-          // If there's an update to test_ok field, update our state
-          if (data.updateDescription?.updatedFields?.test_ok !== undefined) {
-            setGitPushReceived(data.updateDescription.updatedFields.test_ok);
+        const response = await fetch(`/api/repository?repoId=${repoId}`);
+        if (response.ok) {
+          const repoData = await response.json();
+          setGitPushReceived(repoData.test_ok ?? false);
+
+          // If git push not received yet, continue polling
+          if (!repoData.test_ok) {
+            timeoutId = setTimeout(pollRepository, 2000); // Poll every 2 seconds
           }
         }
       } catch (error) {
-        console.error("Error processing repository update:", error);
+        console.error("Error polling repository:", error);
+        // On error, continue polling
+        timeoutId = setTimeout(pollRepository, 2000);
       }
     };
 
-    eventSource.onerror = (error) => {
-      console.error("EventSource failed:", error);
-    };
+    void pollRepository();
 
     return () => {
-      eventSource.close();
+      clearTimeout(timeoutId);
     };
   }, [repoId]);
 
