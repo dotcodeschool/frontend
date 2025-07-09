@@ -26,6 +26,7 @@ const useRepositorySetup = (
     initialRepo?._id?.toString() ?? null,
   );
 
+  // Effect for initial setup and repo data fetching
   useEffect(() => {
     if (initialRepo) {
       setShowRepositorySetup(true);
@@ -82,7 +83,35 @@ cd dotcodeschool-${courseSlug}
     repositorySetup,
   ]);
 
-  // Rest of your component...
+  // Effect for real-time repository updates
+  useEffect(() => {
+    if (!repoId) return;
+
+    const eventSource = new EventSource("/api/repository-updates");
+
+    eventSource.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        // Check if the update is for our repository
+        if (data.documentKey?._id === repoId) {
+          // If there's an update to test_ok field, update our state
+          if (data.updateDescription?.updatedFields?.test_ok !== undefined) {
+            setGitPushReceived(data.updateDescription.updatedFields.test_ok);
+          }
+        }
+      } catch (error) {
+        console.error("Error processing repository update:", error);
+      }
+    };
+
+    eventSource.onerror = (error) => {
+      console.error("EventSource failed:", error);
+    };
+
+    return () => {
+      eventSource.close();
+    };
+  }, [repoId]);
 
   return {
     showRepositorySetup,
