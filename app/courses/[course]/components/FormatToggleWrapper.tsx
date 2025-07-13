@@ -29,27 +29,15 @@ const FormatToggleWrapper = ({
         const baseSlug = isInBrowser ? slug.replace("in-browser-", "") : slug;
         const alternateSlug = isInBrowser ? baseSlug : `in-browser-${baseSlug}`;
 
-        // Get all courses to check if the alternate format exists
-        const response = await fetch("/api/courses");
-        const courses = await response.json();
-
-        console.log(
-          "FormatToggleWrapper - All courses:",
-          courses.map((c: any) => c.slug),
+        // Check if the alternate format exists in the local content/courses directory
+        const response = await fetch(
+          `/api/check-course-exists?slug=${alternateSlug}&checkLocal=true`,
         );
-        console.log(
-          "FormatToggleWrapper - Looking for alternate slug:",
-          alternateSlug,
-        );
-
-        // Check if the alternate format exists in the courses
-        const alternateExists = courses.some(
-          (course: { slug?: string }) => course.slug === alternateSlug,
-        );
+        const { exists } = await response.json();
 
         console.log(
           "FormatToggleWrapper - Alternate exists:",
-          alternateExists,
+          exists,
           "for slug:",
           slug,
           "alternate slug:",
@@ -57,40 +45,18 @@ const FormatToggleWrapper = ({
         );
 
         setFormatData({
-          hasInBrowser: isInBrowser ? true : alternateExists,
-          hasOnMachine: isInBrowser ? alternateExists : true,
+          hasInBrowser: isInBrowser ? true : exists,
+          hasOnMachine: isInBrowser ? exists : true,
           currentFormat: isInBrowser ? "inBrowserCourse" : "onMachineCourse",
         });
       } catch (error) {
         console.error("Error checking course formats:", error);
-        // Fallback to using the API endpoint to check if the alternate format exists
-        try {
-          const isInBrowser = slug.startsWith("in-browser-");
-          const baseSlug = isInBrowser ? slug.replace("in-browser-", "") : slug;
-          const alternateSlug = isInBrowser
-            ? baseSlug
-            : `in-browser-${baseSlug}`;
-
-          // Check if the alternate format exists by making a fetch request
-          const response = await fetch(
-            `/api/check-course-exists?slug=${alternateSlug}`,
-          );
-          const { exists } = await response.json();
-
-          setFormatData({
-            hasInBrowser: isInBrowser ? true : exists,
-            hasOnMachine: isInBrowser ? exists : true,
-            currentFormat: isInBrowser ? "inBrowserCourse" : "onMachineCourse",
-          });
-        } catch (fallbackError) {
-          console.error("Error in fallback check:", fallbackError);
-          // Default to showing only the current format
-          setFormatData({
-            hasInBrowser: format === "inBrowserCourse",
-            hasOnMachine: format === "onMachineCourse",
-            currentFormat: format || "inBrowserCourse",
-          });
-        }
+        // Default to showing only the current format
+        setFormatData({
+          hasInBrowser: format === "inBrowserCourse",
+          hasOnMachine: format === "onMachineCourse",
+          currentFormat: format || "inBrowserCourse",
+        });
       } finally {
         setLoading(false);
       }

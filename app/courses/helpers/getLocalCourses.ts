@@ -3,6 +3,16 @@ import path from "path";
 import matter from "gray-matter";
 import { CourseOverview } from "@/lib/types";
 
+// Extended type for local courses that includes format information
+interface LocalCourseOverview extends CourseOverview {
+  formats: {
+    hasInBrowser: boolean;
+    hasOnMachine: boolean;
+    inBrowserSlug?: string;
+    onMachineSlug?: string;
+  };
+}
+
 /**
  * Reads local course files from the content/courses directory
  * and returns them in the same format as the Contentful API
@@ -39,7 +49,8 @@ export const getLocalCourses = async (): Promise<CourseOverview[]> => {
 
   console.log("Found course directories:", courseDirectories);
 
-  const courses: CourseOverview[] = [];
+  // Create a map to group course variants together
+  const courseMap = new Map<string, LocalCourseOverview>();
 
   // Process each course directory
   for (const courseSlug of courseDirectories) {
@@ -56,18 +67,55 @@ export const getLocalCourses = async (): Promise<CourseOverview[]> => {
     const fileContents = fs.readFileSync(mdxFilePath, "utf8");
     const { data } = matter(fileContents);
 
+    // Determine if this is an in-browser variant
+    const isInBrowser = courseSlug.startsWith("in-browser-");
+    const baseSlug = isInBrowser
+      ? courseSlug.replace("in-browser-", "")
+      : courseSlug;
+
     // Extract the required fields for CourseOverview
-    const course: CourseOverview = {
+    const course: LocalCourseOverview = {
       slug: data.slug || courseSlug,
       title: data.title || courseSlug,
       description: data.description || "",
       level: data.level || "Beginner",
       language: data.language || "Unknown",
       author: data.author || "Unknown",
+      formats: {
+        hasInBrowser: isInBrowser,
+        hasOnMachine: !isInBrowser,
+        inBrowserSlug: isInBrowser ? courseSlug : undefined,
+        onMachineSlug: !isInBrowser ? courseSlug : undefined,
+      },
     };
 
-    courses.push(course);
+    // Check if we already have a variant of this course
+    const existingCourse = courseMap.get(baseSlug);
+    if (existingCourse) {
+      // Update formats information
+      const formats = {
+        hasInBrowser: existingCourse.formats.hasInBrowser || isInBrowser,
+        hasOnMachine: existingCourse.formats.hasOnMachine || !isInBrowser,
+        inBrowserSlug: isInBrowser
+          ? courseSlug
+          : existingCourse.formats.inBrowserSlug,
+        onMachineSlug: !isInBrowser
+          ? courseSlug
+          : existingCourse.formats.onMachineSlug,
+      };
+
+      // Prefer the on-machine (local) course metadata
+      if (!isInBrowser) {
+        courseMap.set(baseSlug, { ...course, formats });
+      } else {
+        courseMap.set(baseSlug, { ...existingCourse, formats });
+      }
+    } else {
+      courseMap.set(baseSlug, course);
+    }
   }
 
-  return courses;
+  // Convert map back to array and cast to CourseOverview[]
+  // This is safe because CourseOverview is a subset of LocalCourseOverview
+  return Array.from(courseMap.values()) as CourseOverview[];
 };

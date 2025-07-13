@@ -12,6 +12,7 @@ import {
 import { InfoIcon } from "@chakra-ui/icons";
 import { FormatSelectionModal } from "../../../courses/components/FormatSelectionModal";
 import { PiArrowsLeftRight } from "react-icons/pi";
+import Link from "next/link";
 
 type FormatToggleProps = {
   slug: string;
@@ -28,7 +29,6 @@ const FormatToggle = ({
   currentFormat,
   title,
 }: FormatToggleProps) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const isInBrowser = currentFormat === "inBrowserCourse";
 
   console.log(
@@ -62,51 +62,32 @@ const FormatToggle = ({
     <Box mb={4} mt={2}>
       <HStack>
         {/* Show the appropriate tag based on the current format */}
-        {!isInBrowser ? (
+        {!isInBrowser && (
           <Tag colorScheme="gray" size="md">
-            <Text mr={2}>Beta</Text>
+            <Text mr={2}>Legacy</Text>
             <Tooltip
-              label="Runs on your local machine. Currently in early testing — setup required."
+              label="Runs on your local machine. This format is unstable and no longer recommended."
               placement="top"
             >
               <InfoIcon />
             </Tooltip>
           </Tag>
-        ) : (
-          alternateExists && (
-            <Tag colorScheme="green" size="md">
-              <Text mr={2}>Recommended</Text>
-              <Tooltip
-                label="We recommend the in-browser format for simplicity and a better learning experience. The on-machine option is available but requires additional setup."
-                placement="top"
-              >
-                <InfoIcon />
-              </Tooltip>
-            </Tag>
-          )
         )}
 
         {/* Only show the Change Format button if an alternate format exists */}
-        {alternateExists && (
+        {alternateExists && !isInBrowser && (
           <Button
+            as={Link}
+            href={`/courses/${inBrowserSlug}`}
             size="sm"
             variant="outline"
             colorScheme="gray"
-            onClick={onOpen}
             leftIcon={<PiArrowsLeftRight />}
           >
-            Switch to {isInBrowser ? "On-Machine" : "In-Browser"} Format
+            Switch to In-Browser Format
           </Button>
         )}
       </HStack>
-
-      <FormatSelectionModal
-        isOpen={isOpen}
-        onClose={onClose}
-        courseTitle={courseTitle}
-        inBrowserSlug={isInBrowser ? slug : inBrowserSlug}
-        onMachineSlug={!isInBrowser ? slug : baseSlug}
-      />
     </Box>
   );
 };

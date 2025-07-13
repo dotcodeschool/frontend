@@ -97,10 +97,10 @@ const FormatSelectionModal = ({
                   <HStack spacing={2} mt={1}>
                     <Text fontWeight="bold">On-Machine</Text>
                     <Tag colorScheme="gray" size="sm">
-                      Beta
+                      Legacy
                     </Tag>
                     <Tooltip
-                      label="Runs on your local machine. Currently in early testing — setup required."
+                      label="Runs on your local machine. This format is unstable and no longer recommended."
                       placement="top"
                     >
                       <InfoIcon boxSize={3} />
@@ -109,7 +109,7 @@ const FormatSelectionModal = ({
                 </Radio>
                 <Text ml={6} mt={2} fontSize="sm" color="gray.300">
                   Run the course on your local machine. Requires setup and
-                  installation.
+                  installation. This format is no longer recommended.
                 </Text>
               </Box>
             </Stack>
