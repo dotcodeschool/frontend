@@ -1,0 +1,31 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Navbar from '@/shared/components/Navbar.astro'
+import { getArticles } from '@/features/articles/lib/loader'
+
+const articles = getArticles()
+---
+
+<BaseLayout title="Articles — Dot Code School">
+  <Navbar />
+  <main class="max-w-3xl mx-auto px-4 py-8">
+    <h1 class="font-heading text-2xl font-bold mb-8">Articles</h1>
+    <div class="space-y-6">
+      {articles.map((article) => (
+        <a href={`/articles/${article.slug}`}
+           class="block p-6 bg-surface border border-border rounded-lg hover:bg-elevated transition-colors no-underline">
+          <h2 class="font-heading text-lg font-semibold text-content-primary mb-1">{article.title}</h2>
+          <p class="text-content-muted text-xs mb-2">{article.date} · {article.author}</p>
+          <p class="text-content-secondary text-sm">{article.description}</p>
+          {article.tags.length > 0 && (
+            <div class="flex gap-2 mt-3">
+              {article.tags.map((tag) => (
+                <span class="text-xs text-content-muted bg-elevated px-2 py-0.5 rounded">{tag}</span>
+              ))}
+            </div>
+          )}
+        </a>
+      ))}
+    </div>
+  </main>
+</BaseLayout>
