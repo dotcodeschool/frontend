@@ -18,7 +18,8 @@
 
 # misc
 .claude/*
-docs/superpowers/*
+.superpowers*
+docs/superpowers*
 .DS_Store
 *.pem
 
