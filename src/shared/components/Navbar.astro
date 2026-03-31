@@ -1,0 +1,33 @@
+---
+// src/shared/components/Navbar.astro
+import { ThemeToggle } from './ThemeToggle'
+
+interface Props {
+  showLinks?: boolean
+}
+
+const { showLinks = true } = Astro.props
+---
+
+<nav class="flex items-center justify-between px-5 h-12 border-b border-border bg-surface">
+  <a href="/" class="font-heading text-base font-semibold text-content-primary no-underline">
+    Dot Code School
+  </a>
+
+  {showLinks && (
+    <div class="flex items-center gap-6 text-sm font-body">
+      <a href="/courses" class="text-content-muted hover:text-content-secondary transition-colors no-underline">Courses</a>
+      <a href="/articles" class="text-content-muted hover:text-content-secondary transition-colors no-underline">Articles</a>
+    </div>
+  )}
+
+  <div class="flex items-center gap-3">
+    <ThemeToggle client:load />
+    <a
+      href="/auth/login"
+      class="text-content-muted text-xs border border-border px-3 py-1.5 rounded-md hover:text-content-secondary hover:border-content-faint transition-colors no-underline"
+    >
+      Sign in with GitHub
+    </a>
+  </div>
+</nav>
