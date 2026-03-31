@@ -52,7 +52,7 @@ export type Lesson = {
   slug: LessonSlug
   title: string
   order: number
-  content: string
+  code: string
   commitHash?: string
   lastUpdated?: string
   files: LessonFiles | null

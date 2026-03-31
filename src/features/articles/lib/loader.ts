@@ -1,7 +1,8 @@
 import fs from "node:fs"
 import path from "node:path"
 import matter from "gray-matter"
-import { marked } from "marked"
+import { bundleMDX } from "mdx-bundler"
+import rehypeMdxCodeProps from "rehype-mdx-code-props"
 
 const ARTICLES_DIR = path.join(process.cwd(), "content/articles")
 
@@ -17,7 +18,7 @@ export interface ArticleSummary {
 }
 
 export interface Article extends ArticleSummary {
-  content: string
+  code: string
   lastUpdated?: string
   estimatedTime?: string
 }
@@ -48,11 +49,19 @@ export function getArticles(): ArticleSummary[] {
   return articles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 }
 
-export function getArticle(slug: string): Article | null {
+export async function getArticle(slug: string): Promise<Article | null> {
   const filePath = path.join(ARTICLES_DIR, `${slug}.mdx`)
   if (!fs.existsSync(filePath)) return null
 
   const { data, content } = matter(fs.readFileSync(filePath, 'utf8'))
+  const { code } = await bundleMDX({
+    source: content,
+    mdxOptions(options) {
+      options.rehypePlugins = [...(options.rehypePlugins ?? []), rehypeMdxCodeProps]
+      return options
+    },
+  })
+
   return {
     slug,
     title: data.title ?? slug,
@@ -62,7 +71,7 @@ export function getArticle(slug: string): Article | null {
     tags: data.tags ?? [],
     category: data.category,
     featured: data.featured ?? false,
-    content: marked.parse(content) as string,
+    code,
     lastUpdated: data.last_updated,
     estimatedTime: data.estimatedTime,
   }

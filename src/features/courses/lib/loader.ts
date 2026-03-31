@@ -1,7 +1,8 @@
 import fs from "node:fs"
 import path from "node:path"
 import matter from "gray-matter"
-import { marked } from "marked"
+import { bundleMDX } from "mdx-bundler"
+import rehypeMdxCodeProps from "rehype-mdx-code-props"
 import type {
   CourseSummary, Course, Section, LessonSummary, Lesson, LessonFiles, CodeFile,
   CourseSlug, SectionSlug, LessonSlug,
@@ -160,11 +161,11 @@ export function getCourse(slug: CourseSlug): Course | null {
   }
 }
 
-export function getLesson(
+export async function getLesson(
   courseSlug: CourseSlug,
   sectionSlug: SectionSlug,
   lessonSlug: LessonSlug,
-): Lesson | null {
+): Promise<Lesson | null> {
   const lessonDir = path.join(CONTENT_DIR, courseSlug, "sections", sectionSlug, "lessons", lessonSlug)
   const mdxPath = path.join(lessonDir, `${lessonSlug}.mdx`)
 
@@ -188,11 +189,19 @@ export function getLesson(
     }
   }
 
+  const { code } = await bundleMDX({
+    source: content,
+    mdxOptions(options) {
+      options.rehypePlugins = [...(options.rehypePlugins ?? []), rehypeMdxCodeProps]
+      return options
+    },
+  })
+
   return {
     slug: lessonSlug as LessonSlug,
     title: data.title ?? lessonSlug,
     order: data.order ?? 0,
-    content: marked.parse(content) as string,
+    code,
     commitHash: data.commit_hash,
     lastUpdated: data.last_updated,
     files,
