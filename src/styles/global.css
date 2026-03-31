@@ -1,6 +1,6 @@
 /* src/styles/global.css */
 @import "tailwindcss";
-@import "@tailwindcss/typography";
+@plugin "@tailwindcss/typography";
 
 @variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
