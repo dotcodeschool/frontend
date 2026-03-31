@@ -32,7 +32,7 @@ export function getStaticPaths() {
 
 const { courseSlug, sectionSlug, lessonSlug } = Astro.params
 const course = getCourse(asCourseSlug(courseSlug!))
-const lesson = getLesson(asCourseSlug(courseSlug!), asSectionSlug(sectionSlug!), asLessonSlug(lessonSlug!))
+const lesson = await getLesson(asCourseSlug(courseSlug!), asSectionSlug(sectionSlug!), asLessonSlug(lessonSlug!))
 
 if (!course || !lesson) return Astro.redirect('/404')
 
@@ -52,7 +52,7 @@ const readOnly = lesson.files !== null && lesson.files.source.length > 0 && less
     />
     <div class="flex-1 flex flex-col overflow-hidden">
       <LessonLayout
-        html={lesson.content}
+        code={lesson.code}
         title={lesson.title}
         lastUpdated={lesson.lastUpdated}
         files={lesson.files}

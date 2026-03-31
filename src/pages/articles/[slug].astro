@@ -2,13 +2,14 @@
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Navbar from '@/shared/components/Navbar.astro'
 import { getArticles, getArticle } from '@/features/articles/lib/loader'
+import MdxRenderer from '@/shared/components/MdxRenderer'
 
 export function getStaticPaths() {
   return getArticles().map(a => ({ params: { slug: a.slug } }))
 }
 
 const { slug } = Astro.params
-const article = getArticle(slug!)
+const article = await getArticle(slug!)
 
 if (!article) return Astro.redirect('/404')
 ---
@@ -23,7 +24,7 @@ if (!article) return Astro.redirect('/404')
                  prose-headings:font-heading prose-headings:text-content-primary
                  prose-a:text-accent prose-code:text-accent prose-code:bg-elevated
                  prose-pre:bg-code prose-pre:border prose-pre:border-border">
-      <Fragment set:html={article.content} />
+      <MdxRenderer code={article.code} client:load />
     </div>
   </main>
 </BaseLayout>

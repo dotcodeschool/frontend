@@ -4,7 +4,7 @@ import LessonContent from './LessonContent'
 import CodeEditor from './code-editor/CodeEditor'
 
 interface Props {
-  html: string
+  code: string
   title: string
   lastUpdated?: string
   files: LessonFiles | null
@@ -12,14 +12,14 @@ interface Props {
   readOnly: boolean
 }
 
-export default function LessonLayout({ html, title, lastUpdated, files, diff, readOnly }: Props) {
+export default function LessonLayout({ code, title, lastUpdated, files, diff, readOnly }: Props) {
   const hasEditor = files !== null
 
   if (!hasEditor) {
     return (
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-3xl mx-auto">
-          <LessonContent html={html} title={title} lastUpdated={lastUpdated} />
+          <LessonContent code={code} title={title} lastUpdated={lastUpdated} />
         </div>
       </div>
     )
@@ -27,7 +27,7 @@ export default function LessonLayout({ html, title, lastUpdated, files, diff, re
 
   return (
     <ResizablePane
-      left={<LessonContent html={html} title={title} lastUpdated={lastUpdated} />}
+      left={<LessonContent code={code} title={title} lastUpdated={lastUpdated} />}
       right={
         <div className="h-full">
           <CodeEditor files={files} diff={diff} readOnly={readOnly} />
