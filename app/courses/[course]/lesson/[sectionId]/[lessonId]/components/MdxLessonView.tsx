@@ -131,9 +131,41 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
   const hasFiles = shouldShowEditor && (sourceFiles || templateFiles);
 
   // Determine which files to display in the editor
-  const editorFiles = sourceFiles || templateFiles || [];
+  const baseFiles = sourceFiles || templateFiles || [];
   const isReadOnly = !!sourceFiles; // Read-only if we're showing source files
   const showHints = !!templateFiles && !!solutionFiles; // Show hints if we have template and solution files
+
+  // Build a unified diff tab from files that have changes
+  const editorFiles = React.useMemo(() => {
+    const changedFiles = baseFiles.filter(
+      (f) => f.hasChanges && f.diffToHighlight,
+    );
+    if (changedFiles.length === 0) return baseFiles;
+
+    const diffContent = changedFiles
+      .map((file) => {
+        const lines = (file.diffToHighlight || [])
+          .map((part) => {
+            const prefix = part.added ? "+" : part.removed ? "-" : " ";
+            return part.value
+              .split("\n")
+              .filter((line) => line !== "" || !part.added)
+              .map((line) => `${prefix}${line}`)
+              .join("\n");
+          })
+          .join("\n");
+        return `--- a/${file.fileName}\n+++ b/${file.fileName}\n${lines}`;
+      })
+      .join("\n\n");
+
+    const diffFile: TypeFile = {
+      fileName: "changes.diff",
+      code: diffContent,
+      language: "diff",
+    };
+
+    return [...baseFiles, diffFile];
+  }, [baseFiles]);
 
   const gitorialUrl = React.useMemo(
     () => (isGitorial ? githubUrl : undefined),
