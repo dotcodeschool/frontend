@@ -99,8 +99,8 @@ importers:
         specifier: ^4.1.2
         version: 4.1.2(react@18.3.1)
       react-icons:
-        specifier: ^4.12.0
-        version: 4.12.0(react@18.3.1)
+        specifier: ^5.6.0
+        version: 5.6.0(react@18.3.1)
       react-split-pane:
         specifier: ^0.1.92
         version: 0.1.92(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -140,6 +140,9 @@ importers:
       tailwindcss:
         specifier: ^4.2.2
         version: 4.2.2
+      vfile:
+        specifier: ^6.0.3
+        version: 6.0.3
       zustand:
         specifier: ^5.0.12
         version: 5.0.12(@types/react@18.3.18)(react@18.3.1)
@@ -4311,8 +4314,8 @@ packages:
       '@types/react':
         optional: true
 
-  react-icons@4.12.0:
-    resolution: {integrity: sha512-IBaDuHiShdZqmfc/TwHu6+d6k2ltNCf3AszxNmjJc1KUfXdEeRJOKyNvLmAHaarhzGmTSVygNdyu8/opXv2gaw==}
+  react-icons@5.6.0:
+    resolution: {integrity: sha512-RH93p5ki6LfOiIt0UtDyNg/cee+HLVR6cHHtW3wALfo+eOHTp8RnU2kRkI6E+H19zMIs03DyxUG/GfZMOGvmiA==}
     peerDependencies:
       react: '*'
 
@@ -10098,7 +10101,7 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.18
 
-  react-icons@4.12.0(react@18.3.1):
+  react-icons@5.6.0(react@18.3.1):
     dependencies:
       react: 18.3.1
 

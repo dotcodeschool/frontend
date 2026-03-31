@@ -3,6 +3,7 @@ import path from "node:path"
 import matter from "gray-matter"
 import { bundleMDX } from "mdx-bundler"
 import rehypeMdxCodeProps from "rehype-mdx-code-props"
+import remarkGfm from "remark-gfm"
 import type {
   CourseSummary, Course, Section, LessonSummary, Lesson, LessonFiles, CodeFile,
   CourseSlug, SectionSlug, LessonSlug,
@@ -191,8 +192,12 @@ export async function getLesson(
 
   const { code } = await bundleMDX({
     source: content,
+    cwd: lessonDir,
     mdxOptions(options) {
+      options.remarkPlugins = [...(options.remarkPlugins ?? []), remarkGfm]
       options.rehypePlugins = [...(options.rehypePlugins ?? []), rehypeMdxCodeProps]
+      options.format = 'md'
+      options.mdExtensions = ['.md', '.mdx']
       return options
     },
   })

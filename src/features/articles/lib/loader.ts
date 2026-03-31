@@ -3,6 +3,7 @@ import path from "node:path"
 import matter from "gray-matter"
 import { bundleMDX } from "mdx-bundler"
 import rehypeMdxCodeProps from "rehype-mdx-code-props"
+import remarkGfm from "remark-gfm"
 
 const ARTICLES_DIR = path.join(process.cwd(), "content/articles")
 
@@ -57,6 +58,7 @@ export async function getArticle(slug: string): Promise<Article | null> {
   const { code } = await bundleMDX({
     source: content,
     mdxOptions(options) {
+      options.remarkPlugins = [...(options.remarkPlugins ?? []), remarkGfm]
       options.rehypePlugins = [...(options.rehypePlugins ?? []), rehypeMdxCodeProps]
       return options
     },
