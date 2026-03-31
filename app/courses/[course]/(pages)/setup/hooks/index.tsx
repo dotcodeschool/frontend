@@ -1,6 +1,4 @@
 // app/courses/[course]/(pages)/setup/hooks/index.tsx
-import { MDXRemote } from "next-mdx-remote";
-import { serialize } from "next-mdx-remote/serialize";
 import { useEffect, useState } from "react";
 
 import { MDXComponents } from "@/components/mdx-components";

@@ -45,7 +45,7 @@
     "mongodb": "^6.14.2",
     "next": "14.2.7",
     "next-auth": "5.0.0-beta.20",
-    "next-mdx-remote": "^5.0.0",
+    "next-mdx-remote": "^6.0.0",
     "prism-react-renderer": "^2.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
