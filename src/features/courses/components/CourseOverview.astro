@@ -1,4 +1,5 @@
 ---
+// src/features/courses/components/CourseOverview.astro
 import type { Course } from '../types'
 
 interface Props {
@@ -6,47 +7,116 @@ interface Props {
 }
 
 const { course } = Astro.props
+
+const totalLessons = course.sections.reduce((sum, s) => sum + s.lessons.length, 0)
+const firstLesson = course.sections[0]?.lessons[0]
+const startHref = firstLesson
+  ? `/courses/${course.slug}/${course.sections[0].slug}/${firstLesson.slug}`
+  : null
 ---
 
 <div>
+  <!-- Header -->
   <h1 class="font-heading text-3xl font-bold mb-2">{course.title}</h1>
-  <p class="text-content-muted text-sm mb-4">{course.level} · {course.language} · by {course.author}</p>
-  <p class="text-content-secondary mb-8 leading-relaxed">{course.description}</p>
 
-  {course.estimatedTime && (
-    <p class="text-content-muted text-sm mb-8">Estimated time: {course.estimatedTime} hours</p>
+  {course.authorUrl ? (
+    <p class="text-content-muted text-sm mb-2">
+      Written by <a href={course.authorUrl} class="text-accent no-underline hover:underline" target="_blank" rel="noopener">{course.author}</a>
+    </p>
+  ) : (
+    <p class="text-content-muted text-sm mb-2">Written by {course.author}</p>
   )}
 
-  <div class="space-y-6">
-    {course.sections.map((section, sIndex) => (
-      <div>
-        <h2 class="font-heading text-lg font-semibold text-content-primary mb-3">{section.title}</h2>
-        {section.description && (
-          <p class="text-content-muted text-sm mb-2">{section.description}</p>
-        )}
-        <ul class="space-y-1 pl-4">
-          {section.lessons.map((lesson) => {
-            const href = `/courses/${course.slug}/${section.slug}/${lesson.slug}`
-            return (
-              <li>
-                <a href={href}
-                   class="flex items-center gap-2 py-1.5 px-3 rounded text-sm text-content-muted hover:text-content-secondary hover:bg-elevated transition-colors no-underline">
-                  <span class="w-1.5 h-1.5 rounded-full bg-content-faint shrink-0" />
-                  {lesson.title}
-                </a>
-              </li>
-            )
-          })}
-        </ul>
-      </div>
-    ))}
+  {course.lastUpdated && (
+    <p class="text-content-faint text-xs mb-4">Last updated: {course.lastUpdated}</p>
+  )}
+
+  <div class="flex gap-2 mb-6">
+    <span class="text-xs font-medium px-3 py-1 rounded-full bg-accent-bg text-accent">{course.level}</span>
+    <span class="text-xs font-medium px-3 py-1 rounded-full bg-accent-bg text-accent">{course.language}</span>
   </div>
 
-  {course.sections[0]?.lessons[0] && (
-    <a href={`/courses/${course.slug}/${course.sections[0].slug}/${course.sections[0].lessons[0].slug}`}
-       class="inline-block mt-8 bg-accent text-sm font-medium px-8 py-3 rounded-md no-underline"
+  <!-- Start Button -->
+  {startHref && (
+    <a href={startHref}
+       class="inline-block bg-accent text-base font-medium px-10 py-3 rounded-md no-underline mb-8"
        style="color: var(--bg-base);">
       Start Course
     </a>
   )}
+
+  <!-- Stats Card -->
+  <div class="border border-border rounded-lg bg-surface p-6 mb-8">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div>
+        <p class="text-content-faint text-xs mb-1">Skill Level</p>
+        <p class="text-content-primary font-semibold">{course.level}</p>
+      </div>
+      <div>
+        <p class="text-content-faint text-xs mb-1">Time to Complete</p>
+        <p class="text-content-primary font-semibold">{course.estimatedTime ? `${course.estimatedTime} hours` : 'Self-paced'}</p>
+      </div>
+      <div>
+        <p class="text-content-faint text-xs mb-1">Course Content</p>
+        <p class="text-content-primary font-semibold">{course.sections.length} sections &middot; {totalLessons} lessons</p>
+      </div>
+      <div>
+        <p class="text-content-faint text-xs mb-1">Prerequisites</p>
+        <p class="text-content-primary font-semibold">{course.prerequisites && course.prerequisites.length > 0 ? course.prerequisites.join(', ') : 'None'}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Description -->
+  <p class="text-content-secondary mb-8 leading-relaxed">{course.description}</p>
+
+  <!-- What You'll Learn -->
+  {course.whatYoullLearn && course.whatYoullLearn.length > 0 && (
+    <div class="border border-border rounded-lg bg-surface p-6 mb-8">
+      <h2 class="font-heading text-lg font-semibold text-content-primary mb-4">What You'll Learn</h2>
+      <ul class="grid grid-cols-1 md:grid-cols-2 gap-2">
+        {course.whatYoullLearn.map((item) => (
+          <li class="flex items-start gap-2 text-sm text-content-secondary">
+            <span class="text-accent mt-0.5 shrink-0">&#10003;</span>
+            {item}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+
+  <!-- Course Content -->
+  <div class="mb-8">
+    <h2 class="font-heading text-lg font-semibold text-content-primary mb-1">Course Content</h2>
+    <p class="text-content-muted text-sm mb-4">{course.sections.length} sections &middot; {totalLessons} lessons</p>
+
+    <div class="space-y-3">
+      {course.sections.map((section, sIndex) => (
+        <div class="border border-border rounded-lg overflow-hidden">
+          <div class="flex items-center gap-3 bg-surface px-4 py-3">
+            <span class="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-sm font-bold shrink-0"
+                  style="color: var(--bg-base);">
+              {sIndex + 1}
+            </span>
+            <div class="flex-1">
+              <h3 class="font-heading text-sm font-semibold text-content-primary">{section.title}</h3>
+              <p class="text-content-faint text-xs">{section.lessons.length} lessons</p>
+            </div>
+          </div>
+          <div class="bg-base">
+            {section.lessons.map((lesson) => {
+              const href = `/courses/${course.slug}/${section.slug}/${lesson.slug}`
+              return (
+                <a href={href}
+                   class="flex items-center gap-3 px-4 py-2.5 pl-16 text-sm text-content-muted hover:text-content-secondary hover:bg-elevated transition-colors no-underline border-t border-border">
+                  <span class="w-1.5 h-1.5 rounded-full bg-content-faint shrink-0" />
+                  {lesson.title}
+                </a>
+              )
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
 </div>

@@ -3,7 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro'
 import Navbar from '@/shared/components/Navbar.astro'
 import SidebarNav from '@/features/courses/components/SidebarNav.astro'
 import LessonNav from '@/features/courses/components/LessonNav.astro'
-import CodeEditor from '@/features/courses/components/code-editor/CodeEditor'
+import LessonLayout from '@/features/courses/components/LessonLayout'
 import { getCourse, getCourses, getLesson } from '@/features/courses/lib/loader'
 import { getNavigation } from '@/features/courses/lib/navigation'
 import { getDiff } from '@/features/courses/lib/diff'
@@ -39,7 +39,7 @@ if (!course || !lesson) return Astro.redirect('/404')
 const nav = getNavigation(asCourseSlug(courseSlug!), asSectionSlug(sectionSlug!), asLessonSlug(lessonSlug!))
 const diff = getDiff(asCourseSlug(courseSlug!), asSectionSlug(sectionSlug!), asLessonSlug(lessonSlug!))
 
-const hasEditor = lesson.files !== null
+const readOnly = lesson.files !== null && lesson.files.source.length > 0 && lesson.files.template.length === 0
 ---
 
 <BaseLayout title={`${lesson.title} — ${course.title}`}>
@@ -51,34 +51,15 @@ const hasEditor = lesson.files !== null
       currentLesson={asLessonSlug(lessonSlug!)}
     />
     <div class="flex-1 flex flex-col overflow-hidden">
-      <div class={`flex flex-1 min-h-0 ${hasEditor ? '' : ''}`}>
-        <!-- MDX Content -->
-        <div class={`overflow-y-auto p-8 ${hasEditor ? 'w-1/2 border-r border-border' : 'max-w-3xl mx-auto w-full'}`}>
-          <h1 class="font-heading text-2xl font-bold mb-2">{lesson.title}</h1>
-          {lesson.lastUpdated && (
-            <p class="text-content-muted text-xs mb-6">Last updated {lesson.lastUpdated}</p>
-          )}
-          <div class="prose prose-invert max-w-none text-content-secondary
-                       prose-headings:font-heading prose-headings:text-content-primary
-                       prose-a:text-accent prose-a:no-underline hover:prose-a:underline
-                       prose-code:text-accent prose-code:bg-elevated prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
-                       prose-pre:bg-code prose-pre:border prose-pre:border-border">
-            <Fragment set:html={lesson.content} />
-          </div>
-        </div>
-
-        <!-- Code Editor -->
-        {hasEditor && (
-          <div class="w-1/2">
-            <CodeEditor
-              files={lesson.files!}
-              diff={diff}
-              readOnly={lesson.files!.source.length > 0 && lesson.files!.template.length === 0}
-              client:only="react"
-            />
-          </div>
-        )}
-      </div>
+      <LessonLayout
+        html={lesson.content}
+        title={lesson.title}
+        lastUpdated={lesson.lastUpdated}
+        files={lesson.files}
+        diff={diff}
+        readOnly={readOnly}
+        client:only="react"
+      />
       <LessonNav nav={nav} />
     </div>
   </div>

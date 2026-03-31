@@ -13,6 +13,7 @@ export type CourseSummary = {
   description: string
   level: string
   language: string
+  order?: number
 }
 
 export type Course = {
@@ -26,6 +27,10 @@ export type Course = {
   githubUrl?: string
   isGitorial?: boolean
   estimatedTime?: number
+  tags?: string[]
+  prerequisites?: string[]
+  whatYoullLearn?: string[]
+  lastUpdated?: string
   sections: Section[]
 }
 

@@ -23,12 +23,12 @@ const { title, description, level, language, slug, index, isLast } = Astro.props
       {index + 1}
     </div>
     <a href={`/courses/${slug}`}
-       class="flex-1 mb-12 p-8 border-l-4 border-l-accent bg-surface rounded-r-lg hover:bg-elevated transition-colors no-underline block">
+       class="flex-1 mb-12 p-8 border border-border border-l-4 border-l-accent bg-surface rounded-r-lg hover:bg-elevated transition-colors no-underline block">
       <h2 class="font-heading text-lg font-semibold text-content-primary mb-1">{title}</h2>
       <p class="text-content-muted text-sm mb-2">{level} · {language}</p>
       <p class="text-content-secondary text-sm">{description}</p>
       <div class="mt-4">
-        <span class="inline-block bg-accent text-sm font-medium px-5 py-2 rounded-md"
+        <span class="inline-block bg-accent text-base font-medium px-8 py-3 rounded-md"
               style="color: var(--bg-base);">
           Start Course
         </span>

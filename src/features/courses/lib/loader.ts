@@ -1,6 +1,7 @@
 import fs from "node:fs"
 import path from "node:path"
 import matter from "gray-matter"
+import { marked } from "marked"
 import type {
   CourseSummary, Course, Section, LessonSummary, Lesson, LessonFiles, CodeFile,
   CourseSlug, SectionSlug, LessonSlug,
@@ -24,7 +25,7 @@ function getLanguage(fileName: string): string {
   const map: Record<string, string> = {
     js: "javascript", jsx: "javascript", ts: "typescript", tsx: "typescript",
     html: "html", css: "css", json: "json", md: "markdown", mdx: "markdown",
-    py: "python", rs: "rust", toml: "toml", go: "go", java: "java",
+    py: "python", rs: "rust", toml: "ini", go: "go", java: "java",
     c: "c", cpp: "cpp", cc: "cpp", sh: "shell",
   }
   return map[ext ?? ""] ?? "plaintext"
@@ -76,10 +77,11 @@ export function getCourses(): CourseSummary[] {
       description: data.description ?? "",
       level: data.level ?? "Beginner",
       language: data.language ?? "Unknown",
+      order: data.order ?? 999,
     })
   }
 
-  return courses
+  return courses.sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
 }
 
 export function getCourse(slug: CourseSlug): Course | null {
@@ -150,6 +152,10 @@ export function getCourse(slug: CourseSlug): Course | null {
     githubUrl: data.github_url,
     isGitorial: data.is_gitorial ?? false,
     estimatedTime: data.estimated_time,
+    tags: data.tags ?? [],
+    prerequisites: data.prerequisites ?? [],
+    whatYoullLearn: data.what_youll_learn ?? [],
+    lastUpdated: data.last_updated,
     sections,
   }
 }
@@ -186,7 +192,7 @@ export function getLesson(
     slug: lessonSlug as LessonSlug,
     title: data.title ?? lessonSlug,
     order: data.order ?? 0,
-    content,
+    content: marked.parse(content) as string,
     commitHash: data.commit_hash,
     lastUpdated: data.last_updated,
     files,
