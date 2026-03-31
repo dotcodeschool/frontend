@@ -1,0 +1,54 @@
+import { CodeBlock } from './CodeBlock'
+import { InfoBox, Warning, Success, Error } from './Alert'
+import { MdxButton } from './MdxButton'
+import { Quiz } from './Quiz'
+import { TrueFalseQuiz } from './TrueFalseQuiz'
+import { FillInTheBlankQuiz } from './FillInTheBlank'
+import { QuizGroup } from './QuizGroup'
+
+function Pre(props: any) {
+  const childProps = props.children?.props ?? {}
+  const code = typeof childProps.children === 'string' ? childProps.children : ''
+  const className = childProps.className ?? ''
+  let filename = childProps.filename
+  if (!filename && childProps.meta) {
+    const match = childProps.meta.match(/filename="([^"]+)"/)
+    if (match) filename = match[1]
+  }
+  return <CodeBlock className={className} filename={filename}>{code}</CodeBlock>
+}
+
+export const mdxComponents = {
+  pre: Pre,
+  code: (props: any) => {
+    if (typeof props.children === 'string' && !props.className) {
+      return <code className="text-accent bg-elevated px-1.5 py-0.5 rounded text-sm font-mono">{props.children}</code>
+    }
+    return <code {...props} />
+  },
+  a: (props: any) => (
+    <a {...props} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline" />
+  ),
+  blockquote: (props: any) => (
+    <blockquote className="border-l-4 border-accent pl-4 py-2 my-4 bg-elevated/50 rounded-r-lg text-content-secondary italic" {...props} />
+  ),
+  img: (props: any) => (
+    <img className="rounded-lg max-w-full my-4" {...props} />
+  ),
+  table: (props: any) => (
+    <div className="overflow-x-auto my-6">
+      <table className="w-full text-sm" {...props} />
+    </div>
+  ),
+  th: (props: any) => <th className="p-2 text-left font-semibold text-content-primary border-b border-border" {...props} />,
+  td: (props: any) => <td className="p-2 text-content-secondary border-b border-border" {...props} />,
+  InfoBox,
+  Warning,
+  Success,
+  Error,
+  Button: MdxButton,
+  Quiz,
+  TrueFalseQuiz,
+  FillInTheBlankQuiz,
+  QuizGroup,
+}
