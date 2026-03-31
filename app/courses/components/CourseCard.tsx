@@ -10,21 +10,8 @@ import {
   Stack,
   Text,
   HStack,
-  Tag,
-  Tooltip,
-  useDisclosure,
 } from "@chakra-ui/react";
-import { InfoIcon } from "@chakra-ui/icons";
 import { ButtonPrimary } from "@/components";
-import { FormatSelectionModal } from "./FormatSelectionModal";
-import { useState } from "react";
-
-interface CourseFormats {
-  hasInBrowser: boolean;
-  hasOnMachine: boolean;
-  inBrowserSlug?: string;
-  onMachineSlug?: string;
-}
 
 interface CourseCardProps {
   index: number;
@@ -33,7 +20,6 @@ interface CourseCardProps {
   level: string;
   language: string;
   slug: string;
-  formats?: CourseFormats;
   isLastItem: boolean;
 }
 
@@ -44,23 +30,16 @@ const CourseCard = ({
   level,
   language,
   slug,
-  formats,
   isLastItem,
 }: CourseCardProps) => {
-  const {
-    isOpen: isModalOpen,
-    onOpen: onOpenModal,
-    onClose: onCloseModal,
-  } = useDisclosure();
   return (
     <Box position="relative">
-      {/* Connecting line - only show if not the last item */}
       {!isLastItem && (
         <Box
           position="absolute"
           left="32px"
-          top="64px" // Start from bottom of circle
-          height="calc(100% - 64px)" // Extend to next circle
+          top="64px"
+          height="calc(100% - 64px)"
           width="4px"
           bg="gray.700"
           zIndex={1}
@@ -97,35 +76,14 @@ const CourseCard = ({
             </Text>
             <Text py={2}>{description}</Text>
             <HStack mt={4} spacing={4}>
-              {formats?.hasInBrowser && formats?.hasOnMachine ? (
-                <>
-                  <ButtonPrimary
-                    onClick={() => {
-                      // Open the format selection modal
-                      onOpenModal();
-                    }}
-                    w="fit-content"
-                  >
-                    Start Course
-                  </ButtonPrimary>
-                  <FormatSelectionModal
-                    isOpen={isModalOpen}
-                    onClose={onCloseModal}
-                    courseTitle={title}
-                    inBrowserSlug={formats.inBrowserSlug || ""}
-                    onMachineSlug={formats.onMachineSlug || ""}
-                  />
-                </>
-              ) : (
-                <ButtonPrimary
-                  as={Link}
-                  href={`/courses/${formats?.inBrowserSlug || formats?.onMachineSlug || slug}`}
-                  _hover={{ textDecor: "none" }}
-                  w="fit-content"
-                >
-                  Start Course
-                </ButtonPrimary>
-              )}
+              <ButtonPrimary
+                as={Link}
+                href={`/courses/${slug}`}
+                _hover={{ textDecor: "none" }}
+                w="fit-content"
+              >
+                Start Course
+              </ButtonPrimary>
             </HStack>
           </Stack>
         </Card>
