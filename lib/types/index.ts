@@ -86,6 +86,8 @@ export type Section = {
 export type CourseModuleSectionsCollection = {
   items: Array<Maybe<Section>>;
   total: number;
+  limit: number;
+  skip: number;
 };
 
 export type OnMachineCourse = {
