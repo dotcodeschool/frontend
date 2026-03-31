@@ -17,6 +17,8 @@
 /build
 
 # misc
+.claude/*
+docs/superpowers/*
 .DS_Store
 *.pem
 
