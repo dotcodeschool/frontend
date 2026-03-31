@@ -10,7 +10,7 @@ interface Props {
   readOnly?: boolean
 }
 
-export function CodeEditor({ files, diff, readOnly = false }: Props) {
+export default function CodeEditor({ files, diff, readOnly = false }: Props) {
   const { showDiff } = useEditorStore()
 
   // Determine which files to show in the editor

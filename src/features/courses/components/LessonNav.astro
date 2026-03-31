@@ -1,0 +1,27 @@
+---
+import type { Navigation } from '../types'
+
+interface Props {
+  nav: Navigation
+}
+
+const { nav } = Astro.props
+---
+
+<div class="flex justify-between items-center px-5 h-12 border-t border-border bg-surface">
+  {nav.prev ? (
+    <a href={nav.prev.href} class="text-content-muted text-sm hover:text-content-primary transition-colors no-underline">
+      ← {nav.prev.title}
+    </a>
+  ) : <div />}
+
+  {nav.next ? (
+    <a href={nav.next.href} class="text-accent text-sm hover:text-accent-dim transition-colors no-underline">
+      {nav.next.title} →
+    </a>
+  ) : (
+    <a href={nav.courseHref} class="text-accent text-sm hover:text-accent-dim transition-colors no-underline">
+      Finish Course →
+    </a>
+  )}
+</div>
