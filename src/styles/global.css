@@ -1,0 +1,74 @@
+/* src/styles/global.css */
+@import "tailwindcss";
+@import "@tailwindcss/typography";
+
+@variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme {
+  --font-heading: 'Junicode', 'Georgia', serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --color-surface: var(--bg-surface);
+  --color-elevated: var(--bg-elevated);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-bg: var(--accent-bg);
+  --color-accent-dim: var(--accent-dim);
+  --color-content-primary: var(--text-primary);
+  --color-content-secondary: var(--text-secondary);
+  --color-content-muted: var(--text-muted);
+  --color-content-faint: var(--text-faint);
+  --color-success: var(--success);
+  --color-base: var(--bg-base);
+  --color-code: var(--code-bg);
+}
+
+@layer base {
+  :root,
+  [data-theme="light"] {
+    --bg-base: #fdfcfa;
+    --bg-surface: #f5f3ef;
+    --bg-elevated: #efece6;
+    --border: #e8e5df;
+    --text-primary: #1a1917;
+    --text-secondary: #4a4639;
+    --text-muted: #8a857a;
+    --text-faint: #ccc8be;
+    --accent: #4e6cd4;
+    --accent-dim: #3d56aa;
+    --accent-bg: rgba(78, 108, 212, 0.08);
+    --code-bg: #f5f3ef;
+    --success: #4ade80;
+  }
+
+  [data-theme="dark"] {
+    --bg-base: #0d0f14;
+    --bg-surface: #111318;
+    --bg-elevated: #161924;
+    --border: #1e2230;
+    --text-primary: #e8eaf0;
+    --text-secondary: #9ba3be;
+    --text-muted: #6b7394;
+    --text-faint: #3a3f54;
+    --accent: #6b8aed;
+    --accent-dim: #4a66b8;
+    --accent-bg: rgba(107, 138, 237, 0.08);
+    --code-bg: #0a0c10;
+    --success: #4ade80;
+  }
+
+  body {
+    @apply bg-base text-content-primary font-body;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3 {
+    @apply font-heading;
+  }
+
+  code {
+    @apply font-mono;
+  }
+}

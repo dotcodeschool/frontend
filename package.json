@@ -12,18 +12,26 @@
     "lint:strict": "pnpm check:strict --fix",
     "fmt": "prettier --write .",
     "sort": "sort-json",
+    "astro:dev": "astro dev --port 4321",
+    "astro:build": "astro build",
+    "astro:preview": "astro preview",
     "prepare": "husky"
   },
   "dependencies": {
+    "@astrojs/mdx": "^5.0.3",
+    "@astrojs/react": "^5.0.2",
     "@chakra-ui/icons": "^2.2.4",
     "@chakra-ui/next-js": "^2.2.0",
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@monaco-editor/react": "^4.6.0",
+    "@tailwindcss/typography": "^0.5.19",
+    "@tailwindcss/vite": "^4.2.2",
     "@types/lodash": "^4.17.7",
     "@vercel/speed-insights": "^1.0.12",
     "ansi-to-html": "^0.7.2",
+    "astro": "^6.1.2",
     "date-fns": "^4.1.0",
     "esbuild": "^0.25.1",
     "esbuild-register": "^3.6.0",
@@ -51,7 +59,8 @@
     "rehype-stringify": "^10.0.1",
     "remark-gfm": "^4.0.1",
     "strip-comments": "^2.0.1",
-    "styled-components": "^6.1.13"
+    "styled-components": "^6.1.13",
+    "tailwindcss": "^4.2.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.5.0",
