@@ -4,6 +4,7 @@ type TypeFile = {
   language: string;
   path?: string;
   hasChanges?: boolean;
+  originalCode?: string;
   diffToHighlight?: Array<{
     value: string;
     added?: boolean;

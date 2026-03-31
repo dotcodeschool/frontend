@@ -1,18 +1,13 @@
 import { defaultMetaDescription, defaultMetaTitle } from "@/lib/constants";
 
-import { getCourseDetails } from "./helpers";
-import { QUERY_COURSE_OVERVIEW_METADATA_FIELDS } from "../../../queries";
-import { CourseMetadata } from "./types";
+import { getMdxCourseDetails } from "./helpers";
 
 export const generateMetadata = async ({
   params: { course },
 }: {
   params: { course: string };
 }) => {
-  const courseData: CourseMetadata | null = await getCourseDetails(
-    course,
-    QUERY_COURSE_OVERVIEW_METADATA_FIELDS,
-  );
+  const courseData = await getMdxCourseDetails(course);
 
   const { title, description } = courseData ?? {
     title: defaultMetaTitle,

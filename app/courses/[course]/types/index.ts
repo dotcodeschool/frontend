@@ -7,11 +7,6 @@ import {
   TypeFile,
 } from "@/lib/types";
 
-import {
-  QUERY_COURSE_OVERVIEW_FIELDS,
-  QUERY_COURSE_OVERVIEW_METADATA_FIELDS,
-} from "../../../../queries";
-
 type Module = {
   id: string;
   index: number;
@@ -50,12 +45,8 @@ type CourseDetails = Pick<
   | "slug"
   | "githubUrl"
 > & {
-  last_updated?: string; // Optional last updated date
+  last_updated?: string;
 };
-
-type CourseQuery =
-  | typeof QUERY_COURSE_OVERVIEW_FIELDS
-  | typeof QUERY_COURSE_OVERVIEW_METADATA_FIELDS;
 
 type CourseMetadata = Pick<CourseModule, "title" | "description">;
 
@@ -66,7 +57,6 @@ type LessonIdAndTotalData = {
 export type {
   CourseDetails,
   CourseMetadata,
-  CourseQuery,
   EditorContextType,
   LessonIdAndTotalData,
   Module,

@@ -133,18 +133,33 @@ export const EditorTabPanel: React.FC<EditorTabPanelProps> = ({
     );
   }
 
+  const isDiffFile = file.fileName.endsWith(".diff");
+
   return (
     <TabPanel h="full" p={0} pb={0}>
-      {renderEditor({
-        file,
-        index,
-        isAnswerOpen,
-        readOnly,
-        editorContent,
-        setEditorContent,
-      })}
-      {isAnswerOpen ? renderDiffEditor(parsedCode, parsedSolution) : null}
-      {hintsPanel}
+      {isDiffFile && file.originalCode !== undefined ? (
+        <DiffEditor
+          height="100%"
+          language={file.language}
+          modified={file.code}
+          options={{ readOnly: true, renderSideBySide: true }}
+          original={file.originalCode}
+          theme="vs-dark"
+        />
+      ) : (
+        renderEditor({
+          file,
+          index,
+          isAnswerOpen,
+          readOnly,
+          editorContent,
+          setEditorContent,
+        })
+      )}
+      {isAnswerOpen && !isDiffFile
+        ? renderDiffEditor(parsedCode, parsedSolution)
+        : null}
+      {!isDiffFile ? hintsPanel : null}
     </TabPanel>
   );
 };

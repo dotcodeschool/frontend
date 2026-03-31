@@ -1,7 +1,6 @@
 import { Heading, HStack, Tag, Text } from "@chakra-ui/react";
 
 import { CourseDetails } from "../types";
-import { FormatToggleWrapper } from "./FormatToggleWrapper";
 
 const CourseHeader = ({
   title,
@@ -21,10 +20,6 @@ const CourseHeader = ({
   slug?: string; // Add slug prop for the FormatToggle component
 }) => (
   <>
-    {/* Format toggle */}
-    {format !== "mdxCourse" && slug && (
-      <FormatToggleWrapper slug={slug} format={format} title={title || ""} />
-    )}
     <Heading as="h1" fontWeight="800" my={4} size="xl">
       {title}
     </Heading>

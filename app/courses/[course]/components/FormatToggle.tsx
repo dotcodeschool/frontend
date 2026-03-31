@@ -10,7 +10,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { InfoIcon } from "@chakra-ui/icons";
-import { FormatSelectionModal } from "../../../courses/components/FormatSelectionModal";
 import { PiArrowsLeftRight } from "react-icons/pi";
 import Link from "next/link";
 

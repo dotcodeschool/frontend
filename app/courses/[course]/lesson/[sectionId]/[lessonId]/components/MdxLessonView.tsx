@@ -32,7 +32,7 @@ import { SidebarNavigation } from "./SidebarNavigation";
 const SplitPane = dynamic(() => import("react-split-pane"), { ssr: false });
 
 // Import components from the Contentful course implementation
-import { EditorComponents } from "../../../../(pages)/section/[section]/lesson/[lesson]/components/EditorComponents";
+import { EditorComponents } from "./EditorComponents";
 import { LinkIcon } from "@chakra-ui/icons";
 
 type LessonData = {
@@ -131,9 +131,35 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
   const hasFiles = shouldShowEditor && (sourceFiles || templateFiles);
 
   // Determine which files to display in the editor
-  const editorFiles = sourceFiles || templateFiles || [];
+  const baseFiles = sourceFiles || templateFiles || [];
   const isReadOnly = !!sourceFiles; // Read-only if we're showing source files
   const showHints = !!templateFiles && !!solutionFiles; // Show hints if we have template and solution files
+
+  // Build diff tab entries from files that have changes
+  // Each changed file gets a .diff entry with originalCode for Monaco DiffEditor
+  const editorFiles = React.useMemo(() => {
+    const changedFiles = baseFiles.filter(
+      (f) => f.hasChanges && f.diffToHighlight,
+    );
+    if (changedFiles.length === 0) return baseFiles;
+
+    const diffEntries: TypeFile[] = changedFiles.map((file) => {
+      // Reconstruct the original code from diffToHighlight
+      const originalCode = (file.diffToHighlight || [])
+        .filter((part) => !part.added)
+        .map((part) => part.value)
+        .join("");
+
+      return {
+        fileName: `${file.fileName}.diff`,
+        code: file.code,
+        language: file.language,
+        originalCode,
+      };
+    });
+
+    return [...baseFiles, ...diffEntries];
+  }, [baseFiles]);
 
   const gitorialUrl = React.useMemo(
     () => (isGitorial ? githubUrl : undefined),

@@ -9,7 +9,7 @@ import { TypeFile } from "@/lib/types";
 import { EditorProvider } from "./EditorProvider";
 import { FullscreenEditorModal } from "./FullscreenEditorModal";
 
-import { EditorTabs } from ".";
+import { EditorTabs } from "./EditorTabs";
 
 const SplitPane = dynamic(() => import("react-split-pane"), { ssr: false });
 
