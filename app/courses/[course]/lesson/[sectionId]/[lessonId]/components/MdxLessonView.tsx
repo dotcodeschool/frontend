@@ -135,36 +135,30 @@ const MdxLessonView = ({ lessonData }: MdxLessonViewProps) => {
   const isReadOnly = !!sourceFiles; // Read-only if we're showing source files
   const showHints = !!templateFiles && !!solutionFiles; // Show hints if we have template and solution files
 
-  // Build a unified diff tab from files that have changes
+  // Build diff tab entries from files that have changes
+  // Each changed file gets a .diff entry with originalCode for Monaco DiffEditor
   const editorFiles = React.useMemo(() => {
     const changedFiles = baseFiles.filter(
       (f) => f.hasChanges && f.diffToHighlight,
     );
     if (changedFiles.length === 0) return baseFiles;
 
-    const diffContent = changedFiles
-      .map((file) => {
-        const lines = (file.diffToHighlight || [])
-          .map((part) => {
-            const prefix = part.added ? "+" : part.removed ? "-" : " ";
-            return part.value
-              .split("\n")
-              .filter((line) => line !== "" || !part.added)
-              .map((line) => `${prefix}${line}`)
-              .join("\n");
-          })
-          .join("\n");
-        return `--- a/${file.fileName}\n+++ b/${file.fileName}\n${lines}`;
-      })
-      .join("\n\n");
+    const diffEntries: TypeFile[] = changedFiles.map((file) => {
+      // Reconstruct the original code from diffToHighlight
+      const originalCode = (file.diffToHighlight || [])
+        .filter((part) => !part.added)
+        .map((part) => part.value)
+        .join("");
 
-    const diffFile: TypeFile = {
-      fileName: "changes.diff",
-      code: diffContent,
-      language: "diff",
-    };
+      return {
+        fileName: `${file.fileName}.diff`,
+        code: file.code,
+        language: file.language,
+        originalCode,
+      };
+    });
 
-    return [...baseFiles, diffFile];
+    return [...baseFiles, ...diffEntries];
   }, [baseFiles]);
 
   const gitorialUrl = React.useMemo(
