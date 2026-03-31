@@ -1,0 +1,17 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Navbar from '@/shared/components/Navbar.astro'
+---
+
+<BaseLayout title="Sign In — Dot Code School">
+  <Navbar />
+  <main class="max-w-md mx-auto px-4 py-16 text-center">
+    <h1 class="font-heading text-2xl font-bold mb-4">Sign In</h1>
+    <p class="text-content-secondary mb-8">Sign in with your GitHub account to track progress.</p>
+    <a href="/api/auth/signin/github"
+       class="inline-block bg-accent text-sm font-medium px-8 py-3 rounded-md no-underline"
+       style="color: var(--bg-base);">
+      Sign in with GitHub
+    </a>
+  </main>
+</BaseLayout>
