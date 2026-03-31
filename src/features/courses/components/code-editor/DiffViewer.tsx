@@ -1,5 +1,7 @@
-import { DiffEditor } from '@monaco-editor/react'
+import { lazy, Suspense } from 'react'
 import type { DiffFile } from '../../types'
+
+const DiffEditor = lazy(() => import('@monaco-editor/react').then(m => ({ default: m.DiffEditor })))
 
 interface Props {
   diff: DiffFile[]
@@ -19,19 +21,21 @@ export function DiffViewer({ diff }: Props) {
       }
 
   return (
-    <DiffEditor
-      original={combined.original}
-      modified={combined.modified}
-      language={combined.language}
-      theme="vs-dark"
-      options={{
-        readOnly: true,
-        minimap: { enabled: false },
-        fontSize: 13,
-        renderSideBySide: true,
-        scrollBeyondLastLine: false,
-        padding: { top: 12 },
-      }}
-    />
+    <Suspense fallback={<div className="flex-1 bg-code" />}>
+      <DiffEditor
+        original={combined.original}
+        modified={combined.modified}
+        language={combined.language}
+        theme="vs-dark"
+        options={{
+          readOnly: true,
+          minimap: { enabled: false },
+          fontSize: 13,
+          renderSideBySide: true,
+          scrollBeyondLastLine: false,
+          padding: { top: 12 },
+        }}
+      />
+    </Suspense>
   )
 }

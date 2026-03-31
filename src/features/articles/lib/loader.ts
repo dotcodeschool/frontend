@@ -1,6 +1,7 @@
 import fs from "node:fs"
 import path from "node:path"
 import matter from "gray-matter"
+import { marked } from "marked"
 
 const ARTICLES_DIR = path.join(process.cwd(), "content/articles")
 
@@ -61,7 +62,7 @@ export function getArticle(slug: string): Article | null {
     tags: data.tags ?? [],
     category: data.category,
     featured: data.featured ?? false,
-    content,
+    content: marked.parse(content) as string,
     lastUpdated: data.last_updated,
     estimatedTime: data.estimatedTime,
   }

@@ -1,6 +1,8 @@
-import Editor from '@monaco-editor/react'
+import { lazy, Suspense } from 'react'
 import type { CodeFile } from '../../types'
 import { useEditorStore } from './editor-store'
+
+const Editor = lazy(() => import('@monaco-editor/react').then(m => ({ default: m.default })))
 
 interface Props {
   files: CodeFile[]
@@ -14,18 +16,20 @@ export function EditorPanel({ files, readOnly }: Props) {
   if (!file) return null
 
   return (
-    <Editor
-      language={file.language}
-      value={file.content}
-      theme="vs-dark"
-      options={{
-        readOnly,
-        minimap: { enabled: false },
-        fontSize: 13,
-        lineNumbers: 'on',
-        scrollBeyondLastLine: false,
-        padding: { top: 12 },
-      }}
-    />
+    <Suspense fallback={<div className="flex-1 bg-code" />}>
+      <Editor
+        language={file.language}
+        value={file.content}
+        theme="vs-dark"
+        options={{
+          readOnly,
+          minimap: { enabled: false },
+          fontSize: 13,
+          lineNumbers: 'on',
+          scrollBeyondLastLine: false,
+          padding: { top: 12 },
+        }}
+      />
+    </Suspense>
   )
 }

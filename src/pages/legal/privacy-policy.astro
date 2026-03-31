@@ -4,9 +4,11 @@ import Navbar from '@/shared/components/Navbar.astro'
 import fs from 'node:fs'
 import path from 'node:path'
 import matter from 'gray-matter'
+import { marked } from 'marked'
 
 const filePath = path.join(process.cwd(), 'content/legal/privacy-policy.mdx')
-const { content } = matter(fs.readFileSync(filePath, 'utf8'))
+const raw = matter(fs.readFileSync(filePath, 'utf8'))
+const content = marked.parse(raw.content) as string
 ---
 
 <BaseLayout title="Privacy Policy — Dot Code School">
