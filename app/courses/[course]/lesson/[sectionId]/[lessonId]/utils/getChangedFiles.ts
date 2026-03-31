@@ -4,6 +4,39 @@ import { diffLines } from "diff";
 import { getFilesRecursively } from "./getFilesRecursively";
 import { getLanguageFromFileName } from "./getLanguageFromFileName";
 
+type SectionWithLessons = {
+  id: string;
+  lessons: { id: string; title: string }[];
+};
+
+/**
+ * Finds the globally previous lesson by looking across section boundaries.
+ * Returns null if this is the very first lesson of the course.
+ */
+function findPreviousLesson(
+  currentSectionId: string,
+  currentLessonId: string,
+  allSections: SectionWithLessons[],
+): { sectionId: string; lessonId: string } | null {
+  // Flatten all lessons into a global ordered list
+  const flatLessons: { sectionId: string; lessonId: string }[] = [];
+  for (const section of allSections) {
+    for (const lesson of section.lessons) {
+      flatLessons.push({ sectionId: section.id, lessonId: lesson.id });
+    }
+  }
+
+  const currentIndex = flatLessons.findIndex(
+    (l) => l.sectionId === currentSectionId && l.lessonId === currentLessonId,
+  );
+
+  if (currentIndex <= 0) {
+    return null;
+  }
+
+  return flatLessons[currentIndex - 1];
+}
+
 type FileType = "source" | "template" | "solution";
 type FileInfo = {
   fileName: string;
@@ -23,18 +56,19 @@ type FileInfo = {
  *
  * - For template/solution pairs: Compare solution files from previous lesson with template files of current lesson
  * - For source folders: Compare source files between current and previous lesson
+ * - Looks across section boundaries to find the globally previous lesson
  *
  * @param course The course slug
  * @param sectionId The current section ID
  * @param lessonId The current lesson ID
- * @param allLessons All lessons in the current section to determine previous lesson
+ * @param allSections All sections with their lessons, ordered
  * @returns An object containing the changed files and information about changes
  */
 export async function getChangedFiles(
   course: string,
   sectionId: string,
   lessonId: string,
-  allLessons: { id: string; title: string }[],
+  allSections: { id: string; lessons: { id: string; title: string }[] }[],
 ): Promise<{
   sourceFiles: FileInfo[] | null;
   templateFiles: FileInfo[] | null;
@@ -51,10 +85,8 @@ export async function getChangedFiles(
     "files",
   );
 
-  // Find the previous lesson in the section
-  const currentLessonIndex = allLessons.findIndex((l) => l.id === lessonId);
-  const prevLessonId =
-    currentLessonIndex > 0 ? allLessons[currentLessonIndex - 1].id : null;
+  // Find the previous lesson across all sections
+  const prev = findPreviousLesson(sectionId, lessonId, allSections);
 
   // Initialize return values
   let sourceFiles: FileInfo[] | null = null;
@@ -62,37 +94,17 @@ export async function getChangedFiles(
   let solutionFiles: FileInfo[] | null = null;
   let shouldShowEditor = false;
 
-  // Check if this is the first lesson of the course
-  // We'll assume it's the first lesson of the course if it's the first lesson of a section called "introduction"
-  const isFirstLessonOfCourse =
-    !prevLessonId && sectionId.toLowerCase() === "introduction";
-
-  console.log(
-    `Lesson ${lessonId} in section ${sectionId} - isFirstLessonOfCourse: ${isFirstLessonOfCourse}`,
-  );
-
-  // If it's the first lesson of the course, return all files
-  if (isFirstLessonOfCourse) {
-    console.log(`First lesson of the course, returning all files`);
+  // If there's no previous lesson, this is the first lesson of the course
+  if (!prev) {
     return await loadAllLessonFiles(course, sectionId, lessonId);
-  }
-
-  // If there's no previous lesson in this section but it's not the first lesson of the course,
-  // we should still compare with files from the previous section, but we don't have that information.
-  // For now, we'll mark all files as changed since this is likely a transition between sections.
-  if (!prevLessonId) {
-    console.log(
-      `First lesson of section ${sectionId} but not the first lesson of the course, marking all files as changed`,
-    );
-    return await loadAllLessonFilesAsChanged(course, sectionId, lessonId);
   }
 
   const prevLessonPath = path.join(
     coursePath,
     "sections",
-    sectionId,
+    prev.sectionId,
     "lessons",
-    prevLessonId,
+    prev.lessonId,
     "files",
   );
 
@@ -125,7 +137,7 @@ export async function getChangedFiles(
     // Case 1: Previous lesson has source files - direct comparison
     if (prevHasSource) {
       console.log(
-        `Comparing source files between ${prevLessonId} and ${lessonId}`,
+        `Comparing source files between ${prev.lessonId} and ${lessonId}`,
       );
       sourceFiles = compareFiles(
         prevLessonPath,
@@ -134,7 +146,7 @@ export async function getChangedFiles(
         "source",
         course,
         sectionId,
-        prevLessonId,
+        prev.lessonId,
         lessonId,
       );
     }
@@ -148,7 +160,7 @@ export async function getChangedFiles(
         "source",
         course,
         sectionId,
-        prevLessonId,
+        prev.lessonId,
         lessonId,
       );
     }
@@ -162,7 +174,7 @@ export async function getChangedFiles(
         "source",
         course,
         sectionId,
-        prevLessonId,
+        prev.lessonId,
         lessonId,
       );
     }
@@ -197,7 +209,7 @@ export async function getChangedFiles(
         "template",
         course,
         sectionId,
-        prevLessonId,
+        prev.lessonId,
         lessonId,
       );
     }
@@ -211,7 +223,7 @@ export async function getChangedFiles(
         "template",
         course,
         sectionId,
-        prevLessonId,
+        prev.lessonId,
         lessonId,
       );
     }
@@ -225,7 +237,7 @@ export async function getChangedFiles(
         "template",
         course,
         sectionId,
-        prevLessonId,
+        prev.lessonId,
         lessonId,
       );
     }

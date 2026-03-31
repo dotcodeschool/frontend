@@ -67,7 +67,7 @@ const LessonPage = async ({ params }: LessonPageProps) => {
         course,
         sectionId,
         lessonId,
-        section.lessons,
+        mdxCourse.sections,
       );
 
       sourceFiles = fileData.sourceFiles;
