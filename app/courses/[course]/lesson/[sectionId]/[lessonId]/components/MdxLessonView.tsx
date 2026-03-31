@@ -32,7 +32,7 @@ import { SidebarNavigation } from "./SidebarNavigation";
 const SplitPane = dynamic(() => import("react-split-pane"), { ssr: false });
 
 // Import components from the Contentful course implementation
-import { EditorComponents } from "../../../../(pages)/section/[section]/lesson/[lesson]/components/EditorComponents";
+import { EditorComponents } from "./EditorComponents";
 import { LinkIcon } from "@chakra-ui/icons";
 
 type LessonData = {

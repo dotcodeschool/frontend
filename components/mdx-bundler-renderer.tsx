@@ -3,7 +3,7 @@
 import { Box, Text } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { getMDXComponent } from "mdx-bundler/client";
-import { LessonSkeleton } from "@/app/courses/[course]/(pages)/section/[section]/lesson/[lesson]/components/LessonSkeleton";
+import { LessonSkeleton } from "@/app/courses/[course]/lesson/[sectionId]/[lessonId]/components/LessonSkeleton";
 import { MDXComponents } from "@/components/mdx-components";
 
 export function MDXBundlerRenderer({ code }: { code: string }) {
