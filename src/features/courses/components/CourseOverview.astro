@@ -56,28 +56,28 @@ const hasPrereqs = course.prerequisites && course.prerequisites.length > 0
       <div class="flex items-center gap-4">
         <div class="text-accent text-2xl shrink-0"><FaPuzzlePiece /></div>
         <div>
-          <p class="text-content-faint text-xs mb-0.5">Skill Level</p>
+          <p class="text-content-muted text-xs mb-0.5">Skill Level</p>
           <p class="text-content-primary font-bold text-base">{course.level}</p>
         </div>
       </div>
       <div class="flex items-center gap-4">
         <div class="text-accent text-2xl shrink-0"><FaClock /></div>
         <div>
-          <p class="text-content-faint text-xs mb-0.5">Time to Complete</p>
+          <p class="text-content-muted text-xs mb-0.5">Time to Complete</p>
           <p class="text-content-primary font-bold text-base">{course.estimatedTime ? `${course.estimatedTime} hours` : 'Self-paced'}</p>
         </div>
       </div>
       <div class="flex items-center gap-4">
         <div class="text-accent text-2xl shrink-0"><FaBookOpen /></div>
         <div>
-          <p class="text-content-faint text-xs mb-0.5">Course Content</p>
+          <p class="text-content-muted text-xs mb-0.5">Course Content</p>
           <p class="text-content-primary font-bold text-base">{course.sections.length} sections</p>
         </div>
       </div>
       <div class="flex items-center gap-4">
         <div class="text-accent text-2xl shrink-0"><FaClipboardList /></div>
         <div>
-          <div class="text-content-faint text-xs mb-0.5 inline-flex items-center gap-1">
+          <div class="text-content-muted text-xs mb-0.5 inline-flex items-center gap-1">
             <span>Prerequisites</span>
             {hasPrereqs && (
               <PrerequisitesPopover prerequisites={course.prerequisites!} client:load />
