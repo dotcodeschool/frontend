@@ -13,7 +13,7 @@ export default function LessonContent({ code, title, lastUpdated }: Props) {
       {lastUpdated && (
         <p className="text-content-muted text-xs mb-6">Last updated {lastUpdated}</p>
       )}
-      <div className="prose prose-invert max-w-none text-content-secondary
+      <div className="prose prose-invert max-w-none text-content-primary
                        prose-headings:font-heading prose-headings:text-content-primary">
         <MdxRenderer code={code} />
       </div>
