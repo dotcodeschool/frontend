@@ -13,6 +13,38 @@ import { useProgressStore } from "@/features/progress/lib/progress-store";
 import type { Course, LessonSlug, SectionSlug } from "../types";
 import { GitHubPanel } from "./github/GitHubPanel";
 
+function SidebarFooter({
+  courseSlug,
+  githubUrl,
+}: {
+  courseSlug: string;
+  githubUrl?: string;
+}) {
+  const { isAuthenticated, progress } = useProgressStore();
+  const hasProgress = Object.keys(progress.courses).length > 0;
+  const showGitHub = isAuthenticated && !!githubUrl;
+  const showBanner = !isAuthenticated && hasProgress;
+
+  if (!showGitHub && !showBanner) return null;
+
+  return (
+    <div className="mt-auto border-t border-border">
+      {showGitHub && (
+        <div className="px-3 py-3">
+          <GitHubPanel courseSlug={courseSlug} githubUrl={githubUrl} />
+        </div>
+      )}
+      {showBanner && (
+        <div
+          className={`px-3 py-3 ${showGitHub ? "border-t border-border" : ""}`}
+        >
+          <AnonBanner />
+        </div>
+      )}
+    </div>
+  );
+}
+
 interface Props {
   course: Course;
   currentSection: SectionSlug;
@@ -143,14 +175,7 @@ function SidebarContent({
           );
         })}
       </div>
-      <div className="mt-auto border-t border-border">
-        <div className="px-3 py-3">
-          <GitHubPanel courseSlug={course.slug} githubUrl={course.githubUrl} />
-        </div>
-        <div className="px-3 py-3 border-t border-border">
-          <AnonBanner />
-        </div>
-      </div>
+      <SidebarFooter courseSlug={course.slug} githubUrl={course.githubUrl} />
     </nav>
   );
 }
