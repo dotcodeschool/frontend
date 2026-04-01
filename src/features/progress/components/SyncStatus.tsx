@@ -69,20 +69,10 @@ export function SyncStatus() {
         <svg
           className="w-3.5 h-3.5 text-accent animate-spin"
           fill="none"
-          stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M4 4v5h5M20 20v-5h-5"
-          />
-          <path
-            strokeLinecap="round"
-            strokeWidth={2}
-            d="M20.49 9A9 9 0 005.64 5.64L4 4m16 16l-1.64-1.64A9 9 0 003.51 15"
-          />
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth={4} />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
         </svg>
       ),
       text: "Saving progress...",
@@ -111,10 +101,11 @@ export function SyncStatus() {
 
   return (
     <div
-      className="flex items-center text-xs"
+      className="flex items-center gap-1.5 text-xs"
       title={syncStatus === "syncing" ? "Please don't close this tab" : text}
     >
       {icon}
+      <span className="text-content-muted hidden sm:inline">{text}</span>
     </div>
   );
 }
