@@ -15,10 +15,9 @@ const articles = getArticles().slice(0, 3)
 
   <!-- Hero Section -->
   <section class="relative overflow-hidden" id="hero-section">
-    <!-- Grid background -->
+    <!-- Single grid layer — cursor brightens it via CSS mask on a brighter copy -->
     <div class="absolute inset-0 bg-grid opacity-40" />
-    <!-- Grid highlight that follows cursor — a second grid layer that's brighter, masked to a radial area around the mouse -->
-    <div id="grid-highlight" class="absolute inset-0 bg-grid-bright opacity-0 pointer-events-none transition-opacity duration-300" style="-webkit-mask-image: radial-gradient(circle 250px, black, transparent); mask-image: radial-gradient(circle 250px, black, transparent);" />
+    <div id="grid-highlight" class="absolute inset-0 bg-grid-bright opacity-0 pointer-events-none" style="transition: opacity 0.3s;" />
     <!-- Aurora gradient -->
     <div class="aurora" />
     <!-- Light streaks — horizontal -->
@@ -208,6 +207,7 @@ const articles = getArticles().slice(0, 3)
       linear-gradient(var(--grid-line) 1px, transparent 1px),
       linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
     background-size: 48px 48px;
+    background-position: 0 0;
   }
 
   .bg-grid-bright {
@@ -215,6 +215,7 @@ const articles = getArticles().slice(0, 3)
       linear-gradient(var(--grid-line-bright) 1px, transparent 1px),
       linear-gradient(90deg, var(--grid-line-bright) 1px, transparent 1px);
     background-size: 48px 48px;
+    background-position: 0 0;
   }
 
   /* Aurora gradient — slow color shift */
