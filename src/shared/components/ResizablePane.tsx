@@ -43,14 +43,14 @@ export default function ResizablePane({ left, right, defaultSplit = 50, minLeft 
 
   return (
     <div ref={containerRef} className="flex flex-1 min-h-0 h-full">
-      <div style={{ width: `${split}%` }} className="overflow-hidden">
+      <div style={{ flex: `0 0 ${split}%` }} className="overflow-hidden min-w-0">
         {left}
       </div>
       <div
         onMouseDown={handleMouseDown}
         className="w-1 bg-border hover:bg-accent cursor-col-resize shrink-0 transition-colors"
       />
-      <div style={{ width: `${100 - split}%` }} className="overflow-hidden">
+      <div style={{ flex: `0 0 ${100 - split}%` }} className="overflow-hidden min-w-0">
         {right}
       </div>
     </div>
