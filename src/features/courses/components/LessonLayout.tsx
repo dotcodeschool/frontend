@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { IoCodeSlash, IoChevronDown, IoChevronUp } from 'react-icons/io5'
-import type { LessonFiles, DiffFile } from '../types'
+import type { CodeFile, DiffFile } from '../types'
 import ResizablePane from '@/shared/components/ResizablePane'
 import LessonContent from './LessonContent'
 import CodeEditor from './code-editor/CodeEditor'
@@ -9,15 +9,16 @@ interface Props {
   code: string
   title: string
   lastUpdated?: string
-  files: LessonFiles | null
-  diff: DiffFile[]
+  editorFiles: CodeFile[]
+  diffFiles: DiffFile[]
+  solutionFiles: CodeFile[]
   readOnly: boolean
   pageUrl?: string
   githubEditUrl?: string
 }
 
-export default function LessonLayout({ code, title, lastUpdated, files, diff, readOnly, pageUrl, githubEditUrl }: Props) {
-  const hasEditor = files !== null
+export default function LessonLayout({ code, title, lastUpdated, editorFiles, diffFiles, solutionFiles, readOnly, pageUrl, githubEditUrl }: Props) {
+  const hasEditor = editorFiles.length > 0
   const [mobileEditorOpen, setMobileEditorOpen] = useState(true)
 
   if (!hasEditor) {
@@ -38,7 +39,7 @@ export default function LessonLayout({ code, title, lastUpdated, files, diff, re
           left={<LessonContent code={code} title={title} lastUpdated={lastUpdated} pageUrl={pageUrl} githubEditUrl={githubEditUrl} />}
           right={
             <div className="h-full">
-              <CodeEditor files={files} diff={diff} readOnly={readOnly} />
+              <CodeEditor files={editorFiles} diff={diffFiles} solutionFiles={solutionFiles} readOnly={readOnly} />
             </div>
           }
           defaultSplit={50}
@@ -67,7 +68,7 @@ export default function LessonLayout({ code, title, lastUpdated, files, diff, re
 
         {mobileEditorOpen && (
           <div className="h-[400px] min-h-[400px] border-t border-border">
-            <CodeEditor files={files} diff={diff} readOnly={readOnly} />
+            <CodeEditor files={editorFiles} diff={diffFiles} solutionFiles={solutionFiles} readOnly={readOnly} />
           </div>
         )}
       </div>
