@@ -1,0 +1,155 @@
+---
+import type { Course } from '../types'
+import { FaPuzzlePiece, FaClock, FaBookOpen, FaClipboardList, FaGraduationCap } from 'react-icons/fa'
+import CourseAccordion from './CourseAccordion'
+import TruncatedContent from './TruncatedContent'
+import PrerequisitesPopover from './PrerequisitesPopover'
+
+interface Props {
+  course: Course
+  code?: string
+}
+
+const { course, code } = Astro.props
+
+const totalLessons = course.sections.reduce((sum, s) => sum + s.lessons.length, 0)
+const firstLesson = course.sections[0]?.lessons[0]
+const startHref = firstLesson
+  ? `/courses/${course.slug}/${course.sections[0].slug}/${firstLesson.slug}`
+  : null
+const hasPrereqs = course.prerequisites && course.prerequisites.length > 0
+---
+
+<div>
+  <!-- Back arrow -->
+  <a href="/courses" class="inline-flex items-center text-accent text-3xl mb-6 no-underline hover:text-accent-dim transition-colors">←</a>
+
+  <!-- Header -->
+  <h1 class="font-heading text-4xl md:text-5xl font-bold mb-4 leading-tight">{course.title}</h1>
+
+  {course.authorUrl ? (
+    <p class="text-content-muted text-base mb-4">
+      Written by <a href={course.authorUrl} class="text-accent no-underline hover:underline" target="_blank" rel="noopener">{course.author}</a>
+    </p>
+  ) : (
+    <p class="text-content-muted text-base mb-4">Written by {course.author}</p>
+  )}
+
+  <p class="text-content-secondary text-lg mb-3 leading-relaxed max-w-3xl">{course.description}</p>
+
+  {course.lastUpdated && (
+    <p class="text-content-muted text-sm mb-8">Last updated: {course.lastUpdated}</p>
+  )}
+
+  <!-- Start Course button -->
+  {startHref && (
+    <a href={startHref}
+       class="inline-block bg-accent text-lg font-semibold px-12 py-3.5 rounded-lg no-underline mb-12 hover:opacity-90 transition-opacity"
+       style="color: var(--bg-base);">
+      Start Course
+    </a>
+  )}
+
+  <!-- Stats Card -->
+  <div class="border border-border rounded-xl bg-surface px-8 py-4 mb-12">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <div class="flex items-center gap-4">
+        <div class="text-accent text-2xl shrink-0"><FaPuzzlePiece /></div>
+        <div>
+          <p class="text-content-muted text-xs mb-0.5">Skill Level</p>
+          <p class="text-content-primary font-bold text-base">{course.level}</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="text-accent text-2xl shrink-0"><FaClock /></div>
+        <div>
+          <p class="text-content-muted text-xs mb-0.5">Time to Complete</p>
+          <p class="text-content-primary font-bold text-base">{course.estimatedTime ? `${course.estimatedTime} hours` : 'Self-paced'}</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="text-accent text-2xl shrink-0"><FaBookOpen /></div>
+        <div>
+          <p class="text-content-muted text-xs mb-0.5">Course Content</p>
+          <p class="text-content-primary font-bold text-base">{course.sections.length} sections</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="text-accent text-2xl shrink-0"><FaClipboardList /></div>
+        <div>
+          <div class="text-content-muted text-xs mb-0.5 inline-flex items-center gap-1">
+            <span>Prerequisites</span>
+            {hasPrereqs && (
+              <PrerequisitesPopover prerequisites={course.prerequisites!} client:load />
+            )}
+          </div>
+          <p class="text-content-primary font-bold text-base">
+            {hasPrereqs ? `${course.prerequisites!.length} ${course.prerequisites!.length === 1 ? 'course' : 'courses'}` : 'None'}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Two-column: About + Sidebar cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
+    <!-- Left column: About This Course (2/3) -->
+    <div class="md:col-span-2">
+      <h2 class="font-heading text-2xl font-bold text-content-primary mb-5">About This Course</h2>
+      {code ? (
+        <TruncatedContent code={code} maxHeight={400} client:load />
+      ) : (
+        <p class="text-content-secondary leading-relaxed">{course.description}</p>
+      )}
+    </div>
+
+    <!-- Right column: Sidebar cards (1/3) -->
+    <div class="space-y-5">
+      <!-- What You'll Learn -->
+      {course.whatYoullLearn && course.whatYoullLearn.length > 0 && (
+        <div class="border border-border rounded-xl bg-surface p-6">
+          <h3 class="font-heading text-lg font-bold text-content-primary mb-4">What You'll Learn</h3>
+          <ul class="space-y-3">
+            {course.whatYoullLearn.map((item) => (
+              <li class="flex items-start gap-2.5 text-sm text-content-secondary">
+                <span class="text-success mt-0.5 shrink-0 text-base">✓</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <!-- Prerequisites -->
+      {hasPrereqs && (
+        <div class="border border-border rounded-xl bg-surface p-6">
+          <h3 class="font-heading text-lg font-bold text-content-primary mb-4 flex items-center gap-2.5">
+            <span class="text-accent text-xl"><FaGraduationCap /></span>
+            Prerequisites
+          </h3>
+          <ul class="space-y-3">
+            {course.prerequisites!.map((prereq) => (
+              <li class="flex items-start gap-2.5 text-sm text-content-secondary">
+                <span class="text-success mt-0.5 shrink-0 text-base">✓</span>
+                {prereq}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <hr class="border-border mb-12" />
+
+  <!-- Course Content -->
+  <div class="mb-12">
+    <h2 class="font-heading text-2xl font-bold text-content-primary mb-2">Course Content</h2>
+    <p class="text-content-muted text-sm mb-8">
+      {course.sections.length} sections · {totalLessons} lessons
+    </p>
+
+    <CourseAccordion sections={course.sections} courseSlug={course.slug} client:load />
+  </div>
+</div>

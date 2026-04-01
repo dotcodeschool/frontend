@@ -1,0 +1,31 @@
+---
+import type { ArticleSummary } from '../lib/loader'
+
+interface Props {
+  articles: ArticleSummary[]
+}
+
+const { articles } = Astro.props
+---
+
+{articles.length > 0 && (
+  <div>
+    <h2 class="font-heading text-xl font-semibold text-content-primary mb-4">Related Articles</h2>
+    <div class="space-y-2">
+      {articles.map((article) => (
+        <a
+          href={`/articles/${article.slug}`}
+          class="flex items-center justify-between p-4 rounded-lg border border-border bg-surface hover:bg-elevated transition-colors no-underline group"
+        >
+          <div class="min-w-0 flex-1">
+            <h3 class="font-heading text-sm font-semibold text-content-primary mb-0.5 truncate">
+              {article.title}
+            </h3>
+            <p class="text-content-muted text-xs truncate">{article.description}</p>
+          </div>
+          <span class="text-content-muted group-hover:text-accent transition-colors ml-3 shrink-0">›</span>
+        </a>
+      ))}
+    </div>
+  </div>
+)}

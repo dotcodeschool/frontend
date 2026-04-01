@@ -1,0 +1,18 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Navbar from '@/shared/components/Navbar.astro'
+import Footer from '@/shared/components/Footer.astro'
+---
+
+<BaseLayout title="Legal — Dot Code School">
+  <Navbar />
+  <main class="max-w-3xl mx-auto px-4 py-8">
+    <h1 class="font-heading text-2xl font-bold mb-6">Legal</h1>
+    <ul class="space-y-3">
+      <li><a href="/legal/disclaimer" class="text-accent no-underline hover:underline">Disclaimer</a></li>
+      <li><a href="/legal/privacy-policy" class="text-accent no-underline hover:underline">Privacy Policy</a></li>
+      <li><a href="/legal/terms-of-service" class="text-accent no-underline hover:underline">Terms of Service</a></li>
+    </ul>
+  </main>
+  <Footer />
+</BaseLayout>

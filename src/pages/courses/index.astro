@@ -1,0 +1,30 @@
+---
+// src/pages/courses/index.astro
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Navbar from '@/shared/components/Navbar.astro'
+import CourseCard from '@/features/courses/components/CourseCard.astro'
+import { getCourses } from '@/features/courses/lib/loader'
+import Footer from '@/shared/components/Footer.astro'
+
+const courses = getCourses()
+---
+
+<BaseLayout title="Courses — Dot Code School">
+  <Navbar />
+  <main class="max-w-3xl mx-auto px-4 py-8">
+    <a href="/" class="text-accent text-4xl mb-4 block">&larr;</a>
+    <h1 class="font-heading text-2xl font-bold mb-8">Courses</h1>
+    {courses.map((course, i) => (
+      <CourseCard
+        title={course.title}
+        description={course.description}
+        level={course.level}
+        language={course.language}
+        slug={course.slug}
+        index={i}
+        isLast={i === courses.length - 1}
+      />
+    ))}
+  </main>
+  <Footer />
+</BaseLayout>

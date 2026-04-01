@@ -1,0 +1,38 @@
+---
+// src/features/courses/components/CourseCard.astro
+interface Props {
+  title: string
+  description: string
+  level: string
+  language: string
+  slug: string
+  index: number
+  isLast: boolean
+}
+
+const { title, description, level, language, slug, index, isLast } = Astro.props
+---
+
+<div class="relative">
+  {!isLast && (
+    <div class="absolute left-8 top-16 h-[calc(100%-64px)] w-1 bg-border z-[1]" />
+  )}
+  <div class="flex">
+    <div class="w-16 h-16 rounded-full bg-accent text-base font-bold flex items-center justify-center text-content-primary mr-4 z-[2] relative shrink-0"
+         style={`background: var(--accent); color: var(--bg-base);`}>
+      {index + 1}
+    </div>
+    <a href={`/courses/${slug}`}
+       class="flex-1 mb-12 p-8 border border-border border-l-4 border-l-accent bg-surface rounded-r-lg hover:bg-elevated transition-colors no-underline block">
+      <h2 class="font-heading text-lg font-semibold text-content-primary mb-1">{title}</h2>
+      <p class="text-content-muted text-sm mb-2">{level} · {language}</p>
+      <p class="text-content-secondary text-sm">{description}</p>
+      <div class="mt-4">
+        <span class="inline-block bg-accent text-base font-medium px-8 py-3 rounded-md"
+              style="color: var(--bg-base);">
+          Start Course
+        </span>
+      </div>
+    </a>
+  </div>
+</div>

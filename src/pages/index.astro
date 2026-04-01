@@ -1,0 +1,218 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Navbar from '@/shared/components/Navbar.astro'
+import Footer from '@/shared/components/Footer.astro'
+import { getCourses } from '@/features/courses/lib/loader'
+import { getArticles } from '@/features/articles/lib/loader'
+import LandingHero from '@/shared/components/LandingHero'
+
+const courses = getCourses().filter(c => c.slug !== 'course-template' && c.slug !== 'sample-course')
+const articles = getArticles().slice(0, 3)
+---
+
+<BaseLayout title="dotcodeschool — Learn blockchain development by building" description="Interactive, in-browser tutorials that teach you blockchain development by writing real code. Build state machines, NFT marketplaces, and more.">
+  <Navbar />
+
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden">
+    <!-- Horizontal streaks -->
+    <div class="light-streak-h" style="top: 20%; width: 45%; left: 10%; animation-duration: 8s;" />
+    <div class="light-streak-h" style="top: 40%; width: 55%; left: 25%; animation-duration: 11s; animation-delay: -4s;" />
+    <div class="light-streak-h" style="top: 60%; width: 40%; left: 35%; animation-duration: 9s; animation-delay: -7s;" />
+    <div class="light-streak-h" style="top: 80%; width: 50%; left: 15%; animation-duration: 10s; animation-delay: -2s;" />
+    <!-- Vertical streaks -->
+    <div class="light-streak-v" style="left: 12%; height: 45%; top: 10%; animation-duration: 10s;" />
+    <div class="light-streak-v" style="left: 30%; height: 40%; top: 25%; animation-duration: 12s; animation-delay: -5s;" />
+    <div class="light-streak-v" style="left: 55%; height: 50%; top: 5%; animation-duration: 9s; animation-delay: -3s;" />
+    <div class="light-streak-v" style="left: 75%; height: 35%; top: 30%; animation-duration: 11s; animation-delay: -8s;" />
+    <div class="light-streak-v" style="left: 90%; height: 40%; top: 15%; animation-duration: 13s; animation-delay: -6s;" />
+
+    <div class="relative max-w-6xl mx-auto px-6 pt-20 pb-16">
+      <!-- Tagline -->
+      <div class="text-center mb-12">
+        <p class="text-accent font-mono text-sm tracking-wider mb-4 uppercase">Interactive blockchain tutorials</p>
+        <h1 class="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-content-primary leading-[1.1] mb-6">
+          Learn by building.
+        </h1>
+        <p class="text-content-muted text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+          Write real code in your browser. Build state machines, NFT marketplaces, and multi-chain applications — one lesson at a time.
+        </p>
+        <div class="flex items-center justify-center gap-4 mt-8">
+          <a href="/courses" class="inline-block bg-accent text-lg font-semibold px-8 py-3 rounded-lg no-underline hover:opacity-90 transition-opacity" style="color: var(--bg-base);">
+            Browse Courses
+          </a>
+          <a href="#courses" class="inline-block text-content-muted text-sm border border-border px-6 py-3 rounded-lg no-underline hover:text-content-secondary hover:border-content-muted transition-colors">
+            See what you'll build ↓
+          </a>
+        </div>
+      </div>
+
+      <!-- Interactive preview card with 3D tilt -->
+      <div class="max-w-4xl mx-auto" style="min-height: 460px;">
+        <LandingHero client:only="react" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Courses Section -->
+  <section id="courses" class="relative max-w-5xl mx-auto px-6 py-20">
+    <div class="text-center mb-12">
+      <p class="text-accent font-mono text-xs tracking-wider mb-3 uppercase">Curriculum</p>
+      <h2 class="font-heading text-3xl md:text-4xl font-bold text-content-primary mb-3">Start your journey</h2>
+      <p class="text-content-muted text-base max-w-xl mx-auto">
+        Each course takes you from concept to working code. Pick your path and start building.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {courses.map((course) => (
+        <a href={`/courses/${course.slug}`}
+           class="group block p-6 bg-surface border border-border rounded-xl no-underline hover:border-accent/30 hover:shadow-lg hover:shadow-accent/[0.04] transition-all duration-300">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-accent-bg text-accent">{course.level}</span>
+            <span class="text-xs text-content-muted">{course.language}</span>
+          </div>
+          <h3 class="font-heading text-lg font-semibold text-content-primary mb-2 group-hover:text-accent transition-colors leading-snug">
+            {course.title}
+          </h3>
+          <p class="text-content-secondary text-sm leading-relaxed mb-4">
+            {course.description}
+          </p>
+          <span class="text-accent text-sm font-medium inline-flex items-center gap-1">
+            Start learning <span class="group-hover:translate-x-1 transition-transform inline-block">→</span>
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="relative border-t border-border overflow-hidden">
+    <div class="light-streak-h" style="top: 40%; width: 45%; left: 30%; animation-duration: 9s; animation-delay: -2s;" />
+
+    <div class="max-w-5xl mx-auto px-6 py-20 relative">
+      <div class="text-center mb-14">
+        <p class="text-accent font-mono text-xs tracking-wider mb-3 uppercase">How it works</p>
+        <h2 class="font-heading text-3xl md:text-4xl font-bold text-content-primary">Code, don't just read</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div class="text-center">
+          <div class="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mx-auto mb-4">
+            <span class="font-mono text-accent font-bold text-lg">01</span>
+          </div>
+          <h3 class="font-heading text-base font-semibold text-content-primary mb-2">Read the lesson</h3>
+          <p class="text-content-muted text-sm leading-relaxed">
+            Each lesson explains a concept with clear prose and code examples. No fluff — just what you need to understand.
+          </p>
+        </div>
+        <div class="text-center">
+          <div class="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mx-auto mb-4">
+            <span class="font-mono text-accent font-bold text-lg">02</span>
+          </div>
+          <h3 class="font-heading text-base font-semibold text-content-primary mb-2">Write the code</h3>
+          <p class="text-content-muted text-sm leading-relaxed">
+            A real code editor is right beside the lesson. Edit files, see changes, and build the project step by step.
+          </p>
+        </div>
+        <div class="text-center">
+          <div class="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mx-auto mb-4">
+            <span class="font-mono text-accent font-bold text-lg">03</span>
+          </div>
+          <h3 class="font-heading text-base font-semibold text-content-primary mb-2">Check your answer</h3>
+          <p class="text-content-muted text-sm leading-relaxed">
+            Compare your code against the solution instantly. See exactly where you diverged and learn from the diff.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Articles preview -->
+  {articles.length > 0 && (
+    <section class="relative border-t border-border">
+      <div class="max-w-5xl mx-auto px-6 py-20">
+        <div class="flex items-baseline justify-between mb-8">
+          <div>
+            <p class="text-accent font-mono text-xs tracking-wider mb-3 uppercase">From the blog</p>
+            <h2 class="font-heading text-3xl font-bold text-content-primary">Latest articles</h2>
+          </div>
+          <a href="/articles" class="text-accent text-sm no-underline hover:text-accent-dim transition-colors">
+            View all →
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {articles.map((article) => (
+            <a href={`/articles/${article.slug}`}
+               class="group block p-5 bg-surface border border-border rounded-xl no-underline hover:bg-elevated transition-colors">
+              <p class="text-content-muted text-xs mb-2">{article.date}</p>
+              <h3 class="font-heading text-base font-semibold text-content-primary mb-2 group-hover:text-accent transition-colors leading-snug">
+                {article.title}
+              </h3>
+              <p class="text-content-secondary text-sm line-clamp-2">{article.description}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- CTA -->
+  <section class="relative border-t border-border overflow-hidden">
+    <div class="light-streak-h" style="top: 45%; width: 50%; left: 25%; animation-duration: 8s;" />
+    <div class="light-streak-h" style="top: 65%; width: 35%; left: 40%; animation-duration: 11s; animation-delay: -5s;" />
+    <div class="relative max-w-3xl mx-auto px-6 py-24 text-center">
+      <h2 class="font-heading text-3xl md:text-4xl font-bold text-content-primary mb-4">
+        Ready to start building?
+      </h2>
+      <p class="text-content-muted text-lg mb-8 max-w-lg mx-auto">
+        No setup required. Pick a course, open the editor, and write your first line of blockchain code.
+      </p>
+      <a href="/courses" class="inline-block bg-accent text-lg font-semibold px-10 py-3.5 rounded-lg no-underline hover:opacity-90 transition-opacity" style="color: var(--bg-base);">
+        Browse Courses
+      </a>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  :root {
+    --streak: rgba(78, 108, 212, 0.2);
+  }
+
+  [data-theme="dark"] {
+    --streak: rgba(107, 138, 237, 0.15);
+  }
+
+  /* Light streaks — horizontal lines that drift across */
+  .light-streak-h {
+    position: absolute;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, var(--streak) 30%, var(--streak) 70%, transparent 100%);
+    animation: streak-h linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes streak-h {
+    0% { transform: translateX(-110%); }
+    100% { transform: translateX(110%); }
+  }
+
+  .light-streak-v {
+    position: absolute;
+    width: 1px;
+    background: linear-gradient(180deg, transparent 0%, var(--streak) 30%, var(--streak) 70%, transparent 100%);
+    animation: streak-v linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes streak-v {
+    0% { transform: translateY(-110%); }
+    100% { transform: translateY(110%); }
+  }
+
+</style>
+

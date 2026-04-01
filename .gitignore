@@ -13,10 +13,17 @@
 /.next/
 /out/
 
+# astro
+/.astro/
+/dist/
+
 # production
 /build
 
 # misc
+.claude/*
+.superpowers*
+docs/superpowers*
 .DS_Store
 *.pem
 

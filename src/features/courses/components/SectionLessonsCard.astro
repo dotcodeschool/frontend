@@ -1,0 +1,35 @@
+---
+import type { LessonSummary, CourseSlug, SectionSlug } from '../types'
+
+interface Props {
+  lessons: LessonSummary[]
+  courseSlug: CourseSlug
+  sectionSlug: SectionSlug
+}
+
+const { lessons, courseSlug, sectionSlug } = Astro.props
+---
+
+<div class="mt-10 border border-border rounded-lg bg-surface p-6">
+  <h2 class="font-heading text-lg font-semibold text-content-primary mb-1">
+    Lessons in this section
+  </h2>
+  <p class="text-content-muted text-sm mb-4">
+    Complete these lessons to master this section
+  </p>
+
+  <div class="space-y-1">
+    {lessons.map((lesson) => {
+      const href = `/courses/${courseSlug}/${sectionSlug}/${lesson.slug}`
+      return (
+        <a
+          href={href}
+          class="flex items-center justify-between px-3 py-2.5 rounded-md text-sm text-accent hover:bg-elevated transition-colors no-underline group"
+        >
+          <span>{lesson.title}</span>
+          <span class="text-content-faint group-hover:text-accent transition-colors">›</span>
+        </a>
+      )
+    })}
+  </div>
+</div>
