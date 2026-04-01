@@ -1,5 +1,5 @@
-// src/shared/components/ThemeToggle.tsx
 import { useState, useEffect } from 'react'
+import { IoSunny, IoMoon } from 'react-icons/io5'
 
 export function ThemeToggle() {
   const [theme, setTheme] = useState<'light' | 'dark'>('dark')
@@ -21,10 +21,11 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      className="text-content-muted hover:text-content-secondary transition-colors text-sm px-2 py-1 rounded"
+      className="text-content-muted hover:text-content-secondary transition-colors text-base p-1.5 rounded"
       aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+      title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
     >
-      {theme === 'dark' ? '☀' : '☽'}
+      {theme === 'dark' ? <IoSunny /> : <IoMoon />}
     </button>
   )
 }
