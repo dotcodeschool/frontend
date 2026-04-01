@@ -1,9 +1,10 @@
 ---
 import type { Course } from '../types'
-import { FaPuzzlePiece, FaClock, FaBookOpen, FaClipboardList, FaGraduationCap } from 'react-icons/fa'
+import { FaPuzzlePiece, FaClock, FaBookOpen, FaClipboardList, FaGraduationCap, FaGithub } from 'react-icons/fa'
 import CourseAccordion from './CourseAccordion'
 import TruncatedContent from './TruncatedContent'
 import PrerequisitesPopover from './PrerequisitesPopover'
+import { ProgressBar } from '@/features/progress/components/ProgressBar'
 
 interface Props {
   course: Course
@@ -41,14 +42,35 @@ const hasPrereqs = course.prerequisites && course.prerequisites.length > 0
     <p class="text-content-muted text-sm mb-8">Last updated: {course.lastUpdated}</p>
   )}
 
-  <!-- Start Course button -->
-  {startHref && (
-    <a href={startHref}
-       class="inline-block bg-accent text-lg font-semibold px-12 py-3.5 rounded-lg no-underline mb-12 hover:opacity-90 transition-opacity"
-       style="color: var(--bg-base);">
-      Start Course
-    </a>
-  )}
+  <!-- Start Course button + GitHub link -->
+  <div class="flex items-center flex-wrap gap-3 mb-6">
+    {startHref && (
+      <a href={startHref}
+         class="inline-block bg-accent text-lg font-semibold px-12 py-3.5 rounded-lg no-underline hover:opacity-90 transition-opacity"
+         style="color: var(--bg-base);">
+        Start Course
+      </a>
+    )}
+    {course.githubUrl && (
+      <a href={course.githubUrl}
+         target="_blank"
+         rel="noopener"
+         class="inline-flex items-center gap-2 text-content-muted text-sm border border-border px-6 py-3 rounded-lg no-underline hover:text-content-secondary hover:border-content-muted transition-colors">
+        <FaGithub className="text-base" />
+        View on GitHub
+      </a>
+    )}
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="mb-12">
+    <ProgressBar
+      courseSlug={course.slug}
+      totalLessons={totalLessons}
+      lessonSlugs={course.sections.flatMap(s => s.lessons.map(l => l.slug))}
+      client:load
+    />
+  </div>
 
   <!-- Stats Card -->
   <div class="border border-border rounded-xl bg-surface px-8 py-4 mb-12">
