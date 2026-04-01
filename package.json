@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "astro build",
     "start": "next start",
     "check": "next lint",
     "check:strict": "pnpm check --report-unused-disable-directives-severity \"error\" --no-inline-config",
