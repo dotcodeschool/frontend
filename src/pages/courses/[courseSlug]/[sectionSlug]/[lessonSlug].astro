@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Navbar from '@/shared/components/Navbar.astro'
-import SidebarNav from '@/features/courses/components/SidebarNav.astro'
+import SidebarNav from '@/features/courses/components/SidebarNav'
 import LessonNav from '@/features/courses/components/LessonNav.astro'
 import LessonLayout from '@/features/courses/components/LessonLayout'
 import { getCourse, getCourses, getLesson } from '@/features/courses/lib/loader'
@@ -45,11 +45,14 @@ const readOnly = lesson.files !== null && lesson.files.source.length > 0 && less
 <BaseLayout title={`${lesson.title} — ${course.title}`}>
   <Navbar showLinks={false} />
   <div class="flex h-[calc(100vh-48px)]">
-    <SidebarNav
-      course={course}
-      currentSection={asSectionSlug(sectionSlug!)}
-      currentLesson={asLessonSlug(lessonSlug!)}
-    />
+    <aside class="w-[260px] min-w-[260px] border-r border-border hidden md:block">
+      <SidebarNav
+        course={course}
+        currentSection={asSectionSlug(sectionSlug!)}
+        currentLesson={asLessonSlug(lessonSlug!)}
+        client:load
+      />
+    </aside>
     <div class="flex-1 flex flex-col overflow-hidden">
       <LessonLayout
         code={lesson.code}
