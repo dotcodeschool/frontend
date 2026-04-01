@@ -36,10 +36,9 @@ export const mdxComponents = {
         {...props}
         target={isExternal ? '_blank' : undefined}
         rel={isExternal ? 'noopener noreferrer' : undefined}
-        className="text-accent hover:underline inline-flex items-center gap-0.5"
+        className="text-accent hover:underline"
       >
-        {props.children}
-        {isExternal && <span className="text-xs">↗</span>}
+        {props.children}{isExternal && <sup className="text-[0.6em] ml-0.5 no-underline">↗</sup>}
       </a>
     )
   },
