@@ -62,7 +62,7 @@ export function CodeBlock({ children, className, filename }: Props) {
     yml: 'yaml',
   }
   const language = langMap[rawLang] ?? rawLang
-  const code = children.trim()
+  const code = children.replace(/\n+$/, '').trim()
 
   return (
     <div
@@ -95,7 +95,7 @@ export function CodeBlock({ children, className, filename }: Props) {
             className="overflow-x-auto px-6 pt-4 pb-3 text-sm leading-relaxed [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded [&:hover::-webkit-scrollbar-thumb]:bg-content-faint"
             style={{ ...style, margin: 0, backgroundColor: themes.dracula.plain.backgroundColor }}
           >
-            <code className={filename ? '' : 'pr-12'}>
+            <code className={`flex flex-col ${filename ? '' : 'pr-12'}`}>
               {tokens.map((line, i) => (
                   <div key={i} {...getLineProps({ line })}>
                     {line.map((token, key) => (
