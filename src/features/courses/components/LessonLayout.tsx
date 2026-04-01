@@ -28,14 +28,29 @@ export default function LessonLayout({ code, title, lastUpdated, files, diff, re
   }
 
   return (
-    <ResizablePane
-      left={<LessonContent code={code} title={title} lastUpdated={lastUpdated} pageUrl={pageUrl} githubEditUrl={githubEditUrl} />}
-      right={
-        <div className="h-full">
+    <>
+      {/* Desktop: side-by-side resizable panes */}
+      <div className="hidden md:flex flex-1 min-h-0">
+        <ResizablePane
+          left={<LessonContent code={code} title={title} lastUpdated={lastUpdated} pageUrl={pageUrl} githubEditUrl={githubEditUrl} />}
+          right={
+            <div className="h-full">
+              <CodeEditor files={files} diff={diff} readOnly={readOnly} />
+            </div>
+          }
+          defaultSplit={50}
+        />
+      </div>
+
+      {/* Mobile: stacked — content on top, editor below */}
+      <div className="flex flex-col flex-1 min-h-0 md:hidden">
+        <div className="flex-1 overflow-y-auto">
+          <LessonContent code={code} title={title} lastUpdated={lastUpdated} pageUrl={pageUrl} githubEditUrl={githubEditUrl} />
+        </div>
+        <div className="h-[400px] min-h-[400px] border-t border-border">
           <CodeEditor files={files} diff={diff} readOnly={readOnly} />
         </div>
-      }
-      defaultSplit={50}
-    />
+      </div>
+    </>
   )
 }
