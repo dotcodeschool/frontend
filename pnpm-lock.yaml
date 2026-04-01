@@ -43,7 +43,7 @@ importers:
         version: 0.25.12
       gitorial-to-dotcodeschool:
         specifier: github:dotcodeschool/gitorial-to-dotcodeschool
-        version: https://codeload.github.com/dotcodeschool/gitorial-to-dotcodeschool/tar.gz/6161cc8695586aa1d146fc6ae41dc00ba0c3e46e
+        version: https://codeload.github.com/dotcodeschool/gitorial-to-dotcodeschool/tar.gz/9125e4c1e3d5a8f5f2609f4be21990421d8071ff
       gray-matter:
         specifier: ^4.0.3
         version: 4.0.3
@@ -1908,8 +1908,8 @@ packages:
   github-slugger@2.0.0:
     resolution: {integrity: sha512-IaOQ9puYtjrkq7Y0Ygl9KDZnrf/aiUJYUpVf89y8kyaxbRG7Y1SrX/jaumrv81vc61+kiMempujsM3Yw7w5qcw==}
 
-  gitorial-to-dotcodeschool@https://codeload.github.com/dotcodeschool/gitorial-to-dotcodeschool/tar.gz/6161cc8695586aa1d146fc6ae41dc00ba0c3e46e:
-    resolution: {tarball: https://codeload.github.com/dotcodeschool/gitorial-to-dotcodeschool/tar.gz/6161cc8695586aa1d146fc6ae41dc00ba0c3e46e}
+  gitorial-to-dotcodeschool@https://codeload.github.com/dotcodeschool/gitorial-to-dotcodeschool/tar.gz/9125e4c1e3d5a8f5f2609f4be21990421d8071ff:
+    resolution: {tarball: https://codeload.github.com/dotcodeschool/gitorial-to-dotcodeschool/tar.gz/9125e4c1e3d5a8f5f2609f4be21990421d8071ff}
     version: 1.0.0
     engines: {node: '>=14.0.0'}
     hasBin: true
@@ -5050,7 +5050,7 @@ snapshots:
 
   github-slugger@2.0.0: {}
 
-  gitorial-to-dotcodeschool@https://codeload.github.com/dotcodeschool/gitorial-to-dotcodeschool/tar.gz/6161cc8695586aa1d146fc6ae41dc00ba0c3e46e:
+  gitorial-to-dotcodeschool@https://codeload.github.com/dotcodeschool/gitorial-to-dotcodeschool/tar.gz/9125e4c1e3d5a8f5f2609f4be21990421d8071ff:
     dependencies:
       commander: 11.1.0
 
