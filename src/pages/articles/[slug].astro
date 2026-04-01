@@ -1,8 +1,11 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Navbar from '@/shared/components/Navbar.astro'
-import { getArticles, getArticle } from '@/features/articles/lib/loader'
 import MdxRenderer from '@/shared/components/MdxRenderer'
+import ShareButtons from '@/features/courses/components/ShareButtons'
+import RelatedArticles from '@/features/articles/components/RelatedArticles.astro'
+import { getArticles, getArticle, getRelatedArticles } from '@/features/articles/lib/loader'
+import { IoChevronForward, IoTimeOutline } from 'react-icons/io5'
 
 export function getStaticPaths() {
   return getArticles().map(a => ({ params: { slug: a.slug } }))
@@ -12,17 +15,90 @@ const { slug } = Astro.params
 const article = await getArticle(slug!)
 
 if (!article) return Astro.redirect('/404')
+
+const related = getRelatedArticles(article.slug, article.tags)
+const readingTime = article.estimatedTime
+  ? `${article.estimatedTime} min read`
+  : `${Math.ceil(article.wordCount / 225)} min read`
+const pageUrl = `https://dotcodeschool.com/articles/${article.slug}`
+const githubEditUrl = `https://github.com/dotcodeschool/frontend/edit/master/content/articles/${article.slug}.mdx`
+const initials = article.author.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
 ---
 
 <BaseLayout title={`${article.title} — Dot Code School`}>
   <Navbar />
-  <main class="max-w-3xl mx-auto px-4 py-8">
-    <a href="/articles" class="text-accent text-sm mb-4 block no-underline">← Articles</a>
-    <h1 class="font-heading text-3xl font-bold mb-2">{article.title}</h1>
-    <p class="text-content-secondary text-sm mb-8">{article.date} · {article.author}</p>
-    <div class="prose prose-invert max-w-none text-content-body
-                 prose-headings:font-heading prose-headings:text-content-primary">
-      <MdxRenderer code={article.code} client:load />
+  <main class="max-w-3xl mx-auto px-6 py-10">
+
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-1.5 text-sm text-content-muted mb-4">
+      <a href="/" class="hover:text-content-secondary transition-colors no-underline">Home</a>
+      <IoChevronForward className="text-xs" />
+      <a href="/articles" class="hover:text-content-secondary transition-colors no-underline">Articles</a>
+      <IoChevronForward className="text-xs" />
+      <span class="text-content-secondary truncate max-w-[200px]">{article.title}</span>
+    </nav>
+
+    <!-- Back link -->
+    <a href="/articles" class="text-accent text-sm mb-6 block no-underline hover:text-accent-dim transition-colors">
+      ← Back to articles
+    </a>
+
+    <!-- Header -->
+    <h1 class="font-heading text-3xl md:text-4xl font-bold mb-4 leading-tight">{article.title}</h1>
+
+    <!-- Tags -->
+    {article.tags.length > 0 && (
+      <div class="flex flex-wrap gap-1.5 mb-5">
+        {article.tags.map((tag) => (
+          <a
+            href={`/articles?tag=${encodeURIComponent(tag)}`}
+            class="text-xs text-content-muted bg-elevated px-2.5 py-1 rounded-md no-underline hover:text-accent transition-colors"
+          >
+            {tag}
+          </a>
+        ))}
+      </div>
+    )}
+
+    <!-- Author info row -->
+    <div class="flex items-center gap-3 mb-8 text-sm">
+      <div class="w-9 h-9 rounded-full bg-accent flex items-center justify-center text-xs font-bold shrink-0"
+           style="color: var(--bg-base);">
+        {initials}
+      </div>
+      <div class="flex items-center gap-2 text-content-muted flex-wrap">
+        <span class="font-semibold text-content-primary">{article.author}</span>
+        <span>·</span>
+        <span>{article.date}</span>
+        <span>·</span>
+        <span class="flex items-center gap-1">
+          <IoTimeOutline className="text-sm" />
+          {readingTime}
+        </span>
+      </div>
     </div>
+
+    <!-- Content -->
+    <div class="prose prose-invert max-w-none text-content-body
+                 prose-headings:font-heading prose-headings:text-content-primary mb-8">
+      <MdxRenderer code={article.code} client:only="react" />
+    </div>
+
+    <!-- Last updated -->
+    {article.lastUpdated && (
+      <p class="text-content-muted text-sm mb-4">Last updated: {article.lastUpdated}</p>
+    )}
+
+    <!-- Share + Edit -->
+    <ShareButtons title={article.title} url={pageUrl} githubEditUrl={githubEditUrl} client:load />
+
+    <!-- Divider + Related -->
+    {related.length > 0 && (
+      <>
+        <hr class="border-border my-10" />
+        <RelatedArticles articles={related} />
+      </>
+    )}
+
   </main>
 </BaseLayout>
