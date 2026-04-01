@@ -1,0 +1,51 @@
+---
+import { FaTwitter, FaGithub, FaDiscord, FaEnvelope } from 'react-icons/fa'
+
+const socialLinks = [
+  { icon: FaTwitter, href: 'https://twitter.com/niceniceoneone', label: 'Twitter' },
+  { icon: FaGithub, href: 'https://github.com/niceniceoneone', label: 'GitHub' },
+  { icon: FaDiscord, href: 'https://discord.gg/Z6QBZ54RM6', label: 'Discord' },
+  { icon: FaEnvelope, href: 'mailto:niceniceoneone@gmail.com', label: 'Email' },
+]
+
+const legalLinks = [
+  { text: 'Terms of Service', href: '/legal/terms-of-service' },
+  { text: 'Privacy Policy', href: '/legal/privacy-policy' },
+  { text: 'Disclaimer', href: '/legal/disclaimer' },
+]
+---
+
+<footer class="mt-20 py-12 border-t border-border">
+  <!-- Social icons -->
+  <div class="flex items-center justify-center gap-4 mb-6">
+    {socialLinks.map(({ icon: Icon, href, label }) => (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-content-muted hover:text-content-secondary transition-colors no-underline"
+        title={label}
+      >
+        <Icon className="text-lg" />
+      </a>
+    ))}
+  </div>
+
+  <!-- Divider -->
+  <div class="w-48 h-px bg-border mx-auto mb-6" />
+
+  <!-- Legal links -->
+  <div class="flex items-center justify-center gap-1 text-xs text-content-muted mb-3">
+    {legalLinks.map((link, i) => (
+      <>
+        {i > 0 && <span class="mx-1.5">·</span>}
+        <a href={link.href} class="hover:text-content-secondary transition-colors no-underline">{link.text}</a>
+      </>
+    ))}
+  </div>
+
+  <!-- Copyright -->
+  <p class="text-center text-xs text-content-muted">
+    © 2026 DotCodeSchool. Funded by the Polkadot Treasury.
+  </p>
+</footer>
