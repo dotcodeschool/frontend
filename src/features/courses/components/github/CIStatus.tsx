@@ -1,82 +1,82 @@
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
   type ActionsResult,
   fetchActionsProgress,
-} from "@/features/progress/lib/actions"
+} from "@/features/progress/lib/actions";
 
 interface Props {
-  forkUrl: string
-  onRunReady?: (runId: number) => void
+  forkUrl: string;
+  onRunReady?: (runId: number) => void;
 }
 
-const POLL_INTERVAL = 15_000
+const POLL_INTERVAL = 15_000;
 
 export function CIStatus({ forkUrl, onRunReady }: Props) {
-  const [result, setResult] = useState<ActionsResult | null>(null)
-  const [loading, setLoading] = useState(true)
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const [result, setResult] = useState<ActionsResult | null>(null);
+  const [loading, setLoading] = useState(true);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const fetchStatus = useCallback(async () => {
     try {
-      const data = await fetchActionsProgress(forkUrl)
-      setResult(data)
+      const data = await fetchActionsProgress(forkUrl);
+      setResult(data);
       if (data.latestRun) {
-        onRunReady?.(data.latestRun.id)
+        onRunReady?.(data.latestRun.id);
       }
-      return data
+      return data;
     } catch {
-      return null
+      return null;
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [forkUrl, onRunReady])
+  }, [forkUrl, onRunReady]);
 
   useEffect(() => {
-    fetchStatus()
+    fetchStatus();
     return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current)
-    }
-  }, [fetchStatus])
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [fetchStatus]);
 
   useEffect(() => {
-    if (intervalRef.current) clearInterval(intervalRef.current)
+    if (intervalRef.current) clearInterval(intervalRef.current);
 
     const isRunning =
       result?.latestRun?.status === "queued" ||
-      result?.latestRun?.status === "in_progress"
+      result?.latestRun?.status === "in_progress";
 
     if (isRunning) {
-      intervalRef.current = setInterval(fetchStatus, POLL_INTERVAL)
+      intervalRef.current = setInterval(fetchStatus, POLL_INTERVAL);
     }
 
     return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current)
-    }
-  }, [result?.latestRun?.status, fetchStatus])
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [result?.latestRun?.status, fetchStatus]);
 
   useEffect(() => {
     function handleVisibility() {
       if (document.hidden) {
         if (intervalRef.current) {
-          clearInterval(intervalRef.current)
-          intervalRef.current = null
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
         }
       } else {
         fetchStatus().then((data) => {
           const isRunning =
             data?.latestRun?.status === "queued" ||
-            data?.latestRun?.status === "in_progress"
+            data?.latestRun?.status === "in_progress";
           if (isRunning && !intervalRef.current) {
-            intervalRef.current = setInterval(fetchStatus, POLL_INTERVAL)
+            intervalRef.current = setInterval(fetchStatus, POLL_INTERVAL);
           }
-        })
+        });
       }
     }
-    document.addEventListener("visibilitychange", handleVisibility)
+    document.addEventListener("visibilitychange", handleVisibility);
     return () =>
-      document.removeEventListener("visibilitychange", handleVisibility)
-  }, [fetchStatus])
+      document.removeEventListener("visibilitychange", handleVisibility);
+  }, [fetchStatus]);
 
   if (loading) {
     return (
@@ -84,23 +84,19 @@ export function CIStatus({ forkUrl, onRunReady }: Props) {
         <div className="w-3 h-3 rounded-full bg-elevated animate-pulse" />
         Checking CI...
       </div>
-    )
+    );
   }
 
   if (!result || !result.hasWorkflows) {
-    return (
-      <p className="text-xs text-content-muted">No CI runs yet</p>
-    )
+    return <p className="text-xs text-content-muted">No CI runs yet</p>;
   }
 
-  const run = result.latestRun
+  const run = result.latestRun;
   if (!run) {
-    return (
-      <p className="text-xs text-content-muted">No CI runs yet</p>
-    )
+    return <p className="text-xs text-content-muted">No CI runs yet</p>;
   }
 
-  const isRunning = run.status === "queued" || run.status === "in_progress"
+  const isRunning = run.status === "queued" || run.status === "in_progress";
 
   return (
     <div className="flex items-center gap-2">
@@ -167,5 +163,5 @@ export function CIStatus({ forkUrl, onRunReady }: Props) {
         </svg>
       </button>
     </div>
-  )
+  );
 }

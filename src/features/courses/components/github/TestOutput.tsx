@@ -1,15 +1,15 @@
-import AnsiToHtml from "ansi-to-html"
-import { useCallback, useState } from "react"
+import AnsiToHtml from "ansi-to-html";
+import { useCallback, useState } from "react";
 
 import {
   fetchActionLogs,
   type LogJob,
   type LogsResult,
-} from "@/features/progress/lib/actions"
+} from "@/features/progress/lib/actions";
 
 interface Props {
-  forkUrl: string
-  runId: number | null
+  forkUrl: string;
+  runId: number | null;
 }
 
 const ansiConverter = new AnsiToHtml({
@@ -25,17 +25,17 @@ const ansiConverter = new AnsiToHtml({
     6: "#22d3ee",
     7: "#e8eaf0",
   },
-})
+});
 
 function StepItem({
   step,
   defaultOpen,
 }: {
-  step: { name: string; conclusion: string; duration: string; output: string }
-  defaultOpen: boolean
+  step: { name: string; conclusion: string; duration: string; output: string };
+  defaultOpen: boolean;
 }) {
-  const [open, setOpen] = useState(defaultOpen)
-  const html = ansiConverter.toHtml(step.output)
+  const [open, setOpen] = useState(defaultOpen);
+  const html = ansiConverter.toHtml(step.output);
 
   return (
     <div className="border-b border-border/50 last:border-0">
@@ -111,7 +111,7 @@ function StepItem({
         />
       )}
     </div>
-  )
+  );
 }
 
 function JobSection({ job }: { job: LogJob }) {
@@ -128,38 +128,38 @@ function JobSection({ job }: { job: LogJob }) {
         />
       ))}
     </div>
-  )
+  );
 }
 
 export function TestOutput({ forkUrl, runId }: Props) {
-  const [open, setOpen] = useState(false)
-  const [logs, setLogs] = useState<LogsResult | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [open, setOpen] = useState(false);
+  const [logs, setLogs] = useState<LogsResult | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const loadLogs = useCallback(async () => {
-    if (!runId) return
-    setLoading(true)
-    setError(null)
+    if (!runId) return;
+    setLoading(true);
+    setError(null);
     try {
-      const data = await fetchActionLogs(forkUrl, runId)
-      setLogs(data)
+      const data = await fetchActionLogs(forkUrl, runId);
+      setLogs(data);
     } catch {
-      setError("Failed to load logs")
+      setError("Failed to load logs");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [forkUrl, runId])
+  }, [forkUrl, runId]);
 
   function handleToggle() {
-    const next = !open
-    setOpen(next)
+    const next = !open;
+    setOpen(next);
     if (next && !logs && !loading) {
-      loadLogs()
+      loadLogs();
     }
   }
 
-  if (!runId) return null
+  if (!runId) return null;
 
   return (
     <div>
@@ -207,10 +207,9 @@ export function TestOutput({ forkUrl, runId }: Props) {
               </button>
             </div>
           )}
-          {logs &&
-            logs.jobs.map((job, i) => <JobSection key={i} job={job} />)}
+          {logs && logs.jobs.map((job, i) => <JobSection key={i} job={job} />)}
         </div>
       )}
     </div>
-  )
+  );
 }

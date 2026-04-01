@@ -11,10 +11,10 @@
 #   level:       Beginner | Intermediate | Advanced
 #   language:    Programming language
 
-# - slug: rust-state-machine
-#   repo: shawntabrizi/rust-state-machine
-#   branch: gitorial
-#   title: Rust State Machine
-#   author: Shawn Tabrizi
-#   level: Intermediate
-#   language: Rust
+- slug: rust-state-machine
+  repo: shawntabrizi/rust-state-machine
+  branch: gitorial
+  title: Rust State Machine
+  author: Shawn Tabrizi
+  level: Intermediate
+  language: Rust

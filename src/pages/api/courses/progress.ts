@@ -1,31 +1,31 @@
-import type { APIRoute } from "astro"
-import { Octokit } from "octokit"
+import type { APIRoute } from "astro";
+import { Octokit } from "octokit";
 
-import { getSession } from "@/features/auth/lib/session"
+import { getSession } from "@/features/auth/lib/session";
 
-export const prerender = false
+export const prerender = false;
 
 function json(data: unknown, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
     headers: { "Content-Type": "application/json" },
-  })
+  });
 }
 
 export const GET: APIRoute = async (context) => {
-  const session = await getSession(context.request)
-  if (!session) return json({ error: "Unauthorized" }, 401)
+  const session = await getSession(context.request);
+  if (!session) return json({ error: "Unauthorized" }, 401);
 
-  const url = new URL(context.request.url)
-  const forkUrl = url.searchParams.get("forkUrl")
+  const url = new URL(context.request.url);
+  const forkUrl = url.searchParams.get("forkUrl");
 
-  if (!forkUrl) return json({ error: "Missing forkUrl parameter" }, 400)
+  if (!forkUrl) return json({ error: "Missing forkUrl parameter" }, 400);
 
-  const match = forkUrl.match(/github\.com\/([^/]+)\/([^/]+)/)
-  if (!match) return json({ error: "Invalid forkUrl" }, 400)
+  const match = forkUrl.match(/github\.com\/([^/]+)\/([^/]+)/);
+  if (!match) return json({ error: "Invalid forkUrl" }, 400);
 
-  const [, owner, repo] = match
-  const octokit = new Octokit({ auth: session.accessToken })
+  const [, owner, repo] = match;
+  const octokit = new Octokit({ auth: session.accessToken });
 
   try {
     // Get latest runs (any status, not just completed)
@@ -33,9 +33,9 @@ export const GET: APIRoute = async (context) => {
       owner,
       repo,
       per_page: 5,
-    })
+    });
 
-    const latestRun = runs.workflow_runs[0] ?? null
+    const latestRun = runs.workflow_runs[0] ?? null;
 
     return json({
       hasWorkflows: runs.total_count > 0,
@@ -50,8 +50,8 @@ export const GET: APIRoute = async (context) => {
           }
         : null,
       totalRuns: runs.total_count,
-    })
+    });
   } catch {
-    return json({ error: "Failed to fetch workflow status" }, 500)
+    return json({ error: "Failed to fetch workflow status" }, 500);
   }
-}
+};
