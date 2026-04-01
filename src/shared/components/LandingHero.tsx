@@ -139,7 +139,7 @@ export default function LandingHero() {
           </div>
 
           {/* Divider */}
-          <div className="w-px" style={{ background: 'var(--border)' }} />
+          <div className="w-px" style={{ background: '#1e2230' }} />
 
           {/* Real Monaco editor */}
           <div
@@ -149,15 +149,15 @@ export default function LandingHero() {
             onMouseLeave={() => setTiltEnabled(true)}
           >
             {/* Tab bar */}
-            <div className="flex items-center h-9 border-b px-2 shrink-0" style={{ background: 'rgba(17,19,24,0.7)', borderColor: 'var(--border)' }}>
+            <div className="flex items-center h-9 border-b px-2 shrink-0" style={{ background: '#111318', borderColor: 'rgba(255,255,255,0.06)' }}>
               {TABS.map((tab) => (
                 <span
                   key={tab.name}
                   className="font-mono px-3 py-2"
                   style={{
                     fontSize: '11px',
-                    color: tab.active ? 'var(--accent)' : 'rgba(107,138,237,0.3)',
-                    borderBottom: tab.active ? '2px solid var(--accent)' : '2px solid transparent',
+                    color: tab.active ? '#6b8aed' : 'rgba(107,138,237,0.3)',
+                    borderBottom: tab.active ? '2px solid #6b8aed' : '2px solid transparent',
                   }}
                 >
                   {tab.name}
@@ -196,7 +196,7 @@ export default function LandingHero() {
         </div>
 
         {/* Bottom bar */}
-        <div className="flex items-center justify-between h-8 px-4 border-t font-mono" style={{ background: 'rgba(17,19,24,0.4)', borderColor: 'var(--border)', fontSize: '10px', color: 'rgba(84,91,120,0.5)' }}>
+        <div className="flex items-center justify-between h-8 px-4 border-t font-mono" style={{ background: '#111318', borderColor: 'rgba(255,255,255,0.06)', fontSize: '10px', color: 'rgba(107,138,237,0.3)' }}>
           <span>Rust State Machine · Lesson 3</span>
           <span>← Previous · Next →</span>
         </div>
