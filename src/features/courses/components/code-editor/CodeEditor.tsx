@@ -14,11 +14,27 @@ interface Props {
 }
 
 export default function CodeEditor({ files, diff, solutionFiles, readOnly = false }: Props) {
-  const { showDiff, isFullscreen, toggleFullscreen } = useEditorStore()
+  const { showDiff, showSolution, isFullscreen, toggleFullscreen, activeTab } = useEditorStore()
 
   if (files.length === 0) return null
 
   const hasSolution = solutionFiles && solutionFiles.length > 0 && !readOnly
+
+  // Build solution diff for the current file
+  const solutionDiff: DiffFile[] = showSolution && hasSolution
+    ? (() => {
+        const currentFile = files[activeTab]
+        if (!currentFile) return []
+        const solution = solutionFiles.find(s => s.path === currentFile.path)
+        if (!solution) return []
+        return [{
+          path: currentFile.path,
+          language: currentFile.language,
+          original: currentFile.content,
+          modified: solution.content,
+        }]
+      })()
+    : []
 
   const editorContent = (
     <div className="flex flex-col h-full bg-code border-l border-border">
@@ -27,7 +43,9 @@ export default function CodeEditor({ files, diff, solutionFiles, readOnly = fals
         <AnswerToolbar editorFiles={files} solutionFiles={solutionFiles} />
       )}
       <div className="flex-1 min-h-0">
-        {showDiff ? (
+        {showSolution && solutionDiff.length > 0 ? (
+          <DiffViewer diff={solutionDiff} />
+        ) : showDiff ? (
           <DiffViewer diff={diff} />
         ) : (
           <EditorPanel files={files} readOnly={readOnly} />

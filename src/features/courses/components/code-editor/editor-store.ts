@@ -15,12 +15,14 @@ interface EditorState {
   // Answer checking
   incorrectFiles: string[]
   doesAnswerMatch: boolean | null
+  showSolution: boolean
 
   // Actions
   setActiveTab: (tab: number) => void
   toggleDiff: () => void
   toggleFullscreen: () => void
   checkAnswer: (editorFiles: CodeFile[], solutionFiles: CodeFile[]) => void
+  toggleSolution: () => void
   resetAnswer: () => void
 }
 
@@ -43,6 +45,7 @@ export const useEditorStore = create<EditorState>((set) => ({
   isFullscreen: false,
   incorrectFiles: [],
   doesAnswerMatch: null,
+  showSolution: false,
 
   setActiveTab: (tab) => set({ activeTab: tab, showDiff: false }),
 
@@ -76,5 +79,7 @@ export const useEditorStore = create<EditorState>((set) => ({
     })
   },
 
-  resetAnswer: () => set({ incorrectFiles: [], doesAnswerMatch: null }),
+  toggleSolution: () => set((s) => ({ showSolution: !s.showSolution })),
+
+  resetAnswer: () => set({ incorrectFiles: [], doesAnswerMatch: null, showSolution: false }),
 }))
