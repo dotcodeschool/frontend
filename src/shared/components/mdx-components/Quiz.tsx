@@ -2,7 +2,6 @@ import { useState, useEffect, useContext } from 'react'
 import { FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa'
 import { generateQuizId } from './quiz-utils'
 import { QuizGroupContext } from './QuizGroup'
-import { HighlightedExplanation } from './HighlightedExplanation'
 
 interface QuizOption {
   label: string
@@ -94,7 +93,7 @@ export function Quiz({ question, options, explanation }: Props) {
       ) : (
         <div className={`mt-4 p-4 rounded-lg text-sm ${isCorrect ? 'bg-green-500/10 border border-green-500/30' : 'bg-red-500/10 border border-red-500/30'}`}>
           <div className="font-semibold mb-1 text-content-primary">{isCorrect ? 'Correct!' : 'Incorrect'}</div>
-          <HighlightedExplanation>{explanation}</HighlightedExplanation>
+          <div className="text-content-secondary">{explanation}</div>
         </div>
       )}
       {hasAttempted && submitted && (
