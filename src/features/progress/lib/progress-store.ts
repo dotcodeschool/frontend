@@ -9,6 +9,7 @@ type ProgressStore = {
   progress: ProgressState;
   syncStatus: SyncStatus;
   isAuthenticated: boolean;
+  userDidInteract: boolean;
 
   // Actions
   init: () => void;
@@ -28,6 +29,7 @@ let _initialized = false;
 export const useProgressStore = create<ProgressStore>((set, get) => ({
   progress: { courses: {} },
   syncStatus: "local",
+  userDidInteract: false,
   isAuthenticated: false,
 
   init: () => {
@@ -96,7 +98,7 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
     };
 
     saveProgress(updated);
-    set({ progress: updated });
+    set({ progress: updated, userDidInteract: true });
     get().queueSync();
   },
 

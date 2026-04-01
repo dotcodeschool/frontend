@@ -3,36 +3,35 @@ import { useEffect, useState } from "react";
 import { useProgressStore } from "../lib/progress-store";
 
 export function SyncStatus() {
-  const { syncStatus, isAuthenticated, progress, init } = useProgressStore();
+  const { syncStatus, isAuthenticated, progress, userDidInteract, init } =
+    useProgressStore();
   const [ready, setReady] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [hasInteracted, setHasInteracted] = useState(false);
 
   useEffect(() => {
     init();
     setReady(true);
   }, []);
 
-  // Only show after a status change triggered by user action, not on initial load
+  // Only show after the user explicitly marks a lesson done
   useEffect(() => {
-    if (!hasInteracted && syncStatus === "local") return;
-    setHasInteracted(true);
+    if (!userDidInteract) return;
     setVisible(true);
 
-    // "local" and "syncing" states stay visible (no auto-hide)
-    // "synced" and "failed" fade after 3 seconds
+    // "synced" fades after 3 seconds, other states stay visible
     if (syncStatus === "synced") {
       const timer = setTimeout(() => setVisible(false), 3000);
       return () => clearTimeout(timer);
     }
-  }, [syncStatus]);
+  }, [syncStatus, userDidInteract]);
 
   if (!ready) return null;
+  if (!userDidInteract) return null;
 
-  // Don't show if no progress exists or nothing to display
   const hasProgress = Object.keys(progress.courses).length > 0;
   if (!hasProgress) return null;
-  if (!visible && syncStatus !== "syncing" && syncStatus !== "local") return null;
+  if (!visible && syncStatus !== "syncing" && syncStatus !== "local")
+    return null;
 
   const config = {
     synced: {
