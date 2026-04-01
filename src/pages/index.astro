@@ -15,11 +15,10 @@ const articles = getArticles().slice(0, 3)
 
   <!-- Hero Section -->
   <section class="relative overflow-hidden" id="hero-section">
-    <!-- Single grid layer — cursor brightens it via CSS mask on a brighter copy -->
+    <!-- Grid background -->
     <div class="absolute inset-0 bg-grid opacity-40" />
-    <div id="grid-highlight" class="absolute inset-0 bg-grid-bright opacity-0 pointer-events-none" style="transition: opacity 0.3s;" />
-    <!-- Aurora gradient -->
-    <div class="aurora" />
+    <!-- Cursor glow that makes the grid more visible nearby -->
+    <div id="cursor-glow" class="absolute pointer-events-none opacity-0" style="width: 600px; height: 600px; transform: translate(-50%, -50%); transition: opacity 0.3s;" />
     <!-- Light streaks — horizontal -->
     <div class="light-streak" style="top: 30%; width: 50%; left: 25%; animation-duration: 7s;" />
     <div class="light-streak" style="top: 55%; width: 40%; left: 30%; animation-duration: 10s; animation-delay: -4s;" />
@@ -89,8 +88,6 @@ const articles = getArticles().slice(0, 3)
 
   <!-- How it works -->
   <section class="relative border-t border-border overflow-hidden">
-    <!-- Subtle aurora on this section too -->
-    <div class="aurora aurora-dim" />
     <div class="light-streak" style="top: 40%; width: 45%; left: 30%; animation-duration: 9s; animation-delay: -2s;" />
 
     <div class="max-w-5xl mx-auto px-6 py-20 relative">
@@ -164,7 +161,6 @@ const articles = getArticles().slice(0, 3)
   <!-- CTA -->
   <section class="relative border-t border-border overflow-hidden">
     <div class="absolute inset-0 bg-grid opacity-20" />
-    <div class="aurora aurora-dim" />
     <div class="light-streak" style="top: 45%; width: 50%; left: 25%; animation-duration: 8s;" />
     <div class="light-streak" style="top: 65%; width: 35%; left: 40%; animation-duration: 11s; animation-delay: -5s;" />
     <div class="relative max-w-3xl mx-auto px-6 py-24 text-center">
@@ -185,18 +181,12 @@ const articles = getArticles().slice(0, 3)
 
 <style>
   :root {
-    --aurora-a: rgba(78, 108, 212, 0.1);
-    --aurora-b: rgba(78, 108, 212, 0.14);
-    --aurora-c: rgba(78, 108, 212, 0.08);
     --streak: rgba(78, 108, 212, 0.2);
     --grid-line: rgba(78, 108, 212, 0.15);
     --grid-line-bright: rgba(78, 108, 212, 0.4);
   }
 
   [data-theme="dark"] {
-    --aurora-a: rgba(107, 138, 237, 0.06);
-    --aurora-b: rgba(78, 108, 212, 0.08);
-    --aurora-c: rgba(107, 138, 237, 0.05);
     --streak: rgba(107, 138, 237, 0.15);
     --grid-line: rgba(107, 138, 237, 0.04);
     --grid-line-bright: rgba(107, 138, 237, 0.15);
@@ -208,42 +198,6 @@ const articles = getArticles().slice(0, 3)
       linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
     background-size: 48px 48px;
     background-position: 0 0;
-  }
-
-  .bg-grid-bright {
-    background-image:
-      linear-gradient(var(--grid-line-bright) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-line-bright) 1px, transparent 1px);
-    background-size: 48px 48px;
-    background-position: 0 0;
-  }
-
-  /* Aurora gradient — slow color shift */
-  .aurora {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      135deg,
-      var(--aurora-a) 0%,
-      transparent 35%,
-      var(--aurora-b) 55%,
-      transparent 75%,
-      var(--aurora-c) 100%
-    );
-    background-size: 200% 200%;
-    animation: aurora-shift 10s ease-in-out infinite;
-    pointer-events: none;
-  }
-
-  .aurora-dim {
-    opacity: 0.6;
-  }
-
-  @keyframes aurora-shift {
-    0%, 100% { background-position: 0% 50%; }
-    25% { background-position: 100% 0%; }
-    50% { background-position: 100% 100%; }
-    75% { background-position: 0% 100%; }
   }
 
   /* Light streaks — horizontal lines that drift across */
@@ -289,18 +243,28 @@ const articles = getArticles().slice(0, 3)
 
 <script is:inline>
   const hero = document.getElementById('hero-section')
-  const highlight = document.getElementById('grid-highlight')
-  if (hero && highlight) {
+  const glow = document.getElementById('cursor-glow')
+  if (hero && glow) {
+    // Match the grid pattern but brighter, so it blends seamlessly
+    glow.style.backgroundImage = `
+      radial-gradient(circle 300px, rgba(107,138,237,0.06) 0%, transparent 70%),
+      linear-gradient(var(--grid-line-bright, rgba(107,138,237,0.15)) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line-bright, rgba(107,138,237,0.15)) 1px, transparent 1px)
+    `
+    glow.style.backgroundSize = '600px 600px, 48px 48px, 48px 48px'
+
     hero.addEventListener('mousemove', (e) => {
       const rect = hero.getBoundingClientRect()
       const x = e.clientX - rect.left
       const y = e.clientY - rect.top
-      highlight.style.opacity = '1'
-      highlight.style.webkitMaskImage = `radial-gradient(circle 250px at ${x}px ${y}px, black, transparent)`
-      highlight.style.maskImage = `radial-gradient(circle 250px at ${x}px ${y}px, black, transparent)`
+      glow.style.left = x + 'px'
+      glow.style.top = y + 'px'
+      // Align the grid pattern to the page grid
+      glow.style.backgroundPosition = `center, ${-x + 300}px ${-y + 300}px, ${-x + 300}px ${-y + 300}px`
+      glow.style.opacity = '1'
     })
     hero.addEventListener('mouseleave', () => {
-      highlight.style.opacity = '0'
+      glow.style.opacity = '0'
     })
   }
 </script>
