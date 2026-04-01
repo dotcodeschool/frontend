@@ -68,11 +68,10 @@ export function SyncStatus() {
       icon: (
         <svg
           className="w-3.5 h-3.5 text-accent animate-spin"
-          fill="none"
+          fill="currentColor"
           viewBox="0 0 24 24"
         >
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth={4} />
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          <path d="M12 4V1L8 5l4 4V6a6 6 0 016 6 6 6 0 01-.7 2.8l1.5 1.5A8 8 0 0012 4zM12 18a6 6 0 01-6-6 6 6 0 01.7-2.8L5.2 7.7A8 8 0 0012 20v3l4-4-4-4v3z" />
         </svg>
       ),
       text: "Saving progress...",
