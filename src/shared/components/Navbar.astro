@@ -1,6 +1,6 @@
 ---
 import { ThemeToggle } from './ThemeToggle'
-import { FaGithub } from 'react-icons/fa'
+import { AuthButton } from '@/features/auth/components/AuthButton'
 
 interface Props {
   showLinks?: boolean
@@ -27,13 +27,9 @@ const { showLinks = true } = Astro.props
   <!-- Right side -->
   <div class="flex items-center gap-2">
     <ThemeToggle client:load />
-    <a
-      href="/auth/login"
-      class="hidden md:flex items-center gap-1.5 text-content-muted text-xs border border-border px-3 py-1.5 rounded-md hover:text-content-secondary hover:border-content-muted transition-colors no-underline"
-    >
-      <FaGithub className="text-sm" />
-      Sign in
-    </a>
+    <div class="hidden md:block">
+      <AuthButton client:load />
+    </div>
 
     <!-- Mobile menu button -->
     {showLinks && (
@@ -56,13 +52,7 @@ const { showLinks = true } = Astro.props
     <div class="flex flex-col px-5 py-3 gap-3">
       <a href="/courses" class="text-content-muted text-sm hover:text-content-secondary transition-colors no-underline">Courses</a>
       <a href="/articles" class="text-content-muted text-sm hover:text-content-secondary transition-colors no-underline">Articles</a>
-      <a
-        href="/auth/login"
-        class="flex items-center gap-1.5 text-content-muted text-xs border border-border px-3 py-1.5 rounded-md hover:text-content-secondary transition-colors no-underline w-fit"
-      >
-        <FaGithub className="text-sm" />
-        Sign in
-      </a>
+      <AuthButton client:load />
     </div>
   </div>
 
