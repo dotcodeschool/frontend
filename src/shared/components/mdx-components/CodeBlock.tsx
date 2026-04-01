@@ -1,5 +1,24 @@
 import { useState, type ReactElement } from 'react'
-import { Highlight, themes } from 'prism-react-renderer'
+import { Highlight, type PrismTheme } from 'prism-react-renderer'
+
+const dcsTheme: PrismTheme = {
+  plain: {
+    color: '#abb2bf',
+    backgroundColor: '#0a0c10',
+  },
+  styles: [
+    { types: ['comment', 'prolog', 'doctype', 'cdata'], style: { color: '#5c6370', fontStyle: 'italic' as const } },
+    { types: ['punctuation'], style: { color: '#abb2bf' } },
+    { types: ['property', 'tag', 'constant', 'symbol', 'deleted'], style: { color: '#e06c75' } },
+    { types: ['boolean', 'number'], style: { color: '#d19a66' } },
+    { types: ['selector', 'attr-name', 'string', 'char', 'builtin', 'inserted'], style: { color: '#98c379' } },
+    { types: ['operator', 'entity', 'url'], style: { color: '#56b6c2' } },
+    { types: ['atrule', 'attr-value', 'keyword'], style: { color: '#c678dd' } },
+    { types: ['function', 'class-name'], style: { color: '#61afef' } },
+    { types: ['regex', 'important', 'variable'], style: { color: '#e06c75' } },
+    { types: ['namespace'], style: { color: '#e5c07b' } },
+  ],
+}
 import { CopyButton } from './CopyButton'
 import { FaFile } from 'react-icons/fa'
 import { FiTerminal } from 'react-icons/fi'
@@ -73,7 +92,7 @@ export function CodeBlock({ children, className, filename }: Props) {
       {filename ? (
         <div
           className="flex items-center gap-2 px-3 py-2 border-b border-border text-sm text-content-muted"
-          style={{ backgroundColor: themes.dracula.plain.backgroundColor }}
+          style={{ backgroundColor: dcsTheme.plain.backgroundColor }}
         >
           {getFileIcon(filename)}
           <span className="font-mono text-xs font-semibold">{filename}</span>
@@ -87,13 +106,13 @@ export function CodeBlock({ children, className, filename }: Props) {
           </div>
         )
       )}
-      <Highlight theme={themes.dracula} code={code} language={language}>
+      <Highlight theme={dcsTheme} code={code} language={language}>
         {({ style, tokens: rawTokens, getLineProps, getTokenProps }) => {
           const tokens = rawTokens
           return (
           <pre
             className="relative overflow-x-auto px-6 py-4 text-sm leading-relaxed [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded [&:hover::-webkit-scrollbar-thumb]:bg-content-faint"
-            style={{ ...style, margin: 0, backgroundColor: themes.dracula.plain.backgroundColor }}
+            style={{ ...style, margin: 0, backgroundColor: dcsTheme.plain.backgroundColor }}
           >
             <code className={`flex flex-col ${filename ? '' : 'pr-12'}`}>
               {tokens.map((line, i) => (
