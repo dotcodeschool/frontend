@@ -31,7 +31,7 @@ export default function LessonLayout({ code, title, lastUpdated, files, diff, re
   }
 
   return (
-    <>
+    <div className="flex flex-col flex-1 min-h-0">
       {/* Desktop: side-by-side resizable panes */}
       <div className="hidden md:flex flex-1 min-h-0">
         <ResizablePane
@@ -71,6 +71,6 @@ export default function LessonLayout({ code, title, lastUpdated, files, diff, re
           </div>
         )}
       </div>
-    </>
+    </div>
   )
 }
