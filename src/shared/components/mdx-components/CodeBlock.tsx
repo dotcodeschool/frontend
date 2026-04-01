@@ -82,7 +82,7 @@ export function CodeBlock({ children, className, filename }: Props) {
         </div>
       ) : (
         isHovered && (
-          <div className="absolute top-2 right-2 z-10">
+          <div className="absolute top-1/2 -translate-y-1/2 right-2 z-10">
             <CopyButton text={code} />
           </div>
         )
