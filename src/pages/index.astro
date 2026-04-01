@@ -19,10 +19,13 @@ const articles = getArticles().slice(0, 3)
     <div class="absolute inset-0 bg-grid opacity-40" />
     <!-- Aurora gradient -->
     <div class="aurora" />
-    <!-- Light streaks -->
+    <!-- Light streaks — horizontal -->
     <div class="light-streak" style="top: 30%; width: 50%; left: 25%; animation-duration: 7s;" />
     <div class="light-streak" style="top: 55%; width: 40%; left: 30%; animation-duration: 10s; animation-delay: -4s;" />
     <div class="light-streak" style="top: 75%; width: 55%; left: 15%; animation-duration: 8s; animation-delay: -6s;" />
+    <!-- Light streaks — vertical -->
+    <div class="light-streak-v" style="left: 20%; height: 40%; top: 15%; animation-duration: 9s;" />
+    <div class="light-streak-v" style="left: 70%; height: 35%; top: 30%; animation-duration: 12s; animation-delay: -5s;" />
 
     <div class="relative max-w-6xl mx-auto px-6 pt-20 pb-16">
       <!-- Tagline -->
@@ -185,7 +188,7 @@ const articles = getArticles().slice(0, 3)
     --aurora-b: rgba(78, 108, 212, 0.14);
     --aurora-c: rgba(78, 108, 212, 0.08);
     --streak: rgba(78, 108, 212, 0.2);
-    --grid-line: rgba(78, 108, 212, 0.06);
+    --grid-line: rgba(78, 108, 212, 0.12);
   }
 
   [data-theme="dark"] {
@@ -249,5 +252,25 @@ const articles = getArticles().slice(0, 3)
   @keyframes streak-drift {
     0% { transform: translateX(-110%); }
     100% { transform: translateX(110%); }
+  }
+
+  /* Vertical light streaks */
+  .light-streak-v {
+    position: absolute;
+    width: 1px;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      var(--streak) 30%,
+      var(--streak) 70%,
+      transparent 100%
+    );
+    animation: streak-drift-v linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes streak-drift-v {
+    0% { transform: translateY(-110%); }
+    100% { transform: translateY(110%); }
   }
 </style>
