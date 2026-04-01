@@ -11,6 +11,7 @@ import { AnonBanner } from "@/features/progress/components/AnonBanner";
 import { useProgressStore } from "@/features/progress/lib/progress-store";
 
 import type { Course, LessonSlug, SectionSlug } from "../types";
+import { GitHubPanel } from "./github/GitHubPanel";
 
 interface Props {
   course: Course;
@@ -142,8 +143,13 @@ function SidebarContent({
           );
         })}
       </div>
-      <div className="mt-auto px-3 py-3 border-t border-border">
-        <AnonBanner />
+      <div className="mt-auto border-t border-border">
+        <div className="px-3 py-3">
+          <GitHubPanel courseSlug={course.slug} githubUrl={course.githubUrl} />
+        </div>
+        <div className="px-3 py-3 border-t border-border">
+          <AnonBanner />
+        </div>
       </div>
     </nav>
   );
