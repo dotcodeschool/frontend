@@ -1,5 +1,5 @@
 import { execSync } from "child_process";
-import { existsSync, mkdirSync, readFileSync, rmSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { convertGitorialToDotCodeSchool } from "gitorial-to-dotcodeschool/src/converter";
 import yaml from "js-yaml";
 import { join, resolve } from "path";
@@ -10,9 +10,14 @@ type RegistryEntry = {
   branch: string;
   title: string;
   author: string;
+  author_url?: string;
   level?: string;
   language?: string;
   description?: string;
+  order?: number;
+  estimated_time?: number;
+  prerequisites?: string[];
+  overview?: string;
 };
 
 // Strict validation to prevent command injection via registry.yaml fields
@@ -116,6 +121,54 @@ async function convertRepo(
     language: entry.language,
     description: entry.description,
   });
+
+  // Overwrite the converter's course MDX with curated metadata from the registry
+  overwriteCourseMdx(entry, outputDir);
+}
+
+function overwriteCourseMdx(entry: RegistryEntry, outputDir: string): void {
+  const mdxPath = join(outputDir, `${entry.slug}.mdx`);
+  if (!existsSync(mdxPath)) return;
+
+  // Read existing to get what_youll_learn (generated from section names)
+  const existing = readFileSync(mdxPath, "utf-8");
+  const whatYoullLearnMatch = existing.match(
+    /what_youll_learn:\s*\[[\s\S]*?\]/,
+  );
+  const whatYoullLearn = whatYoullLearnMatch?.[0] ?? "what_youll_learn: []";
+
+  const frontmatter = [
+    "---",
+    entry.order != null ? `order: ${entry.order}` : null,
+    `slug: ${entry.slug}`,
+    `title: "${entry.title}"`,
+    `author: ${entry.author}`,
+    entry.author_url ? `author_url: ${entry.author_url}` : null,
+    `description: ${entry.description ?? "A course converted from gitorial format."}`,
+    `level: ${entry.level ?? "Beginner"}`,
+    `language: ${entry.language ?? "Rust"}`,
+    'tags: ["rust", "tutorial", "course"]',
+    entry.prerequisites && entry.prerequisites.length > 0
+      ? `prerequisites: ${JSON.stringify(entry.prerequisites)}`
+      : "prerequisites: []",
+    whatYoullLearn,
+    entry.estimated_time != null
+      ? `estimated_time: ${entry.estimated_time}`
+      : null,
+    `last_updated: "${new Date().toISOString().split("T")[0]}"`,
+    "is_gitorial: true",
+    `github_url: https://github.com/${entry.repo}`,
+    "---",
+  ]
+    .filter((line) => line !== null)
+    .join("\n");
+
+  const body =
+    entry.overview?.trim() ??
+    `# ${entry.title}\n\nA course converted from gitorial format.`;
+
+  writeFileSync(mdxPath, `${frontmatter}\n\n${body}\n`);
+  console.log(`  Overwrote ${entry.slug}.mdx with registry metadata`);
 }
 
 function cleanup(): void {

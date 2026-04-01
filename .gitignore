@@ -45,3 +45,7 @@ next-env.d.ts
 
 # Ingestion temp files
 .ingestion-tmp/
+
+# Ingested gittorial courses (build artifacts — regenerated from registry.yaml)
+content/courses/rust-state-machine/
+content/courses/substrate-kitties/
