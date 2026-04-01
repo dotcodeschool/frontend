@@ -46,7 +46,7 @@ export default function CourseAccordion({ sections, courseSlug }: Props) {
                 <h3 className="font-heading text-sm font-semibold text-content-primary truncate">
                   {section.title}
                 </h3>
-                <p className="text-content-faint text-xs">
+                <p className="text-content-muted text-xs">
                   {section.lessons.length} {section.lessons.length === 1 ? 'lesson' : 'lessons'}
                 </p>
               </div>
@@ -72,7 +72,7 @@ export default function CourseAccordion({ sections, courseSlug }: Props) {
                       <span className="w-1.5 h-1.5 rounded-full bg-content-faint shrink-0" />
                       <span className="flex-1">{lesson.title}</span>
                       {lesson.fileType && (
-                        <span className="text-xs text-content-faint shrink-0">
+                        <span className="text-xs text-content-muted shrink-0">
                           {lesson.fileType === 'exercise' ? 'Exercise' : 'Source Files'}
                         </span>
                       )}

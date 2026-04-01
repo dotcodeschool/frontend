@@ -55,11 +55,11 @@ export function QuizGroup({ title, description, children }: Props) {
           <div className="mt-6 p-6 bg-green-500/10 border border-green-500/30 rounded-lg">
             <div className="flex items-baseline gap-4">
               <div>
-                <div className="text-content-faint text-xs">Final Score</div>
+                <div className="text-content-muted text-xs">Final Score</div>
                 <div className="text-2xl font-bold text-content-primary">{correctCount}/{totalQuizzes}</div>
               </div>
               <div>
-                <div className="text-content-faint text-xs">Performance</div>
+                <div className="text-content-muted text-xs">Performance</div>
                 <div className="text-2xl font-bold text-content-primary">{getPerformance()}</div>
               </div>
             </div>
