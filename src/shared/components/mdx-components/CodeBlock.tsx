@@ -85,13 +85,17 @@ export function CodeBlock({ children, className, filename }: Props) {
             style={{ ...style, margin: 0, backgroundColor: themes.dracula.plain.backgroundColor }}
           >
             <code className={filename ? '' : 'pr-12'}>
-              {tokens.map((line, i) => (
-                <div key={i} {...getLineProps({ line })}>
-                  {line.map((token, key) => (
-                    <span key={key} {...getTokenProps({ token })} />
-                  ))}
-                </div>
-              ))}
+              {tokens.map((line, i) => {
+                // Skip empty trailing line
+                if (i === tokens.length - 1 && line.length === 1 && line[0].empty) return null
+                return (
+                  <div key={i} {...getLineProps({ line })}>
+                    {line.map((token, key) => (
+                      <span key={key} {...getTokenProps({ token })} />
+                    ))}
+                  </div>
+                )
+              })}
             </code>
           </pre>
         )}

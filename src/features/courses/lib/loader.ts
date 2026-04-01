@@ -4,6 +4,29 @@ import matter from "gray-matter"
 import { bundleMDX } from "mdx-bundler"
 import rehypeMdxCodeProps from "rehype-mdx-code-props"
 import remarkGfm from "remark-gfm"
+import type { Root, Element } from 'hast'
+import { visit } from 'unist-util-visit'
+
+/**
+ * Custom rehype plugin that preserves the meta string from fenced code blocks
+ * as a `meta` property on the `<code>` element. This is needed because
+ * `rehype-mdx-code-props` doesn't work in `format: 'md'` mode.
+ */
+function rehypeCodeMeta() {
+  return (tree: Root) => {
+    visit(tree, 'element', (node: Element) => {
+      if (node.tagName === 'pre') {
+        const code = node.children.find(
+          (c): c is Element => c.type === 'element' && c.tagName === 'code'
+        )
+        if (code?.data?.meta) {
+          code.properties = code.properties ?? {}
+          code.properties.meta = code.data.meta as string
+        }
+      }
+    })
+  }
+}
 import type {
   CourseSummary, Course, Section, LessonSummary, Lesson, LessonFiles, CodeFile,
   CourseSlug, SectionSlug, LessonSlug,
@@ -195,7 +218,7 @@ export async function getLesson(
     cwd: lessonDir,
     mdxOptions(options) {
       options.remarkPlugins = [...(options.remarkPlugins ?? []), remarkGfm]
-      options.rehypePlugins = [...(options.rehypePlugins ?? []), rehypeMdxCodeProps]
+      options.rehypePlugins = [...(options.rehypePlugins ?? []), rehypeCodeMeta, rehypeMdxCodeProps]
       options.format = 'md'
       options.mdExtensions = ['.md', '.mdx']
       return options

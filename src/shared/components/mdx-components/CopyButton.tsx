@@ -25,7 +25,7 @@ export function CopyButton({ text, className = '' }: Props) {
       className={`p-1.5 rounded transition-colors ${
         copied
           ? 'text-green-400 cursor-default'
-          : 'text-content-faint hover:text-content-muted hover:bg-white/10'
+          : 'text-content-muted hover:text-content-primary hover:bg-white/10'
       } ${className}`}
       aria-label={copied ? 'Copied!' : 'Copy code'}
     >

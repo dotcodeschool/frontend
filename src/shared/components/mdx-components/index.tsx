@@ -26,9 +26,20 @@ export const mdxComponents = {
     }
     return <code {...props} />
   },
-  a: (props: any) => (
-    <a {...props} target="_blank" rel="noopener noreferrer" className="text-accent hover:underline" />
-  ),
+  a: (props: any) => {
+    const isExternal = typeof props.href === 'string' && props.href.startsWith('http')
+    return (
+      <a
+        {...props}
+        target={isExternal ? '_blank' : undefined}
+        rel={isExternal ? 'noopener noreferrer' : undefined}
+        className="text-accent hover:underline inline-flex items-center gap-0.5"
+      >
+        {props.children}
+        {isExternal && <span className="text-xs">↗</span>}
+      </a>
+    )
+  },
   blockquote: (props: any) => (
     <blockquote className="border-l-4 border-accent pl-4 py-2 my-4 bg-elevated/50 rounded-r-lg text-content-secondary italic" {...props} />
   ),
