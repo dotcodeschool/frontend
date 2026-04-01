@@ -22,14 +22,15 @@ export function CopyButton({ text, className = '' }: Props) {
   return (
     <button
       onClick={copy}
-      className={`p-1.5 rounded transition-colors ${
+      className={`p-1.5 rounded-md border transition-all ${
         copied
-          ? 'text-green-400 cursor-default'
-          : 'text-content-muted hover:text-content-primary hover:bg-white/10'
+          ? 'text-success border-success/30 bg-success/10 cursor-default'
+          : 'text-content-muted border-border bg-elevated/80 hover:text-content-primary hover:border-content-muted hover:bg-elevated'
       } ${className}`}
       aria-label={copied ? 'Copied!' : 'Copy code'}
+      title={copied ? 'Copied!' : 'Copy'}
     >
-      {copied ? <FaCheck className="w-3.5 h-3.5" /> : <FaCopy className="w-3.5 h-3.5" />}
+      {copied ? <FaCheck className="w-3 h-3" /> : <FaCopy className="w-3 h-3" />}
     </button>
   )
 }
