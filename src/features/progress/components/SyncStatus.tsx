@@ -3,23 +3,30 @@ import { useEffect, useState } from "react";
 import { useProgressStore } from "../lib/progress-store";
 
 export function SyncStatus() {
-  const { syncStatus, isAuthenticated, init } = useProgressStore();
+  const { syncStatus, isAuthenticated, progress, init } = useProgressStore();
   const [ready, setReady] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   useEffect(() => {
     init();
     setReady(true);
   }, []);
 
-  // Show briefly after status changes, then fade
+  // Only show after a status change triggered by user action, not on initial load
   useEffect(() => {
+    if (!hasInteracted && syncStatus === "local") return;
+    setHasInteracted(true);
     setVisible(true);
     const timer = setTimeout(() => setVisible(false), 3000);
     return () => clearTimeout(timer);
   }, [syncStatus]);
 
   if (!ready) return null;
+
+  // Don't show if no progress exists or nothing to display
+  const hasProgress = Object.keys(progress.courses).length > 0;
+  if (!hasProgress) return null;
   if (!visible && syncStatus !== "syncing") return null;
 
   const config = {
