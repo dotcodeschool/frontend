@@ -83,3 +83,21 @@
     display: none;
   }
 }
+
+@utility scrollbar-thin {
+  scrollbar-width: thin;
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 4px;
+  }
+  &:hover::-webkit-scrollbar-thumb {
+    background: var(--text-faint);
+  }
+}
