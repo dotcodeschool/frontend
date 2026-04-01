@@ -14,13 +14,13 @@ interface Props {
 }
 
 export default function CodeEditor({ files, diff, solutionFiles, readOnly = false }: Props) {
-  const { showDiff, showSolution, isFullscreen, toggleFullscreen, activeTab } = useEditorStore()
+  const { showDiff, showSolution, isFullscreen, toggleFullscreen, activeTab, getFileContent } = useEditorStore()
 
   if (files.length === 0) return null
 
   const hasSolution = solutionFiles && solutionFiles.length > 0 && !readOnly
 
-  // Build solution diff for the current file
+  // Build solution diff for the current file (user's edits vs solution)
   const solutionDiff: DiffFile[] = showSolution && hasSolution
     ? (() => {
         const currentFile = files[activeTab]
@@ -30,7 +30,7 @@ export default function CodeEditor({ files, diff, solutionFiles, readOnly = fals
         return [{
           path: currentFile.path,
           language: currentFile.language,
-          original: currentFile.content,
+          original: getFileContent(currentFile),
           modified: solution.content,
         }]
       })()

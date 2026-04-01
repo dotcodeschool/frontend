@@ -10,17 +10,25 @@ interface Props {
 }
 
 export function EditorPanel({ files, readOnly }: Props) {
-  const { activeTab } = useEditorStore()
+  const { activeTab, getFileContent, setFileContent } = useEditorStore()
   const file = files[activeTab]
 
   if (!file) return null
 
+  const content = getFileContent(file)
+
   return (
     <Suspense fallback={<div className="flex-1 bg-code" />}>
       <Editor
+        key={file.path}
         language={file.language}
-        value={file.content}
+        value={content}
         theme="vs-dark"
+        onChange={(value) => {
+          if (value !== undefined && !readOnly) {
+            setFileContent(file.path, value)
+          }
+        }}
         options={{
           readOnly,
           minimap: { enabled: false },

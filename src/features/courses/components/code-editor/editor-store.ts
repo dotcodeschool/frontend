@@ -6,6 +6,9 @@ interface EditorState {
   activeTab: number
   previousTab: number
 
+  // File content (tracks user edits)
+  fileContents: Record<string, string>
+
   // Diff view
   showDiff: boolean
 
@@ -19,6 +22,8 @@ interface EditorState {
 
   // Actions
   setActiveTab: (tab: number) => void
+  setFileContent: (path: string, content: string) => void
+  getFileContent: (file: CodeFile) => string
   toggleDiff: () => void
   toggleFullscreen: () => void
   checkAnswer: (editorFiles: CodeFile[], solutionFiles: CodeFile[]) => void
@@ -41,6 +46,7 @@ function normalizeWhitespace(code: string): string {
 export const useEditorStore = create<EditorState>((set) => ({
   activeTab: 0,
   previousTab: 0,
+  fileContents: {},
   showDiff: false,
   isFullscreen: false,
   incorrectFiles: [],
@@ -48,6 +54,15 @@ export const useEditorStore = create<EditorState>((set) => ({
   showSolution: false,
 
   setActiveTab: (tab) => set({ activeTab: tab, showDiff: false }),
+
+  setFileContent: (path, content) => set((s) => ({
+    fileContents: { ...s.fileContents, [path]: content },
+  })),
+
+  getFileContent: (file) => {
+    const contents = useEditorStore.getState().fileContents
+    return contents[file.path] ?? file.content
+  },
 
   toggleDiff: () => set((s) => {
     if (s.showDiff) {
@@ -60,12 +75,14 @@ export const useEditorStore = create<EditorState>((set) => ({
 
   checkAnswer: (editorFiles, solutionFiles) => {
     const incorrect: string[] = []
+    const contents = useEditorStore.getState().fileContents
 
     for (const editorFile of editorFiles) {
       const solutionFile = solutionFiles.find(s => s.path === editorFile.path)
       if (!solutionFile) continue
 
-      const editorNorm = normalizeWhitespace(stripComments(editorFile.content))
+      const currentContent = contents[editorFile.path] ?? editorFile.content
+      const editorNorm = normalizeWhitespace(stripComments(currentContent))
       const solutionNorm = normalizeWhitespace(stripComments(solutionFile.content))
 
       if (editorNorm !== solutionNorm) {
