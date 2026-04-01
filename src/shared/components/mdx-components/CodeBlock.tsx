@@ -89,13 +89,14 @@ export function CodeBlock({ children, className, filename }: Props) {
       )}
       <Highlight theme={themes.dracula} code={code} language={language}>
         {({ style, tokens: rawTokens, getLineProps, getTokenProps }) => {
-          // Remove trailing empty lines that prism-react-renderer adds
-          const tokens = rawTokens.filter((line, i) => {
-            if (i < rawTokens.length - 1) return true
-            // Last line: skip if all tokens are empty/whitespace
-            const text = line.map(t => t.content).join('')
-            return text.trim().length > 0
-          })
+          // Remove ALL trailing empty lines
+          const tokens = [...rawTokens]
+          while (tokens.length > 0) {
+            const last = tokens[tokens.length - 1]
+            const text = last.map(t => t.content).join('')
+            if (text.trim().length === 0) tokens.pop()
+            else break
+          }
           return (
           <pre
             className="overflow-x-auto px-6 py-4 text-sm leading-relaxed [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded [&:hover::-webkit-scrollbar-thumb]:bg-content-faint"
