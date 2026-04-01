@@ -1,5 +1,6 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useRef } from 'react'
 import type { DiffFile } from '../../types'
+import { DCS_THEME_NAME, dcsDarkTheme } from './editor-theme'
 
 const DiffEditor = lazy(() => import('@monaco-editor/react').then(m => ({ default: m.DiffEditor })))
 
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export function DiffViewer({ diff }: Props) {
+  const themeRegistered = useRef(false)
   if (diff.length === 0) return null
 
   // For now, show the first diff file. Could add tabs later.
@@ -26,7 +28,13 @@ export function DiffViewer({ diff }: Props) {
         original={combined.original}
         modified={combined.modified}
         language={combined.language}
-        theme="vs-dark"
+        theme={DCS_THEME_NAME}
+        beforeMount={(monaco) => {
+          if (!themeRegistered.current) {
+            monaco.editor.defineTheme(DCS_THEME_NAME, dcsDarkTheme as any)
+            themeRegistered.current = true
+          }
+        }}
         options={{
           readOnly: true,
           minimap: { enabled: false },
