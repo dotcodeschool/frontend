@@ -40,6 +40,8 @@ const nav = getNavigation(asCourseSlug(courseSlug!), asSectionSlug(sectionSlug!)
 const diff = getDiff(asCourseSlug(courseSlug!), asSectionSlug(sectionSlug!), asLessonSlug(lessonSlug!))
 
 const readOnly = lesson.files !== null && lesson.files.source.length > 0 && lesson.files.template.length === 0
+const pageUrl = `https://dotcodeschool.com/courses/${courseSlug}/${sectionSlug}/${lessonSlug}`
+const githubEditUrl = `https://github.com/dotcodeschool/frontend/edit/master/content/courses/${courseSlug}/sections/${sectionSlug}/lessons/${lessonSlug}/${lessonSlug}.mdx`
 ---
 
 <BaseLayout title={`${lesson.title} — ${course.title}`}>
@@ -61,6 +63,8 @@ const readOnly = lesson.files !== null && lesson.files.source.length > 0 && less
         files={lesson.files}
         diff={diff}
         readOnly={readOnly}
+        pageUrl={pageUrl}
+        githubEditUrl={githubEditUrl}
         client:only="react"
       />
       <LessonNav nav={nav} />

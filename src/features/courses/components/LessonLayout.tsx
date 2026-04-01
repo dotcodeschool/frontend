@@ -10,16 +10,18 @@ interface Props {
   files: LessonFiles | null
   diff: DiffFile[]
   readOnly: boolean
+  pageUrl?: string
+  githubEditUrl?: string
 }
 
-export default function LessonLayout({ code, title, lastUpdated, files, diff, readOnly }: Props) {
+export default function LessonLayout({ code, title, lastUpdated, files, diff, readOnly, pageUrl, githubEditUrl }: Props) {
   const hasEditor = files !== null
 
   if (!hasEditor) {
     return (
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-3xl mx-auto">
-          <LessonContent code={code} title={title} lastUpdated={lastUpdated} />
+          <LessonContent code={code} title={title} lastUpdated={lastUpdated} pageUrl={pageUrl} githubEditUrl={githubEditUrl} />
         </div>
       </div>
     )
@@ -27,7 +29,7 @@ export default function LessonLayout({ code, title, lastUpdated, files, diff, re
 
   return (
     <ResizablePane
-      left={<LessonContent code={code} title={title} lastUpdated={lastUpdated} />}
+      left={<LessonContent code={code} title={title} lastUpdated={lastUpdated} pageUrl={pageUrl} githubEditUrl={githubEditUrl} />}
       right={
         <div className="h-full">
           <CodeEditor files={files} diff={diff} readOnly={readOnly} />
