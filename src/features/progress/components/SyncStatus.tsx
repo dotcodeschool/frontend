@@ -111,11 +111,10 @@ export function SyncStatus() {
 
   return (
     <div
-      className="flex items-center gap-1.5 text-xs"
+      className="flex items-center text-xs"
       title={syncStatus === "syncing" ? "Please don't close this tab" : text}
     >
       {icon}
-      <span className="text-content-muted hidden sm:inline">{text}</span>
     </div>
   );
 }
