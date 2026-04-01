@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Navbar from '@/shared/components/Navbar.astro'
-import SidebarNav from '@/features/courses/components/SidebarNav'
+import SidebarNav, { MobileSidebarToggle } from '@/features/courses/components/SidebarNav'
 import LessonNav from '@/features/courses/components/LessonNav.astro'
 import LessonLayout from '@/features/courses/components/LessonLayout'
 import { getCourse, getCourses, getLesson } from '@/features/courses/lib/loader'
@@ -46,7 +46,26 @@ const githubEditUrl = `https://github.com/dotcodeschool/frontend/edit/master/con
 
 <BaseLayout title={`${lesson.title} — ${course.title}`}>
   <Navbar showLinks={false} />
-  <div class="flex h-[calc(100vh-48px)]">
+
+  <!-- Mobile header bar with hamburger + lesson title -->
+  <div class="md:hidden flex items-center px-3 py-2 border-b border-border bg-surface">
+    <MobileSidebarToggle client:load />
+    <span class="text-xs text-content-muted truncate">{lesson.title}</span>
+  </div>
+
+  <!-- Mobile drawer sidebar -->
+  <div class="md:hidden">
+    <SidebarNav
+      course={course}
+      currentSection={asSectionSlug(sectionSlug!)}
+      currentLesson={asLessonSlug(lessonSlug!)}
+      mobile={true}
+      client:load
+    />
+  </div>
+
+  <div class="flex h-[calc(100vh-88px)] md:h-[calc(100vh-48px)]">
+    <!-- Desktop sidebar -->
     <aside class="w-[260px] min-w-[260px] border-r border-border hidden md:block">
       <SidebarNav
         course={course}
