@@ -17,8 +17,8 @@ const articles = getArticles().slice(0, 3)
   <section class="relative overflow-hidden" id="hero-section">
     <!-- Grid background -->
     <div class="absolute inset-0 bg-grid opacity-40" />
-    <!-- Cursor spotlight on grid -->
-    <div id="grid-spotlight" class="absolute pointer-events-none opacity-0 transition-opacity duration-300" style="width: 500px; height: 500px; transform: translate(-50%, -50%); background: radial-gradient(circle, var(--grid-line) 0%, transparent 70%); z-index: 1;" />
+    <!-- Grid highlight that follows cursor — a second grid layer that's brighter, masked to a radial area around the mouse -->
+    <div id="grid-highlight" class="absolute inset-0 bg-grid-bright opacity-0 pointer-events-none transition-opacity duration-300" style="-webkit-mask-image: radial-gradient(circle 250px, black, transparent); mask-image: radial-gradient(circle 250px, black, transparent);" />
     <!-- Aurora gradient -->
     <div class="aurora" />
     <!-- Light streaks — horizontal -->
@@ -191,6 +191,7 @@ const articles = getArticles().slice(0, 3)
     --aurora-c: rgba(78, 108, 212, 0.08);
     --streak: rgba(78, 108, 212, 0.2);
     --grid-line: rgba(78, 108, 212, 0.15);
+    --grid-line-bright: rgba(78, 108, 212, 0.4);
   }
 
   [data-theme="dark"] {
@@ -199,12 +200,20 @@ const articles = getArticles().slice(0, 3)
     --aurora-c: rgba(107, 138, 237, 0.05);
     --streak: rgba(107, 138, 237, 0.15);
     --grid-line: rgba(107, 138, 237, 0.04);
+    --grid-line-bright: rgba(107, 138, 237, 0.15);
   }
 
   .bg-grid {
     background-image:
       linear-gradient(var(--grid-line) 1px, transparent 1px),
       linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  .bg-grid-bright {
+    background-image:
+      linear-gradient(var(--grid-line-bright) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line-bright) 1px, transparent 1px);
     background-size: 48px 48px;
   }
 
@@ -279,16 +288,18 @@ const articles = getArticles().slice(0, 3)
 
 <script is:inline>
   const hero = document.getElementById('hero-section')
-  const spot = document.getElementById('grid-spotlight')
-  if (hero && spot) {
+  const highlight = document.getElementById('grid-highlight')
+  if (hero && highlight) {
     hero.addEventListener('mousemove', (e) => {
       const rect = hero.getBoundingClientRect()
-      spot.style.left = (e.clientX - rect.left) + 'px'
-      spot.style.top = (e.clientY - rect.top) + 'px'
-      spot.style.opacity = '1'
+      const x = e.clientX - rect.left
+      const y = e.clientY - rect.top
+      highlight.style.opacity = '1'
+      highlight.style.webkitMaskImage = `radial-gradient(circle 250px at ${x}px ${y}px, black, transparent)`
+      highlight.style.maskImage = `radial-gradient(circle 250px at ${x}px ${y}px, black, transparent)`
     })
     hero.addEventListener('mouseleave', () => {
-      spot.style.opacity = '0'
+      highlight.style.opacity = '0'
     })
   }
 </script>
