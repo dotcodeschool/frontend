@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { ReactNode, CSSProperties } from 'react'
 
 interface Props {
   href?: string
@@ -15,28 +15,27 @@ const sizeClasses = {
   lg: 'px-8 py-3 text-base',
 }
 
-const variantClasses = {
-  primary: 'bg-accent font-semibold hover:opacity-90',
-  secondary: 'bg-elevated text-content-primary font-semibold hover:opacity-80',
-  outline: 'border border-accent text-accent font-semibold hover:bg-accent hover:text-[var(--bg-base)]',
-  ghost: 'text-accent font-semibold hover:bg-accent-bg',
+const variantStyles: Record<string, { classes: string; style?: CSSProperties }> = {
+  primary: { classes: 'bg-accent font-semibold hover:brightness-110', style: { color: 'var(--bg-base)' } },
+  secondary: { classes: 'bg-elevated text-content-primary font-semibold hover:brightness-90' },
+  outline: { classes: 'border font-semibold hover:brightness-90', style: { borderColor: 'var(--accent)', color: 'var(--accent)' } },
+  ghost: { classes: 'text-accent font-semibold hover:bg-accent-bg' },
 }
 
 export function MdxButton({ href, target, variant = 'primary', size = 'md', children, onClick }: Props) {
-  const classes = `inline-block rounded-md transition-all my-4 no-underline ${sizeClasses[size]} ${variantClasses[variant]}`
-  const needsLightText = variant === 'primary' || variant === 'outline'
-  const inlineStyle = needsLightText ? { color: 'var(--bg-base)' } : undefined
+  const { classes: variantCls, style: variantStyle } = variantStyles[variant] ?? variantStyles.primary
+  const classes = `inline rounded-md transition-all my-2 no-underline cursor-pointer ${sizeClasses[size]} ${variantCls}`
 
   if (href) {
     return (
-      <a href={href} target={target} rel={target === '_blank' ? 'noopener noreferrer' : undefined} className={classes} style={inlineStyle}>
+      <a href={href} target={target} rel={target === '_blank' ? 'noopener noreferrer' : undefined} className={classes} style={variantStyle}>
         {children}
       </a>
     )
   }
 
   return (
-    <button onClick={onClick} className={classes} style={inlineStyle}>
+    <button onClick={onClick} className={classes} style={variantStyle}>
       {children}
     </button>
   )

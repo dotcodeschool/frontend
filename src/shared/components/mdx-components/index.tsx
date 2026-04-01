@@ -10,9 +10,12 @@ function Pre(props: any) {
   const childProps = props.children?.props ?? {}
   const code = typeof childProps.children === 'string' ? childProps.children : ''
   const className = childProps.className ?? ''
-  let filename = childProps.filename
-  if (!filename && childProps.meta) {
-    const match = childProps.meta.match(/filename="([^"]+)"/)
+  // rehype-mdx-code-props puts filename on the pre element (props), not on code (childProps)
+  let filename = props.filename ?? childProps.filename
+  if (!filename) {
+    // Fallback: check meta string on either element
+    const meta = props.meta ?? childProps.meta ?? ''
+    const match = meta.match(/filename="([^"]+)"/)
     if (match) filename = match[1]
   }
   return <CodeBlock className={className} filename={filename}>{code}</CodeBlock>

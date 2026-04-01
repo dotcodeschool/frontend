@@ -52,7 +52,16 @@ interface Props {
 
 export function CodeBlock({ children, className, filename }: Props) {
   const [isHovered, setIsHovered] = useState(false)
-  const language = className?.replace('language-', '') ?? 'rust'
+  const rawLang = className?.replace('language-', '') ?? 'rust'
+  // Map common aliases to prism-supported language names
+  const langMap: Record<string, string> = {
+    sh: 'bash',
+    shell: 'bash',
+    js: 'javascript',
+    ts: 'typescript',
+    yml: 'yaml',
+  }
+  const language = langMap[rawLang] ?? rawLang
   const code = children.trim()
 
   return (
@@ -86,8 +95,9 @@ export function CodeBlock({ children, className, filename }: Props) {
           >
             <code className={filename ? '' : 'pr-12'}>
               {tokens.map((line, i) => {
-                // Skip empty trailing line
-                if (i === tokens.length - 1 && line.length === 1 && line[0].empty) return null
+                // Skip empty trailing line (prism adds one)
+                if (i === tokens.length - 1 && line.length === 1 && line[0].content === '\n') return null
+                if (i === tokens.length - 1 && line.length === 1 && line[0].content.trim() === '') return null
                 return (
                   <div key={i} {...getLineProps({ line })}>
                     {line.map((token, key) => (
