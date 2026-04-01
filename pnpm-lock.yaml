@@ -41,6 +41,9 @@ importers:
       esbuild:
         specifier: ^0.25.1
         version: 0.25.12
+      gitorial-to-dotcodeschool:
+        specifier: github:dotcodeschool/gitorial-to-dotcodeschool
+        version: https://codeload.github.com/dotcodeschool/gitorial-to-dotcodeschool/tar.gz/6161cc8695586aa1d146fc6ae41dc00ba0c3e46e
       gray-matter:
         specifier: ^4.0.3
         version: 4.0.3
@@ -1904,6 +1907,12 @@ packages:
 
   github-slugger@2.0.0:
     resolution: {integrity: sha512-IaOQ9puYtjrkq7Y0Ygl9KDZnrf/aiUJYUpVf89y8kyaxbRG7Y1SrX/jaumrv81vc61+kiMempujsM3Yw7w5qcw==}
+
+  gitorial-to-dotcodeschool@https://codeload.github.com/dotcodeschool/gitorial-to-dotcodeschool/tar.gz/6161cc8695586aa1d146fc6ae41dc00ba0c3e46e:
+    resolution: {tarball: https://codeload.github.com/dotcodeschool/gitorial-to-dotcodeschool/tar.gz/6161cc8695586aa1d146fc6ae41dc00ba0c3e46e}
+    version: 1.0.0
+    engines: {node: '>=14.0.0'}
+    hasBin: true
 
   glob-parent@5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
@@ -5040,6 +5049,10 @@ snapshots:
       resolve-pkg-maps: 1.0.0
 
   github-slugger@2.0.0: {}
+
+  gitorial-to-dotcodeschool@https://codeload.github.com/dotcodeschool/gitorial-to-dotcodeschool/tar.gz/6161cc8695586aa1d146fc6ae41dc00ba0c3e46e:
+    dependencies:
+      commander: 11.1.0
 
   glob-parent@5.1.2:
     dependencies:

@@ -1,5 +1,6 @@
 import { execSync } from "child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync } from "fs";
+import { convertGitorialToDotCodeSchool } from "gitorial-to-dotcodeschool/src/converter";
 import yaml from "js-yaml";
 import { join, resolve } from "path";
 
@@ -41,7 +42,6 @@ const REGISTRY_PATH = join(ROOT, "config", "registry.yaml");
 const WHITELIST_PATH = join(ROOT, "config", "whitelist.yaml");
 const CONTENT_DIR = join(ROOT, "content", "courses");
 const TMP_DIR = join(ROOT, ".ingestion-tmp");
-const CONVERTER_PATH = join(ROOT, "..", "gitorial-to-dotcodeschool");
 
 type Whitelist = {
   trustedOwners: string[];
@@ -94,7 +94,10 @@ function cloneRepo(entry: RegistryEntry): string {
   return cloneDir;
 }
 
-function convertRepo(entry: RegistryEntry, cloneDir: string): void {
+async function convertRepo(
+  entry: RegistryEntry,
+  cloneDir: string,
+): Promise<void> {
   const outputDir = join(CONTENT_DIR, entry.slug);
 
   if (existsSync(outputDir)) {
@@ -103,21 +106,15 @@ function convertRepo(entry: RegistryEntry, cloneDir: string): void {
 
   console.log(`Converting ${entry.slug}...`);
 
-  const args = [
-    `-i "${cloneDir}"`,
-    `-o "${outputDir}"`,
-    `-b ${entry.branch}`,
-    entry.title ? `-t "${entry.title}"` : "",
-    entry.author ? `-a "${entry.author}"` : "",
-    entry.level ? `-l "${entry.level}"` : "",
-    entry.language ? `-g "${entry.language}"` : "",
-    entry.description ? `-d "${entry.description}"` : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
-  execSync(`node ${join(CONVERTER_PATH, "dist", "cli.js")} ${args}`, {
-    stdio: "inherit",
+  await convertGitorialToDotCodeSchool({
+    input: cloneDir,
+    output: outputDir,
+    branch: entry.branch,
+    title: entry.title,
+    author: entry.author,
+    level: entry.level,
+    language: entry.language,
+    description: entry.description,
   });
 }
 
@@ -161,7 +158,7 @@ async function main() {
     for (const entry of entries) {
       validateEntry(entry);
       const cloneDir = cloneRepo(entry);
-      convertRepo(entry, cloneDir);
+      await convertRepo(entry, cloneDir);
       console.log(`✓ ${entry.slug} ingested successfully`);
     }
   } finally {

@@ -23,6 +23,7 @@
     "astro": "^6.1.2",
     "auth-astro": "^4.2.0",
     "esbuild": "^0.25.1",
+    "gitorial-to-dotcodeschool": "github:dotcodeschool/gitorial-to-dotcodeschool",
     "gray-matter": "^4.0.3",
     "js-yaml": "^4.1.1",
     "marked": "^17.0.5",
