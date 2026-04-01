@@ -235,3 +235,38 @@ export async function getLesson(
     files,
   }
 }
+
+export async function getSectionContent(
+  courseSlug: CourseSlug,
+  sectionSlug: SectionSlug,
+): Promise<{ title: string; code: string; lessons: LessonSummary[] } | null> {
+  const sectionDir = path.join(CONTENT_DIR, courseSlug, "sections", sectionSlug)
+  const mdxPath = path.join(sectionDir, `${sectionSlug}.mdx`)
+
+  if (!fs.existsSync(mdxPath)) return null
+
+  const { data, content } = parseFrontmatter(mdxPath)
+
+  const { code } = await bundleMDX({
+    source: content,
+    cwd: sectionDir,
+    mdxOptions(options) {
+      options.remarkPlugins = [...(options.remarkPlugins ?? []), remarkGfm]
+      options.rehypePlugins = [...(options.rehypePlugins ?? []), rehypeCodeMeta, rehypeMdxCodeProps]
+      options.format = 'md'
+      options.mdExtensions = ['.md', '.mdx']
+      return options
+    },
+  })
+
+  // Get lessons for this section
+  const course = getCourse(courseSlug)
+  const section = course?.sections.find(s => s.slug === sectionSlug)
+  const lessons = section?.lessons ?? []
+
+  return {
+    title: data.title ?? sectionSlug,
+    code,
+    lessons,
+  }
+}
