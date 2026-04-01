@@ -47,6 +47,7 @@ export type LessonSummary = {
   slug: LessonSlug
   title: string
   order: number
+  fileType: 'exercise' | 'source' | null
 }
 
 export type Lesson = {

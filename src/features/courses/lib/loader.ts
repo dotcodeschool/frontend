@@ -145,10 +145,26 @@ export function getCourse(slug: CourseSlug): Course | null {
         if (!fs.existsSync(lessonMdxPath)) continue
 
         const { data: lData } = parseFrontmatter(lessonMdxPath)
+
+        // Detect file type
+        const lessonFilesDir = path.join(lessonsDir, lessonSlug, "files")
+        let fileType: 'exercise' | 'source' | null = null
+        if (fs.existsSync(lessonFilesDir)) {
+          const hasTemplate = fs.existsSync(path.join(lessonFilesDir, "template"))
+          const hasSolution = fs.existsSync(path.join(lessonFilesDir, "solution"))
+          const hasSource = fs.existsSync(path.join(lessonFilesDir, "source"))
+          if (hasTemplate && hasSolution) {
+            fileType = 'exercise'
+          } else if (hasSource) {
+            fileType = 'source'
+          }
+        }
+
         lessons.push({
           slug: lessonSlug as LessonSlug,
           title: lData.title ?? lessonSlug,
           order: lData.order ?? 0,
+          fileType,
         })
       }
 
@@ -269,4 +285,27 @@ export async function getSectionContent(
     code,
     lessons,
   }
+}
+
+export async function getCourseWithContent(slug: CourseSlug): Promise<{ course: Course; code: string } | null> {
+  const course = getCourse(slug)
+  if (!course) return null
+
+  const courseDir = path.join(CONTENT_DIR, slug)
+  const mdxPath = path.join(courseDir, `${slug}.mdx`)
+  const { content } = parseFrontmatter(mdxPath)
+
+  const { code } = await bundleMDX({
+    source: content,
+    cwd: courseDir,
+    mdxOptions(options) {
+      options.remarkPlugins = [...(options.remarkPlugins ?? []), remarkGfm]
+      options.rehypePlugins = [...(options.rehypePlugins ?? []), rehypeCodeMeta, rehypeMdxCodeProps]
+      options.format = 'md'
+      options.mdExtensions = ['.md', '.mdx']
+      return options
+    },
+  })
+
+  return { course, code }
 }
