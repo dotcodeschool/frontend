@@ -180,10 +180,26 @@ const articles = getArticles().slice(0, 3)
 </BaseLayout>
 
 <style>
+  :root {
+    --aurora-a: rgba(78, 108, 212, 0.1);
+    --aurora-b: rgba(78, 108, 212, 0.14);
+    --aurora-c: rgba(78, 108, 212, 0.08);
+    --streak: rgba(78, 108, 212, 0.2);
+    --grid-line: rgba(78, 108, 212, 0.06);
+  }
+
+  [data-theme="dark"] {
+    --aurora-a: rgba(107, 138, 237, 0.06);
+    --aurora-b: rgba(78, 108, 212, 0.08);
+    --aurora-c: rgba(107, 138, 237, 0.05);
+    --streak: rgba(107, 138, 237, 0.15);
+    --grid-line: rgba(107, 138, 237, 0.04);
+  }
+
   .bg-grid {
     background-image:
-      linear-gradient(rgba(107, 138, 237, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(107, 138, 237, 0.04) 1px, transparent 1px);
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
     background-size: 48px 48px;
   }
 
@@ -193,11 +209,11 @@ const articles = getArticles().slice(0, 3)
     inset: 0;
     background: linear-gradient(
       135deg,
-      rgba(107, 138, 237, 0.06) 0%,
+      var(--aurora-a) 0%,
       transparent 35%,
-      rgba(78, 108, 212, 0.08) 55%,
+      var(--aurora-b) 55%,
       transparent 75%,
-      rgba(107, 138, 237, 0.05) 100%
+      var(--aurora-c) 100%
     );
     background-size: 200% 200%;
     animation: aurora-shift 10s ease-in-out infinite;
@@ -205,14 +221,7 @@ const articles = getArticles().slice(0, 3)
   }
 
   .aurora-dim {
-    background: linear-gradient(
-      135deg,
-      rgba(107, 138, 237, 0.03) 0%,
-      transparent 35%,
-      rgba(78, 108, 212, 0.05) 55%,
-      transparent 75%,
-      rgba(107, 138, 237, 0.03) 100%
-    );
+    opacity: 0.6;
   }
 
   @keyframes aurora-shift {
@@ -229,8 +238,8 @@ const articles = getArticles().slice(0, 3)
     background: linear-gradient(
       90deg,
       transparent 0%,
-      rgba(107, 138, 237, 0.15) 30%,
-      rgba(107, 138, 237, 0.15) 70%,
+      var(--streak) 30%,
+      var(--streak) 70%,
       transparent 100%
     );
     animation: streak-drift linear infinite;
