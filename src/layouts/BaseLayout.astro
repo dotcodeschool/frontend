@@ -1,5 +1,4 @@
 ---
-// src/layouts/BaseLayout.astro
 import '../styles/global.css'
 
 interface Props {
@@ -7,7 +6,7 @@ interface Props {
   description?: string
 }
 
-const { title = 'Dot Code School', description = 'Learn blockchain development' } = Astro.props
+const { title = 'Dot Code School', description = 'Learn blockchain development with interactive tutorials' } = Astro.props
 ---
 
 <!DOCTYPE html>
@@ -17,9 +16,22 @@ const { title = 'Dot Code School', description = 'Learn blockchain development' 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content={description} />
   <title>{title}</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Dot Code School" />
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Junicode:wght@400;600;700&family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Theme init (prevent flash) -->
   <script is:inline>
     const theme = localStorage.getItem('theme') ?? 'dark'
     document.documentElement.setAttribute('data-theme', theme)
