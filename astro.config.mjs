@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config'
 import react from '@astrojs/react'
 import tailwindcss from '@tailwindcss/vite'
 import mdx from '@astrojs/mdx'
+import node from '@astrojs/node'
 
 export default defineConfig({
   integrations: [
@@ -12,5 +13,6 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  output: 'static',
+  output: 'server',
+  adapter: node({ mode: 'standalone' }),
 })
