@@ -15,6 +15,8 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
+  // Astro 6 removed 'hybrid' mode. Using 'server' with prerender=true on static
+  // pages achieves the same result. auth-astro also requires server output.
   output: 'server',
   adapter: node({ mode: 'standalone' }),
 })

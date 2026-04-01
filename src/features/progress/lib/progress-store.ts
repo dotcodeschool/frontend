@@ -22,14 +22,21 @@ type ProgressStore = {
   getCourseProgress: (courseSlug: string) => CourseProgress | undefined
 }
 
+let _initialized = false
+
 export const useProgressStore = create<ProgressStore>((set, get) => ({
   progress: { courses: {} },
   syncStatus: 'local',
   isAuthenticated: false,
 
   init: () => {
+    // Always load from localStorage (idempotent)
     const progress = loadProgress()
     set({ progress })
+
+    // Only run auth check and event listeners once
+    if (_initialized) return
+    _initialized = true
 
     // Check auth status and sync
     fetch('/api/auth/session')

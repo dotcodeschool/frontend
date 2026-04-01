@@ -6,13 +6,25 @@ export const prerender = false
 
 const GIST_FILENAME = 'dotcodeschool-progress.json'
 const GIST_DESCRIPTION = 'Dot Code School — course progress'
+const MAX_PAYLOAD_SIZE = 1024 * 1024 // 1MB
 
 async function findProgressGist(octokit: Octokit): Promise<string | null> {
-  const { data: gists } = await octokit.rest.gists.list({ per_page: 100 })
-  const gist = gists.find(
-    (g) => g.files && GIST_FILENAME in g.files
-  )
-  return gist?.id ?? null
+  // Paginate through gists to avoid missing the progress gist
+  for (let page = 1; page <= 5; page++) {
+    const { data: gists } = await octokit.rest.gists.list({ per_page: 100, page })
+    const gist = gists.find(
+      (g) => g.files && GIST_FILENAME in g.files
+    )
+    if (gist) return gist.id
+    if (gists.length < 100) break // No more pages
+  }
+  return null
+}
+
+function isValidProgressState(body: unknown): body is { courses: Record<string, unknown> } {
+  if (typeof body !== 'object' || body === null) return false
+  if (!('courses' in body) || typeof (body as any).courses !== 'object') return false
+  return true
 }
 
 // GET — read progress from gist
@@ -50,7 +62,17 @@ export const POST: APIRoute = async (context) => {
   }
 
   const octokit = new Octokit({ auth: session.accessToken })
+
+  const contentLength = context.request.headers.get('content-length')
+  if (contentLength && parseInt(contentLength) > MAX_PAYLOAD_SIZE) {
+    return new Response(JSON.stringify({ error: 'Payload too large' }), { status: 413 })
+  }
+
   const body = await context.request.json()
+
+  if (!isValidProgressState(body)) {
+    return new Response(JSON.stringify({ error: 'Invalid progress data' }), { status: 400 })
+  }
 
   try {
     const gistId = await findProgressGist(octokit)
