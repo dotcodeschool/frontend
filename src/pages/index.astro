@@ -4,7 +4,7 @@ import Navbar from '@/shared/components/Navbar.astro'
 import Footer from '@/shared/components/Footer.astro'
 import { getCourses } from '@/features/courses/lib/loader'
 import { getArticles } from '@/features/articles/lib/loader'
-import LandingHero from '@/shared/components/LandingHero'
+import LandingHero from '../shared/components/LandingHero'
 
 const courses = getCourses().filter(c => c.slug !== 'course-template' && c.slug !== 'sample-course')
 const articles = getArticles().slice(0, 3)
