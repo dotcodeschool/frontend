@@ -1,3 +1,4 @@
+import { signIn, signOut } from "auth-astro/client";
 import { useEffect, useRef, useState } from "react";
 import { FaGithub } from "react-icons/fa";
 
@@ -82,12 +83,12 @@ export function AuthButton() {
               {user.name}
             </p>
           </div>
-          <a
-            href="/api/auth/signout"
-            className="block px-3 py-2 text-sm text-content-muted hover:text-content-secondary hover:bg-elevated transition-colors no-underline"
+          <button
+            onClick={() => signOut()}
+            className="block w-full text-left px-3 py-2 text-sm text-content-muted hover:text-content-secondary hover:bg-elevated transition-colors"
           >
             Sign out
-          </a>
+          </button>
         </div>
       )}
     </div>
