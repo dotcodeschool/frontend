@@ -1,0 +1,60 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Navbar from '@/shared/components/Navbar.astro'
+import SidebarNav from '@/features/courses/components/SidebarNav'
+import SectionLessonsCard from '@/features/courses/components/SectionLessonsCard.astro'
+import MdxRenderer from '@/shared/components/MdxRenderer'
+import { getCourses, getCourse, getSectionContent } from '@/features/courses/lib/loader'
+import { asCourseSlug, asSectionSlug } from '@/features/courses/types'
+
+export function getStaticPaths() {
+  const courses = getCourses()
+  const paths = []
+  for (const summary of courses) {
+    const course = getCourse(summary.slug)
+    if (!course) continue
+    for (const section of course.sections) {
+      paths.push({
+        params: {
+          courseSlug: course.slug,
+          sectionSlug: section.slug,
+        },
+      })
+    }
+  }
+  return paths
+}
+
+const { courseSlug, sectionSlug } = Astro.params
+const course = getCourse(asCourseSlug(courseSlug!))
+const sectionData = await getSectionContent(asCourseSlug(courseSlug!), asSectionSlug(sectionSlug!))
+
+if (!course || !sectionData) return Astro.redirect('/404')
+---
+
+<BaseLayout title={`${sectionData.title} — ${course.title}`}>
+  <Navbar showLinks={false} />
+  <div class="flex h-[calc(100vh-48px)]">
+    <aside class="w-[260px] min-w-[260px] border-r border-border hidden md:block">
+      <SidebarNav
+        course={course}
+        currentSection={asSectionSlug(sectionSlug!)}
+        client:load
+      />
+    </aside>
+    <div class="flex-1 overflow-y-auto">
+      <div class="max-w-3xl mx-auto p-8">
+        <h1 class="font-heading text-2xl font-bold mb-6">{sectionData.title}</h1>
+        <div class="prose prose-invert max-w-none text-content-body
+                     prose-headings:font-heading prose-headings:text-content-primary">
+          <MdxRenderer code={sectionData.code} client:only="react" />
+        </div>
+        <SectionLessonsCard
+          lessons={sectionData.lessons}
+          courseSlug={asCourseSlug(courseSlug!)}
+          sectionSlug={asSectionSlug(sectionSlug!)}
+        />
+      </div>
+    </div>
+  </div>
+</BaseLayout>
