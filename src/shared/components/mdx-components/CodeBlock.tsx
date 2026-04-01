@@ -66,7 +66,7 @@ export function CodeBlock({ children, className, filename }: Props) {
 
   return (
     <div
-      className="border border-border rounded-lg overflow-hidden mb-6 last:mb-0 relative not-prose"
+      className="border border-border rounded-lg overflow-hidden mb-6 last:mb-0 not-prose"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -80,19 +80,13 @@ export function CodeBlock({ children, className, filename }: Props) {
           <div className="flex-1" />
           <CopyButton text={code} />
         </div>
-      ) : (
-        isHovered && (
-          <div className="absolute top-1/2 -translate-y-1/2 right-2 z-10">
-            <CopyButton text={code} />
-          </div>
-        )
-      )}
+      ) : null}
       <Highlight theme={themes.dracula} code={code} language={language}>
         {({ style, tokens: rawTokens, getLineProps, getTokenProps }) => {
           const tokens = rawTokens
           return (
           <pre
-            className="overflow-x-auto px-6 py-4 text-sm leading-relaxed [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded [&:hover::-webkit-scrollbar-thumb]:bg-content-faint"
+            className="relative overflow-x-auto px-6 py-4 text-sm leading-relaxed [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded [&:hover::-webkit-scrollbar-thumb]:bg-content-faint"
             style={{ ...style, margin: 0, backgroundColor: themes.dracula.plain.backgroundColor }}
           >
             <code className={`flex flex-col ${filename ? '' : 'pr-12'}`}>
@@ -104,6 +98,11 @@ export function CodeBlock({ children, className, filename }: Props) {
                   </div>
                 ))}
             </code>
+            {!filename && isHovered && (
+              <div className="absolute top-0 right-0 h-full flex items-center pr-3">
+                <CopyButton text={code} />
+              </div>
+            )}
           </pre>
           )
         }}
