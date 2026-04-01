@@ -8,20 +8,29 @@ interface Props {
 const { nav } = Astro.props
 ---
 
-<div class="flex justify-between items-center px-5 h-12 border-t border-border bg-surface">
+<div class="flex justify-between items-center px-5 h-14 border-t border-border bg-surface">
   {nav.prev ? (
-    <a href={nav.prev.href} class="text-content-muted text-sm hover:text-content-primary transition-colors no-underline">
-      ← {nav.prev.title}
+    <a href={nav.prev.href} class="flex flex-col items-start text-sm no-underline min-w-0 max-w-[45%]">
+      <span class="text-content-faint text-xs">← Previous</span>
+      <span class="text-content-muted hover:text-content-primary transition-colors truncate w-full">
+        {nav.prev.title}
+      </span>
     </a>
   ) : <div />}
 
   {nav.next ? (
-    <a href={nav.next.href} class="text-accent text-sm hover:text-accent-dim transition-colors no-underline">
-      {nav.next.title} →
+    <a href={nav.next.href} class="flex flex-col items-end text-sm no-underline min-w-0 max-w-[45%]">
+      <span class="text-content-faint text-xs">Next →</span>
+      <span class="text-accent hover:text-accent-dim transition-colors truncate w-full text-right">
+        {nav.next.title}
+      </span>
     </a>
   ) : (
-    <a href={nav.courseHref} class="text-accent text-sm hover:text-accent-dim transition-colors no-underline">
-      Finish Course →
+    <a href={nav.courseHref} class="flex flex-col items-end text-sm no-underline">
+      <span class="text-content-faint text-xs">Next →</span>
+      <span class="text-accent hover:text-accent-dim transition-colors">
+        Complete Course
+      </span>
     </a>
   )}
 </div>
