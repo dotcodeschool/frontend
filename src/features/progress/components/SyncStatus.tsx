@@ -20,6 +20,7 @@ export function SyncStatus() {
   }, [syncStatus]);
 
   if (!ready) return null;
+  if (!visible && syncStatus !== "syncing") return null;
 
   const config = {
     synced: {
@@ -103,9 +104,7 @@ export function SyncStatus() {
 
   return (
     <div
-      className={`flex items-center gap-1.5 text-xs transition-opacity duration-300 ${
-        visible || syncStatus === "syncing" ? "opacity-100" : "opacity-0"
-      }`}
+      className="flex items-center gap-1.5 text-xs"
       title={syncStatus === "syncing" ? "Please don't close this tab" : text}
     >
       {icon}
