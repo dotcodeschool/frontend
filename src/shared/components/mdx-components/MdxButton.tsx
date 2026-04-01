@@ -24,7 +24,7 @@ const variantStyles: Record<string, { classes: string; style?: CSSProperties }> 
 
 export function MdxButton({ href, target, variant = 'primary', size = 'md', children, onClick }: Props) {
   const { classes: variantCls, style: variantStyle } = variantStyles[variant] ?? variantStyles.primary
-  const classes = `inline rounded-md transition-all my-2 no-underline cursor-pointer ${sizeClasses[size]} ${variantCls}`
+  const classes = `inline-flex items-center rounded-md transition-all my-2 no-underline cursor-pointer [&>p]:m-0 [&>p]:inline ${sizeClasses[size]} ${variantCls}`
 
   if (href) {
     return (
