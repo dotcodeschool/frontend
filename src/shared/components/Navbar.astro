@@ -28,8 +28,8 @@ const { showLinks = true } = Astro.props
 
   <!-- Right side -->
   <div class="flex items-center gap-2">
-    <ThemeToggle client:load />
     <SyncStatus client:load />
+    <ThemeToggle client:load />
     <div class="hidden md:block">
       <AuthButton client:load />
     </div>
