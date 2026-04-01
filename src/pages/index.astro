@@ -14,18 +14,13 @@ const articles = getArticles().slice(0, 3)
   <Navbar />
 
   <!-- Hero Section -->
-  <section class="relative overflow-hidden" id="hero-section">
+  <section class="relative overflow-hidden">
     <!-- Grid background -->
     <div class="absolute inset-0 bg-grid opacity-40" />
-    <!-- Cursor glow that makes the grid more visible nearby -->
-    <div id="cursor-glow" class="absolute pointer-events-none opacity-0" style="width: 600px; height: 600px; transform: translate(-50%, -50%); transition: opacity 0.3s;" />
     <!-- Light streaks — horizontal -->
     <div class="light-streak" style="top: 30%; width: 50%; left: 25%; animation-duration: 7s;" />
     <div class="light-streak" style="top: 55%; width: 40%; left: 30%; animation-duration: 10s; animation-delay: -4s;" />
     <div class="light-streak" style="top: 75%; width: 55%; left: 15%; animation-duration: 8s; animation-delay: -6s;" />
-    <!-- Light streaks — vertical -->
-    <div class="light-streak-v" style="left: 20%; height: 40%; top: 15%; animation-duration: 9s;" />
-    <div class="light-streak-v" style="left: 70%; height: 35%; top: 30%; animation-duration: 12s; animation-delay: -5s;" />
 
     <div class="relative max-w-6xl mx-auto px-6 pt-20 pb-16">
       <!-- Tagline -->
@@ -183,13 +178,11 @@ const articles = getArticles().slice(0, 3)
   :root {
     --streak: rgba(78, 108, 212, 0.2);
     --grid-line: rgba(78, 108, 212, 0.15);
-    --grid-line-bright: rgba(78, 108, 212, 0.4);
   }
 
   [data-theme="dark"] {
     --streak: rgba(107, 138, 237, 0.15);
     --grid-line: rgba(107, 138, 237, 0.04);
-    --grid-line-bright: rgba(107, 138, 237, 0.15);
   }
 
   .bg-grid {
@@ -220,51 +213,5 @@ const articles = getArticles().slice(0, 3)
     100% { transform: translateX(110%); }
   }
 
-  /* Vertical light streaks */
-  .light-streak-v {
-    position: absolute;
-    width: 1px;
-    background: linear-gradient(
-      180deg,
-      transparent 0%,
-      var(--streak) 30%,
-      var(--streak) 70%,
-      transparent 100%
-    );
-    animation: streak-drift-v linear infinite;
-    pointer-events: none;
-  }
-
-  @keyframes streak-drift-v {
-    0% { transform: translateY(-110%); }
-    100% { transform: translateY(110%); }
-  }
 </style>
 
-<script is:inline>
-  const hero = document.getElementById('hero-section')
-  const glow = document.getElementById('cursor-glow')
-  if (hero && glow) {
-    // Match the grid pattern but brighter, so it blends seamlessly
-    glow.style.backgroundImage = `
-      radial-gradient(circle 300px, rgba(107,138,237,0.06) 0%, transparent 70%),
-      linear-gradient(var(--grid-line-bright, rgba(107,138,237,0.15)) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-line-bright, rgba(107,138,237,0.15)) 1px, transparent 1px)
-    `
-    glow.style.backgroundSize = '600px 600px, 48px 48px, 48px 48px'
-
-    hero.addEventListener('mousemove', (e) => {
-      const rect = hero.getBoundingClientRect()
-      const x = e.clientX - rect.left
-      const y = e.clientY - rect.top
-      glow.style.left = x + 'px'
-      glow.style.top = y + 'px'
-      // Align the grid pattern to the page grid
-      glow.style.backgroundPosition = `center, ${-x + 300}px ${-y + 300}px, ${-x + 300}px ${-y + 300}px`
-      glow.style.opacity = '1'
-    })
-    hero.addEventListener('mouseleave', () => {
-      glow.style.opacity = '0'
-    })
-  }
-</script>
