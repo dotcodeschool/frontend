@@ -7,9 +7,10 @@ import Footer from '@/shared/components/Footer.astro'
 import Navbar from '@/shared/components/Navbar.astro'
 
 const session = await getSession(Astro.request)
+const redirectTo = Astro.url.searchParams.get('redirect') ?? '/courses'
 
 if (session) {
-  return Astro.redirect('/courses')
+  return Astro.redirect(redirectTo)
 }
 ---
 
@@ -37,7 +38,9 @@ if (session) {
       <script>
         import { signIn } from 'auth-astro/client'
         document.getElementById('github-signin')?.addEventListener('click', () => {
-          signIn('github')
+          const params = new URLSearchParams(window.location.search)
+          const redirect = params.get('redirect') ?? '/courses'
+          signIn('github', { callbackUrl: redirect })
         })
       </script>
 

@@ -43,9 +43,13 @@ export function AuthButton() {
   }
 
   if (!user) {
+    const loginHref =
+      typeof window !== "undefined"
+        ? `/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`
+        : "/auth/login";
     return (
       <a
-        href="/auth/login"
+        href={loginHref}
         className="flex items-center gap-1.5 text-content-muted text-xs border border-border px-3 py-1.5 rounded-md hover:text-content-secondary hover:border-content-muted transition-colors no-underline"
       >
         <FaGithub className="text-sm" />

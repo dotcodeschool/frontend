@@ -33,7 +33,11 @@ export function AnonBanner() {
       <p className="text-content-secondary">
         Progress is saved on this device only.{" "}
         <a
-          href="/auth/login"
+          href={
+            typeof window !== "undefined"
+              ? `/auth/login?redirect=${encodeURIComponent(window.location.pathname)}`
+              : "/auth/login"
+          }
           className="text-accent hover:text-accent-dim no-underline"
         >
           Sign in
