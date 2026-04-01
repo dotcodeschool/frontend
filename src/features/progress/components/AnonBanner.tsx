@@ -11,11 +11,13 @@ export function AnonBanner() {
     init();
     setReady(true);
     try {
-      setDismissed(
-        localStorage.getItem("dcs:anon-banner-dismissed") === "true",
-      );
+      const permanent =
+        localStorage.getItem("dcs:anon-banner-dismissed") === "true";
+      const session =
+        sessionStorage.getItem("dcs:anon-banner-skipped") === "true";
+      setDismissed(permanent || session);
     } catch {
-      // localStorage unavailable (private browsing, quota exceeded)
+      // storage unavailable (private browsing, quota exceeded)
     }
   }, []);
 
@@ -51,7 +53,12 @@ export function AnonBanner() {
           Don't show again
         </button>
         <button
-          onClick={() => setDismissed(true)}
+          onClick={() => {
+            setDismissed(true);
+            try {
+              sessionStorage.setItem("dcs:anon-banner-skipped", "true");
+            } catch {}
+          }}
           className="text-content-muted hover:text-content-secondary transition-colors"
         >
           Skip for now
