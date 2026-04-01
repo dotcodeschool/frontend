@@ -31,12 +31,26 @@ export const mdxComponents = {
   },
   a: (props: any) => {
     const isExternal = typeof props.href === 'string' && props.href.startsWith('http')
+    if (isExternal) {
+      return (
+        <a
+          {...props}
+          target="_blank"
+          rel="noreferrer"
+          className="group relative inline-flex items-center gap-0.5 text-accent no-underline after:absolute after:-bottom-px after:left-0 after:h-px after:w-full after:bg-current after:origin-right after:scale-x-0 after:transition-transform after:duration-300 after:ease-out hover:after:origin-left hover:after:scale-x-100"
+        >
+          <span className="group-hover:opacity-90 transition-opacity">{props.children}</span>
+          <svg className="inline h-3.5 w-3.5 translate-y-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M7 17L17 7" />
+            <path d="M7 7h10v10" />
+          </svg>
+        </a>
+      )
+    }
     return (
       <a
         {...props}
-        target={isExternal ? '_blank' : undefined}
-        rel={isExternal ? 'noopener noreferrer' : undefined}
-        className={`text-accent hover:underline ${isExternal ? "after:content-['↗'] after:text-[0.6em] after:ml-0.5 after:align-super" : ''}`}
+        className="text-accent relative no-underline after:absolute after:-bottom-px after:left-0 after:h-px after:w-full after:bg-current after:origin-right after:scale-x-0 after:transition-transform after:duration-300 after:ease-out hover:after:origin-left hover:after:scale-x-100"
       >
         {props.children}
       </a>
