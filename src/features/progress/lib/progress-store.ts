@@ -148,7 +148,14 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
 
   queueSync: () => {
     const { isAuthenticated } = get();
-    if (!isAuthenticated) return;
+    if (!isAuthenticated) {
+      set({ syncStatus: "local" });
+      return;
+    }
+    if (typeof window !== "undefined" && !navigator.onLine) {
+      set({ syncStatus: "local" });
+      return;
+    }
 
     debouncedSync(
       () => get().progress,

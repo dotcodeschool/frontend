@@ -18,8 +18,13 @@ export function SyncStatus() {
     if (!hasInteracted && syncStatus === "local") return;
     setHasInteracted(true);
     setVisible(true);
-    const timer = setTimeout(() => setVisible(false), 3000);
-    return () => clearTimeout(timer);
+
+    // "local" and "syncing" states stay visible (no auto-hide)
+    // "synced" and "failed" fade after 3 seconds
+    if (syncStatus === "synced") {
+      const timer = setTimeout(() => setVisible(false), 3000);
+      return () => clearTimeout(timer);
+    }
   }, [syncStatus]);
 
   if (!ready) return null;
@@ -27,7 +32,7 @@ export function SyncStatus() {
   // Don't show if no progress exists or nothing to display
   const hasProgress = Object.keys(progress.courses).length > 0;
   if (!hasProgress) return null;
-  if (!visible && syncStatus !== "syncing") return null;
+  if (!visible && syncStatus !== "syncing" && syncStatus !== "local") return null;
 
   const config = {
     synced: {
