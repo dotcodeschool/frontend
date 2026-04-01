@@ -66,7 +66,7 @@ export function CodeBlock({ children, className, filename }: Props) {
 
   return (
     <div
-      className="border border-border rounded-lg overflow-hidden mb-6 last:mb-0 not-prose"
+      className="border border-border rounded-lg overflow-hidden mb-6 last:mb-0 not-prose relative"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -80,7 +80,13 @@ export function CodeBlock({ children, className, filename }: Props) {
           <div className="flex-1" />
           <CopyButton text={code} />
         </div>
-      ) : null}
+      ) : (
+        isHovered && (
+          <div className={`absolute right-3 z-10 ${code.includes('\n') ? 'top-3' : 'top-1/2 -translate-y-1/2'}`}>
+            <CopyButton text={code} />
+          </div>
+        )
+      )}
       <Highlight theme={themes.dracula} code={code} language={language}>
         {({ style, tokens: rawTokens, getLineProps, getTokenProps }) => {
           const tokens = rawTokens
@@ -98,11 +104,6 @@ export function CodeBlock({ children, className, filename }: Props) {
                   </div>
                 ))}
             </code>
-            {!filename && isHovered && (
-              <div className="absolute top-0 right-0 h-full flex items-center pr-3">
-                <CopyButton text={code} />
-              </div>
-            )}
           </pre>
           )
         }}
