@@ -1,6 +1,6 @@
 ---
-// src/shared/components/Navbar.astro
 import { ThemeToggle } from './ThemeToggle'
+import { FaGithub } from 'react-icons/fa'
 
 interface Props {
   showLinks?: boolean
@@ -10,24 +10,65 @@ const { showLinks = true } = Astro.props
 ---
 
 <nav class="flex items-center justify-between px-5 h-12 border-b border-border bg-surface">
-  <a href="/" class="font-heading text-base font-semibold text-content-primary no-underline">
-    Dot Code School
+  <!-- Logo -->
+  <a href="/" class="flex items-center gap-1 no-underline group">
+    <span class="font-mono text-accent font-bold text-sm">&lt;/&gt;</span>
+    <span class="font-mono text-content-primary text-sm font-medium group-hover:text-accent transition-colors">dotcodeschool</span>
   </a>
 
+  <!-- Nav links (center, hidden on lesson pages) -->
   {showLinks && (
-    <div class="flex items-center gap-6 text-sm font-body">
+    <div class="hidden md:flex items-center gap-6 text-sm font-body">
       <a href="/courses" class="text-content-muted hover:text-content-secondary transition-colors no-underline">Courses</a>
       <a href="/articles" class="text-content-muted hover:text-content-secondary transition-colors no-underline">Articles</a>
     </div>
   )}
 
-  <div class="flex items-center gap-3">
+  <!-- Right side -->
+  <div class="flex items-center gap-2">
     <ThemeToggle client:load />
     <a
       href="/auth/login"
-      class="text-content-muted text-xs border border-border px-3 py-1.5 rounded-md hover:text-content-secondary hover:border-content-faint transition-colors no-underline"
+      class="hidden md:flex items-center gap-1.5 text-content-muted text-xs border border-border px-3 py-1.5 rounded-md hover:text-content-secondary hover:border-content-muted transition-colors no-underline"
     >
-      Sign in with GitHub
+      <FaGithub className="text-sm" />
+      Sign in
     </a>
+
+    <!-- Mobile menu button -->
+    {showLinks && (
+      <button
+        id="mobile-menu-btn"
+        class="md:hidden p-1.5 text-content-muted hover:text-content-secondary transition-colors"
+        aria-label="Open menu"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    )}
   </div>
 </nav>
+
+<!-- Mobile menu drawer -->
+{showLinks && (
+  <div id="mobile-menu" class="hidden md:hidden border-b border-border bg-surface">
+    <div class="flex flex-col px-5 py-3 gap-3">
+      <a href="/courses" class="text-content-muted text-sm hover:text-content-secondary transition-colors no-underline">Courses</a>
+      <a href="/articles" class="text-content-muted text-sm hover:text-content-secondary transition-colors no-underline">Articles</a>
+      <a
+        href="/auth/login"
+        class="flex items-center gap-1.5 text-content-muted text-xs border border-border px-3 py-1.5 rounded-md hover:text-content-secondary transition-colors no-underline w-fit"
+      >
+        <FaGithub className="text-sm" />
+        Sign in
+      </a>
+    </div>
+  </div>
+
+  <script is:inline>
+    document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+      document.getElementById('mobile-menu')?.classList.toggle('hidden')
+    })
+  </script>
+)}
