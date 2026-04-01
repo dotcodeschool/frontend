@@ -1,0 +1,20 @@
+# Course Registry
+# Add your gittorial course here via PR.
+# See .github/PULL_REQUEST_TEMPLATE/course.md for the contribution guide.
+#
+# Fields:
+#   slug:        URL-safe identifier (must match output directory name)
+#   repo:        GitHub owner/repo
+#   branch:      Git branch containing the gitorial (default: gitorial)
+#   title:       Display title
+#   author:      Author name
+#   level:       Beginner | Intermediate | Advanced
+#   language:    Programming language
+
+# - slug: rust-state-machine
+#   repo: shawntabrizi/rust-state-machine
+#   branch: gitorial
+#   title: Rust State Machine
+#   author: Shawn Tabrizi
+#   level: Intermediate
+#   language: Rust
