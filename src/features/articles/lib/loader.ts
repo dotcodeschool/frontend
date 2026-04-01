@@ -22,6 +22,7 @@ export interface Article extends ArticleSummary {
   code: string
   lastUpdated?: string
   estimatedTime?: string
+  wordCount: number
 }
 
 export function getArticles(): ArticleSummary[] {
@@ -55,6 +56,7 @@ export async function getArticle(slug: string): Promise<Article | null> {
   if (!fs.existsSync(filePath)) return null
 
   const { data, content } = matter(fs.readFileSync(filePath, 'utf8'))
+  const wordCount = content.trim().split(/\s+/).length
   const { code } = await bundleMDX({
     source: content,
     mdxOptions(options) {
@@ -76,5 +78,27 @@ export async function getArticle(slug: string): Promise<Article | null> {
     code,
     lastUpdated: data.last_updated,
     estimatedTime: data.estimatedTime,
+    wordCount,
   }
+}
+
+export function getRelatedArticles(
+  currentSlug: string,
+  tags: string[],
+  limit: number = 3,
+): ArticleSummary[] {
+  const allArticles = getArticles()
+  const lowerTags = tags.map(t => t.toLowerCase())
+
+  const scored = allArticles
+    .filter(a => a.slug !== currentSlug)
+    .map(a => {
+      const matchCount = a.tags.filter(t => lowerTags.includes(t.toLowerCase())).length
+      return { article: a, matchCount }
+    })
+    .filter(s => s.matchCount > 0)
+    .sort((a, b) => b.matchCount - a.matchCount)
+    .slice(0, limit)
+
+  return scored.map(s => s.article)
 }
