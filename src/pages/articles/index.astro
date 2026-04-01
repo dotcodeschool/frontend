@@ -1,11 +1,11 @@
 ---
 export const prerender = true
 
-import BaseLayout from '@/layouts/BaseLayout.astro'
-import Navbar from '@/shared/components/Navbar.astro'
 import ArticlesPage from '@/features/articles/components/ArticlesPage'
 import { getArticles } from '@/features/articles/lib/loader'
+import BaseLayout from '@/layouts/BaseLayout.astro'
 import Footer from '@/shared/components/Footer.astro'
+import Navbar from '@/shared/components/Navbar.astro'
 
 const articles = getArticles()
 ---

@@ -1,21 +1,21 @@
-import type { ProgressState } from '../types'
+import type { ProgressState } from "../types";
 
-let syncTimer: ReturnType<typeof setTimeout> | null = null
-const DEBOUNCE_MS = 3000
+let syncTimer: ReturnType<typeof setTimeout> | null = null;
+const DEBOUNCE_MS = 3000;
 
 export async function fetchRemoteProgress(): Promise<ProgressState> {
-  const res = await fetch('/api/sync/progress')
-  if (!res.ok) throw new Error('Failed to fetch remote progress')
-  return res.json()
+  const res = await fetch("/api/sync/progress");
+  if (!res.ok) throw new Error("Failed to fetch remote progress");
+  return res.json();
 }
 
 export async function pushProgress(state: ProgressState): Promise<void> {
-  const res = await fetch('/api/sync/progress', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+  const res = await fetch("/api/sync/progress", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(state),
-  })
-  if (!res.ok) throw new Error('Failed to push progress')
+  });
+  if (!res.ok) throw new Error("Failed to push progress");
 }
 
 export function debouncedSync(
@@ -24,15 +24,15 @@ export function debouncedSync(
   onSynced: () => void,
   onFailed: () => void,
 ): void {
-  if (syncTimer) clearTimeout(syncTimer)
+  if (syncTimer) clearTimeout(syncTimer);
 
   syncTimer = setTimeout(async () => {
-    onSyncing()
+    onSyncing();
     try {
-      await pushProgress(getState())
-      onSynced()
+      await pushProgress(getState());
+      onSynced();
     } catch {
-      onFailed()
+      onFailed();
     }
-  }, DEBOUNCE_MS)
+  }, DEBOUNCE_MS);
 }

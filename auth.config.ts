@@ -1,5 +1,5 @@
-import GitHub from '@auth/core/providers/github'
-import { defineConfig } from 'auth-astro'
+import GitHub from "@auth/core/providers/github";
+import { defineConfig } from "auth-astro";
 
 export default defineConfig({
   providers: [
@@ -8,7 +8,7 @@ export default defineConfig({
       clientSecret: import.meta.env.AUTH_GITHUB_SECRET,
       authorization: {
         params: {
-          scope: 'repo gist read:user',
+          scope: "repo gist read:user",
         },
       },
     }),
@@ -16,15 +16,15 @@ export default defineConfig({
   callbacks: {
     async jwt({ token, account }) {
       if (account) {
-        token.accessToken = account.access_token
+        token.accessToken = account.access_token;
       }
-      return token
+      return token;
     },
     async session({ session, token }) {
       return {
         ...session,
         accessToken: token.accessToken as string,
-      }
+      };
     },
   },
-})
+});

@@ -1,51 +1,71 @@
-import { useState, type ReactElement } from 'react'
-import { Highlight, type PrismTheme } from 'prism-react-renderer'
+import { Highlight, type PrismTheme } from "prism-react-renderer";
+import { type ReactElement, useState } from "react";
 
 const dcsTheme: PrismTheme = {
   plain: {
-    color: '#abb2bf',
-    backgroundColor: '#0a0c10',
+    color: "#abb2bf",
+    backgroundColor: "#0a0c10",
   },
   styles: [
-    { types: ['comment', 'prolog', 'doctype', 'cdata'], style: { color: '#5c6370', fontStyle: 'italic' as const } },
-    { types: ['punctuation'], style: { color: '#abb2bf' } },
-    { types: ['property', 'tag', 'constant', 'symbol', 'deleted'], style: { color: '#e06c75' } },
-    { types: ['boolean', 'number'], style: { color: '#d19a66' } },
-    { types: ['selector', 'attr-name', 'string', 'char', 'builtin', 'inserted'], style: { color: '#98c379' } },
-    { types: ['operator', 'entity', 'url'], style: { color: '#56b6c2' } },
-    { types: ['atrule', 'attr-value', 'keyword'], style: { color: '#c678dd' } },
-    { types: ['function', 'class-name'], style: { color: '#61afef' } },
-    { types: ['regex', 'important', 'variable'], style: { color: '#e06c75' } },
-    { types: ['namespace'], style: { color: '#e5c07b' } },
+    {
+      types: ["comment", "prolog", "doctype", "cdata"],
+      style: { color: "#5c6370", fontStyle: "italic" as const },
+    },
+    { types: ["punctuation"], style: { color: "#abb2bf" } },
+    {
+      types: ["property", "tag", "constant", "symbol", "deleted"],
+      style: { color: "#e06c75" },
+    },
+    { types: ["boolean", "number"], style: { color: "#d19a66" } },
+    {
+      types: ["selector", "attr-name", "string", "char", "builtin", "inserted"],
+      style: { color: "#98c379" },
+    },
+    { types: ["operator", "entity", "url"], style: { color: "#56b6c2" } },
+    { types: ["atrule", "attr-value", "keyword"], style: { color: "#c678dd" } },
+    { types: ["function", "class-name"], style: { color: "#61afef" } },
+    { types: ["regex", "important", "variable"], style: { color: "#e06c75" } },
+    { types: ["namespace"], style: { color: "#e5c07b" } },
   ],
-}
-import { CopyButton } from './CopyButton'
-import { FaFile } from 'react-icons/fa'
-import { FiTerminal } from 'react-icons/fi'
+};
+import { FaFile } from "react-icons/fa";
+import { FiTerminal } from "react-icons/fi";
+import { MdLock, MdTerminal } from "react-icons/md";
+import { PiCertificateFill } from "react-icons/pi";
 import {
-  SiRust, SiTypescript, SiJavascript, SiToml, SiMarkdown, SiDocker,
-  SiNodedotjs, SiReact, SiGit, SiYarn, SiPnpm, SiBun,
-} from 'react-icons/si'
-import { VscJson } from 'react-icons/vsc'
-import { PiCertificateFill } from 'react-icons/pi'
-import { MdLock, MdTerminal } from 'react-icons/md'
+  SiBun,
+  SiDocker,
+  SiGit,
+  SiJavascript,
+  SiMarkdown,
+  SiNodedotjs,
+  SiPnpm,
+  SiReact,
+  SiRust,
+  SiToml,
+  SiTypescript,
+  SiYarn,
+} from "react-icons/si";
+import { VscJson } from "react-icons/vsc";
+
+import { CopyButton } from "./CopyButton";
 
 function getFileIcon(filename: string): ReactElement {
   const nameMap: Record<string, ReactElement> = {
-    'Cargo.toml': <SiRust className="w-3.5 h-3.5" />,
-    'package.json': <SiNodedotjs className="w-3.5 h-3.5" />,
-    'pnpm-lock.yaml': <SiPnpm className="w-3.5 h-3.5" />,
-    'yarn.lock': <SiYarn className="w-3.5 h-3.5" />,
-    'bun.lockb': <SiBun className="w-3.5 h-3.5" />,
-    'Dockerfile': <SiDocker className="w-3.5 h-3.5" />,
-    'LICENSE': <PiCertificateFill className="w-3.5 h-3.5" />,
-    'Makefile': <FiTerminal className="w-3.5 h-3.5" />,
-    'README.md': <SiMarkdown className="w-3.5 h-3.5" />,
-    'Terminal': <MdTerminal className="w-3.5 h-3.5" />,
-  }
-  if (nameMap[filename]) return nameMap[filename]
+    "Cargo.toml": <SiRust className="w-3.5 h-3.5" />,
+    "package.json": <SiNodedotjs className="w-3.5 h-3.5" />,
+    "pnpm-lock.yaml": <SiPnpm className="w-3.5 h-3.5" />,
+    "yarn.lock": <SiYarn className="w-3.5 h-3.5" />,
+    "bun.lockb": <SiBun className="w-3.5 h-3.5" />,
+    Dockerfile: <SiDocker className="w-3.5 h-3.5" />,
+    LICENSE: <PiCertificateFill className="w-3.5 h-3.5" />,
+    Makefile: <FiTerminal className="w-3.5 h-3.5" />,
+    "README.md": <SiMarkdown className="w-3.5 h-3.5" />,
+    Terminal: <MdTerminal className="w-3.5 h-3.5" />,
+  };
+  if (nameMap[filename]) return nameMap[filename];
 
-  const ext = filename.split('.').pop()?.toLowerCase() ?? ''
+  const ext = filename.split(".").pop()?.toLowerCase() ?? "";
   const extMap: Record<string, ReactElement> = {
     rs: <SiRust className="w-3.5 h-3.5" />,
     ts: <SiTypescript className="w-3.5 h-3.5" />,
@@ -58,30 +78,30 @@ function getFileIcon(filename: string): ReactElement {
     mdx: <SiMarkdown className="w-3.5 h-3.5" />,
     sh: <MdTerminal className="w-3.5 h-3.5" />,
     lock: <MdLock className="w-3.5 h-3.5" />,
-  }
-  if (ext.startsWith('git')) return <SiGit className="w-3.5 h-3.5" />
-  return extMap[ext] ?? <FaFile className="w-3.5 h-3.5" />
+  };
+  if (ext.startsWith("git")) return <SiGit className="w-3.5 h-3.5" />;
+  return extMap[ext] ?? <FaFile className="w-3.5 h-3.5" />;
 }
 
 interface Props {
-  children: string
-  className?: string
-  filename?: string
+  children: string;
+  className?: string;
+  filename?: string;
 }
 
 export function CodeBlock({ children, className, filename }: Props) {
-  const [isHovered, setIsHovered] = useState(false)
-  const rawLang = className?.replace('language-', '') || 'jsx' // defaults to jsx for untagged blocks
+  const [isHovered, setIsHovered] = useState(false);
+  const rawLang = className?.replace("language-", "") || "jsx"; // defaults to jsx for untagged blocks
   // Map common aliases to prism-supported language names
   const langMap: Record<string, string> = {
-    sh: 'bash',
-    shell: 'bash',
-    js: 'javascript',
-    ts: 'typescript',
-    yml: 'yaml',
-  }
-  const language = langMap[rawLang] ?? rawLang
-  const code = children.replace(/\n+$/, '').trim()
+    sh: "bash",
+    shell: "bash",
+    js: "javascript",
+    ts: "typescript",
+    yml: "yaml",
+  };
+  const language = langMap[rawLang] ?? rawLang;
+  const code = children.replace(/\n+$/, "").trim();
 
   return (
     <div
@@ -101,32 +121,38 @@ export function CodeBlock({ children, className, filename }: Props) {
         </div>
       ) : (
         isHovered && (
-          <div className={`absolute right-3 z-10 ${code.includes('\n') ? 'top-3' : 'top-1/2 -translate-y-1/2'}`}>
+          <div
+            className={`absolute right-3 z-10 ${code.includes("\n") ? "top-3" : "top-1/2 -translate-y-1/2"}`}
+          >
             <CopyButton text={code} />
           </div>
         )
       )}
       <Highlight theme={dcsTheme} code={code} language={language}>
         {({ style, tokens: rawTokens, getLineProps, getTokenProps }) => {
-          const tokens = rawTokens
+          const tokens = rawTokens;
           return (
-          <pre
-            className="relative overflow-x-auto px-6 py-4 text-sm leading-relaxed [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded [&:hover::-webkit-scrollbar-thumb]:bg-content-faint"
-            style={{ ...style, margin: 0, backgroundColor: dcsTheme.plain.backgroundColor }}
-          >
-            <code className={`flex flex-col ${filename ? '' : 'pr-12'}`}>
-              {tokens.map((line, i) => (
+            <pre
+              className="relative overflow-x-auto px-6 py-4 text-sm leading-relaxed [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded [&:hover::-webkit-scrollbar-thumb]:bg-content-faint"
+              style={{
+                ...style,
+                margin: 0,
+                backgroundColor: dcsTheme.plain.backgroundColor,
+              }}
+            >
+              <code className={`flex flex-col ${filename ? "" : "pr-12"}`}>
+                {tokens.map((line, i) => (
                   <div key={i} {...getLineProps({ line })}>
                     {line.map((token, key) => (
                       <span key={key} {...getTokenProps({ token })} />
                     ))}
                   </div>
                 ))}
-            </code>
-          </pre>
-          )
+              </code>
+            </pre>
+          );
         }}
       </Highlight>
     </div>
-  )
+  );
 }

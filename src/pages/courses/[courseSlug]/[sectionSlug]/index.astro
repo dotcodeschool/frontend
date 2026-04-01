@@ -1,13 +1,13 @@
 ---
 export const prerender = true
 
-import BaseLayout from '@/layouts/BaseLayout.astro'
-import Navbar from '@/shared/components/Navbar.astro'
-import SidebarNav, { MobileSidebarToggle } from '@/features/courses/components/SidebarNav'
 import SectionLessonsCard from '@/features/courses/components/SectionLessonsCard.astro'
-import MdxRenderer from '@/shared/components/MdxRenderer'
-import { getCourses, getCourse, getSectionContent } from '@/features/courses/lib/loader'
+import SidebarNav, { MobileSidebarToggle } from '@/features/courses/components/SidebarNav'
+import { getCourse, getCourses, getSectionContent } from '@/features/courses/lib/loader'
 import { asCourseSlug, asSectionSlug } from '@/features/courses/types'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import MdxRenderer from '@/shared/components/MdxRenderer'
+import Navbar from '@/shared/components/Navbar.astro'
 
 export function getStaticPaths() {
   const courses = getCourses()

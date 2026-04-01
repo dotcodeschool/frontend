@@ -1,46 +1,44 @@
-import { useState, useEffect, useRef } from 'react'
-import { FaGithub } from 'react-icons/fa'
+import { useEffect, useRef, useState } from "react";
+import { FaGithub } from "react-icons/fa";
 
 type User = {
-  name: string
-  avatarUrl: string
-}
+  name: string;
+  avatarUrl: string;
+};
 
 export function AuthButton() {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [menuOpen, setMenuOpen] = useState(false)
-  const menuRef = useRef<HTMLDivElement>(null)
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetch('/api/auth/session')
+    fetch("/api/auth/session")
       .then((res) => res.json())
       .then((session) => {
         if (session?.user) {
           setUser({
-            name: session.user.name ?? session.user.email ?? 'User',
-            avatarUrl: session.user.image ?? '',
-          })
+            name: session.user.name ?? session.user.email ?? "User",
+            avatarUrl: session.user.image ?? "",
+          });
         }
       })
       .catch(() => {})
-      .finally(() => setLoading(false))
-  }, [])
+      .finally(() => setLoading(false));
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false)
+        setMenuOpen(false);
       }
     }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   if (loading) {
-    return (
-      <div className="w-7 h-7 rounded-full bg-elevated animate-pulse" />
-    )
+    return <div className="w-7 h-7 rounded-full bg-elevated animate-pulse" />;
   }
 
   if (!user) {
@@ -52,7 +50,7 @@ export function AuthButton() {
         <FaGithub className="text-sm" />
         Sign in
       </a>
-    )
+    );
   }
 
   return (
@@ -68,7 +66,10 @@ export function AuthButton() {
             className="w-7 h-7 rounded-full"
           />
         ) : (
-          <div className="w-7 h-7 rounded-full bg-accent flex items-center justify-center text-xs font-medium" style={{ color: 'var(--bg-base)' }}>
+          <div
+            className="w-7 h-7 rounded-full bg-accent flex items-center justify-center text-xs font-medium"
+            style={{ color: "var(--bg-base)" }}
+          >
             {user.name[0]?.toUpperCase()}
           </div>
         )}
@@ -77,7 +78,9 @@ export function AuthButton() {
       {menuOpen && (
         <div className="absolute right-0 top-9 w-48 bg-surface border border-border rounded-md shadow-lg py-1 z-50">
           <div className="px-3 py-2 border-b border-border">
-            <p className="text-sm font-medium text-content-primary truncate">{user.name}</p>
+            <p className="text-sm font-medium text-content-primary truncate">
+              {user.name}
+            </p>
           </div>
           <a
             href="/api/auth/signout"
@@ -88,5 +91,5 @@ export function AuthButton() {
         </div>
       )}
     </div>
-  )
+  );
 }

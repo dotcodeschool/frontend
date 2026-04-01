@@ -1,34 +1,52 @@
-import { useState } from 'react'
-import { IoCodeSlash, IoChevronDown, IoChevronUp } from 'react-icons/io5'
-import type { CodeFile, DiffFile } from '../types'
-import ResizablePane from '@/shared/components/ResizablePane'
-import LessonContent from './LessonContent'
-import CodeEditor from './code-editor/CodeEditor'
+import { useState } from "react";
+import { IoChevronDown, IoChevronUp, IoCodeSlash } from "react-icons/io5";
+
+import ResizablePane from "@/shared/components/ResizablePane";
+
+import type { CodeFile, DiffFile } from "../types";
+import CodeEditor from "./code-editor/CodeEditor";
+import LessonContent from "./LessonContent";
 
 interface Props {
-  code: string
-  title: string
-  lastUpdated?: string
-  editorFiles: CodeFile[]
-  diffFiles: DiffFile[]
-  solutionFiles: CodeFile[]
-  readOnly: boolean
-  pageUrl?: string
-  githubEditUrl?: string
+  code: string;
+  title: string;
+  lastUpdated?: string;
+  editorFiles: CodeFile[];
+  diffFiles: DiffFile[];
+  solutionFiles: CodeFile[];
+  readOnly: boolean;
+  pageUrl?: string;
+  githubEditUrl?: string;
 }
 
-export default function LessonLayout({ code, title, lastUpdated, editorFiles, diffFiles, solutionFiles, readOnly, pageUrl, githubEditUrl }: Props) {
-  const hasEditor = editorFiles.length > 0
-  const [mobileEditorOpen, setMobileEditorOpen] = useState(true)
+export default function LessonLayout({
+  code,
+  title,
+  lastUpdated,
+  editorFiles,
+  diffFiles,
+  solutionFiles,
+  readOnly,
+  pageUrl,
+  githubEditUrl,
+}: Props) {
+  const hasEditor = editorFiles.length > 0;
+  const [mobileEditorOpen, setMobileEditorOpen] = useState(true);
 
   if (!hasEditor) {
     return (
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-3xl mx-auto">
-          <LessonContent code={code} title={title} lastUpdated={lastUpdated} pageUrl={pageUrl} githubEditUrl={githubEditUrl} />
+          <LessonContent
+            code={code}
+            title={title}
+            lastUpdated={lastUpdated}
+            pageUrl={pageUrl}
+            githubEditUrl={githubEditUrl}
+          />
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -36,10 +54,23 @@ export default function LessonLayout({ code, title, lastUpdated, editorFiles, di
       {/* Desktop: side-by-side resizable panes */}
       <div className="hidden md:flex flex-1 min-h-0">
         <ResizablePane
-          left={<LessonContent code={code} title={title} lastUpdated={lastUpdated} pageUrl={pageUrl} githubEditUrl={githubEditUrl} />}
+          left={
+            <LessonContent
+              code={code}
+              title={title}
+              lastUpdated={lastUpdated}
+              pageUrl={pageUrl}
+              githubEditUrl={githubEditUrl}
+            />
+          }
           right={
             <div className="h-full">
-              <CodeEditor files={editorFiles} diff={diffFiles} solutionFiles={solutionFiles} readOnly={readOnly} />
+              <CodeEditor
+                files={editorFiles}
+                diff={diffFiles}
+                solutionFiles={solutionFiles}
+                readOnly={readOnly}
+              />
             </div>
           }
           defaultSplit={50}
@@ -49,16 +80,22 @@ export default function LessonLayout({ code, title, lastUpdated, editorFiles, di
       {/* Mobile: stacked — content on top, collapsible editor below */}
       <div className="flex flex-col flex-1 min-h-0 md:hidden">
         <div className="flex-1 overflow-y-auto">
-          <LessonContent code={code} title={title} lastUpdated={lastUpdated} pageUrl={pageUrl} githubEditUrl={githubEditUrl} />
+          <LessonContent
+            code={code}
+            title={title}
+            lastUpdated={lastUpdated}
+            pageUrl={pageUrl}
+            githubEditUrl={githubEditUrl}
+          />
         </div>
 
         {/* Toggle bar */}
         <button
-          onClick={() => setMobileEditorOpen(prev => !prev)}
+          onClick={() => setMobileEditorOpen((prev) => !prev)}
           className="flex items-center justify-center gap-2 px-4 py-2 bg-surface border-t border-border text-xs text-content-muted hover:text-content-secondary transition-colors shrink-0"
         >
           <IoCodeSlash className="text-sm" />
-          <span>{mobileEditorOpen ? 'Hide Editor' : 'Show Editor'}</span>
+          <span>{mobileEditorOpen ? "Hide Editor" : "Show Editor"}</span>
           {mobileEditorOpen ? (
             <IoChevronDown className="text-xs" />
           ) : (
@@ -68,10 +105,15 @@ export default function LessonLayout({ code, title, lastUpdated, editorFiles, di
 
         {mobileEditorOpen && (
           <div className="h-[400px] min-h-[400px] border-t border-border">
-            <CodeEditor files={editorFiles} diff={diffFiles} solutionFiles={solutionFiles} readOnly={readOnly} />
+            <CodeEditor
+              files={editorFiles}
+              diff={diffFiles}
+              solutionFiles={solutionFiles}
+              readOnly={readOnly}
+            />
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }

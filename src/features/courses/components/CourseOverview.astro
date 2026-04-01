@@ -1,10 +1,12 @@
 ---
-import type { Course } from '../types'
-import { FaPuzzlePiece, FaClock, FaBookOpen, FaClipboardList, FaGraduationCap, FaGithub } from 'react-icons/fa'
-import CourseAccordion from './CourseAccordion'
-import TruncatedContent from './TruncatedContent'
-import PrerequisitesPopover from './PrerequisitesPopover'
+import { FaBookOpen, FaClipboardList, FaClock, FaGithub,FaGraduationCap, FaPuzzlePiece } from 'react-icons/fa'
+
 import { ProgressBar } from '@/features/progress/components/ProgressBar'
+
+import type { Course } from '../types'
+import CourseAccordion from './CourseAccordion'
+import PrerequisitesPopover from './PrerequisitesPopover'
+import TruncatedContent from './TruncatedContent'
 
 interface Props {
   course: Course

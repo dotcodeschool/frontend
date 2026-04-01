@@ -1,7 +1,8 @@
 import process from "node:process";
-import { getWsProvider } from "polkadot-api/ws-provider/web";
+
 // TODO: Import the type `SS58String` from `"polkadot-api"`.
 import { createClient, type PolkadotClient } from "polkadot-api";
+import { getWsProvider } from "polkadot-api/ws-provider/web";
 // TODO: Import `dot` from `"@polkadot-api/descriptors"`.
 
 function makeClient(endpoint: string): PolkadotClient {

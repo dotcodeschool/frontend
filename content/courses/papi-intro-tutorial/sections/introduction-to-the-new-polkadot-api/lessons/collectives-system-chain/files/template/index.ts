@@ -1,12 +1,13 @@
 import process from "node:process";
-import { getWsProvider } from "polkadot-api/ws-provider/web";
+
+// TODO: Import `collectives` from `"@polkadot-api/descriptors"`.
+import { dot, people } from "@polkadot-api/descriptors";
 import {
   createClient,
   type PolkadotClient,
   type SS58String,
 } from "polkadot-api";
-// TODO: Import `collectives` from `"@polkadot-api/descriptors"`.
-import { dot, people } from "@polkadot-api/descriptors";
+import { getWsProvider } from "polkadot-api/ws-provider/web";
 
 function makeClient(endpoint: string): PolkadotClient {
   console.log(`Connecting to endpoint: ${endpoint}`);
@@ -27,7 +28,7 @@ async function printChainInfo(client: PolkadotClient) {
 async function getBalance(
   polkadotClient: PolkadotClient,
   address: SS58String,
-): Promise<BigInt> {
+): Promise<bigint> {
   const dotApi = polkadotClient.getTypedApi(dot);
   const accountInfo = await dotApi.query.System.Account.getValue(address);
   const { free, reserved } = accountInfo.data;

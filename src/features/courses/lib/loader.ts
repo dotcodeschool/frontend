@@ -1,11 +1,12 @@
-import fs from "node:fs"
-import path from "node:path"
-import matter from "gray-matter"
-import { bundleMDX } from "mdx-bundler"
-import rehypeMdxCodeProps from "rehype-mdx-code-props"
-import remarkGfm from "remark-gfm"
-import type { Root, Element } from 'hast'
-import { visit } from 'unist-util-visit'
+import fs from "node:fs";
+import path from "node:path";
+
+import matter from "gray-matter";
+import type { Element, Root } from "hast";
+import { bundleMDX } from "mdx-bundler";
+import rehypeMdxCodeProps from "rehype-mdx-code-props";
+import remarkGfm from "remark-gfm";
+import { visit } from "unist-util-visit";
 
 /**
  * Custom rehype plugin that preserves the meta string from fenced code blocks
@@ -14,87 +15,125 @@ import { visit } from 'unist-util-visit'
  */
 function rehypeCodeMeta() {
   return (tree: Root) => {
-    visit(tree, 'element', (node: Element) => {
-      if (node.tagName === 'pre') {
+    visit(tree, "element", (node: Element) => {
+      if (node.tagName === "pre") {
         const code = node.children.find(
-          (c): c is Element => c.type === 'element' && c.tagName === 'code'
-        )
+          (c): c is Element => c.type === "element" && c.tagName === "code",
+        );
         if (code?.data?.meta) {
-          code.properties = code.properties ?? {}
-          code.properties.meta = code.data.meta as string
+          code.properties = code.properties ?? {};
+          code.properties.meta = code.data.meta as string;
         }
       }
-    })
-  }
+    });
+  };
 }
 import type {
-  CourseSummary, Course, Section, LessonSummary, Lesson, LessonFiles, CodeFile,
-  CourseSlug, SectionSlug, LessonSlug,
-} from "../types"
+  CodeFile,
+  Course,
+  CourseSlug,
+  CourseSummary,
+  Lesson,
+  LessonFiles,
+  LessonSlug,
+  LessonSummary,
+  Section,
+  SectionSlug,
+} from "../types";
 
-const CONTENT_DIR = path.join(process.cwd(), "content/courses")
+const CONTENT_DIR = path.join(process.cwd(), "content/courses");
 
 const IGNORED_FILES = new Set([
-  "Cargo.lock", ".gitignore", ".DS_Store", "target", "node_modules", "bun.lockb", "readmeTitle",
-])
+  "Cargo.lock",
+  ".gitignore",
+  ".DS_Store",
+  "target",
+  "node_modules",
+  "bun.lockb",
+  "readmeTitle",
+]);
 
-const EXCLUDED_DIRS = new Set(["course-template", "sample-course"])
+const EXCLUDED_DIRS = new Set(["course-template", "sample-course"]);
 
-function parseFrontmatter(filePath: string): { data: Record<string, any>; content: string } {
-  const raw = fs.readFileSync(filePath, "utf8")
-  return matter(raw)
+function parseFrontmatter(filePath: string): {
+  data: Record<string, any>;
+  content: string;
+} {
+  const raw = fs.readFileSync(filePath, "utf8");
+  return matter(raw);
 }
 
 function getLanguage(fileName: string): string {
-  const ext = fileName.split(".").pop()?.toLowerCase()
+  const ext = fileName.split(".").pop()?.toLowerCase();
   const map: Record<string, string> = {
-    js: "javascript", jsx: "javascript", ts: "typescript", tsx: "typescript",
-    html: "html", css: "css", json: "json", md: "markdown", mdx: "markdown",
-    py: "python", rs: "rust", toml: "ini", go: "go", java: "java",
-    c: "c", cpp: "cpp", cc: "cpp", sh: "shell",
-  }
-  return map[ext ?? ""] ?? "plaintext"
+    js: "javascript",
+    jsx: "javascript",
+    ts: "typescript",
+    tsx: "typescript",
+    html: "html",
+    css: "css",
+    json: "json",
+    md: "markdown",
+    mdx: "markdown",
+    py: "python",
+    rs: "rust",
+    toml: "ini",
+    go: "go",
+    java: "java",
+    c: "c",
+    cpp: "cpp",
+    cc: "cpp",
+    sh: "shell",
+  };
+  return map[ext ?? ""] ?? "plaintext";
 }
 
 function readFilesRecursively(dir: string, baseDir: string): CodeFile[] {
-  if (!fs.existsSync(dir)) return []
+  if (!fs.existsSync(dir)) return [];
 
-  const files: CodeFile[] = []
-  const entries = fs.readdirSync(dir, { withFileTypes: true })
+  const files: CodeFile[] = [];
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
 
   for (const entry of entries) {
-    if (IGNORED_FILES.has(entry.name)) continue
-    const fullPath = path.join(dir, entry.name)
+    if (IGNORED_FILES.has(entry.name)) continue;
+    const fullPath = path.join(dir, entry.name);
 
     if (entry.isDirectory()) {
-      files.push(...readFilesRecursively(fullPath, baseDir))
+      files.push(...readFilesRecursively(fullPath, baseDir));
     } else {
-      const relativePath = path.relative(baseDir, fullPath).replace(/\\/g, "/")
+      const relativePath = path.relative(baseDir, fullPath).replace(/\\/g, "/");
       files.push({
         path: relativePath,
         content: fs.readFileSync(fullPath, "utf8"),
         language: getLanguage(entry.name),
-      })
+      });
     }
   }
 
-  return files
+  return files;
 }
 
 export function getCourses(): CourseSummary[] {
-  if (!fs.existsSync(CONTENT_DIR)) return []
+  if (!fs.existsSync(CONTENT_DIR)) return [];
 
-  const dirs = fs.readdirSync(CONTENT_DIR, { withFileTypes: true })
-    .filter(d => d.isDirectory() && !d.name.startsWith(".") && !d.name.startsWith("_") && !EXCLUDED_DIRS.has(d.name))
-    .map(d => d.name)
+  const dirs = fs
+    .readdirSync(CONTENT_DIR, { withFileTypes: true })
+    .filter(
+      (d) =>
+        d.isDirectory() &&
+        !d.name.startsWith(".") &&
+        !d.name.startsWith("_") &&
+        !EXCLUDED_DIRS.has(d.name),
+    )
+    .map((d) => d.name);
 
-  const courses: CourseSummary[] = []
+  const courses: CourseSummary[] = [];
 
   for (const slug of dirs) {
-    const mdxPath = path.join(CONTENT_DIR, slug, `${slug}.mdx`)
-    if (!fs.existsSync(mdxPath)) continue
+    const mdxPath = path.join(CONTENT_DIR, slug, `${slug}.mdx`);
+    if (!fs.existsSync(mdxPath)) continue;
 
-    const { data } = parseFrontmatter(mdxPath)
+    const { data } = parseFrontmatter(mdxPath);
     courses.push({
       slug: slug as CourseSlug,
       title: data.title ?? slug,
@@ -103,60 +142,74 @@ export function getCourses(): CourseSummary[] {
       level: data.level ?? "Beginner",
       language: data.language ?? "Unknown",
       order: data.order ?? 999,
-    })
+    });
   }
 
-  return courses.sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
+  return courses.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
 }
 
 export function getCourse(slug: CourseSlug): Course | null {
-  const courseDir = path.join(CONTENT_DIR, slug)
-  const mdxPath = path.join(courseDir, `${slug}.mdx`)
+  const courseDir = path.join(CONTENT_DIR, slug);
+  const mdxPath = path.join(courseDir, `${slug}.mdx`);
 
-  if (!fs.existsSync(mdxPath)) return null
+  if (!fs.existsSync(mdxPath)) return null;
 
-  const { data } = parseFrontmatter(mdxPath)
-  const sectionsDir = path.join(courseDir, "sections")
+  const { data } = parseFrontmatter(mdxPath);
+  const sectionsDir = path.join(courseDir, "sections");
 
-  if (!fs.existsSync(sectionsDir)) return null
+  if (!fs.existsSync(sectionsDir)) return null;
 
-  const sectionDirs = fs.readdirSync(sectionsDir, { withFileTypes: true })
-    .filter(d => d.isDirectory() && !d.name.startsWith("."))
-    .map(d => d.name)
+  const sectionDirs = fs
+    .readdirSync(sectionsDir, { withFileTypes: true })
+    .filter((d) => d.isDirectory() && !d.name.startsWith("."))
+    .map((d) => d.name);
 
-  const sections: Section[] = []
+  const sections: Section[] = [];
 
   for (const sectionSlug of sectionDirs) {
-    const sectionMdxPath = path.join(sectionsDir, sectionSlug, `${sectionSlug}.mdx`)
-    if (!fs.existsSync(sectionMdxPath)) continue
+    const sectionMdxPath = path.join(
+      sectionsDir,
+      sectionSlug,
+      `${sectionSlug}.mdx`,
+    );
+    if (!fs.existsSync(sectionMdxPath)) continue;
 
-    const { data: sData } = parseFrontmatter(sectionMdxPath)
-    const lessonsDir = path.join(sectionsDir, sectionSlug, "lessons")
+    const { data: sData } = parseFrontmatter(sectionMdxPath);
+    const lessonsDir = path.join(sectionsDir, sectionSlug, "lessons");
 
-    const lessons: LessonSummary[] = []
+    const lessons: LessonSummary[] = [];
 
     if (fs.existsSync(lessonsDir)) {
-      const lessonDirs = fs.readdirSync(lessonsDir, { withFileTypes: true })
-        .filter(d => d.isDirectory() && !d.name.startsWith("."))
-        .map(d => d.name)
+      const lessonDirs = fs
+        .readdirSync(lessonsDir, { withFileTypes: true })
+        .filter((d) => d.isDirectory() && !d.name.startsWith("."))
+        .map((d) => d.name);
 
       for (const lessonSlug of lessonDirs) {
-        const lessonMdxPath = path.join(lessonsDir, lessonSlug, `${lessonSlug}.mdx`)
-        if (!fs.existsSync(lessonMdxPath)) continue
+        const lessonMdxPath = path.join(
+          lessonsDir,
+          lessonSlug,
+          `${lessonSlug}.mdx`,
+        );
+        if (!fs.existsSync(lessonMdxPath)) continue;
 
-        const { data: lData } = parseFrontmatter(lessonMdxPath)
+        const { data: lData } = parseFrontmatter(lessonMdxPath);
 
         // Detect file type
-        const lessonFilesDir = path.join(lessonsDir, lessonSlug, "files")
-        let fileType: 'exercise' | 'source' | null = null
+        const lessonFilesDir = path.join(lessonsDir, lessonSlug, "files");
+        let fileType: "exercise" | "source" | null = null;
         if (fs.existsSync(lessonFilesDir)) {
-          const hasTemplate = fs.existsSync(path.join(lessonFilesDir, "template"))
-          const hasSolution = fs.existsSync(path.join(lessonFilesDir, "solution"))
-          const hasSource = fs.existsSync(path.join(lessonFilesDir, "source"))
+          const hasTemplate = fs.existsSync(
+            path.join(lessonFilesDir, "template"),
+          );
+          const hasSolution = fs.existsSync(
+            path.join(lessonFilesDir, "solution"),
+          );
+          const hasSource = fs.existsSync(path.join(lessonFilesDir, "source"));
           if (hasTemplate && hasSolution) {
-            fileType = 'exercise'
+            fileType = "exercise";
           } else if (hasSource) {
-            fileType = 'source'
+            fileType = "source";
           }
         }
 
@@ -165,10 +218,10 @@ export function getCourse(slug: CourseSlug): Course | null {
           title: lData.title ?? lessonSlug,
           order: lData.order ?? 0,
           fileType,
-        })
+        });
       }
 
-      lessons.sort((a, b) => a.order - b.order)
+      lessons.sort((a, b) => a.order - b.order);
     }
 
     sections.push({
@@ -177,10 +230,10 @@ export function getCourse(slug: CourseSlug): Course | null {
       order: sData.order ?? 0,
       description: sData.description,
       lessons,
-    })
+    });
   }
 
-  sections.sort((a, b) => a.order - b.order)
+  sections.sort((a, b) => a.order - b.order);
 
   return {
     slug: slug as CourseSlug,
@@ -198,7 +251,7 @@ export function getCourse(slug: CourseSlug): Course | null {
     whatYoullLearn: data.what_youll_learn ?? [],
     lastUpdated: data.last_updated,
     sections,
-  }
+  };
 }
 
 export async function getLesson(
@@ -206,26 +259,46 @@ export async function getLesson(
   sectionSlug: SectionSlug,
   lessonSlug: LessonSlug,
 ): Promise<Lesson | null> {
-  const lessonDir = path.join(CONTENT_DIR, courseSlug, "sections", sectionSlug, "lessons", lessonSlug)
-  const mdxPath = path.join(lessonDir, `${lessonSlug}.mdx`)
+  const lessonDir = path.join(
+    CONTENT_DIR,
+    courseSlug,
+    "sections",
+    sectionSlug,
+    "lessons",
+    lessonSlug,
+  );
+  const mdxPath = path.join(lessonDir, `${lessonSlug}.mdx`);
 
-  if (!fs.existsSync(mdxPath)) return null
+  if (!fs.existsSync(mdxPath)) return null;
 
-  const { data, content } = parseFrontmatter(mdxPath)
-  const filesDir = path.join(lessonDir, "files")
+  const { data, content } = parseFrontmatter(mdxPath);
+  const filesDir = path.join(lessonDir, "files");
 
-  let files: LessonFiles | null = null
+  let files: LessonFiles | null = null;
 
   if (fs.existsSync(filesDir)) {
     files = {
-      template: readFilesRecursively(path.join(filesDir, "template"), path.join(filesDir, "template")),
-      solution: readFilesRecursively(path.join(filesDir, "solution"), path.join(filesDir, "solution")),
-      source: readFilesRecursively(path.join(filesDir, "source"), path.join(filesDir, "source")),
-    }
+      template: readFilesRecursively(
+        path.join(filesDir, "template"),
+        path.join(filesDir, "template"),
+      ),
+      solution: readFilesRecursively(
+        path.join(filesDir, "solution"),
+        path.join(filesDir, "solution"),
+      ),
+      source: readFilesRecursively(
+        path.join(filesDir, "source"),
+        path.join(filesDir, "source"),
+      ),
+    };
 
     // If all arrays are empty, set files to null
-    if (files.template.length === 0 && files.solution.length === 0 && files.source.length === 0) {
-      files = null
+    if (
+      files.template.length === 0 &&
+      files.solution.length === 0 &&
+      files.source.length === 0
+    ) {
+      files = null;
     }
   }
 
@@ -233,13 +306,17 @@ export async function getLesson(
     source: content,
     cwd: lessonDir,
     mdxOptions(options) {
-      options.remarkPlugins = [...(options.remarkPlugins ?? []), remarkGfm]
-      options.rehypePlugins = [...(options.rehypePlugins ?? []), rehypeCodeMeta, rehypeMdxCodeProps]
-      options.format = 'md'
-      options.mdExtensions = ['.md', '.mdx']
-      return options
+      options.remarkPlugins = [...(options.remarkPlugins ?? []), remarkGfm];
+      options.rehypePlugins = [
+        ...(options.rehypePlugins ?? []),
+        rehypeCodeMeta,
+        rehypeMdxCodeProps,
+      ];
+      options.format = "md";
+      options.mdExtensions = [".md", ".mdx"];
+      return options;
     },
-  })
+  });
 
   return {
     slug: lessonSlug as LessonSlug,
@@ -249,63 +326,78 @@ export async function getLesson(
     commitHash: data.commit_hash,
     lastUpdated: data.last_updated,
     files,
-  }
+  };
 }
 
 export async function getSectionContent(
   courseSlug: CourseSlug,
   sectionSlug: SectionSlug,
 ): Promise<{ title: string; code: string; lessons: LessonSummary[] } | null> {
-  const sectionDir = path.join(CONTENT_DIR, courseSlug, "sections", sectionSlug)
-  const mdxPath = path.join(sectionDir, `${sectionSlug}.mdx`)
+  const sectionDir = path.join(
+    CONTENT_DIR,
+    courseSlug,
+    "sections",
+    sectionSlug,
+  );
+  const mdxPath = path.join(sectionDir, `${sectionSlug}.mdx`);
 
-  if (!fs.existsSync(mdxPath)) return null
+  if (!fs.existsSync(mdxPath)) return null;
 
-  const { data, content } = parseFrontmatter(mdxPath)
+  const { data, content } = parseFrontmatter(mdxPath);
 
   const { code } = await bundleMDX({
     source: content,
     cwd: sectionDir,
     mdxOptions(options) {
-      options.remarkPlugins = [...(options.remarkPlugins ?? []), remarkGfm]
-      options.rehypePlugins = [...(options.rehypePlugins ?? []), rehypeCodeMeta, rehypeMdxCodeProps]
-      options.format = 'md'
-      options.mdExtensions = ['.md', '.mdx']
-      return options
+      options.remarkPlugins = [...(options.remarkPlugins ?? []), remarkGfm];
+      options.rehypePlugins = [
+        ...(options.rehypePlugins ?? []),
+        rehypeCodeMeta,
+        rehypeMdxCodeProps,
+      ];
+      options.format = "md";
+      options.mdExtensions = [".md", ".mdx"];
+      return options;
     },
-  })
+  });
 
   // Get lessons for this section
-  const course = getCourse(courseSlug)
-  const section = course?.sections.find(s => s.slug === sectionSlug)
-  const lessons = section?.lessons ?? []
+  const course = getCourse(courseSlug);
+  const section = course?.sections.find((s) => s.slug === sectionSlug);
+  const lessons = section?.lessons ?? [];
 
   return {
     title: data.title ?? sectionSlug,
     code,
     lessons,
-  }
+  };
 }
 
-export async function getCourseWithContent(slug: CourseSlug): Promise<{ course: Course; code: string } | null> {
-  const course = getCourse(slug)
-  if (!course) return null
+export async function getCourseWithContent(
+  slug: CourseSlug,
+): Promise<{ course: Course; code: string } | null> {
+  const course = getCourse(slug);
+  if (!course) return null;
 
-  const courseDir = path.join(CONTENT_DIR, slug)
-  const mdxPath = path.join(courseDir, `${slug}.mdx`)
-  const { content } = parseFrontmatter(mdxPath)
+  const courseDir = path.join(CONTENT_DIR, slug);
+  const mdxPath = path.join(courseDir, `${slug}.mdx`);
+  const { content } = parseFrontmatter(mdxPath);
 
   const { code } = await bundleMDX({
     source: content,
     cwd: courseDir,
     mdxOptions(options) {
-      options.remarkPlugins = [...(options.remarkPlugins ?? []), remarkGfm]
-      options.rehypePlugins = [...(options.rehypePlugins ?? []), rehypeCodeMeta, rehypeMdxCodeProps]
-      options.format = 'md'
-      options.mdExtensions = ['.md', '.mdx']
-      return options
+      options.remarkPlugins = [...(options.remarkPlugins ?? []), remarkGfm];
+      options.rehypePlugins = [
+        ...(options.rehypePlugins ?? []),
+        rehypeCodeMeta,
+        rehypeMdxCodeProps,
+      ];
+      options.format = "md";
+      options.mdExtensions = [".md", ".mdx"];
+      return options;
     },
-  })
+  });
 
-  return { course, code }
+  return { course, code };
 }

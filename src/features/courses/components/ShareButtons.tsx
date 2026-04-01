@@ -1,42 +1,49 @@
-import { useState } from 'react'
-import { FaTwitter, FaFacebook, FaLinkedin, FaLink, FaCheck, FaGithub } from 'react-icons/fa'
+import { useState } from "react";
+import {
+  FaCheck,
+  FaFacebook,
+  FaGithub,
+  FaLink,
+  FaLinkedin,
+  FaTwitter,
+} from "react-icons/fa";
 
 interface Props {
-  title: string
-  url: string
-  githubEditUrl?: string
+  title: string;
+  url: string;
+  githubEditUrl?: string;
 }
 
 export default function ShareButtons({ title, url, githubEditUrl }: Props) {
-  const [copied, setCopied] = useState(false)
+  const [copied, setCopied] = useState(false);
 
   const shareLinks = [
     {
       icon: FaTwitter,
-      label: 'Share on Twitter',
+      label: "Share on Twitter",
       href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`,
     },
     {
       icon: FaFacebook,
-      label: 'Share on Facebook',
+      label: "Share on Facebook",
       href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
     },
     {
       icon: FaLinkedin,
-      label: 'Share on LinkedIn',
+      label: "Share on LinkedIn",
       href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
     },
-  ]
+  ];
 
   const handleCopyLink = async () => {
     try {
-      await navigator.clipboard.writeText(url)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     } catch {
       // Fallback: do nothing if clipboard API unavailable
     }
-  }
+  };
 
   return (
     <div className="flex items-center gap-3 pt-8 mt-8 border-t border-border">
@@ -56,10 +63,14 @@ export default function ShareButtons({ title, url, githubEditUrl }: Props) {
         ))}
         <button
           onClick={handleCopyLink}
-          title={copied ? 'Copied!' : 'Copy link'}
+          title={copied ? "Copied!" : "Copy link"}
           className="p-2 text-content-muted hover:text-content-secondary transition-colors rounded-md hover:bg-elevated"
         >
-          {copied ? <FaCheck className="text-sm text-success" /> : <FaLink className="text-sm" />}
+          {copied ? (
+            <FaCheck className="text-sm text-success" />
+          ) : (
+            <FaLink className="text-sm" />
+          )}
         </button>
       </div>
 
@@ -76,5 +87,5 @@ export default function ShareButtons({ title, url, githubEditUrl }: Props) {
         </a>
       )}
     </div>
-  )
+  );
 }

@@ -1,30 +1,30 @@
-import { useEffect, type ReactNode } from 'react'
-import { createPortal } from 'react-dom'
+import { type ReactNode, useEffect } from "react";
+import { createPortal } from "react-dom";
 
 interface Props {
-  isOpen: boolean
-  onClose: () => void
-  children: ReactNode
+  isOpen: boolean;
+  onClose: () => void;
+  children: ReactNode;
 }
 
 export function FullscreenModal({ isOpen, onClose, children }: Props) {
   useEffect(() => {
-    if (!isOpen) return
+    if (!isOpen) return;
 
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    }
+      if (e.key === "Escape") onClose();
+    };
 
-    document.addEventListener('keydown', handleEscape)
-    document.body.style.overflow = 'hidden'
+    document.addEventListener("keydown", handleEscape);
+    document.body.style.overflow = "hidden";
 
     return () => {
-      document.removeEventListener('keydown', handleEscape)
-      document.body.style.overflow = ''
-    }
-  }, [isOpen, onClose])
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "";
+    };
+  }, [isOpen, onClose]);
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -38,6 +38,6 @@ export function FullscreenModal({ isOpen, onClose, children }: Props) {
         {children}
       </div>
     </div>,
-    document.body
-  )
+    document.body,
+  );
 }
