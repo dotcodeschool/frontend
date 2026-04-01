@@ -66,7 +66,7 @@ export function CodeBlock({ children, className, filename }: Props) {
 
   return (
     <div
-      className="border border-border rounded-lg overflow-hidden mb-8 relative"
+      className="border border-border rounded-lg overflow-hidden mb-6 last:mb-0 relative"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
