@@ -1,0 +1,21 @@
+name: Rebuild & Deploy
+
+# Manual trigger only — run when course content is ready to deploy.
+# Gittorial repos rewrite history, so there's no stable ref to pin to.
+# A maintainer triggers this when they know the upstream content is ready.
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Vercel deploy
+        run: |
+          if [ -z "${{ secrets.VERCEL_DEPLOY_HOOK }}" ]; then
+            echo "VERCEL_DEPLOY_HOOK secret not set. Skipping deploy."
+            echo "Set up a deploy hook in Vercel project settings and add it as a repository secret."
+            exit 0
+          fi
+          curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}"
+          echo "Deploy triggered."

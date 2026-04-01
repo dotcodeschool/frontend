@@ -1,11 +1,15 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro'
-import Navbar from '@/shared/components/Navbar.astro'
+export const prerender = true
+
 import fs from 'node:fs'
 import path from 'node:path'
+
 import matter from 'gray-matter'
 import { marked } from 'marked'
+
+import BaseLayout from '@/layouts/BaseLayout.astro'
 import Footer from '@/shared/components/Footer.astro'
+import Navbar from '@/shared/components/Navbar.astro'
 
 const filePath = path.join(process.cwd(), 'content/legal/terms-of-service.mdx')
 const raw = matter(fs.readFileSync(filePath, 'utf8'))

@@ -1,7 +1,8 @@
 dist
+.astro
 node_modules
+pnpm-lock.yaml
 package.json
+.ingestion-tmp
 content/**/*
 !content/**/*.mdx
-
-# Ignore all files

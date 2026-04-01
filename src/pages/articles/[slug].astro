@@ -1,12 +1,15 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro'
-import Navbar from '@/shared/components/Navbar.astro'
-import MdxRenderer from '@/shared/components/MdxRenderer'
-import ShareButtons from '@/features/courses/components/ShareButtons'
-import RelatedArticles from '@/features/articles/components/RelatedArticles.astro'
-import { getArticles, getArticle, getRelatedArticles } from '@/features/articles/lib/loader'
+export const prerender = true
+
 import { IoChevronForward, IoTimeOutline } from 'react-icons/io5'
+
+import RelatedArticles from '@/features/articles/components/RelatedArticles.astro'
+import { getArticle, getArticles, getRelatedArticles } from '@/features/articles/lib/loader'
+import ShareButtons from '@/features/courses/components/ShareButtons'
+import BaseLayout from '@/layouts/BaseLayout.astro'
 import Footer from '@/shared/components/Footer.astro'
+import MdxRenderer from '@/shared/components/MdxRenderer'
+import Navbar from '@/shared/components/Navbar.astro'
 
 export function getStaticPaths() {
   return getArticles().map(a => ({ params: { slug: a.slug } }))

@@ -1,31 +1,36 @@
-import { useState, useRef, useEffect } from 'react'
-import MdxRenderer from '@/shared/components/MdxRenderer'
+import { useEffect, useRef, useState } from "react";
+
+import MdxRenderer from "@/shared/components/MdxRenderer";
 
 interface Props {
-  code: string
-  maxHeight?: number
+  code: string;
+  maxHeight?: number;
 }
 
 export default function TruncatedContent({ code, maxHeight = 200 }: Props) {
-  const [expanded, setExpanded] = useState(false)
-  const [needsTruncation, setNeedsTruncation] = useState(false)
-  const contentRef = useRef<HTMLDivElement>(null)
+  const [expanded, setExpanded] = useState(false);
+  const [needsTruncation, setNeedsTruncation] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (contentRef.current) {
-      setNeedsTruncation(contentRef.current.scrollHeight > maxHeight)
+      setNeedsTruncation(contentRef.current.scrollHeight > maxHeight);
     }
-  }, [code, maxHeight])
+  }, [code, maxHeight]);
 
   return (
     <div>
       <div
         ref={contentRef}
         className="relative overflow-hidden transition-[max-height] duration-300"
-        style={{ maxHeight: expanded || !needsTruncation ? 'none' : `${maxHeight}px` }}
+        style={{
+          maxHeight: expanded || !needsTruncation ? "none" : `${maxHeight}px`,
+        }}
       >
-        <div className="prose prose-invert max-w-none text-content-body
-                         prose-headings:font-heading prose-headings:text-content-primary">
+        <div
+          className="prose prose-invert max-w-none text-content-body
+                         prose-headings:font-heading prose-headings:text-content-primary"
+        >
           <MdxRenderer code={code} />
         </div>
         {!expanded && needsTruncation && (
@@ -34,12 +39,12 @@ export default function TruncatedContent({ code, maxHeight = 200 }: Props) {
       </div>
       {needsTruncation && (
         <button
-          onClick={() => setExpanded(prev => !prev)}
+          onClick={() => setExpanded((prev) => !prev)}
           className="text-accent text-sm font-medium mt-2 hover:text-accent-dim transition-colors"
         >
-          {expanded ? 'Show less' : 'Show more'}
+          {expanded ? "Show less" : "Show more"}
         </button>
       )}
     </div>
-  )
+  );
 }

@@ -1,6 +1,7 @@
 import process from "node:process";
-import { getWsProvider } from "polkadot-api/ws-provider/web";
+
 import { createClient, type PolkadotClient } from "polkadot-api";
+import { getWsProvider } from "polkadot-api/ws-provider/web";
 
 function makeClient(endpoint: string): PolkadotClient {
   console.log(`Connecting to endpoint: ${endpoint}`);
@@ -11,8 +12,8 @@ function makeClient(endpoint: string): PolkadotClient {
 
 async function printChainInfo(client: PolkadotClient) {
   // **IMPORTANT NOTE:** This method is used in this tutorial, but it should not be used in production apps.
-  let chain = await client.getChainSpecData();
-  let finalizedBlock = await client.getFinalizedBlock();
+  const chain = await client.getChainSpecData();
+  const finalizedBlock = await client.getFinalizedBlock();
   console.log(
     `Connected to ${chain.name} at block ${finalizedBlock.number}.\n`,
   );

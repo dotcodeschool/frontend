@@ -1,36 +1,40 @@
-import { useState } from 'react'
-import { IoChevronDown, IoChevronUp } from 'react-icons/io5'
-import type { Section, CourseSlug } from '../types'
+import { useState } from "react";
+import { IoChevronDown, IoChevronUp } from "react-icons/io5";
+
+import type { CourseSlug, Section } from "../types";
 
 interface Props {
-  sections: Section[]
-  courseSlug: CourseSlug
+  sections: Section[];
+  courseSlug: CourseSlug;
 }
 
 export default function CourseAccordion({ sections, courseSlug }: Props) {
   const [openSections, setOpenSections] = useState<Set<number>>(
-    () => new Set(sections.map((_, i) => i))
-  )
+    () => new Set(sections.map((_, i) => i)),
+  );
 
   const toggleSection = (index: number) => {
-    setOpenSections(prev => {
-      const next = new Set(prev)
+    setOpenSections((prev) => {
+      const next = new Set(prev);
       if (next.has(index)) {
-        next.delete(index)
+        next.delete(index);
       } else {
-        next.add(index)
+        next.add(index);
       }
-      return next
-    })
-  }
+      return next;
+    });
+  };
 
   return (
     <div className="space-y-3">
       {sections.map((section, sIndex) => {
-        const isOpen = openSections.has(sIndex)
+        const isOpen = openSections.has(sIndex);
 
         return (
-          <div key={section.slug} className="border border-border rounded-lg overflow-hidden">
+          <div
+            key={section.slug}
+            className="border border-border rounded-lg overflow-hidden"
+          >
             {/* Section header */}
             <button
               onClick={() => toggleSection(sIndex)}
@@ -38,7 +42,7 @@ export default function CourseAccordion({ sections, courseSlug }: Props) {
             >
               <span
                 className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-sm font-bold shrink-0"
-                style={{ color: 'var(--bg-base)' }}
+                style={{ color: "var(--bg-base)" }}
               >
                 {sIndex + 1}
               </span>
@@ -47,7 +51,8 @@ export default function CourseAccordion({ sections, courseSlug }: Props) {
                   {section.title}
                 </h3>
                 <p className="text-content-muted text-xs">
-                  {section.lessons.length} {section.lessons.length === 1 ? 'lesson' : 'lessons'}
+                  {section.lessons.length}{" "}
+                  {section.lessons.length === 1 ? "lesson" : "lessons"}
                 </p>
               </div>
               {isOpen ? (
@@ -61,7 +66,7 @@ export default function CourseAccordion({ sections, courseSlug }: Props) {
             {isOpen && (
               <div className="bg-base">
                 {section.lessons.map((lesson) => {
-                  const href = `/courses/${courseSlug}/${section.slug}/${lesson.slug}`
+                  const href = `/courses/${courseSlug}/${section.slug}/${lesson.slug}`;
 
                   return (
                     <a
@@ -73,17 +78,19 @@ export default function CourseAccordion({ sections, courseSlug }: Props) {
                       <span className="flex-1">{lesson.title}</span>
                       {lesson.fileType && (
                         <span className="text-xs text-content-muted shrink-0">
-                          {lesson.fileType === 'exercise' ? 'Exercise' : 'Source Files'}
+                          {lesson.fileType === "exercise"
+                            ? "Exercise"
+                            : "Source Files"}
                         </span>
                       )}
                     </a>
-                  )
+                  );
                 })}
               </div>
             )}
           </div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

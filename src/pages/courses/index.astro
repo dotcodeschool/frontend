@@ -1,10 +1,12 @@
 ---
+export const prerender = true
+
 // src/pages/courses/index.astro
-import BaseLayout from '@/layouts/BaseLayout.astro'
-import Navbar from '@/shared/components/Navbar.astro'
 import CourseCard from '@/features/courses/components/CourseCard.astro'
 import { getCourses } from '@/features/courses/lib/loader'
+import BaseLayout from '@/layouts/BaseLayout.astro'
 import Footer from '@/shared/components/Footer.astro'
+import Navbar from '@/shared/components/Navbar.astro'
 
 const courses = getCourses()
 ---

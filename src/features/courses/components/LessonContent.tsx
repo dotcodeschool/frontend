@@ -1,4 +1,5 @@
 import MdxRenderer from "@/shared/components/MdxRenderer";
+
 import ShareButtons from "./ShareButtons";
 
 interface Props {

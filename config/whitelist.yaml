@@ -1,0 +1,13 @@
+# Trusted Sources
+# Repos matching these owners or paths auto-deploy on rebuild
+# without manual review.
+#
+# Maintainers only — do not include in course contribution PRs.
+
+trustedOwners:
+  - shawntabrizi
+  - dotcodeschool
+
+trustedRepos: []
+  # Add individual repo paths for one-off trusted external repos:
+  # - org-name/repo-name

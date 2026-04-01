@@ -1,9 +1,12 @@
 ---
+import { FaBookOpen, FaClipboardList, FaClock, FaGithub,FaGraduationCap, FaPuzzlePiece } from 'react-icons/fa'
+
+import { ProgressBar } from '@/features/progress/components/ProgressBar'
+
 import type { Course } from '../types'
-import { FaPuzzlePiece, FaClock, FaBookOpen, FaClipboardList, FaGraduationCap } from 'react-icons/fa'
 import CourseAccordion from './CourseAccordion'
-import TruncatedContent from './TruncatedContent'
 import PrerequisitesPopover from './PrerequisitesPopover'
+import TruncatedContent from './TruncatedContent'
 
 interface Props {
   course: Course
@@ -44,11 +47,32 @@ const hasPrereqs = course.prerequisites && course.prerequisites.length > 0
   <!-- Start Course button -->
   {startHref && (
     <a href={startHref}
-       class="inline-block bg-accent text-lg font-semibold px-12 py-3.5 rounded-lg no-underline mb-12 hover:opacity-90 transition-opacity"
+       class="inline-block bg-accent text-lg font-semibold px-12 py-3.5 rounded-lg no-underline mb-3 hover:opacity-90 transition-opacity"
        style="color: var(--bg-base);">
       Start Course
     </a>
   )}
+  {course.githubUrl && (
+    <div class="mb-6">
+      <a href={course.githubUrl}
+         target="_blank"
+         rel="noopener"
+         class="inline-flex items-center gap-1.5 text-content-muted text-sm no-underline hover:text-accent transition-colors">
+        <FaGithub className="text-sm" />
+        View source on GitHub
+      </a>
+    </div>
+  )}
+
+  <!-- Progress Bar -->
+  <div class="mb-12">
+    <ProgressBar
+      courseSlug={course.slug}
+      totalLessons={totalLessons}
+      lessonSlugs={course.sections.flatMap(s => s.lessons.map(l => l.slug))}
+      client:load
+    />
+  </div>
 
   <!-- Stats Card -->
   <div class="border border-border rounded-xl bg-surface px-8 py-4 mb-12">
