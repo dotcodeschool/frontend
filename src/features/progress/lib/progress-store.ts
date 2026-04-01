@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import type { ProgressState, CourseProgress, SyncStatus } from '../types'
 import { loadProgress, saveProgress } from './local-storage'
 import { mergeProgress } from './merge'
+import { fetchRemoteProgress, pushProgress, debouncedSync } from './gist-sync'
 
 type ProgressStore = {
   progress: ProgressState
@@ -15,6 +16,8 @@ type ProgressStore = {
   markLessonDone: (courseSlug: string, lessonSlug: string) => void
   setForkUrl: (courseSlug: string, forkUrl: string) => void
   mergeRemote: (remote: ProgressState) => void
+  syncWithRemote: () => Promise<void>
+  queueSync: () => void
   isLessonComplete: (courseSlug: string, lessonSlug: string) => boolean
   getCourseProgress: (courseSlug: string) => CourseProgress | undefined
 }
@@ -27,6 +30,26 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
   init: () => {
     const progress = loadProgress()
     set({ progress })
+
+    // Check auth status and sync
+    fetch('/api/auth/session')
+      .then((res) => res.json())
+      .then((session) => {
+        if (session?.user) {
+          set({ isAuthenticated: true })
+          get().syncWithRemote()
+        }
+      })
+      .catch(() => {})
+
+    // Sync when coming back online
+    if (typeof window !== 'undefined') {
+      window.addEventListener('online', () => {
+        if (get().isAuthenticated) {
+          get().syncWithRemote()
+        }
+      })
+    }
   },
 
   setAuthenticated: (auth) => set({ isAuthenticated: auth }),
@@ -66,6 +89,7 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
 
     saveProgress(updated)
     set({ progress: updated })
+    get().queueSync()
   },
 
   setForkUrl: (courseSlug, forkUrl) => {
@@ -94,6 +118,35 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
     const merged = mergeProgress(progress, remote)
     saveProgress(merged)
     set({ progress: merged })
+  },
+
+  syncWithRemote: async () => {
+    const { isAuthenticated } = get()
+    if (!isAuthenticated || typeof window === 'undefined' || !navigator.onLine) return
+
+    set({ syncStatus: 'syncing' })
+    try {
+      const remote = await fetchRemoteProgress()
+      const { progress } = get()
+      const merged = mergeProgress(progress, remote)
+      saveProgress(merged)
+      await pushProgress(merged)
+      set({ progress: merged, syncStatus: 'synced' })
+    } catch {
+      set({ syncStatus: 'failed' })
+    }
+  },
+
+  queueSync: () => {
+    const { isAuthenticated } = get()
+    if (!isAuthenticated) return
+
+    debouncedSync(
+      () => get().progress,
+      () => set({ syncStatus: 'syncing' }),
+      () => set({ syncStatus: 'synced' }),
+      () => set({ syncStatus: 'failed' }),
+    )
   },
 
   isLessonComplete: (courseSlug, lessonSlug) => {
