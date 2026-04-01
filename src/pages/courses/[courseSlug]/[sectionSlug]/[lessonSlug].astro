@@ -77,9 +77,9 @@ const githubEditUrl = `https://github.com/dotcodeschool/frontend/edit/master/con
         client:load
       />
     </aside>
-    <div class="flex-1 flex flex-col overflow-hidden">
+    <div class="flex-1 flex flex-col overflow-hidden relative">
       <!-- Static skeleton visible immediately while React loads -->
-      <div id="lesson-skeleton" class="flex-1 overflow-y-auto p-8">
+      <div id="lesson-skeleton" class="absolute inset-0 overflow-y-auto p-8 z-0">
         <h1 class="font-heading text-2xl font-bold mb-2">{lesson.title}</h1>
         {lesson.lastUpdated && (
           <p class="text-content-muted text-xs mb-6">Last updated {lesson.lastUpdated}</p>
@@ -92,8 +92,8 @@ const githubEditUrl = `https://github.com/dotcodeschool/frontend/edit/master/con
           <div class="h-4 bg-elevated rounded w-3/6"></div>
         </div>
       </div>
-      <!-- React island replaces skeleton once loaded -->
-      <div id="lesson-content" class="hidden flex-1 min-h-0 overflow-hidden">
+      <!-- React island renders on top, covering skeleton -->
+      <div class="flex-1 min-h-0 overflow-hidden relative z-10 bg-base">
         <LessonLayout
           code={lesson.code}
           title={lesson.title}
@@ -107,20 +107,7 @@ const githubEditUrl = `https://github.com/dotcodeschool/frontend/edit/master/con
           client:only="react"
         />
       </div>
-      <script is:inline>
-        // Show React content and hide skeleton once the island hydrates
-        const observer = new MutationObserver(() => {
-          const content = document.getElementById('lesson-content')
-          if (content && content.children.length > 0 && content.children[0].children.length > 0) {
-            content.classList.remove('hidden')
-            document.getElementById('lesson-skeleton')?.remove()
-            observer.disconnect()
-          }
-        })
-        const content = document.getElementById('lesson-content')
-        if (content) observer.observe(content, { childList: true, subtree: true })
-      </script>
-      <div class="flex items-center justify-end px-5 py-2 border-t border-border bg-surface">
+      <div class="flex items-center justify-end px-5 py-2 border-t border-border bg-surface relative z-10">
         <LessonCheckbox courseSlug={courseSlug!} lessonSlug={lessonSlug!} client:load />
       </div>
       <LessonNav nav={nav} />
