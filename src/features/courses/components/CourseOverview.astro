@@ -97,7 +97,7 @@ const hasPrereqs = course.prerequisites && course.prerequisites.length > 0
     <div class="md:col-span-2">
       <h2 class="font-heading text-2xl font-bold text-content-primary mb-5">About This Course</h2>
       {code ? (
-        <TruncatedContent code={code} maxHeight={200} client:load />
+        <TruncatedContent code={code} maxHeight={400} client:load />
       ) : (
         <p class="text-content-secondary leading-relaxed">{course.description}</p>
       )}
