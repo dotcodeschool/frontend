@@ -2,24 +2,25 @@
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Navbar from '@/shared/components/Navbar.astro'
 import CourseOverview from '@/features/courses/components/CourseOverview.astro'
-import { getCourse, getCourses } from '@/features/courses/lib/loader'
+import { getCourseWithContent, getCourses } from '@/features/courses/lib/loader'
 import { asCourseSlug } from '@/features/courses/types'
 
-export function getStaticPaths() {
+export async function getStaticPaths() {
   const courses = getCourses()
   return courses.map(c => ({ params: { courseSlug: c.slug } }))
 }
 
 const { courseSlug } = Astro.params
-const course = getCourse(asCourseSlug(courseSlug!))
+const result = await getCourseWithContent(asCourseSlug(courseSlug!))
 
-if (!course) return Astro.redirect('/404')
+if (!result) return Astro.redirect('/404')
+
+const { course, code } = result
 ---
 
 <BaseLayout title={`${course.title} — Dot Code School`}>
   <Navbar />
-  <main class="max-w-3xl mx-auto px-4 py-8">
-    <a href="/courses" class="text-accent text-4xl mb-4 block">←</a>
-    <CourseOverview course={course} />
+  <main class="max-w-4xl mx-auto px-4 py-8">
+    <CourseOverview course={course} code={code} />
   </main>
 </BaseLayout>

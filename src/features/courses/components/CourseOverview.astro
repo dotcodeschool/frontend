@@ -1,23 +1,31 @@
 ---
-// src/features/courses/components/CourseOverview.astro
 import type { Course } from '../types'
+import { FaPuzzlePiece, FaClock, FaBookOpen, FaClipboardList, FaGraduationCap } from 'react-icons/fa'
+import CourseAccordion from './CourseAccordion'
+import TruncatedContent from './TruncatedContent'
+import PrerequisitesPopover from './PrerequisitesPopover'
 
 interface Props {
   course: Course
+  code?: string
 }
 
-const { course } = Astro.props
+const { course, code } = Astro.props
 
 const totalLessons = course.sections.reduce((sum, s) => sum + s.lessons.length, 0)
 const firstLesson = course.sections[0]?.lessons[0]
 const startHref = firstLesson
   ? `/courses/${course.slug}/${course.sections[0].slug}/${firstLesson.slug}`
   : null
+const hasPrereqs = course.prerequisites && course.prerequisites.length > 0
 ---
 
 <div>
+  <!-- Back arrow -->
+  <a href="/courses" class="text-accent text-2xl mb-4 block no-underline hover:text-accent-dim transition-colors">←</a>
+
   <!-- Header -->
-  <h1 class="font-heading text-3xl font-bold mb-2">{course.title}</h1>
+  <h1 class="font-heading text-3xl font-bold mb-3">{course.title}</h1>
 
   {course.authorUrl ? (
     <p class="text-content-muted text-sm mb-2">
@@ -27,16 +35,13 @@ const startHref = firstLesson
     <p class="text-content-muted text-sm mb-2">Written by {course.author}</p>
   )}
 
+  <p class="text-content-secondary mb-3 leading-relaxed">{course.description}</p>
+
   {course.lastUpdated && (
-    <p class="text-content-faint text-xs mb-4">Last updated: {course.lastUpdated}</p>
+    <p class="text-content-faint text-xs mb-6">Last updated: {course.lastUpdated}</p>
   )}
 
-  <div class="flex gap-2 mb-6">
-    <span class="text-xs font-medium px-3 py-1 rounded-full bg-accent-bg text-accent">{course.level}</span>
-    <span class="text-xs font-medium px-3 py-1 rounded-full bg-accent-bg text-accent">{course.language}</span>
-  </div>
-
-  <!-- Start Button -->
+  <!-- Start Course button -->
   {startHref && (
     <a href={startHref}
        class="inline-block bg-accent text-base font-medium px-10 py-3 rounded-md no-underline mb-8"
@@ -46,77 +51,105 @@ const startHref = firstLesson
   )}
 
   <!-- Stats Card -->
-  <div class="border border-border rounded-lg bg-surface p-6 mb-8">
+  <div class="border border-border rounded-lg bg-surface p-6 mb-10">
     <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-      <div>
-        <p class="text-content-faint text-xs mb-1">Skill Level</p>
-        <p class="text-content-primary font-semibold">{course.level}</p>
+      <div class="flex items-center gap-3">
+        <div class="text-accent text-lg"><FaPuzzlePiece /></div>
+        <div>
+          <p class="text-content-faint text-xs">Skill Level</p>
+          <p class="text-content-primary font-semibold text-sm">{course.level}</p>
+        </div>
       </div>
-      <div>
-        <p class="text-content-faint text-xs mb-1">Time to Complete</p>
-        <p class="text-content-primary font-semibold">{course.estimatedTime ? `${course.estimatedTime} hours` : 'Self-paced'}</p>
+      <div class="flex items-center gap-3">
+        <div class="text-accent text-lg"><FaClock /></div>
+        <div>
+          <p class="text-content-faint text-xs">Time to Complete</p>
+          <p class="text-content-primary font-semibold text-sm">{course.estimatedTime ? `${course.estimatedTime} hours` : 'Self-paced'}</p>
+        </div>
       </div>
-      <div>
-        <p class="text-content-faint text-xs mb-1">Course Content</p>
-        <p class="text-content-primary font-semibold">{course.sections.length} sections &middot; {totalLessons} lessons</p>
+      <div class="flex items-center gap-3">
+        <div class="text-accent text-lg"><FaBookOpen /></div>
+        <div>
+          <p class="text-content-faint text-xs">Course Content</p>
+          <p class="text-content-primary font-semibold text-sm">{course.sections.length} sections</p>
+        </div>
       </div>
-      <div>
-        <p class="text-content-faint text-xs mb-1">Prerequisites</p>
-        <p class="text-content-primary font-semibold">{course.prerequisites && course.prerequisites.length > 0 ? course.prerequisites.join(', ') : 'None'}</p>
+      <div class="flex items-center gap-3">
+        <div class="text-accent text-lg"><FaClipboardList /></div>
+        <div>
+          <p class="text-content-faint text-xs">
+            Prerequisites
+            {hasPrereqs && (
+              <PrerequisitesPopover prerequisites={course.prerequisites!} client:load />
+            )}
+          </p>
+          <p class="text-content-primary font-semibold text-sm">
+            {hasPrereqs ? `${course.prerequisites!.length} ${course.prerequisites!.length === 1 ? 'course' : 'courses'}` : 'None'}
+          </p>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Description -->
-  <p class="text-content-secondary mb-8 leading-relaxed">{course.description}</p>
-
-  <!-- What You'll Learn -->
-  {course.whatYoullLearn && course.whatYoullLearn.length > 0 && (
-    <div class="border border-border rounded-lg bg-surface p-6 mb-8">
-      <h2 class="font-heading text-lg font-semibold text-content-primary mb-4">What You'll Learn</h2>
-      <ul class="grid grid-cols-1 md:grid-cols-2 gap-2">
-        {course.whatYoullLearn.map((item) => (
-          <li class="flex items-start gap-2 text-sm text-content-secondary">
-            <span class="text-accent mt-0.5 shrink-0">&#10003;</span>
-            {item}
-          </li>
-        ))}
-      </ul>
+  <!-- Two-column: About + Sidebar cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+    <!-- Left column: About This Course (2/3) -->
+    <div class="md:col-span-2">
+      <h2 class="font-heading text-xl font-semibold text-content-primary mb-4">About This Course</h2>
+      {code ? (
+        <TruncatedContent code={code} maxHeight={200} client:load />
+      ) : (
+        <p class="text-content-secondary leading-relaxed">{course.description}</p>
+      )}
     </div>
-  )}
+
+    <!-- Right column: Sidebar cards (1/3) -->
+    <div class="space-y-4">
+      <!-- What You'll Learn -->
+      {course.whatYoullLearn && course.whatYoullLearn.length > 0 && (
+        <div class="border border-border rounded-lg bg-surface p-5">
+          <h3 class="font-heading text-base font-semibold text-content-primary mb-3">What You'll Learn</h3>
+          <ul class="space-y-2.5">
+            {course.whatYoullLearn.map((item) => (
+              <li class="flex items-start gap-2 text-sm text-content-secondary">
+                <span class="text-success mt-0.5 shrink-0">✓</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <!-- Prerequisites -->
+      {hasPrereqs && (
+        <div class="border border-border rounded-lg bg-surface p-5">
+          <h3 class="font-heading text-base font-semibold text-content-primary mb-3 flex items-center gap-2">
+            <span class="text-accent"><FaGraduationCap /></span>
+            Prerequisites
+          </h3>
+          <ul class="space-y-2.5">
+            {course.prerequisites!.map((prereq) => (
+              <li class="flex items-start gap-2 text-sm text-content-secondary">
+                <span class="text-success mt-0.5 shrink-0">✓</span>
+                {prereq}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <hr class="border-border mb-10" />
 
   <!-- Course Content -->
   <div class="mb-8">
-    <h2 class="font-heading text-lg font-semibold text-content-primary mb-1">Course Content</h2>
-    <p class="text-content-muted text-sm mb-4">{course.sections.length} sections &middot; {totalLessons} lessons</p>
+    <h2 class="font-heading text-xl font-semibold text-content-primary mb-1">Course Content</h2>
+    <p class="text-content-muted text-sm mb-6">
+      {course.sections.length} sections · {totalLessons} lessons
+    </p>
 
-    <div class="space-y-3">
-      {course.sections.map((section, sIndex) => (
-        <div class="border border-border rounded-lg overflow-hidden">
-          <div class="flex items-center gap-3 bg-surface px-4 py-3">
-            <span class="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-sm font-bold shrink-0"
-                  style="color: var(--bg-base);">
-              {sIndex + 1}
-            </span>
-            <div class="flex-1">
-              <h3 class="font-heading text-sm font-semibold text-content-primary">{section.title}</h3>
-              <p class="text-content-faint text-xs">{section.lessons.length} lessons</p>
-            </div>
-          </div>
-          <div class="bg-base">
-            {section.lessons.map((lesson) => {
-              const href = `/courses/${course.slug}/${section.slug}/${lesson.slug}`
-              return (
-                <a href={href}
-                   class="flex items-center gap-3 px-4 py-2.5 pl-16 text-sm text-content-muted hover:text-content-secondary hover:bg-elevated transition-colors no-underline border-t border-border">
-                  <span class="w-1.5 h-1.5 rounded-full bg-content-faint shrink-0" />
-                  {lesson.title}
-                </a>
-              )
-            })}
-          </div>
-        </div>
-      ))}
-    </div>
+    <CourseAccordion sections={course.sections} courseSlug={course.slug} client:load />
   </div>
 </div>
