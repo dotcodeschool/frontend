@@ -156,7 +156,7 @@ export default function LandingHero() {
                   className="font-mono px-3 py-2"
                   style={{
                     fontSize: '11px',
-                    color: tab.active ? '#6b8aed' : 'rgba(107,138,237,0.3)',
+                    color: tab.active ? '#6b8aed' : '#6b7394',
                     borderBottom: tab.active ? '2px solid #6b8aed' : '2px solid transparent',
                   }}
                 >
@@ -196,7 +196,7 @@ export default function LandingHero() {
         </div>
 
         {/* Bottom bar */}
-        <div className="flex items-center justify-between h-8 px-4 border-t font-mono" style={{ background: '#111318', borderColor: 'rgba(255,255,255,0.06)', fontSize: '10px', color: 'rgba(107,138,237,0.3)' }}>
+        <div className="flex items-center justify-between h-8 px-4 border-t font-mono" style={{ background: '#111318', borderColor: 'rgba(255,255,255,0.06)', fontSize: '10px', color: '#6b7394' }}>
           <span>Rust State Machine · Lesson 3</span>
           <span>← Previous · Next →</span>
         </div>
