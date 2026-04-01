@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { IoChevronDown, IoChevronUp, IoArrowBack, IoClose, IoMenu } from 'react-icons/io5'
 import type { Course, SectionSlug, LessonSlug } from '../types'
+import { useProgressStore } from '@/features/progress/lib/progress-store'
+import { AnonBanner } from '@/features/progress/components/AnonBanner'
 
 interface Props {
   course: Course
@@ -15,6 +17,9 @@ function SidebarContent({ course, currentSection, currentLesson, onNavigate }: {
   currentLesson?: LessonSlug
   onNavigate?: () => void
 }) {
+  const { isLessonComplete, init } = useProgressStore()
+  useEffect(() => { init() }, [])
+
   const [openSections, setOpenSections] = useState<Set<string>>(() => {
     return new Set([currentSection])
   })
@@ -89,11 +94,17 @@ function SidebarContent({ course, currentSection, currentLesson, onNavigate }: {
                             : 'text-content-muted hover:text-content-secondary hover:bg-elevated'
                         }`}
                       >
-                        <span
-                          className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                            isActive ? 'bg-accent' : 'bg-content-faint'
-                          }`}
-                        />
+                        {isLessonComplete(course.slug, lesson.slug) ? (
+                          <svg className="w-3 h-3 text-success flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                          </svg>
+                        ) : (
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                              isActive ? 'bg-accent' : 'bg-content-faint'
+                            }`}
+                          />
+                        )}
                         {lesson.title}
                       </a>
                     )
@@ -103,6 +114,9 @@ function SidebarContent({ course, currentSection, currentLesson, onNavigate }: {
             </div>
           )
         })}
+      </div>
+      <div className="mt-auto px-3 py-3 border-t border-border">
+        <AnonBanner />
       </div>
     </nav>
   )

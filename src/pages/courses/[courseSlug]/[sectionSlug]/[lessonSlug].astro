@@ -10,6 +10,7 @@ import { getCourse, getCourses, getLesson } from '@/features/courses/lib/loader'
 import { getNavigation } from '@/features/courses/lib/navigation'
 import { getChangedFiles } from '@/features/courses/lib/files'
 import { asCourseSlug, asSectionSlug, asLessonSlug } from '@/features/courses/types'
+import { LessonCheckbox } from '@/features/progress/components/LessonCheckbox'
 
 export function getStaticPaths() {
   const courses = getCourses()
@@ -89,6 +90,9 @@ const githubEditUrl = `https://github.com/dotcodeschool/frontend/edit/master/con
         githubEditUrl={githubEditUrl}
         client:only="react"
       />
+      <div class="flex items-center justify-end px-5 py-2 border-t border-border bg-surface">
+        <LessonCheckbox courseSlug={courseSlug!} lessonSlug={lessonSlug!} client:load />
+      </div>
       <LessonNav nav={nav} />
     </div>
   </div>
