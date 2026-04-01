@@ -6,6 +6,7 @@ import ShareButtons from '@/features/courses/components/ShareButtons'
 import RelatedArticles from '@/features/articles/components/RelatedArticles.astro'
 import { getArticles, getArticle, getRelatedArticles } from '@/features/articles/lib/loader'
 import { IoChevronForward, IoTimeOutline } from 'react-icons/io5'
+import Footer from '@/shared/components/Footer.astro'
 
 export function getStaticPaths() {
   return getArticles().map(a => ({ params: { slug: a.slug } }))
@@ -101,4 +102,5 @@ const initials = article.author.split(' ').map(w => w[0]).join('').toUpperCase()
     )}
 
   </main>
+  <Footer />
 </BaseLayout>

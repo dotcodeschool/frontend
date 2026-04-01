@@ -5,6 +5,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import matter from 'gray-matter'
 import { marked } from 'marked'
+import Footer from '@/shared/components/Footer.astro'
 
 const filePath = path.join(process.cwd(), 'content/legal/disclaimer.mdx')
 const raw = matter(fs.readFileSync(filePath, 'utf8'))
@@ -16,4 +17,5 @@ const content = marked.parse(raw.content) as string
   <main class="max-w-3xl mx-auto px-4 py-8 prose prose-invert text-content-secondary prose-headings:font-heading prose-headings:text-content-primary">
     <Fragment set:html={content} />
   </main>
+  <Footer />
 </BaseLayout>
