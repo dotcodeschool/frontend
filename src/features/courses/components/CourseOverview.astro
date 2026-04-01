@@ -77,12 +77,14 @@ const hasPrereqs = course.prerequisites && course.prerequisites.length > 0
       <div class="flex items-center gap-4">
         <div class="text-accent text-2xl shrink-0"><FaClipboardList /></div>
         <div>
-          <p class="text-content-faint text-xs mb-0.5">Prerequisites</p>
-          <p class="text-content-primary font-bold text-base inline-flex items-center gap-1">
-            {hasPrereqs ? `${course.prerequisites!.length} ${course.prerequisites!.length === 1 ? 'course' : 'courses'}` : 'None'}
+          <div class="text-content-faint text-xs mb-0.5 inline-flex items-center gap-1">
+            <span>Prerequisites</span>
             {hasPrereqs && (
               <PrerequisitesPopover prerequisites={course.prerequisites!} client:load />
             )}
+          </div>
+          <p class="text-content-primary font-bold text-base">
+            {hasPrereqs ? `${course.prerequisites!.length} ${course.prerequisites!.length === 1 ? 'course' : 'courses'}` : 'None'}
           </p>
         </div>
       </div>
