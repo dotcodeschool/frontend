@@ -29,7 +29,7 @@ export function FillInTheBlankQuiz({ question, answers, caseSensitive = false, e
       }
     } catch {}
     groupCtx?.registerQuiz(quizId)
-  }, [quizId])
+  }, [quizId, groupCtx])
 
   const checkAnswer = (input: string) => {
     return answers.some(a => caseSensitive ? a === input.trim() : a.toLowerCase() === input.trim().toLowerCase())
@@ -77,7 +77,7 @@ export function FillInTheBlankQuiz({ question, answers, caseSensitive = false, e
         </div>
       )}
       {hasAttempted && submitted && (
-        <p className="text-content-faint text-xs italic mt-3">You've already answered this question.</p>
+        <p className="text-content-muted text-xs italic mt-3">You've already answered this question.</p>
       )}
     </div>
   )

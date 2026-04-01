@@ -34,7 +34,7 @@ export function Quiz({ question, options, explanation }: Props) {
       }
     } catch {}
     groupCtx?.registerQuiz(quizId)
-  }, [quizId])
+  }, [quizId, groupCtx])
 
   const handleSubmit = () => {
     const correct = options.find(o => o.label === selected)?.correct ?? false
@@ -93,11 +93,11 @@ export function Quiz({ question, options, explanation }: Props) {
       ) : (
         <div className={`mt-4 p-4 rounded-lg text-sm ${isCorrect ? 'bg-green-500/10 border border-green-500/30' : 'bg-red-500/10 border border-red-500/30'}`}>
           <div className="font-semibold mb-1 text-content-primary">{isCorrect ? 'Correct!' : 'Incorrect'}</div>
-          <div className="text-content-secondary">{explanation}</div>
+          <div className="text-content-secondary [&_code]:text-accent [&_code]:bg-elevated [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-sm [&_code]:font-mono [&_pre]:bg-code [&_pre]:rounded-lg [&_pre]:p-4 [&_pre]:my-2 [&_pre]:overflow-x-auto [&_pre]:text-sm [&_pre_code]:bg-transparent [&_pre_code]:p-0">{explanation}</div>
         </div>
       )}
       {hasAttempted && submitted && (
-        <p className="text-content-faint text-xs italic mt-3">You've already answered this question.</p>
+        <p className="text-content-muted text-xs italic mt-3">You&apos;ve already answered this question.</p>
       )}
     </div>
   )

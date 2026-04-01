@@ -28,7 +28,7 @@ export function TrueFalseQuiz({ question, correct, explanation }: Props) {
       }
     } catch {}
     groupCtx?.registerQuiz(quizId)
-  }, [quizId])
+  }, [quizId, groupCtx])
 
   const handleSubmit = () => {
     const result = selected === correct
@@ -79,7 +79,7 @@ export function TrueFalseQuiz({ question, correct, explanation }: Props) {
         </div>
       )}
       {hasAttempted && submitted && (
-        <p className="text-content-faint text-xs italic mt-3">You've already answered this question.</p>
+        <p className="text-content-muted text-xs italic mt-3">You've already answered this question.</p>
       )}
     </div>
   )
