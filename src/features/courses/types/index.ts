@@ -39,6 +39,7 @@ export type Section = {
   title: string
   order: number
   description?: string
+  content?: string
   lessons: LessonSummary[]
 }
 
