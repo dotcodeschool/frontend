@@ -31,9 +31,30 @@ function validateEntry(entry: RegistryEntry): void {
 const __dirname = import.meta.dirname ?? new URL('.', import.meta.url).pathname.replace(/\/$/, '')
 const ROOT = resolve(__dirname, '..')
 const REGISTRY_PATH = join(ROOT, 'config', 'registry.yaml')
+const WHITELIST_PATH = join(ROOT, 'config', 'whitelist.yaml')
 const CONTENT_DIR = join(ROOT, 'content', 'courses')
 const TMP_DIR = join(ROOT, '.ingestion-tmp')
 const CONVERTER_PATH = join(ROOT, '..', 'gitorial-to-dotcodeschool')
+
+type Whitelist = {
+  trustedOwners: string[]
+  trustedRepos: string[]
+}
+
+function loadWhitelist(): Whitelist {
+  if (!existsSync(WHITELIST_PATH)) return { trustedOwners: [], trustedRepos: [] }
+  const raw = readFileSync(WHITELIST_PATH, 'utf-8')
+  const data = yaml.load(raw) as Whitelist | null
+  return {
+    trustedOwners: data?.trustedOwners ?? [],
+    trustedRepos: data?.trustedRepos ?? [],
+  }
+}
+
+function isTrusted(entry: RegistryEntry, whitelist: Whitelist): boolean {
+  const owner = entry.repo.split('/')[0]
+  return whitelist.trustedOwners.includes(owner) || whitelist.trustedRepos.includes(entry.repo)
+}
 
 function loadRegistry(): RegistryEntry[] {
   if (!existsSync(REGISTRY_PATH)) {
@@ -94,11 +115,27 @@ function cleanup(): void {
 }
 
 async function main() {
-  const entries = loadRegistry()
+  const allEntries = loadRegistry()
 
-  if (entries.length === 0) {
+  if (allEntries.length === 0) {
     console.log('No courses to ingest.')
     return
+  }
+
+  const whitelist = loadWhitelist()
+  const ingestAll = process.argv.includes('--all')
+
+  const entries = ingestAll
+    ? allEntries
+    : allEntries.filter((e) => isTrusted(e, whitelist))
+
+  if (entries.length === 0) {
+    console.log(`No trusted courses to ingest (${allEntries.length} total in registry). Use --all to ingest all.`)
+    return
+  }
+
+  if (!ingestAll && entries.length < allEntries.length) {
+    console.log(`Ingesting ${entries.length} trusted course(s), skipping ${allEntries.length - entries.length} untrusted.`)
   }
 
   mkdirSync(TMP_DIR, { recursive: true })

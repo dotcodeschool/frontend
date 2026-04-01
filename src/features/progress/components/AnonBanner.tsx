@@ -9,7 +9,11 @@ export function AnonBanner() {
   useEffect(() => {
     init()
     setReady(true)
-    setDismissed(localStorage.getItem('dcs:anon-banner-dismissed') === 'true')
+    try {
+      setDismissed(localStorage.getItem('dcs:anon-banner-dismissed') === 'true')
+    } catch {
+      // localStorage unavailable (private browsing, quota exceeded)
+    }
   }, [])
 
   if (!ready || isAuthenticated || dismissed) return null
@@ -31,7 +35,7 @@ export function AnonBanner() {
       <button
         onClick={() => {
           setDismissed(true)
-          localStorage.setItem('dcs:anon-banner-dismissed', 'true')
+          try { localStorage.setItem('dcs:anon-banner-dismissed', 'true') } catch {}
         }}
         className="text-content-muted hover:text-content-secondary ml-auto"
         aria-label="Dismiss"

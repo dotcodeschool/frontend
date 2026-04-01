@@ -4,6 +4,13 @@ import { Octokit } from 'octokit'
 
 export const prerender = false
 
+function json(data: unknown, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  })
+}
+
 const GIST_FILENAME = 'dotcodeschool-progress.json'
 const GIST_DESCRIPTION = 'Dot Code School — course progress'
 const MAX_PAYLOAD_SIZE = 1024 * 1024 // 1MB
@@ -30,48 +37,40 @@ function isValidProgressState(body: unknown): body is { courses: Record<string, 
 // GET — read progress from gist
 export const GET: APIRoute = async (context) => {
   const session = await getSession(context.request)
-  if (!session) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 })
-  }
+  if (!session) return json({ error: 'Unauthorized' }, 401)
 
   const octokit = new Octokit({ auth: session.accessToken })
 
   try {
     const gistId = await findProgressGist(octokit)
-    if (!gistId) {
-      return new Response(JSON.stringify({ courses: {} }), {
-        headers: { 'Content-Type': 'application/json' },
-      })
-    }
+    if (!gistId) return json({ courses: {} })
 
     const { data: gist } = await octokit.rest.gists.get({ gist_id: gistId })
     const content = gist.files?.[GIST_FILENAME]?.content ?? '{"courses":{}}'
     return new Response(content, {
       headers: { 'Content-Type': 'application/json' },
     })
-  } catch (error) {
-    return new Response(JSON.stringify({ error: 'Failed to read progress' }), { status: 500 })
+  } catch {
+    return json({ error: 'Failed to read progress' }, 500)
   }
 }
 
 // POST — write progress to gist
 export const POST: APIRoute = async (context) => {
   const session = await getSession(context.request)
-  if (!session) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 })
-  }
+  if (!session) return json({ error: 'Unauthorized' }, 401)
 
   const octokit = new Octokit({ auth: session.accessToken })
 
   const contentLength = context.request.headers.get('content-length')
   if (contentLength && parseInt(contentLength) > MAX_PAYLOAD_SIZE) {
-    return new Response(JSON.stringify({ error: 'Payload too large' }), { status: 413 })
+    return json({ error: 'Payload too large' }, 413)
   }
 
   const body = await context.request.json()
 
   if (!isValidProgressState(body)) {
-    return new Response(JSON.stringify({ error: 'Invalid progress data' }), { status: 400 })
+    return json({ error: 'Invalid progress data' }, 400)
   }
 
   try {
@@ -94,10 +93,8 @@ export const POST: APIRoute = async (context) => {
       })
     }
 
-    return new Response(JSON.stringify({ ok: true }), {
-      headers: { 'Content-Type': 'application/json' },
-    })
-  } catch (error) {
-    return new Response(JSON.stringify({ error: 'Failed to save progress' }), { status: 500 })
+    return json({ ok: true })
+  } catch {
+    return json({ error: 'Failed to save progress' }, 500)
   }
 }

@@ -1,5 +1,21 @@
 import { getSession as getAuthSession } from 'auth-astro/server'
 
+// Augment Auth.js types to include our custom fields
+declare module '@auth/core/types' {
+  interface Session {
+    accessToken?: string
+  }
+  interface User {
+    login?: string
+  }
+}
+
+declare module '@auth/core/jwt' {
+  interface JWT {
+    accessToken?: string
+  }
+}
+
 export type SessionUser = {
   id: string
   login: string
@@ -19,11 +35,11 @@ export async function getSession(request: Request): Promise<Session | null> {
   return {
     user: {
       id: session.user.id ?? '',
-      login: (session.user as any).login ?? session.user.name ?? '',
+      login: session.user.login ?? session.user.name ?? '',
       name: session.user.name ?? '',
       avatarUrl: session.user.image ?? '',
     },
-    accessToken: (session as any).accessToken ?? '',
+    accessToken: session.accessToken ?? '',
   }
 }
 
