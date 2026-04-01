@@ -1,18 +1,21 @@
-# Use the official image as a base image
-FROM node:alpine
+FROM node:20-alpine
 
-# Set the working directory
-COPY . /dcs-frontend
-WORKDIR /dcs-frontend
+# Install pnpm
+RUN npm install -g pnpm
 
-# Install pnpm if it's not installed
-RUN if ! command -v pnpm &> /dev/null; then npm install --global pnpm; fi
+WORKDIR /app
 
 # Install dependencies
-RUN pnpm install
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 
-# Build the app
+# Copy source and content
+COPY . .
+
+# Build the static site
 RUN pnpm build
 
-# Start the app
-CMD ["pnpm", "start"]
+# Serve with a simple static server
+RUN npm install -g serve
+CMD ["serve", "dist", "-l", "3000"]
+EXPOSE 3000
