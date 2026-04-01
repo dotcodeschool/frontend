@@ -17,20 +17,23 @@ const articles = getArticles().slice(0, 3)
   <section class="relative overflow-hidden">
     <!-- Grid background -->
     <div class="absolute inset-0 bg-grid opacity-40" />
-    <!-- Accent glow — slow breathing pulse -->
-    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-accent/[0.06] rounded-full blur-[100px] pointer-events-none animate-glow-pulse" />
+
+    <!-- Floating orbs — slow drifting ambient lights -->
+    <div class="orb orb-1" />
+    <div class="orb orb-2" />
+    <div class="orb orb-3" />
 
     <div class="relative max-w-6xl mx-auto px-6 pt-20 pb-16">
-      <!-- Tagline — staggered fade in -->
+      <!-- Tagline -->
       <div class="text-center mb-12">
-        <p class="text-accent font-mono text-sm tracking-wider mb-4 uppercase animate-fade-up" style="animation-delay: 0ms;">Interactive blockchain tutorials</p>
-        <h1 class="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-content-primary leading-[1.1] mb-6 animate-fade-up" style="animation-delay: 100ms;">
+        <p class="text-accent font-mono text-sm tracking-wider mb-4 uppercase">Interactive blockchain tutorials</p>
+        <h1 class="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-content-primary leading-[1.1] mb-6">
           Learn by building.
         </h1>
-        <p class="text-content-muted text-lg md:text-xl max-w-2xl mx-auto leading-relaxed animate-fade-up" style="animation-delay: 200ms;">
+        <p class="text-content-muted text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
           Write real code in your browser. Build state machines, NFT marketplaces, and multi-chain applications — one lesson at a time.
         </p>
-        <div class="flex items-center justify-center gap-4 mt-8 animate-fade-up" style="animation-delay: 300ms;">
+        <div class="flex items-center justify-center gap-4 mt-8">
           <a href="/courses" class="inline-block bg-accent text-lg font-semibold px-8 py-3 rounded-lg no-underline hover:opacity-90 transition-opacity" style="color: var(--bg-base);">
             Browse Courses
           </a>
@@ -41,7 +44,7 @@ const articles = getArticles().slice(0, 3)
       </div>
 
       <!-- Interactive preview card with 3D tilt -->
-      <div class="max-w-4xl mx-auto animate-fade-up" style="min-height: 460px; animation-delay: 450ms;">
+      <div class="max-w-4xl mx-auto" style="min-height: 460px;">
         <LandingHero client:only="react" />
       </div>
     </div>
@@ -49,7 +52,7 @@ const articles = getArticles().slice(0, 3)
 
   <!-- Courses Section -->
   <section id="courses" class="relative max-w-5xl mx-auto px-6 py-20">
-    <div class="text-center mb-12 animate-on-scroll">
+    <div class="text-center mb-12">
       <p class="text-accent font-mono text-xs tracking-wider mb-3 uppercase">Curriculum</p>
       <h2 class="font-heading text-3xl md:text-4xl font-bold text-content-primary mb-3">Start your journey</h2>
       <p class="text-content-muted text-base max-w-xl mx-auto">
@@ -58,10 +61,9 @@ const articles = getArticles().slice(0, 3)
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {courses.map((course, i) => (
+      {courses.map((course) => (
         <a href={`/courses/${course.slug}`}
-           class="group block p-6 bg-surface border border-border rounded-xl no-underline hover:border-accent/30 hover:shadow-lg hover:shadow-accent/[0.04] transition-all duration-300 animate-on-scroll"
-           style={`animation-delay: ${i * 100}ms;`}>
+           class="group block p-6 bg-surface border border-border rounded-xl no-underline hover:border-accent/30 hover:shadow-lg hover:shadow-accent/[0.04] transition-all duration-300">
           <div class="flex items-center gap-2 mb-3">
             <span class="text-xs font-medium px-2.5 py-0.5 rounded-full bg-accent-bg text-accent">{course.level}</span>
             <span class="text-xs text-content-muted">{course.language}</span>
@@ -81,27 +83,44 @@ const articles = getArticles().slice(0, 3)
   </section>
 
   <!-- How it works -->
-  <section class="relative border-t border-border">
+  <section class="relative border-t border-border overflow-hidden">
+    <!-- Subtle floating particle -->
+    <div class="orb orb-4" />
+
     <div class="max-w-5xl mx-auto px-6 py-20">
-      <div class="text-center mb-14 animate-on-scroll">
+      <div class="text-center mb-14">
         <p class="text-accent font-mono text-xs tracking-wider mb-3 uppercase">How it works</p>
         <h2 class="font-heading text-3xl md:text-4xl font-bold text-content-primary">Code, don't just read</h2>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-        {[
-          { num: '01', title: 'Read the lesson', desc: 'Each lesson explains a concept with clear prose and code examples. No fluff — just what you need to understand.' },
-          { num: '02', title: 'Write the code', desc: 'A real code editor is right beside the lesson. Edit files, see changes, and build the project step by step.' },
-          { num: '03', title: 'Check your answer', desc: 'Compare your code against the solution instantly. See exactly where you diverged and learn from the diff.' },
-        ].map((step, i) => (
-          <div class="text-center animate-on-scroll" style={`animation-delay: ${i * 120}ms;`}>
-            <div class="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mx-auto mb-4">
-              <span class="font-mono text-accent font-bold text-lg">{step.num}</span>
-            </div>
-            <h3 class="font-heading text-base font-semibold text-content-primary mb-2">{step.title}</h3>
-            <p class="text-content-muted text-sm leading-relaxed">{step.desc}</p>
+        <div class="text-center">
+          <div class="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mx-auto mb-4">
+            <span class="font-mono text-accent font-bold text-lg">01</span>
           </div>
-        ))}
+          <h3 class="font-heading text-base font-semibold text-content-primary mb-2">Read the lesson</h3>
+          <p class="text-content-muted text-sm leading-relaxed">
+            Each lesson explains a concept with clear prose and code examples. No fluff — just what you need to understand.
+          </p>
+        </div>
+        <div class="text-center">
+          <div class="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mx-auto mb-4">
+            <span class="font-mono text-accent font-bold text-lg">02</span>
+          </div>
+          <h3 class="font-heading text-base font-semibold text-content-primary mb-2">Write the code</h3>
+          <p class="text-content-muted text-sm leading-relaxed">
+            A real code editor is right beside the lesson. Edit files, see changes, and build the project step by step.
+          </p>
+        </div>
+        <div class="text-center">
+          <div class="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mx-auto mb-4">
+            <span class="font-mono text-accent font-bold text-lg">03</span>
+          </div>
+          <h3 class="font-heading text-base font-semibold text-content-primary mb-2">Check your answer</h3>
+          <p class="text-content-muted text-sm leading-relaxed">
+            Compare your code against the solution instantly. See exactly where you diverged and learn from the diff.
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -110,7 +129,7 @@ const articles = getArticles().slice(0, 3)
   {articles.length > 0 && (
     <section class="relative border-t border-border">
       <div class="max-w-5xl mx-auto px-6 py-20">
-        <div class="flex items-baseline justify-between mb-8 animate-on-scroll">
+        <div class="flex items-baseline justify-between mb-8">
           <div>
             <p class="text-accent font-mono text-xs tracking-wider mb-3 uppercase">From the blog</p>
             <h2 class="font-heading text-3xl font-bold text-content-primary">Latest articles</h2>
@@ -121,10 +140,9 @@ const articles = getArticles().slice(0, 3)
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {articles.map((article, i) => (
+          {articles.map((article) => (
             <a href={`/articles/${article.slug}`}
-               class="group block p-5 bg-surface border border-border rounded-xl no-underline hover:bg-elevated transition-colors animate-on-scroll"
-               style={`animation-delay: ${i * 100}ms;`}>
+               class="group block p-5 bg-surface border border-border rounded-xl no-underline hover:bg-elevated transition-colors">
               <p class="text-content-muted text-xs mb-2">{article.date}</p>
               <h3 class="font-heading text-base font-semibold text-content-primary mb-2 group-hover:text-accent transition-colors leading-snug">
                 {article.title}
@@ -138,10 +156,10 @@ const articles = getArticles().slice(0, 3)
   )}
 
   <!-- CTA -->
-  <section class="relative border-t border-border">
+  <section class="relative border-t border-border overflow-hidden">
     <div class="absolute inset-0 bg-grid opacity-20" />
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-accent/[0.04] rounded-full blur-[80px] pointer-events-none animate-glow-pulse" />
-    <div class="relative max-w-3xl mx-auto px-6 py-24 text-center animate-on-scroll">
+    <div class="orb orb-5" />
+    <div class="relative max-w-3xl mx-auto px-6 py-24 text-center">
       <h2 class="font-heading text-3xl md:text-4xl font-bold text-content-primary mb-4">
         Ready to start building?
       </h2>
@@ -165,66 +183,80 @@ const articles = getArticles().slice(0, 3)
     background-size: 48px 48px;
   }
 
-  /* Hero staggered fade-up on load */
-  @keyframes fade-up {
-    from {
-      opacity: 0;
-      transform: translateY(16px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  /* Floating ambient orbs — different sizes, positions, speeds */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(80px);
+    will-change: transform;
   }
 
-  .animate-fade-up {
-    opacity: 0;
-    animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  /* Hero: large accent orb, top-right drift */
+  .orb-1 {
+    width: 600px;
+    height: 400px;
+    top: 10%;
+    right: -10%;
+    background: rgba(107, 138, 237, 0.06);
+    animation: drift-1 20s ease-in-out infinite;
   }
 
-  /* Scroll-triggered fade-up */
-  .animate-on-scroll {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Hero: smaller warm orb, left side */
+  .orb-2 {
+    width: 400px;
+    height: 300px;
+    top: 40%;
+    left: -5%;
+    background: rgba(78, 108, 212, 0.04);
+    animation: drift-2 25s ease-in-out infinite;
   }
 
-  .animate-on-scroll.is-visible {
-    opacity: 1;
-    transform: translateY(0);
+  /* Hero: tiny bright orb near center */
+  .orb-3 {
+    width: 200px;
+    height: 200px;
+    top: 20%;
+    left: 45%;
+    background: rgba(107, 138, 237, 0.05);
+    animation: drift-3 15s ease-in-out infinite;
   }
 
-  /* Slow breathing glow */
-  @keyframes glow-pulse {
-    0%, 100% { opacity: 0.06; transform: translate(-50%, 0) scale(1); }
-    50% { opacity: 0.1; transform: translate(-50%, 0) scale(1.05); }
+  /* How it works section */
+  .orb-4 {
+    width: 350px;
+    height: 250px;
+    top: 30%;
+    right: -5%;
+    background: rgba(107, 138, 237, 0.04);
+    animation: drift-2 22s ease-in-out infinite;
   }
 
-  .animate-glow-pulse {
-    animation: glow-pulse 6s ease-in-out infinite;
+  /* CTA section */
+  .orb-5 {
+    width: 500px;
+    height: 300px;
+    top: 20%;
+    left: 50%;
+    background: rgba(107, 138, 237, 0.05);
+    animation: drift-1 18s ease-in-out infinite;
+  }
+
+  @keyframes drift-1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(-30px, 20px) scale(1.03); }
+    50% { transform: translate(15px, -15px) scale(0.97); }
+    75% { transform: translate(-10px, -25px) scale(1.02); }
+  }
+
+  @keyframes drift-2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(25px, -20px) scale(1.04); }
+    66% { transform: translate(-15px, 15px) scale(0.98); }
+  }
+
+  @keyframes drift-3 {
+    0%, 100% { transform: translate(0, 0); opacity: 0.05; }
+    50% { transform: translate(20px, -10px); opacity: 0.08; }
   }
 </style>
-
-<script is:inline>
-  // Intersection Observer for scroll-triggered animations
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          // Respect animation-delay from inline styles
-          const delay = entry.target.style.animationDelay || '0ms'
-          const ms = parseInt(delay)
-          if (ms > 0) {
-            setTimeout(() => entry.target.classList.add('is-visible'), ms)
-          } else {
-            entry.target.classList.add('is-visible')
-          }
-          observer.unobserve(entry.target)
-        }
-      })
-    },
-    { threshold: 0.15 }
-  )
-
-  document.querySelectorAll('.animate-on-scroll').forEach((el) => observer.observe(el))
-</script>
