@@ -16,6 +16,7 @@
   --color-accent-bg: var(--accent-bg);
   --color-accent-dim: var(--accent-dim);
   --color-content-primary: var(--text-primary);
+  --color-content-body: var(--text-body);
   --color-content-secondary: var(--text-secondary);
   --color-content-muted: var(--text-muted);
   --color-content-faint: var(--text-faint);
@@ -32,6 +33,7 @@
     --bg-elevated: #efece6;
     --border: #e8e5df;
     --text-primary: #1a1917;
+    --text-body: #33312d;
     --text-secondary: #4a4639;
     --text-muted: #8a857a;
     --text-faint: #ccc8be;
@@ -48,6 +50,7 @@
     --bg-elevated: #161924;
     --border: #1e2230;
     --text-primary: #e8eaf0;
+    --text-body: #c4c8d4;
     --text-secondary: #9ba3be;
     --text-muted: #6b7394;
     --text-faint: #3a3f54;

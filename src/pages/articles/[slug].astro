@@ -19,8 +19,8 @@ if (!article) return Astro.redirect('/404')
   <main class="max-w-3xl mx-auto px-4 py-8">
     <a href="/articles" class="text-accent text-sm mb-4 block no-underline">← Articles</a>
     <h1 class="font-heading text-3xl font-bold mb-2">{article.title}</h1>
-    <p class="text-content-muted text-sm mb-8">{article.date} · {article.author}</p>
-    <div class="prose prose-invert max-w-none text-content-primary
+    <p class="text-content-secondary text-sm mb-8">{article.date} · {article.author}</p>
+    <div class="prose prose-invert max-w-none text-content-body
                  prose-headings:font-heading prose-headings:text-content-primary">
       <MdxRenderer code={article.code} client:load />
     </div>
