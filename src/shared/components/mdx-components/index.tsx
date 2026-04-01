@@ -24,8 +24,20 @@ function Pre(props: any) {
 export const mdxComponents = {
   pre: Pre,
   code: (props: any) => {
-    if (typeof props.children === 'string' && !props.className) {
-      return <code className="text-accent bg-elevated px-1.5 py-0.5 rounded text-sm font-mono">{props.children}</code>
+    // If this code element is a direct child (no pre wrapper) but contains
+    // what looks like a code block (multiline or code-like content), render as CodeBlock
+    if (typeof props.children === 'string') {
+      const text = props.children
+      const hasNewlines = text.includes('\n')
+      const lang = props.className?.replace('language-', '') ?? ''
+
+      // Multi-line code or code with a language class → render as code block
+      if (hasNewlines || lang) {
+        return <CodeBlock className={props.className ?? ''} filename={props.filename}>{text}</CodeBlock>
+      }
+
+      // Single-line inline code
+      return <code className="text-accent bg-elevated px-1.5 py-0.5 rounded text-sm font-mono">{text}</code>
     }
     return <code {...props} />
   },
