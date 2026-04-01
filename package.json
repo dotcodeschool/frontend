@@ -19,6 +19,7 @@
     "@monaco-editor/react": "^4.6.0",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.2.2",
+    "ansi-to-html": "^0.7.2",
     "astro": "^6.1.2",
     "auth-astro": "^4.2.0",
     "esbuild": "^0.25.1",
