@@ -8,7 +8,7 @@ export default defineConfig({
       clientSecret: import.meta.env.AUTH_GITHUB_SECRET,
       authorization: {
         params: {
-          scope: "repo gist read:user",
+          scope: "public_repo gist read:user",
         },
       },
     }),
