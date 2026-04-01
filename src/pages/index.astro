@@ -17,11 +17,12 @@ const articles = getArticles().slice(0, 3)
   <section class="relative overflow-hidden">
     <!-- Grid background -->
     <div class="absolute inset-0 bg-grid opacity-40" />
-
-    <!-- Floating orbs — slow drifting ambient lights -->
-    <div class="orb orb-1" />
-    <div class="orb orb-2" />
-    <div class="orb orb-3" />
+    <!-- Aurora gradient -->
+    <div class="aurora" />
+    <!-- Light streaks -->
+    <div class="light-streak" style="top: 30%; width: 50%; left: 25%; animation-duration: 7s;" />
+    <div class="light-streak" style="top: 55%; width: 40%; left: 30%; animation-duration: 10s; animation-delay: -4s;" />
+    <div class="light-streak" style="top: 75%; width: 55%; left: 15%; animation-duration: 8s; animation-delay: -6s;" />
 
     <div class="relative max-w-6xl mx-auto px-6 pt-20 pb-16">
       <!-- Tagline -->
@@ -84,10 +85,11 @@ const articles = getArticles().slice(0, 3)
 
   <!-- How it works -->
   <section class="relative border-t border-border overflow-hidden">
-    <!-- Subtle floating particle -->
-    <div class="orb orb-4" />
+    <!-- Subtle aurora on this section too -->
+    <div class="aurora aurora-dim" />
+    <div class="light-streak" style="top: 40%; width: 45%; left: 30%; animation-duration: 9s; animation-delay: -2s;" />
 
-    <div class="max-w-5xl mx-auto px-6 py-20">
+    <div class="max-w-5xl mx-auto px-6 py-20 relative">
       <div class="text-center mb-14">
         <p class="text-accent font-mono text-xs tracking-wider mb-3 uppercase">How it works</p>
         <h2 class="font-heading text-3xl md:text-4xl font-bold text-content-primary">Code, don't just read</h2>
@@ -158,7 +160,9 @@ const articles = getArticles().slice(0, 3)
   <!-- CTA -->
   <section class="relative border-t border-border overflow-hidden">
     <div class="absolute inset-0 bg-grid opacity-20" />
-    <div class="orb orb-5" />
+    <div class="aurora aurora-dim" />
+    <div class="light-streak" style="top: 45%; width: 50%; left: 25%; animation-duration: 8s;" />
+    <div class="light-streak" style="top: 65%; width: 35%; left: 40%; animation-duration: 11s; animation-delay: -5s;" />
     <div class="relative max-w-3xl mx-auto px-6 py-24 text-center">
       <h2 class="font-heading text-3xl md:text-4xl font-bold text-content-primary mb-4">
         Ready to start building?
@@ -183,80 +187,58 @@ const articles = getArticles().slice(0, 3)
     background-size: 48px 48px;
   }
 
-  /* Floating ambient orbs — different sizes, positions, speeds */
-  .orb {
+  /* Aurora gradient — slow color shift */
+  .aurora {
     position: absolute;
-    border-radius: 50%;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(107, 138, 237, 0.06) 0%,
+      transparent 35%,
+      rgba(78, 108, 212, 0.08) 55%,
+      transparent 75%,
+      rgba(107, 138, 237, 0.05) 100%
+    );
+    background-size: 200% 200%;
+    animation: aurora-shift 10s ease-in-out infinite;
     pointer-events: none;
-    filter: blur(80px);
-    will-change: transform;
   }
 
-  /* Hero: large accent orb, top-right drift */
-  .orb-1 {
-    width: 600px;
-    height: 400px;
-    top: 10%;
-    right: -10%;
-    background: rgba(107, 138, 237, 0.06);
-    animation: drift-1 20s ease-in-out infinite;
+  .aurora-dim {
+    background: linear-gradient(
+      135deg,
+      rgba(107, 138, 237, 0.03) 0%,
+      transparent 35%,
+      rgba(78, 108, 212, 0.05) 55%,
+      transparent 75%,
+      rgba(107, 138, 237, 0.03) 100%
+    );
   }
 
-  /* Hero: smaller warm orb, left side */
-  .orb-2 {
-    width: 400px;
-    height: 300px;
-    top: 40%;
-    left: -5%;
-    background: rgba(78, 108, 212, 0.04);
-    animation: drift-2 25s ease-in-out infinite;
+  @keyframes aurora-shift {
+    0%, 100% { background-position: 0% 50%; }
+    25% { background-position: 100% 0%; }
+    50% { background-position: 100% 100%; }
+    75% { background-position: 0% 100%; }
   }
 
-  /* Hero: tiny bright orb near center */
-  .orb-3 {
-    width: 200px;
-    height: 200px;
-    top: 20%;
-    left: 45%;
-    background: rgba(107, 138, 237, 0.05);
-    animation: drift-3 15s ease-in-out infinite;
+  /* Light streaks — horizontal lines that drift across */
+  .light-streak {
+    position: absolute;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(107, 138, 237, 0.15) 30%,
+      rgba(107, 138, 237, 0.15) 70%,
+      transparent 100%
+    );
+    animation: streak-drift linear infinite;
+    pointer-events: none;
   }
 
-  /* How it works section */
-  .orb-4 {
-    width: 350px;
-    height: 250px;
-    top: 30%;
-    right: -5%;
-    background: rgba(107, 138, 237, 0.04);
-    animation: drift-2 22s ease-in-out infinite;
-  }
-
-  /* CTA section */
-  .orb-5 {
-    width: 500px;
-    height: 300px;
-    top: 20%;
-    left: 50%;
-    background: rgba(107, 138, 237, 0.05);
-    animation: drift-1 18s ease-in-out infinite;
-  }
-
-  @keyframes drift-1 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    25% { transform: translate(-30px, 20px) scale(1.03); }
-    50% { transform: translate(15px, -15px) scale(0.97); }
-    75% { transform: translate(-10px, -25px) scale(1.02); }
-  }
-
-  @keyframes drift-2 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(25px, -20px) scale(1.04); }
-    66% { transform: translate(-15px, 15px) scale(0.98); }
-  }
-
-  @keyframes drift-3 {
-    0%, 100% { transform: translate(0, 0); opacity: 0.05; }
-    50% { transform: translate(20px, -10px); opacity: 0.08; }
+  @keyframes streak-drift {
+    0% { transform: translateX(-110%); }
+    100% { transform: translateX(110%); }
   }
 </style>
