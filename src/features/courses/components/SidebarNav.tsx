@@ -50,19 +50,27 @@ function SidebarContent({ course, currentSection, currentLesson, onNavigate }: {
 
           return (
             <div key={section.slug}>
-              <button
-                onClick={() => toggleSection(section.slug)}
-                className="flex items-center justify-between w-full px-4 py-2.5 text-left group"
-              >
-                <span className="text-xs font-semibold text-content-muted tracking-wide truncate pr-2">
+              {/* Section header — title links to section page, chevron toggles lessons */}
+              <div className="flex items-center px-4 py-2.5">
+                <a
+                  href={`/courses/${course.slug}/${section.slug}`}
+                  onClick={onNavigate}
+                  className="text-xs font-semibold text-content-muted tracking-wide truncate pr-2 no-underline hover:text-content-secondary transition-colors"
+                >
                   {section.title}
-                </span>
-                {isOpen ? (
-                  <IoChevronUp className="text-content-faint text-xs shrink-0" />
-                ) : (
-                  <IoChevronDown className="text-content-faint text-xs shrink-0" />
-                )}
-              </button>
+                </a>
+                <button
+                  onClick={() => toggleSection(section.slug)}
+                  className="ml-auto p-0.5 shrink-0"
+                  aria-label={isOpen ? 'Collapse section' : 'Expand section'}
+                >
+                  {isOpen ? (
+                    <IoChevronUp className="text-content-faint text-xs" />
+                  ) : (
+                    <IoChevronDown className="text-content-faint text-xs" />
+                  )}
+                </button>
+              </div>
 
               {isOpen && (
                 <div className="pb-1">
