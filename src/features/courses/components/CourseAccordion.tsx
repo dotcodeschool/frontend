@@ -8,7 +8,9 @@ interface Props {
 }
 
 export default function CourseAccordion({ sections, courseSlug }: Props) {
-  const [openSections, setOpenSections] = useState<Set<number>>(new Set())
+  const [openSections, setOpenSections] = useState<Set<number>>(
+    () => new Set(sections.map((_, i) => i))
+  )
 
   const toggleSection = (index: number) => {
     setOpenSections(prev => {
