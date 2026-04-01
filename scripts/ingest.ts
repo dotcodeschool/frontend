@@ -87,7 +87,7 @@ function cloneRepo(entry: RegistryEntry): string {
 
   console.log(`Cloning ${entry.repo}@${entry.branch}...`);
   execSync(
-    `git clone --depth 1 --branch ${entry.branch} https://github.com/${entry.repo}.git ${cloneDir}`,
+    `git clone --single-branch --branch ${entry.branch} https://github.com/${entry.repo}.git ${cloneDir}`,
     { stdio: "inherit" },
   );
 
