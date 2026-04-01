@@ -1,32 +1,47 @@
-import { useRef, useCallback, useState, useEffect } from 'react'
+import { useRef, useCallback, useState, lazy, Suspense } from 'react'
+import { DCS_THEME_NAME, dcsDarkTheme } from '@/features/courses/components/code-editor/editor-theme'
 
-const CODE_LINES = [
-  { num: 1, tokens: [{ text: 'use', color: '#c678dd' }, { text: ' std::collections::', color: '#abb2bf' }, { text: 'HashMap', color: '#e5c07b' }, { text: ';', color: '#abb2bf' }] },
-  { num: 2, tokens: [] },
-  { num: 3, tokens: [{ text: 'pub struct', color: '#c678dd' }, { text: ' ', color: '#abb2bf' }, { text: 'BalancesPallet', color: '#e5c07b' }, { text: ' {', color: '#abb2bf' }] },
-  { num: 4, tokens: [{ text: '    ', color: '' }, { text: 'balances', color: '#e06c75' }, { text: ': ', color: '#abb2bf' }, { text: 'HashMap', color: '#e5c07b' }, { text: '<', color: '#abb2bf' }, { text: 'String', color: '#e5c07b' }, { text: ', ', color: '#abb2bf' }, { text: 'u128', color: '#e5c07b' }, { text: '>,', color: '#abb2bf' }] },
-  { num: 5, tokens: [{ text: '}', color: '#abb2bf' }] },
-  { num: 6, tokens: [] },
-  { num: 7, tokens: [{ text: 'impl', color: '#c678dd' }, { text: ' ', color: '#abb2bf' }, { text: 'BalancesPallet', color: '#e5c07b' }, { text: ' {', color: '#abb2bf' }] },
-  { num: 8, tokens: [{ text: '    ', color: '' }, { text: 'pub fn', color: '#c678dd' }, { text: ' ', color: '#abb2bf' }, { text: 'new', color: '#61afef' }, { text: '() -> ', color: '#abb2bf' }, { text: 'Self', color: '#e5c07b' }, { text: ' {', color: '#abb2bf' }] },
-  { num: 9, tokens: [{ text: '        ', color: '' }, { text: 'Self', color: '#e5c07b' }, { text: ' {', color: '#abb2bf' }] },
-  { num: 10, tokens: [{ text: '            ', color: '' }, { text: 'balances', color: '#e06c75' }, { text: ': ', color: '#abb2bf' }, { text: 'HashMap', color: '#e5c07b' }, { text: '::', color: '#abb2bf' }, { text: 'new', color: '#61afef' }, { text: '(),', color: '#abb2bf' }] },
-  { num: 11, tokens: [{ text: '        }', color: '#abb2bf' }] },
-  { num: 12, tokens: [{ text: '    }', color: '#abb2bf' }] },
-  { num: 13, tokens: [] },
-  { num: 14, tokens: [{ text: '    ', color: '' }, { text: 'pub fn', color: '#c678dd' }, { text: ' ', color: '#abb2bf' }, { text: 'set_balance', color: '#61afef' }, { text: '(&', color: '#abb2bf' }, { text: 'mut self', color: '#c678dd' }, { text: ', who: &', color: '#abb2bf' }, { text: 'str', color: '#e5c07b' }, { text: ', amount: ', color: '#abb2bf' }, { text: 'u128', color: '#e5c07b' }, { text: ') {', color: '#abb2bf' }] },
-  { num: 15, tokens: [{ text: '        ', color: '' }, { text: 'self', color: '#c678dd' }, { text: '.balances.insert(', color: '#abb2bf' }] },
-  { num: 16, tokens: [{ text: '            who.', color: '#abb2bf' }, { text: 'to_string', color: '#61afef' }, { text: '(), amount', color: '#abb2bf' }] },
-  { num: 17, tokens: [{ text: '        );', color: '#abb2bf' }] },
-  { num: 18, tokens: [{ text: '    }', color: '#abb2bf' }] },
-  { num: 19, tokens: [] },
-  { num: 20, tokens: [{ text: '    ', color: '' }, { text: 'pub fn', color: '#c678dd' }, { text: ' ', color: '#abb2bf' }, { text: 'transfer', color: '#61afef' }, { text: '(', color: '#abb2bf' }] },
-  { num: 21, tokens: [{ text: '        &', color: '#abb2bf' }, { text: 'mut self', color: '#c678dd' }, { text: ',', color: '#abb2bf' }] },
-  { num: 22, tokens: [{ text: '        from: &', color: '#abb2bf' }, { text: 'str', color: '#e5c07b' }, { text: ',', color: '#abb2bf' }] },
-  { num: 23, tokens: [{ text: '        to: &', color: '#abb2bf' }, { text: 'str', color: '#e5c07b' }, { text: ',', color: '#abb2bf' }] },
-  { num: 24, tokens: [{ text: '        amount: ', color: '#abb2bf' }, { text: 'u128', color: '#e5c07b' }] },
-  { num: 25, tokens: [{ text: '    ) -> ', color: '#abb2bf' }, { text: 'Result', color: '#e5c07b' }, { text: '<(), &\'static ', color: '#abb2bf' }, { text: 'str', color: '#e5c07b' }, { text: '> {', color: '#abb2bf' }] },
-]
+const Editor = lazy(() => import('@monaco-editor/react').then(m => ({ default: m.default })))
+
+const SAMPLE_CODE = `use std::collections::HashMap;
+
+pub struct BalancesPallet {
+    balances: HashMap<String, u128>,
+}
+
+impl BalancesPallet {
+    pub fn new() -> Self {
+        Self {
+            balances: HashMap::new(),
+        }
+    }
+
+    pub fn set_balance(&mut self, who: &str, amount: u128) {
+        self.balances.insert(who.to_string(), amount);
+    }
+
+    pub fn balance(&self, who: &str) -> u128 {
+        *self.balances.get(who).unwrap_or(&0)
+    }
+
+    pub fn transfer(
+        &mut self,
+        from: &str,
+        to: &str,
+        amount: u128,
+    ) -> Result<(), &'static str> {
+        let from_balance = self.balance(from);
+        let to_balance = self.balance(to);
+
+        if from_balance < amount {
+            return Err("insufficient balance");
+        }
+
+        self.set_balance(from, from_balance - amount);
+        self.set_balance(to, to_balance + amount);
+        Ok(())
+    }
+}`
 
 const TABS = [
   { name: 'balances.rs', active: true },
@@ -37,17 +52,11 @@ const TABS = [
 export default function LandingHero() {
   const cardRef = useRef<HTMLDivElement>(null)
   const glowRef = useRef<HTMLDivElement>(null)
-  const [visibleLines, setVisibleLines] = useState(0)
-
-  // Typewriter effect — reveal lines one by one
-  useEffect(() => {
-    if (visibleLines >= CODE_LINES.length) return
-    const delay = visibleLines === 0 ? 400 : 40 + Math.random() * 60
-    const timer = setTimeout(() => setVisibleLines(v => v + 1), delay)
-    return () => clearTimeout(timer)
-  }, [visibleLines])
+  const [tiltEnabled, setTiltEnabled] = useState(true)
+  const themeRegistered = useRef(false)
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!tiltEnabled) return
     const card = cardRef.current
     const glow = glowRef.current
     if (!card || !glow) return
@@ -64,7 +73,7 @@ export default function LandingHero() {
     glow.style.opacity = '1'
     glow.style.left = `${x}px`
     glow.style.top = `${y}px`
-  }, [])
+  }, [tiltEnabled])
 
   const handleMouseLeave = useCallback(() => {
     const card = cardRef.current
@@ -73,6 +82,13 @@ export default function LandingHero() {
     card.style.transform = ''
     glow.style.opacity = '0'
   }, [])
+
+  const handleBeforeMount = (monaco: any) => {
+    if (!themeRegistered.current) {
+      monaco.editor.defineTheme(DCS_THEME_NAME, dcsDarkTheme)
+      themeRegistered.current = true
+    }
+  }
 
   return (
     <div
@@ -104,7 +120,7 @@ export default function LandingHero() {
           }}
         />
 
-        {/* Split view */}
+        {/* Split view: content + real editor */}
         <div className="flex" style={{ height: '420px' }}>
           {/* Content pane */}
           <div className="flex-1 overflow-y-auto p-8" style={{ background: 'var(--bg-base)' }}>
@@ -116,22 +132,8 @@ export default function LandingHero() {
               At the heart of a blockchain is a state machine. We can create a very naive state machine
               using simple Rust abstractions, and through this help learn about Rust in the context of blockchains.
             </p>
-            <div className="rounded-lg overflow-hidden border p-4 mb-5" style={{ borderColor: 'var(--border)', background: 'var(--code-bg)' }}>
-              <pre className="font-mono text-xs leading-relaxed">
-                <code>
-                  <span style={{ color: '#c678dd' }}>let</span>
-                  {' '}
-                  <span style={{ color: '#e06c75' }}>pallet</span>
-                  {' = '}
-                  <span style={{ color: '#61afef' }}>BalancesPallet</span>
-                  {'::'}
-                  <span style={{ color: '#61afef' }}>new</span>
-                  {'();'}
-                </code>
-              </pre>
-            </div>
             <p className="text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-              We want to keep our code organized, so we will create a new file called{' '}
+              We want to keep our code organized, so we will create a new file for our Balances Pallet called{' '}
               <code className="px-1.5 py-0.5 rounded text-xs font-mono" style={{ color: 'var(--accent)', background: 'var(--accent-bg)' }}>balances.rs</code>
             </p>
           </div>
@@ -139,8 +141,13 @@ export default function LandingHero() {
           {/* Divider */}
           <div className="w-px" style={{ background: 'var(--border)' }} />
 
-          {/* Editor pane */}
-          <div className="flex-1 flex flex-col" style={{ background: '#0a0c10' }}>
+          {/* Real Monaco editor */}
+          <div
+            className="flex-1 flex flex-col"
+            style={{ background: '#0a0c10' }}
+            onMouseEnter={() => setTiltEnabled(false)}
+            onMouseLeave={() => setTiltEnabled(true)}
+          >
             {/* Tab bar */}
             <div className="flex items-center h-9 border-b px-2 shrink-0" style={{ background: 'rgba(17,19,24,0.7)', borderColor: 'var(--border)' }}>
               {TABS.map((tab) => (
@@ -158,31 +165,32 @@ export default function LandingHero() {
               ))}
             </div>
 
-            {/* Code with typewriter */}
-            <div className="flex-1 py-3 overflow-hidden font-mono" style={{ fontSize: '12.5px', lineHeight: '1.85' }}>
-              {CODE_LINES.slice(0, visibleLines).map(({ num, tokens }) => (
-                <div key={num} className="flex px-4">
-                  <span className="w-8 text-right pr-4 select-none shrink-0" style={{ color: 'rgba(84,91,120,0.4)' }}>
-                    {num}
-                  </span>
-                  <span>
-                    {tokens.length === 0
-                      ? '\u00A0'
-                      : tokens.map((t, i) => (
-                          <span key={i} style={{ color: t.color || undefined }}>{t.text}</span>
-                        ))
-                    }
-                  </span>
-                </div>
-              ))}
-              {visibleLines < CODE_LINES.length && (
-                <div className="flex px-4">
-                  <span className="w-8 text-right pr-4 select-none shrink-0" style={{ color: 'rgba(84,91,120,0.4)' }}>
-                    {visibleLines + 1}
-                  </span>
-                  <span className="animate-pulse" style={{ color: '#61afef' }}>▎</span>
-                </div>
-              )}
+            {/* Monaco */}
+            <div className="flex-1 min-h-0">
+              <Suspense fallback={<div className="flex-1" style={{ background: '#0a0c10' }} />}>
+                <Editor
+                  language="rust"
+                  defaultValue={SAMPLE_CODE}
+                  theme={DCS_THEME_NAME}
+                  beforeMount={handleBeforeMount}
+                  options={{
+                    minimap: { enabled: false },
+                    fontSize: 13,
+                    lineNumbers: 'on',
+                    scrollBeyondLastLine: false,
+                    padding: { top: 12 },
+                    renderLineHighlight: 'none',
+                    overviewRulerBorder: false,
+                    hideCursorInOverviewRuler: true,
+                    scrollbar: {
+                      vertical: 'auto',
+                      horizontal: 'auto',
+                      verticalScrollbarSize: 4,
+                      horizontalScrollbarSize: 4,
+                    },
+                  }}
+                />
+              </Suspense>
             </div>
           </div>
         </div>
