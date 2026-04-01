@@ -196,7 +196,7 @@ export default function LandingHero() {
         </div>
 
         {/* Bottom bar */}
-        <div className="flex items-center justify-between h-8 px-4 border-t font-mono" style={{ background: '#111318', borderColor: 'rgba(255,255,255,0.06)', fontSize: '10px', color: '#6b7394' }}>
+        <div className="flex items-center justify-between h-8 px-4 border-t font-mono" style={{ background: '#111318', borderColor: 'rgba(255,255,255,0.06)', fontSize: '10px', color: '#9ba3be' }}>
           <span>Rust State Machine · Lesson 3</span>
           <span>← Previous · Next →</span>
         </div>
