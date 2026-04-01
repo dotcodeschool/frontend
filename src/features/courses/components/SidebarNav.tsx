@@ -16,13 +16,15 @@ import { GitHubPanel } from "./github/GitHubPanel";
 function SidebarFooter({
   courseSlug,
   githubUrl,
+  forkable,
 }: {
   courseSlug: string;
   githubUrl?: string;
+  forkable?: boolean;
 }) {
   const { isAuthenticated, progress } = useProgressStore();
   const hasProgress = Object.keys(progress.courses).length > 0;
-  const showGitHub = isAuthenticated && !!githubUrl;
+  const showGitHub = isAuthenticated && !!githubUrl && !!forkable;
   const showBanner = !isAuthenticated && hasProgress;
 
   if (!showGitHub && !showBanner) return null;
@@ -31,7 +33,11 @@ function SidebarFooter({
     <div className="mt-auto border-t border-border">
       {showGitHub && (
         <div className="px-3 py-3">
-          <GitHubPanel courseSlug={courseSlug} githubUrl={githubUrl} />
+          <GitHubPanel
+            courseSlug={courseSlug}
+            githubUrl={githubUrl}
+            forkable={forkable}
+          />
         </div>
       )}
       {showBanner && (
@@ -175,7 +181,11 @@ function SidebarContent({
           );
         })}
       </div>
-      <SidebarFooter courseSlug={course.slug} githubUrl={course.githubUrl} />
+      <SidebarFooter
+        courseSlug={course.slug}
+        githubUrl={course.githubUrl}
+        forkable={course.forkable}
+      />
     </nav>
   );
 }

@@ -9,9 +9,10 @@ import { TestOutput } from "./TestOutput";
 interface Props {
   courseSlug: string;
   githubUrl?: string;
+  forkable?: boolean;
 }
 
-export function GitHubPanel({ courseSlug, githubUrl }: Props) {
+export function GitHubPanel({ courseSlug, githubUrl, forkable }: Props) {
   const { isAuthenticated, getCourseProgress, init } = useProgressStore();
   const [ready, setReady] = useState(false);
   const [latestRunId, setLatestRunId] = useState<number | null>(null);
@@ -21,7 +22,7 @@ export function GitHubPanel({ courseSlug, githubUrl }: Props) {
     setReady(true);
   }, []);
 
-  if (!ready || !githubUrl) return null;
+  if (!ready || !githubUrl || !forkable) return null;
 
   const courseProgress = getCourseProgress(courseSlug);
   const forkUrl = courseProgress?.forkUrl;

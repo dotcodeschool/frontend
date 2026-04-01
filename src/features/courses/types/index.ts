@@ -25,6 +25,7 @@ export type Course = {
   level: string;
   language: string;
   githubUrl?: string;
+  forkable?: boolean;
   isGitorial?: boolean;
   estimatedTime?: number;
   tags?: string[];

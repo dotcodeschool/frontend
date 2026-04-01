@@ -244,6 +244,7 @@ export function getCourse(slug: CourseSlug): Course | null {
     level: data.level ?? "Beginner",
     language: data.language ?? "Unknown",
     githubUrl: data.github_url,
+    forkable: data.forkable ?? false,
     isGitorial: data.is_gitorial ?? false,
     estimatedTime: data.estimated_time,
     tags: data.tags ?? [],
