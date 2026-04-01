@@ -14,9 +14,11 @@ const articles = getArticles().slice(0, 3)
   <Navbar />
 
   <!-- Hero Section -->
-  <section class="relative overflow-hidden">
+  <section class="relative overflow-hidden" id="hero-section">
     <!-- Grid background -->
     <div class="absolute inset-0 bg-grid opacity-40" />
+    <!-- Cursor spotlight on grid -->
+    <div id="grid-spotlight" class="absolute pointer-events-none opacity-0 transition-opacity duration-300" style="width: 500px; height: 500px; transform: translate(-50%, -50%); background: radial-gradient(circle, var(--grid-line) 0%, transparent 70%); z-index: 1;" />
     <!-- Aurora gradient -->
     <div class="aurora" />
     <!-- Light streaks — horizontal -->
@@ -188,7 +190,7 @@ const articles = getArticles().slice(0, 3)
     --aurora-b: rgba(78, 108, 212, 0.14);
     --aurora-c: rgba(78, 108, 212, 0.08);
     --streak: rgba(78, 108, 212, 0.2);
-    --grid-line: rgba(78, 108, 212, 0.12);
+    --grid-line: rgba(78, 108, 212, 0.15);
   }
 
   [data-theme="dark"] {
@@ -274,3 +276,19 @@ const articles = getArticles().slice(0, 3)
     100% { transform: translateY(110%); }
   }
 </style>
+
+<script is:inline>
+  const hero = document.getElementById('hero-section')
+  const spot = document.getElementById('grid-spotlight')
+  if (hero && spot) {
+    hero.addEventListener('mousemove', (e) => {
+      const rect = hero.getBoundingClientRect()
+      spot.style.left = (e.clientX - rect.left) + 'px'
+      spot.style.top = (e.clientY - rect.top) + 'px'
+      spot.style.opacity = '1'
+    })
+    hero.addEventListener('mouseleave', () => {
+      spot.style.opacity = '0'
+    })
+  }
+</script>
