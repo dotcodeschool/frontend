@@ -15,7 +15,7 @@ export function AnswerToolbar({ editorFiles, solutionFiles }: Props) {
   }
 
   return (
-    <div className="flex flex-col bg-surface border-b border-border shrink-0">
+    <div className="flex flex-col border-b border-white/[0.06] shrink-0" style={{ background: '#111318' }}>
       <div className="flex items-center gap-2 px-3 py-1.5">
         <button
           onClick={handleCheck}

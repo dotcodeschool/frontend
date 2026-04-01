@@ -13,7 +13,7 @@ export function EditorTabs({ files, diff }: Props) {
   const hasDiff = diff.length > 0
 
   return (
-    <div className="flex items-center bg-surface border-b border-border h-9 shrink-0">
+    <div className="flex items-center border-b border-white/[0.06] h-9 shrink-0" style={{ background: '#111318' }}>
       {/* Scrollable tab area */}
       <div className="flex-1 flex items-center overflow-x-auto min-w-0 px-1 scrollbar-none">
         {files.map((file, i) => {
@@ -48,7 +48,7 @@ export function EditorTabs({ files, diff }: Props) {
       </div>
 
       {/* Fixed action buttons */}
-      <div className="flex items-center gap-1 px-2 shrink-0 border-l border-border">
+      <div className="flex items-center gap-1 px-2 shrink-0 border-l border-white/[0.06]">
         {hasDiff && (
           <button
             onClick={toggleDiff}

@@ -37,7 +37,7 @@ export default function CodeEditor({ files, diff, solutionFiles, readOnly = fals
     : []
 
   const editorContent = (
-    <div className="flex flex-col h-full bg-code border-l border-border">
+    <div className="flex flex-col h-full border-l border-white/[0.06]" style={{ background: '#0a0c10' }}>
       <EditorTabs files={files} diff={diff} />
       {hasSolution && (
         <AnswerToolbar editorFiles={files} solutionFiles={solutionFiles} />
