@@ -52,7 +52,7 @@ interface Props {
 
 export function CodeBlock({ children, className, filename }: Props) {
   const [isHovered, setIsHovered] = useState(false)
-  const rawLang = className?.replace('language-', '') ?? 'rust'
+  const rawLang = className?.replace('language-', '') || 'jsx' // defaults to jsx for untagged blocks
   // Map common aliases to prism-supported language names
   const langMap: Record<string, string> = {
     sh: 'bash',
