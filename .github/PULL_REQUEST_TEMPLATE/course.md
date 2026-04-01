@@ -1,67 +1,70 @@
-# New Course Contribution
+# Course Contribution
 
-## Course Information
+<!-- Pick ONE option below, expand it, and delete the others -->
 
-- **Title**: <!-- Your course title -->
-- **Difficulty Level**: <!-- Beginner, Intermediate, or Advanced -->
-- **Programming Language(s)**: <!-- Language(s) used in the course -->
-- **Estimated Completion Time**: <!-- Approximate hours to complete the course -->
+<details>
+<summary><strong>Option A: New Gittorial Course</strong></summary>
 
-## Description
+### Registry Entry
 
-<!-- Provide a brief description of what this course covers and why it's valuable for the Dot Code School community -->
+I've added my course to `config/registry.yaml` with:
 
-## Learning Objectives
+- **Slug**: 
+- **Repo**: 
+- **Branch**: 
+- **Title**: 
+- **Author**: 
+- **Level**: 
+- **Language**: 
 
-<!-- List the key concepts or skills that learners will gain from this course -->
+### Checklist
 
--
--
--
+- [ ] Added entry to `config/registry.yaml`
+- [ ] Gittorial repo is public on GitHub
+- [ ] Gittorial branch has properly prefixed commits (`section:`, `template:`, `solution:`, `action:`)
+- [ ] Included `overview` field in registry with course description
+- [ ] Tested ingestion locally: `pnpm tsx scripts/ingest.ts --all`
+- [ ] Content renders correctly: `pnpm dev`
 
-## Prerequisites
+</details>
 
-<!-- List any knowledge or skills that learners should have before taking this course -->
+<details>
+<summary><strong>Option B: Update Existing Course Content</strong></summary>
 
--
--
--
+For courses NOT on the whitelist (untrusted repos that require review).
 
-## Checklist
+### What Changed
 
-<!-- Please check all that apply -->
+<!-- Describe what was updated in the upstream gittorial repo -->
 
-- [ ] I have placed my course in the correct location (`content/courses/your-course-name/`)
-- [ ] I have included all required frontmatter metadata in the main course file:
-  - [ ] slug
-  - [ ] title
-  - [ ] author
-  - [ ] author_url
-  - [ ] description
-  - [ ] level
-  - [ ] language
-  - [ ] tags
-  - [ ] prerequisites
-  - [ ] what_youll_learn
-  - [ ] estimated_time
-  - [ ] last_updated
-- [ ] My course follows the directory structure outlined in the [Course Contribution Guide](https://dotcodeschool.com/articles/course-contribution-guide)
-- [ ] All section and lesson files include proper frontmatter
-- [ ] My course has a logical progression of concepts
-- [ ] Code examples are complete, functional, and properly formatted
+### Checklist
+
+- [ ] Regenerated course content: `pnpm tsx scripts/ingest.ts --all`
+- [ ] Reviewed the diff for unexpected changes
+- [ ] No `readmeTitle` or other artifact files in the output
+- [ ] Content renders correctly: `pnpm dev`
+
+</details>
+
+<details>
+<summary><strong>Option C: New MDX Course (Manual)</strong></summary>
+
+Adding a course written directly in MDX (not from a gittorial).
+
+### Course Information
+
+- **Title**: 
+- **Level**: 
+- **Language**: 
+- **Estimated Time**: 
+
+### Checklist
+
+- [ ] Placed course in `content/courses/my-course-name/`
+- [ ] Included all required frontmatter (slug, title, author, description, level, language)
+- [ ] Follows directory structure (sections/lessons with MDX + files)
+- [ ] Code examples are complete and functional
 - [ ] Template and solution files match correctly
-- [ ] All links are valid and use relative paths where appropriate
-- [ ] I have checked my content for spelling and grammatical errors
-- [ ] I have tested all code examples to ensure they work as expected
+- [ ] Tested locally: `pnpm dev`
 
-## Course Structure
-
-<!-- Provide a brief overview of your course structure (sections and lessons) -->
-
-## Preview
-
-<!-- If possible, provide a screenshot or link to a preview of your course -->
-
-## Additional Notes
-
-<!-- Add any other information about your course here -->
+</details>
