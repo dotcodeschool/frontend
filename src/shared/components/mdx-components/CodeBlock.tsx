@@ -89,17 +89,10 @@ export function CodeBlock({ children, className, filename }: Props) {
       )}
       <Highlight theme={themes.dracula} code={code} language={language}>
         {({ style, tokens: rawTokens, getLineProps, getTokenProps }) => {
-          // Remove ALL trailing empty lines
-          const tokens = [...rawTokens]
-          while (tokens.length > 0) {
-            const last = tokens[tokens.length - 1]
-            const text = last.map(t => t.content).join('')
-            if (text.trim().length === 0) tokens.pop()
-            else break
-          }
+          const tokens = rawTokens
           return (
           <pre
-            className="overflow-x-auto px-6 py-4 text-sm leading-relaxed [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded [&:hover::-webkit-scrollbar-thumb]:bg-content-faint"
+            className="overflow-x-auto px-6 pt-4 pb-3 text-sm leading-relaxed [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:rounded [&:hover::-webkit-scrollbar-thumb]:bg-content-faint"
             style={{ ...style, margin: 0, backgroundColor: themes.dracula.plain.backgroundColor }}
           >
             <code className={filename ? '' : 'pr-12'}>
