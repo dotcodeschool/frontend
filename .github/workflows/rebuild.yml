@@ -5,6 +5,10 @@ on:
     - cron: "0 6 * * *"
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   # Job 1: Always trigger a Vercel rebuild.
   # Whitelisted repos are ingested fresh at build time via the prebuild script.
@@ -47,21 +51,13 @@ jobs:
       - name: Check for untrusted content changes
         id: diff
         run: |
-          echo "=== Listing ingested content ==="
-          ls -la content/courses/
-          echo "=== PAPI directory ==="
-          ls -la content/courses/papi-intro-tutorial/ 2>&1 || echo "PAPI directory does not exist"
-          echo "=== Git status ==="
-          git status --short content/ | head -20
-          echo "=== Staging ==="
           git add --force content/
-          echo "=== Cached diff ==="
-          git diff --cached --stat content/ | head -20
           if git diff --cached --quiet content/; then
             echo "No untrusted content changes detected."
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
           else
-            echo "Untrusted content changes detected."
+            echo "Untrusted content changes detected:"
+            git diff --cached --stat content/ | tail -5
             echo "has_changes=true" >> "$GITHUB_OUTPUT"
           fi
 
