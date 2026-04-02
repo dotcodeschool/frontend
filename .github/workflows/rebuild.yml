@@ -87,5 +87,4 @@ jobs:
 
           Please review the diff to ensure the content is correct before merging.
 
-          Triggered by the daily content sync workflow." \
-            --draft
+          Triggered by the daily content sync workflow."
