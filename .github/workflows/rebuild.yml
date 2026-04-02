@@ -66,13 +66,16 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          BRANCH="content-sync/$(date +%Y-%m-%d)"
+          BRANCH="content-sync/$(date +%Y-%m-%d-%H%M%S)"
 
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+          # Delete stale remote branch if it exists
+          git push origin --delete "content-sync/$(date +%Y-%m-%d)" 2>/dev/null || true
+
           git checkout -b "$BRANCH"
-          git add content/
+          git add --force content/
           git commit -m "content: update untrusted courses from upstream gittorial repos"
           git push origin "$BRANCH"
 
