@@ -51,7 +51,7 @@ jobs:
       - name: Check for untrusted content changes
         id: diff
         run: |
-          git add --force content/
+          git add content/
           if git diff --cached --quiet content/; then
             echo "No untrusted content changes detected."
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
@@ -75,7 +75,7 @@ jobs:
           git push origin --delete "content-sync/$(date +%Y-%m-%d)" 2>/dev/null || true
 
           git checkout -b "$BRANCH"
-          git add --force content/
+          git add content/
           git commit -m "content: update untrusted courses from upstream gittorial repos"
           git push origin "$BRANCH"
 
