@@ -1,21 +1,82 @@
-name: Rebuild & Deploy
+name: Content Sync
 
-# Manual trigger only — run when course content is ready to deploy.
-# Gittorial repos rewrite history, so there's no stable ref to pin to.
-# A maintainer triggers this when they know the upstream content is ready.
 on:
+  schedule:
+    - cron: "0 6 * * *"
   workflow_dispatch:
 
 jobs:
+  # Job 1: Always trigger a Vercel rebuild.
+  # Whitelisted repos are ingested fresh at build time via the prebuild script.
   deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Vercel deploy
         run: |
           if [ -z "${{ secrets.VERCEL_DEPLOY_HOOK }}" ]; then
-            echo "VERCEL_DEPLOY_HOOK secret not set. Skipping deploy."
-            echo "Set up a deploy hook in Vercel project settings and add it as a repository secret."
+            echo "::warning::VERCEL_DEPLOY_HOOK secret not set. Skipping deploy."
             exit 0
           fi
-          curl -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}"
-          echo "Deploy triggered."
+          curl -s -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}"
+          echo "Vercel deploy triggered."
+
+  # Job 2: Check untrusted repos for content changes.
+  # Runs ingestion with --all, diffs against committed content.
+  # If untrusted content changed, opens a draft PR for review.
+  check-untrusted:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - run: pnpm install
+
+      - name: Run full ingestion
+        run: pnpm tsx scripts/ingest.ts --all
+
+      - name: Check for untrusted content changes
+        id: diff
+        run: |
+          # Only check content/ directory for changes (untrusted courses are committed)
+          if git diff --quiet content/; then
+            echo "No untrusted content changes detected."
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Untrusted content changes detected:"
+            git diff --stat content/
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create PR for untrusted content updates
+        if: steps.diff.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="content-sync/$(date +%Y-%m-%d)"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git checkout -b "$BRANCH"
+          git add content/
+          git commit -m "content: update untrusted courses from upstream gittorial repos"
+          git push origin "$BRANCH"
+
+          gh pr create \
+            --base master \
+            --head "$BRANCH" \
+            --title "content: upstream course updates ($(date +%Y-%m-%d))" \
+            --body "Automated content sync detected changes in untrusted course repos.
+
+          Please review the diff to ensure the content is correct before merging.
+
+          Triggered by the daily content sync workflow." \
+            --draft
