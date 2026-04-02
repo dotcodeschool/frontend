@@ -47,13 +47,14 @@ jobs:
       - name: Check for untrusted content changes
         id: diff
         run: |
-          # Only check content/ directory for changes (untrusted courses are committed)
-          if git diff --quiet content/; then
+          # Stage everything in content/ so we catch both modified and new files
+          git add content/
+          if git diff --cached --quiet content/; then
             echo "No untrusted content changes detected."
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
           else
             echo "Untrusted content changes detected:"
-            git diff --stat content/
+            git diff --cached --stat content/
             echo "has_changes=true" >> "$GITHUB_OUTPUT"
           fi
 
