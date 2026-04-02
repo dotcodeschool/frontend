@@ -47,14 +47,21 @@ jobs:
       - name: Check for untrusted content changes
         id: diff
         run: |
-          # Stage everything in content/ so we catch both modified and new files
-          git add content/
+          echo "=== Listing ingested content ==="
+          ls -la content/courses/
+          echo "=== PAPI directory ==="
+          ls -la content/courses/papi-intro-tutorial/ 2>&1 || echo "PAPI directory does not exist"
+          echo "=== Git status ==="
+          git status --short content/ | head -20
+          echo "=== Staging ==="
+          git add --force content/
+          echo "=== Cached diff ==="
+          git diff --cached --stat content/ | head -20
           if git diff --cached --quiet content/; then
             echo "No untrusted content changes detected."
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
           else
-            echo "Untrusted content changes detected:"
-            git diff --cached --stat content/
+            echo "Untrusted content changes detected."
             echo "has_changes=true" >> "$GITHUB_OUTPUT"
           fi
 
