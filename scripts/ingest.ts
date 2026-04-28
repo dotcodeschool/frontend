@@ -1,5 +1,13 @@
 import { execSync } from "child_process";
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
+import {
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+} from "fs";
 import { convertGitorialToDotCodeSchool } from "gitorial-to-dotcodeschool/src/converter";
 import yaml from "js-yaml";
 import { join, resolve } from "path";
@@ -25,6 +33,7 @@ const SAFE_SLUG = /^[a-zA-Z0-9_-]+$/;
 const SAFE_REPO = /^[a-zA-Z0-9._-]+\/[a-zA-Z0-9._-]+$/;
 const SAFE_BRANCH = /^[a-zA-Z0-9._/-]+$/;
 const SAFE_TEXT = /^[^"\\`$]+$/; // No shell-significant characters
+const SAFE_HASH = /^[a-f0-9]{6,40}$/;
 
 function validateEntry(entry: RegistryEntry): void {
   if (!SAFE_SLUG.test(entry.slug))
@@ -122,11 +131,57 @@ async function convertRepo(
     description: entry.description,
   });
 
-  // Overwrite the converter's course MDX with curated metadata from the registry
-  overwriteCourseMdx(entry, outputDir);
+  // The converter and overwriteCourseMdx both stamp today's date into
+  // last_updated, which produces spurious daily diffs even when upstream
+  // hasn't changed. Rewrite each lesson's last_updated to the date of its
+  // commit_hash, and use the branch HEAD date for the course-level mdx.
+  rewriteLessonDates(outputDir, cloneDir);
+  overwriteCourseMdx(entry, outputDir, cloneDir);
 }
 
-function overwriteCourseMdx(entry: RegistryEntry, outputDir: string): void {
+// Returns YYYY-MM-DD for the given git ref in cloneDir, or null on failure.
+// `ref` must be either "HEAD" or a SAFE_HASH-validated commit SHA.
+function gitDate(cloneDir: string, ref: string): string | null {
+  try {
+    const date = execSync(
+      `git -C "${cloneDir}" log -1 --format=%cs ${ref}`,
+      { encoding: "utf-8", stdio: ["ignore", "pipe", "ignore"] },
+    ).trim();
+    return /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : null;
+  } catch {
+    return null;
+  }
+}
+
+function rewriteLessonDates(outputDir: string, cloneDir: string): void {
+  function walk(dir: string): void {
+    for (const name of readdirSync(dir)) {
+      const full = join(dir, name);
+      if (statSync(full).isDirectory()) {
+        walk(full);
+        continue;
+      }
+      if (!full.endsWith(".mdx")) continue;
+      const content = readFileSync(full, "utf-8");
+      const hashMatch = content.match(/^commit_hash:\s*([a-f0-9]+)\s*$/m);
+      if (!hashMatch || !SAFE_HASH.test(hashMatch[1])) continue;
+      const date = gitDate(cloneDir, hashMatch[1]);
+      if (!date) continue;
+      const updated = content.replace(
+        /^last_updated:\s*"[^"]*"\s*(#.*)?$/m,
+        `last_updated: "${date}"`,
+      );
+      if (updated !== content) writeFileSync(full, updated);
+    }
+  }
+  walk(outputDir);
+}
+
+function overwriteCourseMdx(
+  entry: RegistryEntry,
+  outputDir: string,
+  cloneDir: string,
+): void {
   const mdxPath = join(outputDir, `${entry.slug}.mdx`);
   if (!existsSync(mdxPath)) return;
 
@@ -136,6 +191,14 @@ function overwriteCourseMdx(entry: RegistryEntry, outputDir: string): void {
     /what_youll_learn:\s*\[[\s\S]*?\]/,
   );
   const whatYoullLearn = whatYoullLearnMatch?.[0] ?? "what_youll_learn: []";
+
+  // Fall back to the existing date if branch lookup fails, so we never
+  // bake today's date in (which is what caused the daily-PR bug).
+  const existingDateMatch = existing.match(
+    /^last_updated:\s*"([^"]*)"/m,
+  );
+  const lastUpdated =
+    gitDate(cloneDir, "HEAD") ?? existingDateMatch?.[1] ?? "";
 
   const frontmatter = [
     "---",
@@ -155,7 +218,7 @@ function overwriteCourseMdx(entry: RegistryEntry, outputDir: string): void {
     entry.estimated_time != null
       ? `estimated_time: ${entry.estimated_time}`
       : null,
-    `last_updated: "${new Date().toISOString().split("T")[0]}"`,
+    `last_updated: "${lastUpdated}"`,
     "is_gitorial: true",
     `github_url: https://github.com/${entry.repo}`,
     "---",
